@@ -5,6 +5,35 @@ finFoil is being rebuild using Qt/C++ in the finFoil repository.
 
 Please refer to the finFoil repository in the finFoil project on Gitorious, or the finFoil repository on GitHub.
 
+
+
 NOTE FOR GITHUB USERS
-The GitHub repository is updated daily from the Gitorious repository.
-If you want to be sure to get the latest code, clone from the Gitorious repository.
+The GitHub master branch is updated daily from the Gitorious repository.
+If you want to be sure to get the latest code or you want to get other branches, clone from the Gitorious repository.
+
+
+
+NOTE FOR SOURCEFORGE USERS
+The code you find here is probably out of date, but the binaries are probably up-to-date.
+
+
+
+FOR BINARY FILES AND WINDOWS INSTALLERS GO TO:
+https://sourceforge.net/projects/finfoil/
+
+
+
+
+HOW TO RUN THE FINFOIL_LEGACY SOURCECODE:
+
+* Install the dependencies (see below)
+* Get a copy of the python source files
+* Compile the Fortran files using f2py and place the binaries in the source folder. Or download the compiled Fortran binaries from sourceforge.
+* Run finFoil.py
+
+Dependencies:
+-python2
+-numpy
+-matplotlib
+-PyQt4
+
