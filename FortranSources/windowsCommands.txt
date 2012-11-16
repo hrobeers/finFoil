@@ -1,0 +1,2 @@
+cd C:\Users\Hrobeers\Documents\PrivProj\finfoil\trunk\FortranSources
+python.exe C:\Python27\Scripts\f2py.py -c --fcompiler=gnu95 --compiler=mingw32 -m Fspline .\Fspline.f90
