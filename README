@@ -1,0 +1,10 @@
+IMPORTANT NOTE
+
+There won't be any active development in the finFoil_legacy repository.
+finFoil is being rebuild using Qt/C++ in the finFoil repository.
+
+Please refer to the finFoil repository in the finFoil project on Gitorious, or the finFoil repository on GitHub.
+
+NOTE FOR GITHUB USERS
+The GitHub repository is updated daily from the Gitorious repository.
+If you want to be sure to get the latest code, clone from the Gitorious repository.
