@@ -20,19 +20,11 @@
 
 ****************************************************************************/
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
-#include "patheditor/patheditorsettings.h"
+#include "patheditorsettings.h"
 
 using namespace patheditor;
 
-int main(int argc, char *argv[])
+PathEditorSettings::PathEditorSettings(QObject *parent) :
+    QObject(parent)
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    QSharedPointer<PathEditorSettings> settings(new PathEditorSettings());
-
-    return a.exec();
 }

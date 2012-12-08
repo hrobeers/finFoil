@@ -20,19 +20,18 @@
 
 ****************************************************************************/
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
-#include "patheditor/patheditorsettings.h"
+#ifndef EDITABLEPATHITEM_H
+#define EDITABLEPATHITEM_H
 
-using namespace patheditor;
+#include <QGraphicsItem>
 
-int main(int argc, char *argv[])
+namespace patheditor
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    QSharedPointer<PathEditorSettings> settings(new PathEditorSettings());
-
-    return a.exec();
+    class EditablePathItem : public QGraphicsItem
+    {
+    public:
+        explicit EditablePathItem(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+    };
 }
+
+#endif // EDITABLEPATHITEM_H

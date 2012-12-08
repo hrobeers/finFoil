@@ -9,13 +9,17 @@ QT       += core gui
 TARGET = finFoil
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp
 
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+INCLUDEPATH += ..
+DEPENDPATH += ..
+
+include(../patheditor/patheditor.pri)
 
 OTHER_FILES += ../../LICENSE.BSD \
             ../../README

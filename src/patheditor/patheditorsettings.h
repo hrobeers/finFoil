@@ -20,19 +20,24 @@
 
 ****************************************************************************/
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
-#include "patheditor/patheditorsettings.h"
+#ifndef PATHEDITORSETTINGS_H
+#define PATHEDITORSETTINGS_H
 
-using namespace patheditor;
+#include <QObject>
 
-int main(int argc, char *argv[])
+namespace patheditor
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    class PathEditorSettings : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit PathEditorSettings(QObject *parent = 0);
 
-    QSharedPointer<PathEditorSettings> settings(new PathEditorSettings());
+    signals:
 
-    return a.exec();
+    public slots:
+
+    };
 }
+
+#endif // PATHEDITORSETTINGS_H
