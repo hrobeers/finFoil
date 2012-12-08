@@ -17,4 +17,5 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-OTHER_FILES += ../../LICENSE.BSD
+OTHER_FILES += ../../LICENSE.BSD \
+            ../../README
