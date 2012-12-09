@@ -23,6 +23,7 @@
 #ifndef CUBICBEZIER_H
 #define CUBICBEZIER_H
 
+#include <QPainter>
 #include "pathitem.h"
 
 namespace patheditor
@@ -33,10 +34,27 @@ namespace patheditor
         explicit CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
                              QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
-        int numberOfControlPoints();
+        int numberOfControlPoints() const;
+
+        QSharedPointer<QPointF> controlPoint1();
+        QSharedPointer<QPointF> controlPoint2();
+
+        QList<QSharedPointer<QPointF> > controlPoints();
+
+        // Implementing QGraphicsItem
+        QRectF boundingRect() const;
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                        QWidget *widget);
 
     private:
         int _numberOfControlPoints;
+
+        QSharedPointer<QPointF> _cPoint1;
+        QSharedPointer<QPointF> _cPoint2;
+
+        QList<QSharedPointer<QPointF> > _controlPoints;
+
+        QRectF _boundingRect;
     };
 }
 

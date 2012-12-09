@@ -29,9 +29,53 @@ CubicBezier::CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPoi
     : PathItem(startPoint, endPoint, parent, scene)
 {
     _numberOfControlPoints = 2;
+
+    QPointF startToEnd = *endPoint - *startPoint;
+    QPointF increment = startToEnd / 3;
+    _cPoint1 = QSharedPointer<QPointF>(new QPointF(0,0));
+    _cPoint2 = QSharedPointer<QPointF>(new QPointF(0,0));
+    *_cPoint1 += *startPoint + increment;
+    *_cPoint2 += *_cPoint1 + increment;
+
+
+    _controlPoints.append(_cPoint1);
+    _controlPoints.append(_cPoint2);
 }
 
-int CubicBezier::numberOfControlPoints()
+int CubicBezier::numberOfControlPoints() const
 {
+    // faster than _controlPoints.length()
     return _numberOfControlPoints;
+}
+
+QSharedPointer<QPointF> CubicBezier::controlPoint1()
+{
+    return _cPoint1;
+}
+
+QSharedPointer<QPointF> CubicBezier::controlPoint2()
+{
+    return _cPoint2;
+}
+
+QList<QSharedPointer<QPointF> > CubicBezier::controlPoints()
+{
+    return _controlPoints;
+}
+
+QRectF CubicBezier::boundingRect() const
+{
+    return _boundingRect;
+}
+
+void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QPainterPath painterPath;
+
+    painterPath.moveTo(*startPoint);
+    painterPath.cubicTo(relativeToStartPoint(_cPoint1), relativeToStartPoint(_cPoint2),
+                        relativeToStartPoint(endPoint));
+    painter->drawPath(painterPath);
+
+    _boundingRect = painterPath.boundingRect();
 }

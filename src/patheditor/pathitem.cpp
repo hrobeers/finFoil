@@ -31,3 +31,8 @@ PathItem::PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> e
     this->startPoint = startPoint;
     this->endPoint = endPoint;
 }
+
+QPointF PathItem::relativeToStartPoint(QSharedPointer<QPointF> point)
+{
+    return *point - *startPoint;
+}
