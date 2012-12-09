@@ -31,13 +31,21 @@ namespace patheditor
     class PathItem : public QGraphicsItem
     {
     public:
-        explicit PathItem(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+                          QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
+        // Variables needed by EditablePath for editing
         QSharedPointer<QPointF> startPoint;
         QSharedPointer<QPointF> endPoint;
 
+        // Functions needed by EditablePath for editing
         virtual int numberOfControlPoints() = 0;
         virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
+
+        // Implementing QGraphicsItem
+        virtual QRectF boundingRect() const = 0;
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                        QWidget *widget) = 0;
     };
 }
 
