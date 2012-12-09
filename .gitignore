@@ -17,4 +17,8 @@
 moc_*.cpp
 qrc_*.cpp
 Makefile
+*.Debug
+*.Release
 *-build-*
+
+src/app/debug

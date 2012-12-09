@@ -20,45 +20,33 @@
 
 ****************************************************************************/
 
-#include <QtGui/QApplication>
-#include <QLayout>
-#include <QGraphicsView>
-#include "mainwindow.h"
-#include "patheditor/patheditorwidget.h"
-#include "patheditor/cubicbezier.h"
-#include "patheditor/pointhandle.h"
+#ifndef PATHITEM_H
+#define PATHITEM_H
 
-using namespace patheditor;
+#include <QGraphicsItem>
+#include <QList>
 
-int main(int argc, char *argv[])
+namespace patheditor
 {
-    QApplication a(argc, argv);
+    class PathItem : public QGraphicsItem
+    {
+    public:
+        explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+                          QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
-    QSharedPointer<QPointF> startPoint(new QPointF(0,0));
-    QSharedPointer<QPointF> endPoint(new QPointF(100,100));
+        // Variables needed by EditablePath for editing
+        QSharedPointer<QPointF> startPoint;
+        QSharedPointer<QPointF> endPoint;
 
-    CubicBezier* bezier = new CubicBezier(startPoint, endPoint);
-    bezier->controlPoint1()->setX(100);
+        // Functions needed by EditablePath for editing
+        virtual int numberOfControlPoints() const = 0;
+        virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
 
-    PointHandle* pHandle1 = new PointHandle(bezier->startPoint);
-    PointHandle* pHandle2 = new PointHandle(bezier->controlPoint1());
-    PointHandle* pHandle3 = new PointHandle(bezier->controlPoint2());
-    PointHandle* pHandle4 = new PointHandle(bezier->endPoint);
-
-//    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(0,0,10,10);
-//    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
-//    ellipse->setPos(bezier->controlPoint1()->toPoint());
-
-    PathEditorWidget* widget = new PathEditorWidget();
-    widget->scene()->addItem(bezier);
-    widget->scene()->addItem(pHandle1);
-    widget->scene()->addItem(pHandle2);
-    widget->scene()->addItem(pHandle3);
-    widget->scene()->addItem(pHandle4);
-
-    MainWindow w;
-    w.setCentralWidget(widget);
-    w.show();
-
-    return a.exec();
+        // Implementing QGraphicsItem
+        virtual QRectF boundingRect() const = 0;
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                        QWidget *widget) = 0;
+    };
 }
+
+#endif // PATHITEM_H
