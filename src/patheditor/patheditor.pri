@@ -1,9 +1,9 @@
 HEADERS += \
     ../patheditor/editablepath.h \
-    ../patheditor/editablepathitem.h \
-    ../patheditor/patheditorsettings.h
+    ../patheditor/patheditorsettings.h \
+    ../patheditor/pathitem.h
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
-    ../patheditor/editablepathitem.cpp \
-    ../patheditor/patheditorsettings.cpp
+    ../patheditor/patheditorsettings.cpp \
+    ../patheditor/pathitem.cpp
