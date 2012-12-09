@@ -27,23 +27,26 @@
 #include <QGraphicsView>
 #include <QLayout>
 
-class PathEditorWidget : public QWidget
+namespace patheditor
 {
-    Q_OBJECT
-public:
-    explicit PathEditorWidget(QWidget *parent = 0);
+    class PathEditorWidget : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit PathEditorWidget(QWidget *parent = 0);
 
-    QGraphicsScene* scene();
-    
-signals:
-    
-public slots:
+        QGraphicsScene* scene();
 
-private:
-    QGraphicsView* _view;
-    QGraphicsScene* _scene;
-    QVBoxLayout* _mainLayout;
-    
-};
+    signals:
+
+    public slots:
+
+    private:
+        QGraphicsView* _view;
+        QGraphicsScene* _scene;
+        QVBoxLayout* _mainLayout;
+
+    };
+}
 
 #endif // PATHEDITORWIDGET_H

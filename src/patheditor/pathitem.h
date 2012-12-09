@@ -46,9 +46,6 @@ namespace patheditor
         virtual QRectF boundingRect() const = 0;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget) = 0;
-
-    protected:
-        QPointF relativeToStartPoint(QSharedPointer<QPointF> point);
     };
 }
 

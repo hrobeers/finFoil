@@ -22,6 +22,8 @@
 
 #include "patheditorwidget.h"
 
+using namespace patheditor;
+
 PathEditorWidget::PathEditorWidget(QWidget *parent) :
     QWidget(parent)
 {
@@ -29,6 +31,9 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     _scene = new QGraphicsScene(this);
     _view = new QGraphicsView(_scene, this);
     _mainLayout = new QVBoxLayout(this);
+
+    // view options
+    _view->setRenderHint(QPainter::Antialiasing);
 
     // layout
     _mainLayout->addWidget(_view);

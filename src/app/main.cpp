@@ -26,6 +26,7 @@
 #include "mainwindow.h"
 #include "patheditor/patheditorwidget.h"
 #include "patheditor/cubicbezier.h"
+#include "patheditor/pointhandle.h"
 
 using namespace patheditor;
 
@@ -33,19 +34,27 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QSharedPointer<QPointF> startPoint(new QPointF(-100,-100));
+    QSharedPointer<QPointF> startPoint(new QPointF(0,0));
     QSharedPointer<QPointF> endPoint(new QPointF(100,100));
 
     CubicBezier* bezier = new CubicBezier(startPoint, endPoint);
     bezier->controlPoint1()->setX(100);
 
-    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(0,0,10,10);
-    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
-    ellipse->setPos(bezier->controlPoint1()->toPoint());
+    PointHandle* pHandle1 = new PointHandle(bezier->startPoint);
+    PointHandle* pHandle2 = new PointHandle(bezier->controlPoint1());
+    PointHandle* pHandle3 = new PointHandle(bezier->controlPoint2());
+    PointHandle* pHandle4 = new PointHandle(bezier->endPoint);
+
+//    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(0,0,10,10);
+//    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+//    ellipse->setPos(bezier->controlPoint1()->toPoint());
 
     PathEditorWidget* widget = new PathEditorWidget();
     widget->scene()->addItem(bezier);
-    widget->scene()->addItem(ellipse);
+    widget->scene()->addItem(pHandle1);
+    widget->scene()->addItem(pHandle2);
+    widget->scene()->addItem(pHandle3);
+    widget->scene()->addItem(pHandle4);
 
     MainWindow w;
     w.setCentralWidget(widget);
