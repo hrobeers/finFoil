@@ -22,3 +22,4 @@ Makefile
 *-build-*
 
 src/app/debug
+src/app/release
