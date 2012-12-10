@@ -49,7 +49,6 @@ namespace patheditor
     private:
         QSharedPointer<QPointF> _startPoint;
         QSharedPointer<QPointF> _endPoint;
-
     };
 }
 

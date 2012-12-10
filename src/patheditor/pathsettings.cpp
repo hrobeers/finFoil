@@ -20,24 +20,35 @@
 
 ****************************************************************************/
 
-#ifndef PATHEDITORSETTINGS_H
-#define PATHEDITORSETTINGS_H
+#include "pathsettings.h"
 
-#include <QObject>
+using namespace patheditor;
 
-namespace patheditor
+PathSettings::PathSettings()
 {
-    class PathEditorSettings : public QObject
-    {
-        Q_OBJECT
-    public:
-        explicit PathEditorSettings(QObject *parent = 0);
-
-    signals:
-
-    public slots:
-
-    };
+    _lineWidth = 2;
+    _handleSize = 10;
 }
 
-#endif // PATHEDITORSETTINGS_H
+PathSettings PathSettings::Default()
+{
+    return PathSettings();
+}
+
+QSharedPointer<QPen> PathSettings::linePen()
+{
+    QSharedPointer<QPen> pen = QSharedPointer<QPen>(new QPen());
+    pen->setWidth(_lineWidth);
+
+    return pen;
+}
+
+QSharedPointer<QBrush> PathSettings::pointBrush()
+{
+    return QSharedPointer<QBrush>(new QBrush(Qt::blue));
+}
+
+QSharedPointer<QBrush> PathSettings::controlPointBrush()
+{
+    return QSharedPointer<QBrush>(new QBrush(Qt::red));
+}

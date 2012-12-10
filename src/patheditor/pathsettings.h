@@ -20,11 +20,30 @@
 
 ****************************************************************************/
 
-#include "patheditorsettings.h"
+#ifndef PATHSETTINGS_H
+#define PATHSETTINGS_H
 
-using namespace patheditor;
+#include <QSharedPointer>
+#include <QPen>
 
-PathEditorSettings::PathEditorSettings(QObject *parent) :
-    QObject(parent)
+namespace patheditor
 {
+    class PathSettings
+    {
+    public:
+        explicit PathSettings();
+
+        static PathSettings Default();
+
+        QSharedPointer<QPen> linePen();
+
+        QSharedPointer<QBrush> pointBrush();
+        QSharedPointer<QBrush> controlPointBrush();
+
+    private:
+        int _lineWidth;
+        int _handleSize;
+    };
 }
+
+#endif // PATHSETTINGS_H

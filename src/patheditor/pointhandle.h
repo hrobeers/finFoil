@@ -30,10 +30,14 @@ namespace patheditor
     class PointHandle : public QGraphicsEllipseItem
     {
     public:
-        explicit PointHandle(QSharedPointer<QPointF> point,
+        explicit PointHandle(QSharedPointer<QPointF> point, QSharedPointer<QBrush> brush,
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
+//        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     private:
+        QSharedPointer<QPen> _pen;
+
         QSharedPointer<QPointF> _point;
         QPointF _originToCenter;
 

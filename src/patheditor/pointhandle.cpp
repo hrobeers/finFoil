@@ -23,12 +23,13 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QPainter>
 #include "pointhandle.h"
 
 using namespace patheditor;
 
 PointHandle::PointHandle(QSharedPointer<QPointF> point,
-                         QGraphicsItem *parent, QGraphicsScene *scene)
+                         QSharedPointer<QBrush> brush, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsEllipseItem(0, 0, 10, 10, parent, scene)
 {
     _point = point;
@@ -37,8 +38,17 @@ PointHandle::PointHandle(QSharedPointer<QPointF> point,
 
     setCenter(_point);
 
+    this->setZValue(1);
+    this->setBrush(*brush);
     this->setFlag(QGraphicsItem::ItemIsMovable);
 }
+
+//void PointHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+//{
+//    painter->setPen(*_pen);
+//    painter->setBrush(Qt::blue);
+//    QGraphicsEllipseItem::paint(painter, option, widget);
+//}
 
 void PointHandle::setCenter(QSharedPointer<QPointF> point)
 {

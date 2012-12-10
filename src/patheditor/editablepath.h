@@ -27,6 +27,7 @@
 #include <QLinkedList>
 #include "pathitem.h"
 #include "pointhandle.h"
+#include "pathsettings.h"
 
 namespace patheditor
 {
@@ -43,6 +44,8 @@ namespace patheditor
                         QWidget *widget);
 
     private:
+        PathSettings _settings;
+
         QLinkedList<QSharedPointer<PathItem> > _pathItemList;
         QLinkedList<QSharedPointer<PointHandle> > _pointHandleList;
     };
