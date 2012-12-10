@@ -28,6 +28,26 @@ PathItem::PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> e
                    QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsItem(parent, scene)
 {
-    this->startPoint = startPoint;
-    this->endPoint = endPoint;
+    setStartPoint(startPoint);
+    setEndPoint(endPoint);
+}
+
+QSharedPointer<QPointF> PathItem::startPoint()
+{
+    return _startPoint;
+}
+
+QSharedPointer<QPointF> PathItem::endPoint()
+{
+    return _endPoint;
+}
+
+void PathItem::setStartPoint(QSharedPointer<QPointF> startPoint)
+{
+    _startPoint = startPoint;
+}
+
+void PathItem::setEndPoint(QSharedPointer<QPointF> endPoint)
+{
+    _endPoint = endPoint;
 }

@@ -34,11 +34,11 @@ namespace patheditor
         explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
                           QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
-        // Variables needed by EditablePath for editing
-        QSharedPointer<QPointF> startPoint;
-        QSharedPointer<QPointF> endPoint;
-
         // Functions needed by EditablePath for editing
+        virtual QSharedPointer<QPointF> startPoint();
+        virtual QSharedPointer<QPointF> endPoint();
+        virtual void setStartPoint(QSharedPointer<QPointF> startPoint);
+        virtual void setEndPoint(QSharedPointer<QPointF> endPoint);
         virtual int numberOfControlPoints() const = 0;
         virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
 
@@ -46,6 +46,11 @@ namespace patheditor
         virtual QRectF boundingRect() const = 0;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget) = 0;
+
+    private:
+        QSharedPointer<QPointF> _startPoint;
+        QSharedPointer<QPointF> _endPoint;
+
     };
 }
 
