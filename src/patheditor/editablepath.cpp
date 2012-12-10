@@ -20,6 +20,7 @@
 
 ****************************************************************************/
 
+#include <QPainter>
 #include "editablepath.h"
 
 using namespace patheditor;
@@ -27,4 +28,56 @@ using namespace patheditor;
 EditablePath::EditablePath(QGraphicsItem * parent, QGraphicsScene * scene)
     : QGraphicsItem(parent, scene)
 {
+}
+
+void EditablePath::append(QSharedPointer<PathItem> pathItem)
+{
+    // reparent
+    pathItem->setParentItem(this);
+
+    if (_pathItemList.count() > 0)
+    {
+        pathItem->setStartPoint(_pathItemList.last()->endPoint());
+    }
+    else
+    {
+        // Add the startpoint pointHandle
+        _pointHandleList.append(QSharedPointer<PointHandle>(
+                                    new PointHandle(pathItem->startPoint(), this, scene())));
+    }
+
+    // Add the endpoint pointHandle
+    _pointHandleList.append(QSharedPointer<PointHandle>(
+                                new PointHandle(pathItem->endPoint(), this, scene())));
+
+    // Add the controlPoint's pointHandles
+    foreach(QSharedPointer<QPointF> controlPoint, pathItem->controlPoints())
+    {
+        _pointHandleList.append(QSharedPointer<PointHandle>(
+                                    new PointHandle(controlPoint, this, scene())));
+    }
+
+    _pathItemList.append(pathItem);
+}
+
+QRectF EditablePath::boundingRect() const
+{
+    if (_pathItemList.count() <= 0)
+        return QRectF(0,0,0,0);
+
+    QRectF retVal = _pathItemList.first()->boundingRect();
+    foreach(QSharedPointer<PathItem> item, _pathItemList)
+    {
+        retVal |= item->boundingRect();
+    }
+
+    return retVal;
+}
+
+void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    foreach(QSharedPointer<PathItem> item, _pathItemList)
+    {
+        item->paint(painter, option, widget);
+    }
 }

@@ -24,6 +24,9 @@
 #define EDITABLEPATH_H
 
 #include <QGraphicsItem>
+#include <QLinkedList>
+#include "pathitem.h"
+#include "pointhandle.h"
 
 namespace patheditor
 {
@@ -31,6 +34,17 @@ namespace patheditor
     {
     public:
         explicit EditablePath(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+
+        virtual void append(QSharedPointer<PathItem> pathItem);
+
+        // Implementing QGraphicsItem
+        virtual QRectF boundingRect() const;
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                        QWidget *widget);
+
+    private:
+        QLinkedList<QSharedPointer<PathItem> > _pathItemList;
+        QLinkedList<QSharedPointer<PointHandle> > _pointHandleList;
     };
 }
 
