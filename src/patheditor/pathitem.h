@@ -39,7 +39,6 @@ namespace patheditor
         virtual QSharedPointer<QPointF> endPoint();
         virtual void setStartPoint(QSharedPointer<QPointF> startPoint);
         virtual void setEndPoint(QSharedPointer<QPointF> endPoint);
-        virtual int numberOfControlPoints() const = 0;
         virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
 
         // Implementing QGraphicsItem

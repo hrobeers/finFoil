@@ -20,22 +20,19 @@
  
 ****************************************************************************/
 
-#ifndef CUBICBEZIER_H
-#define CUBICBEZIER_H
+#ifndef LINE_H
+#define LINE_H
 
-#include <QPainter>
+#include <QGraphicsItem>
 #include "pathitem.h"
 
 namespace patheditor
 {
-    class CubicBezier : public PathItem
+    class Line : public PathItem
     {
     public:
-        explicit CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
-                             QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
-
-        QSharedPointer<QPointF> controlPoint1();
-        QSharedPointer<QPointF> controlPoint2();
+        explicit Line(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+             QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
         // implementing PathItem
         QList<QSharedPointer<QPointF> > controlPoints();
@@ -46,13 +43,10 @@ namespace patheditor
                         QWidget *widget);
 
     private:
-        QSharedPointer<QPointF> _cPoint1;
-        QSharedPointer<QPointF> _cPoint2;
-
         QList<QSharedPointer<QPointF> > _controlPoints;
 
         QRectF _boundingRect;
     };
 }
 
-#endif // CUBICBEZIER_H
+#endif // LINE_H
