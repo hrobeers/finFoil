@@ -23,7 +23,7 @@
 #ifndef PATHSETTINGS_H
 #define PATHSETTINGS_H
 
-#include <QSharedPointer>
+#include <QScopedPointer>
 #include <QPen>
 
 namespace patheditor
@@ -35,14 +35,19 @@ namespace patheditor
 
         static PathSettings Default();
 
-        QSharedPointer<QPen> linePen();
+        QPen& linePen();
 
-        QSharedPointer<QBrush> pointBrush();
-        QSharedPointer<QBrush> controlPointBrush();
+        QBrush& pointBrush();
+        QBrush& controlPointBrush();
 
     private:
         int _lineWidth;
         int _handleSize;
+
+        QPen _linePen;
+
+        QBrush _pointBrush;
+        QBrush _controlPointBrush;
     };
 }
 

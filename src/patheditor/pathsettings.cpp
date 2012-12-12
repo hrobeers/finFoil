@@ -28,6 +28,21 @@ PathSettings::PathSettings()
 {
     _lineWidth = 2;
     _handleSize = 10;
+
+    // linePen
+    _linePen.setWidth(_lineWidth);
+
+    // pointBrush
+    _pointBrush.setStyle(Qt::SolidPattern);
+    QColor blue(Qt::blue);
+    blue.setAlpha(100);
+    _pointBrush.setColor(blue);
+
+    // controlPointBrush
+    _controlPointBrush.setStyle(Qt::SolidPattern);
+    QColor red(Qt::red);
+    red.setAlpha(100);
+    _controlPointBrush.setColor(red);
 }
 
 PathSettings PathSettings::Default()
@@ -35,20 +50,17 @@ PathSettings PathSettings::Default()
     return PathSettings();
 }
 
-QSharedPointer<QPen> PathSettings::linePen()
+QPen &PathSettings::linePen()
 {
-    QSharedPointer<QPen> pen = QSharedPointer<QPen>(new QPen());
-    pen->setWidth(_lineWidth);
-
-    return pen;
+    return _linePen;
 }
 
-QSharedPointer<QBrush> PathSettings::pointBrush()
+QBrush &PathSettings::pointBrush()
 {
-    return QSharedPointer<QBrush>(new QBrush(Qt::blue));
+    return _pointBrush;
 }
 
-QSharedPointer<QBrush> PathSettings::controlPointBrush()
+QBrush &PathSettings::controlPointBrush()
 {
-    return QSharedPointer<QBrush>(new QBrush(Qt::red));
+    return _controlPointBrush;
 }

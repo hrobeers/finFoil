@@ -68,5 +68,6 @@ void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painterPath.cubicTo(*_cPoint1, *_cPoint2, *endPoint());
     painter->drawPath(painterPath);
 
-    _boundingRect = painterPath.boundingRect();
+    // faster than bounding rect
+    _boundingRect = painterPath.controlPointRect();
 }

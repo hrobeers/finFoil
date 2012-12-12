@@ -29,7 +29,7 @@
 using namespace patheditor;
 
 PointHandle::PointHandle(QSharedPointer<QPointF> point,
-                         QSharedPointer<QBrush> brush, QGraphicsItem *parent, QGraphicsScene *scene)
+                         QBrush &brush, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsEllipseItem(0, 0, 10, 10, parent, scene)
 {
     _point = point;
@@ -39,7 +39,7 @@ PointHandle::PointHandle(QSharedPointer<QPointF> point,
     setCenter(_point);
 
     this->setZValue(1);
-    this->setBrush(*brush);
+    this->setBrush(brush);
     this->setFlag(QGraphicsItem::ItemIsMovable);
 }
 
