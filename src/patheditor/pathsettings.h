@@ -20,36 +20,35 @@
 
 ****************************************************************************/
 
-#ifndef PATHITEM_H
-#define PATHITEM_H
+#ifndef PATHSETTINGS_H
+#define PATHSETTINGS_H
 
-#include <QGraphicsItem>
-#include <QList>
+#include <QScopedPointer>
+#include <QPen>
 
 namespace patheditor
 {
-    class PathItem : public QGraphicsItem
+    class PathSettings
     {
     public:
-        explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
-                          QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit PathSettings();
 
-        // Functions needed by EditablePath for editing
-        virtual QSharedPointer<QPointF> startPoint();
-        virtual QSharedPointer<QPointF> endPoint();
-        virtual void setStartPoint(QSharedPointer<QPointF> startPoint);
-        virtual void setEndPoint(QSharedPointer<QPointF> endPoint);
-        virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
+        static PathSettings Default();
 
-        // Implementing QGraphicsItem
-        virtual QRectF boundingRect() const = 0;
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                        QWidget *widget) = 0;
+        QPen& linePen();
+
+        QBrush& pointBrush();
+        QBrush& controlPointBrush();
 
     private:
-        QSharedPointer<QPointF> _startPoint;
-        QSharedPointer<QPointF> _endPoint;
+        int _lineWidth;
+        int _handleSize;
+
+        QPen _linePen;
+
+        QBrush _pointBrush;
+        QBrush _controlPointBrush;
     };
 }
 
-#endif // PATHITEM_H
+#endif // PATHSETTINGS_H

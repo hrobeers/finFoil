@@ -28,8 +28,6 @@ CubicBezier::CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPoi
                          QGraphicsItem *parent, QGraphicsScene *scene)
     : PathItem(startPoint, endPoint, parent, scene)
 {
-    _numberOfControlPoints = 2;
-
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
     _cPoint1 = QSharedPointer<QPointF>(new QPointF(0,0));
@@ -40,12 +38,6 @@ CubicBezier::CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPoi
 
     _controlPoints.append(_cPoint1);
     _controlPoints.append(_cPoint2);
-}
-
-int CubicBezier::numberOfControlPoints() const
-{
-    // faster than _controlPoints.length()
-    return _numberOfControlPoints;
 }
 
 QSharedPointer<QPointF> CubicBezier::controlPoint1()
@@ -76,5 +68,6 @@ void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painterPath.cubicTo(*_cPoint1, *_cPoint2, *endPoint());
     painter->drawPath(painterPath);
 
-    _boundingRect = painterPath.boundingRect();
+    // faster than bounding rect
+    _boundingRect = painterPath.controlPointRect();
 }

@@ -28,6 +28,7 @@ using namespace patheditor;
 EditablePath::EditablePath(QGraphicsItem * parent, QGraphicsScene * scene)
     : QGraphicsItem(parent, scene)
 {
+    _settings = PathSettings::Default();
 }
 
 void EditablePath::append(QSharedPointer<PathItem> pathItem)
@@ -43,18 +44,18 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
     {
         // Add the startpoint pointHandle
         _pointHandleList.append(QSharedPointer<PointHandle>(
-                                    new PointHandle(pathItem->startPoint(), this, scene())));
+                                    new PointHandle(pathItem->startPoint(), _settings.pointBrush(), this, scene())));
     }
 
     // Add the endpoint pointHandle
     _pointHandleList.append(QSharedPointer<PointHandle>(
-                                new PointHandle(pathItem->endPoint(), this, scene())));
+                                new PointHandle(pathItem->endPoint(), _settings.pointBrush(), this, scene())));
 
     // Add the controlPoint's pointHandles
     foreach(QSharedPointer<QPointF> controlPoint, pathItem->controlPoints())
     {
         _pointHandleList.append(QSharedPointer<PointHandle>(
-                                    new PointHandle(controlPoint, this, scene())));
+                                    new PointHandle(controlPoint, _settings.controlPointBrush(), this, scene())));
     }
 
     _pathItemList.append(pathItem);
@@ -76,6 +77,8 @@ QRectF EditablePath::boundingRect() const
 
 void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setPen(_settings.linePen());
+
     foreach(QSharedPointer<PathItem> item, _pathItemList)
     {
         item->paint(painter, option, widget);

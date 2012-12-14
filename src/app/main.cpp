@@ -26,6 +26,7 @@
 #include "mainwindow.h"
 #include "patheditor/patheditorwidget.h"
 #include "patheditor/cubicbezier.h"
+#include "patheditor/line.h"
 #include "patheditor/editablepath.h"
 
 using namespace patheditor;
@@ -37,10 +38,12 @@ int main(int argc, char *argv[])
     QSharedPointer<QPointF> point1(new QPointF(0,0));
     QSharedPointer<QPointF> point2(new QPointF(100,100));
     QSharedPointer<QPointF> point3(new QPointF(100,0));
+    QSharedPointer<QPointF> point4(new QPointF(200,0));
 
     EditablePath* path = new EditablePath();
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
+    path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
 
     PathEditorWidget* widget = new PathEditorWidget();
     widget->scene()->addItem(path);

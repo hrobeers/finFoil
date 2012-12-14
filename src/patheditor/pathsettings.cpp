@@ -20,36 +20,47 @@
 
 ****************************************************************************/
 
-#ifndef PATHITEM_H
-#define PATHITEM_H
+#include "pathsettings.h"
 
-#include <QGraphicsItem>
-#include <QList>
+using namespace patheditor;
 
-namespace patheditor
+PathSettings::PathSettings()
 {
-    class PathItem : public QGraphicsItem
-    {
-    public:
-        explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
-                          QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+    _lineWidth = 2;
+    _handleSize = 10;
 
-        // Functions needed by EditablePath for editing
-        virtual QSharedPointer<QPointF> startPoint();
-        virtual QSharedPointer<QPointF> endPoint();
-        virtual void setStartPoint(QSharedPointer<QPointF> startPoint);
-        virtual void setEndPoint(QSharedPointer<QPointF> endPoint);
-        virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
+    // linePen
+    _linePen.setWidth(_lineWidth);
 
-        // Implementing QGraphicsItem
-        virtual QRectF boundingRect() const = 0;
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                        QWidget *widget) = 0;
+    // pointBrush
+    _pointBrush.setStyle(Qt::SolidPattern);
+    QColor blue(Qt::blue);
+    blue.setAlpha(100);
+    _pointBrush.setColor(blue);
 
-    private:
-        QSharedPointer<QPointF> _startPoint;
-        QSharedPointer<QPointF> _endPoint;
-    };
+    // controlPointBrush
+    _controlPointBrush.setStyle(Qt::SolidPattern);
+    QColor red(Qt::red);
+    red.setAlpha(100);
+    _controlPointBrush.setColor(red);
 }
 
-#endif // PATHITEM_H
+PathSettings PathSettings::Default()
+{
+    return PathSettings();
+}
+
+QPen &PathSettings::linePen()
+{
+    return _linePen;
+}
+
+QBrush &PathSettings::pointBrush()
+{
+    return _pointBrush;
+}
+
+QBrush &PathSettings::controlPointBrush()
+{
+    return _controlPointBrush;
+}

@@ -34,11 +34,10 @@ namespace patheditor
         explicit CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
                              QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
-        int numberOfControlPoints() const;
-
         QSharedPointer<QPointF> controlPoint1();
         QSharedPointer<QPointF> controlPoint2();
 
+        // implementing PathItem
         QList<QSharedPointer<QPointF> > controlPoints();
 
         // Implementing QGraphicsItem
@@ -47,8 +46,6 @@ namespace patheditor
                         QWidget *widget);
 
     private:
-        int _numberOfControlPoints;
-
         QSharedPointer<QPointF> _cPoint1;
         QSharedPointer<QPointF> _cPoint2;
 
