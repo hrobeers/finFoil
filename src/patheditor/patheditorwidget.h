@@ -26,6 +26,7 @@
 #include <QWidget>
 #include <QGraphicsView>
 #include <QLayout>
+#include "editablepath.h"
 
 namespace patheditor
 {
@@ -36,9 +37,17 @@ namespace patheditor
         explicit PathEditorWidget(QWidget *parent = 0);
 
         /**
-         * Returns the QGraphicsScene used in this PathEditorWidget
+         * Returns a pointer to the QGraphicsScene used in this PathEditorWidget
          */
         QGraphicsScene* scene();
+
+        /**
+         * Adds an EditablePath object to this widget.
+         * This widget takes ownership of the item.
+         *
+         * @param path The EditablePath to add
+         */
+        void addPath(EditablePath *path);
 
     signals:
 

@@ -16,10 +16,11 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH += ..
+INCLUDEPATH += ../patheditor/
 DEPENDPATH += ..
 
 include(../patheditor/patheditor.pri)
+include(../fineditors/contoureditor/contoureditor.pri)
 
 OTHER_FILES += ../../LICENSE.BSD \
             ../../README

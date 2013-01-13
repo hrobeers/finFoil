@@ -44,3 +44,8 @@ QGraphicsScene *PathEditorWidget::scene()
 {
     return _scene;
 }
+
+void PathEditorWidget::addPath(EditablePath* path)
+{
+    this->scene()->addItem(path);
+}

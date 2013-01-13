@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
 
     PathEditorWidget* widget = new PathEditorWidget();
-    widget->scene()->addItem(path);
+    widget->addPath(path);
 
     MainWindow w;
     w.setCentralWidget(widget);
