@@ -28,6 +28,9 @@
 
 namespace patheditor
 {
+    /**
+     * @brief The CubicBezier PathItem
+     */
     class CubicBezier : public PathItem
     {
     public:

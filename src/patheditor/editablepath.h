@@ -31,11 +31,18 @@
 
 namespace patheditor
 {
+    /**
+     * @brief A compound path, build by PathItems, that can be edited by dragging control points
+     */
     class EditablePath : public QGraphicsItem
     {
     public:
         explicit EditablePath(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
+        /**
+         * @brief append Append a new path item to the editable path
+         * @param pathItem PathItem to append
+         */
         virtual void append(QSharedPointer<PathItem> pathItem);
 
         // Implementing QGraphicsItem

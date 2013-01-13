@@ -28,6 +28,9 @@
 
 namespace patheditor
 {
+    /**
+     * @brief The Line PathItem
+     */
     class Line : public PathItem
     {
     public:

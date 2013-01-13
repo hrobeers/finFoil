@@ -35,6 +35,9 @@ namespace patheditor
     public:
         explicit PathEditorWidget(QWidget *parent = 0);
 
+        /**
+         * Returns the QGraphicsScene used in this PathEditorWidget
+         */
         QGraphicsScene* scene();
 
     signals:

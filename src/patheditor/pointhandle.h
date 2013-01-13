@@ -27,6 +27,9 @@
 
 namespace patheditor
 {
+    /**
+     * @brief The handle object used by EditablePath to move control points
+     */
     class PointHandle : public QGraphicsEllipseItem
     {
     public:
