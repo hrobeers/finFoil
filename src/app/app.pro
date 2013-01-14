@@ -16,7 +16,9 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH += ../patheditor/
+INCLUDEPATH += ../patheditor/ \
+            ../fineditors/contoureditor/
+
 DEPENDPATH += ..
 
 include(../patheditor/patheditor.pri)
