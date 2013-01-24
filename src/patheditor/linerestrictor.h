@@ -20,25 +20,27 @@
  
 ****************************************************************************/
 
-#include "restrictablepoint.h"
+#ifndef LINERESTRICTOR_H
+#define LINERESTRICTOR_H
 
-using namespace patheditor;
+#include <QPointF>
+#include "restrictor.h"
 
-RestrictablePoint::RestrictablePoint(qreal xpos, qreal ypos)
-    : QPointF(xpos, ypos)
+namespace patheditor
 {
+    class LineRestrictor : public Restrictor
+    {
+    public:
+        explicit LineRestrictor(QPointF point1, QPointF point2);
+
+        virtual void restrictCoordinates(qreal *x, qreal *y);
+
+//        virtual ~LineRestrictor();
+
+    private:
+        QPointF _point1;
+        QPointF _point2;
+    };
 }
 
-void RestrictablePoint::setRestrictedPos(qreal xpos, qreal ypos)
-{
-    if (!_restrictor.isNull())
-        _restrictor->restrictCoordinates(&xpos, &ypos);
-
-    this->setX(xpos);
-    this->setY(ypos);
-}
-
-void RestrictablePoint::setRestrictor(QScopedPointer<Restrictor> &restrictor)
-{
-    _restrictor.swap(restrictor);
-}
+#endif // LINERESTRICTOR_H

@@ -36,7 +36,7 @@ namespace patheditor
 
         void setRestrictedPos(qreal xpos, qreal ypos);
 
-        void setRestrictor(QScopedPointer<Restrictor> restrictor);
+        void setRestrictor(QScopedPointer<Restrictor> &restrictor);
 
     private:
         QScopedPointer<Restrictor> _restrictor;

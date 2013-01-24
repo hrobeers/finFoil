@@ -24,6 +24,7 @@
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "line.h"
+#include "linerestrictor.h"
 
 using namespace fineditors;
 using namespace patheditor;
@@ -37,6 +38,9 @@ ContourEditor::ContourEditor(QWidget *parent) :
     QSharedPointer<RestrictablePoint> point2(new RestrictablePoint(100,100));
     QSharedPointer<RestrictablePoint> point3(new RestrictablePoint(100,0));
     QSharedPointer<RestrictablePoint> point4(new RestrictablePoint(200,0));
+
+    QScopedPointer<Restrictor> restrictor(new LineRestrictor(QPointF(0,0), QPointF(0,1)));
+    point1->setRestrictor(restrictor);
 
     EditablePath* path = new EditablePath();
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
