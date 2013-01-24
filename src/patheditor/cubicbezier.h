@@ -34,14 +34,14 @@ namespace patheditor
     class CubicBezier : public PathItem
     {
     public:
-        explicit CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+        explicit CubicBezier(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
                              QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
-        QSharedPointer<QPointF> controlPoint1();
-        QSharedPointer<QPointF> controlPoint2();
+        QSharedPointer<RestrictablePoint> controlPoint1();
+        QSharedPointer<RestrictablePoint> controlPoint2();
 
         // implementing PathItem
-        QList<QSharedPointer<QPointF> > controlPoints();
+        QList<QSharedPointer<RestrictablePoint> > controlPoints();
 
         // Implementing QGraphicsItem
         QRectF boundingRect() const;
@@ -49,10 +49,10 @@ namespace patheditor
                         QWidget *widget);
 
     private:
-        QSharedPointer<QPointF> _cPoint1;
-        QSharedPointer<QPointF> _cPoint2;
+        QSharedPointer<RestrictablePoint> _cPoint1;
+        QSharedPointer<RestrictablePoint> _cPoint2;
 
-        QList<QSharedPointer<QPointF> > _controlPoints;
+        QList<QSharedPointer<RestrictablePoint> > _controlPoints;
 
         QRectF _boundingRect;
     };

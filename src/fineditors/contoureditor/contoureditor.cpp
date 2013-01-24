@@ -33,10 +33,10 @@ ContourEditor::ContourEditor(QWidget *parent) :
 {
     _pathEditor = new patheditor::PathEditorWidget(this);
 
-    QSharedPointer<QPointF> point1(new QPointF(0,0));
-    QSharedPointer<QPointF> point2(new QPointF(100,100));
-    QSharedPointer<QPointF> point3(new QPointF(100,0));
-    QSharedPointer<QPointF> point4(new QPointF(200,0));
+    QSharedPointer<RestrictablePoint> point1(new RestrictablePoint(0,0));
+    QSharedPointer<RestrictablePoint> point2(new RestrictablePoint(100,100));
+    QSharedPointer<RestrictablePoint> point3(new RestrictablePoint(100,0));
+    QSharedPointer<RestrictablePoint> point4(new RestrictablePoint(200,0));
 
     EditablePath* path = new EditablePath();
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));

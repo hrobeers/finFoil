@@ -24,14 +24,14 @@
 
 using namespace patheditor;
 
-CubicBezier::CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+CubicBezier::CubicBezier(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
                          QGraphicsItem *parent, QGraphicsScene *scene)
     : PathItem(startPoint, endPoint, parent, scene)
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
-    _cPoint1 = QSharedPointer<QPointF>(new QPointF(0,0));
-    _cPoint2 = QSharedPointer<QPointF>(new QPointF(0,0));
+    _cPoint1 = QSharedPointer<RestrictablePoint>(new RestrictablePoint(0,0));
+    _cPoint2 = QSharedPointer<RestrictablePoint>(new RestrictablePoint(0,0));
     *_cPoint1 += *startPoint + increment;
     *_cPoint2 += *_cPoint1 + increment;
 
@@ -40,17 +40,17 @@ CubicBezier::CubicBezier(QSharedPointer<QPointF> startPoint, QSharedPointer<QPoi
     _controlPoints.append(_cPoint2);
 }
 
-QSharedPointer<QPointF> CubicBezier::controlPoint1()
+QSharedPointer<RestrictablePoint> CubicBezier::controlPoint1()
 {
     return _cPoint1;
 }
 
-QSharedPointer<QPointF> CubicBezier::controlPoint2()
+QSharedPointer<RestrictablePoint> CubicBezier::controlPoint2()
 {
     return _cPoint2;
 }
 
-QList<QSharedPointer<QPointF> > CubicBezier::controlPoints()
+QList<QSharedPointer<RestrictablePoint> > CubicBezier::controlPoints()
 {
     return _controlPoints;
 }

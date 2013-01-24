@@ -52,7 +52,7 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
                                 new PointHandle(pathItem->endPoint(), _settings.pointBrush(), this, scene())));
 
     // Add the controlPoint's pointHandles
-    foreach(QSharedPointer<QPointF> controlPoint, pathItem->controlPoints())
+    foreach(QSharedPointer<RestrictablePoint> controlPoint, pathItem->controlPoints())
     {
         _pointHandleList.append(QSharedPointer<PointHandle>(
                                     new PointHandle(controlPoint, _settings.controlPointBrush(), this, scene())));

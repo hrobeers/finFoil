@@ -28,7 +28,7 @@
 
 using namespace patheditor;
 
-PointHandle::PointHandle(QSharedPointer<QPointF> point,
+PointHandle::PointHandle(QSharedPointer<RestrictablePoint> point,
                          QBrush &brush, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsEllipseItem(0, 0, 10, 10, parent, scene)
 {
@@ -43,13 +43,6 @@ PointHandle::PointHandle(QSharedPointer<QPointF> point,
     this->setFlag(QGraphicsItem::ItemIsMovable);
 }
 
-//void PointHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-//{
-//    painter->setPen(*_pen);
-//    painter->setBrush(Qt::blue);
-//    QGraphicsEllipseItem::paint(painter, option, widget);
-//}
-
 void PointHandle::setCenter(QSharedPointer<QPointF> point)
 {
     this->setPos(*point - _originToCenter);
@@ -57,8 +50,10 @@ void PointHandle::setCenter(QSharedPointer<QPointF> point)
 
 void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    _point->setX(this->pos().rx() + _originToCenter.rx());
-    _point->setY(this->pos().ry() + _originToCenter.ry());
+//    _point->setX(this->pos().rx() + _originToCenter.rx());
+//    _point->setY(this->pos().ry() + _originToCenter.ry());
+    _point->setRestrictedPos(this->pos().rx() + _originToCenter.rx(),
+                             this->pos().ry() + _originToCenter.ry());
     this->scene()->update();
     QGraphicsEllipseItem::mouseMoveEvent(event);
 }

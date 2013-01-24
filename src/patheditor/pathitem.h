@@ -25,21 +25,22 @@
 
 #include <QGraphicsItem>
 #include <QList>
+#include "restrictablepoint.h"
 
 namespace patheditor
 {
     class PathItem : public QGraphicsItem
     {
     public:
-        explicit PathItem(QSharedPointer<QPointF> startPoint, QSharedPointer<QPointF> endPoint,
+        explicit PathItem(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
                           QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
         // Functions needed by EditablePath for editing
-        virtual QSharedPointer<QPointF> startPoint();
-        virtual QSharedPointer<QPointF> endPoint();
-        virtual void setStartPoint(QSharedPointer<QPointF> startPoint);
-        virtual void setEndPoint(QSharedPointer<QPointF> endPoint);
-        virtual QList<QSharedPointer<QPointF> > controlPoints() = 0;
+        virtual QSharedPointer<RestrictablePoint> startPoint();
+        virtual QSharedPointer<RestrictablePoint> endPoint();
+        virtual void setStartPoint(QSharedPointer<RestrictablePoint> startPoint);
+        virtual void setEndPoint(QSharedPointer<RestrictablePoint> endPoint);
+        virtual QList<QSharedPointer<RestrictablePoint> > controlPoints() = 0;
 
         // Implementing QGraphicsItem
         virtual QRectF boundingRect() const = 0;
@@ -47,8 +48,8 @@ namespace patheditor
                         QWidget *widget) = 0;
 
     private:
-        QSharedPointer<QPointF> _startPoint;
-        QSharedPointer<QPointF> _endPoint;
+        QSharedPointer<RestrictablePoint> _startPoint;
+        QSharedPointer<RestrictablePoint> _endPoint;
     };
 }
 

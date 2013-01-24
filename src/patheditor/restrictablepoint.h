@@ -20,36 +20,27 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef RESTRICTABLEPOINT_H
+#define RESTRICTABLEPOINT_H
 
-#include <QGraphicsItem>
-#include "pathitem.h"
+#include <QPointF>
+#include <QScopedPointer>
+#include "restrictor.h"
 
 namespace patheditor
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
+    class RestrictablePoint : public QPointF
     {
     public:
-        explicit Line(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
-             QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit RestrictablePoint(qreal xpos, qreal ypos);
 
-        // implementing PathItem
-        QList<QSharedPointer<RestrictablePoint> > controlPoints();
+        void setRestrictedPos(qreal xpos, qreal ypos);
 
-        // Implementing QGraphicsItem
-        QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                        QWidget *widget);
+        void setRestrictor(QScopedPointer<Restrictor> restrictor);
 
     private:
-        QList<QSharedPointer<RestrictablePoint> > _controlPoints;
-
-        QRectF _boundingRect;
+        QScopedPointer<Restrictor> _restrictor;
     };
 }
 
-#endif // LINE_H
+#endif // RESTRICTABLEPOINT_H
