@@ -41,10 +41,14 @@ namespace fineditors
     signals:
 
     public slots:
+        void onSceneRectChanged ( const QRectF & rect );
 
     private:
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
+
+        QGraphicsLineItem* _horizontalAxis;
+        QGraphicsLineItem* _verticalAxis;
 
     };
 }
