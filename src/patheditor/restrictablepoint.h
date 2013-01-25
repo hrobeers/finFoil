@@ -24,7 +24,7 @@
 #define RESTRICTABLEPOINT_H
 
 #include <QPointF>
-#include <QScopedPointer>
+#include <QSharedPointer>
 #include "restrictor.h"
 
 namespace patheditor
@@ -36,10 +36,10 @@ namespace patheditor
 
         void setRestrictedPos(qreal xpos, qreal ypos);
 
-        void setRestrictor(QScopedPointer<Restrictor> &restrictor);
+        void setRestrictor(QSharedPointer<Restrictor> &restrictor);
 
     private:
-        QScopedPointer<Restrictor> _restrictor;
+        QSharedPointer<Restrictor> _restrictor;
     };
 }
 

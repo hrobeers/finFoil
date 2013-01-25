@@ -33,9 +33,7 @@ namespace patheditor
     public:
         explicit LineRestrictor(QPointF point1, QPointF point2);
 
-        virtual void restrictCoordinates(qreal *x, qreal *y);
-
-//        virtual ~LineRestrictor();
+        virtual void restrictCoordinate(qreal *x, qreal *y);
 
     private:
         QPointF _point1;

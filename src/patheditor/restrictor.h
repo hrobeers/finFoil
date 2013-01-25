@@ -30,9 +30,9 @@ namespace patheditor
     class Restrictor
     {
     public:
-        virtual void restrictCoordinates(qreal* x, qreal* y) = 0;
+        virtual void restrictCoordinate(qreal* x, qreal* y) = 0;
 
-        virtual ~Restrictor() {}
+//        virtual ~Restrictor() {}
     };
 }
 

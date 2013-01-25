@@ -32,13 +32,13 @@ RestrictablePoint::RestrictablePoint(qreal xpos, qreal ypos)
 void RestrictablePoint::setRestrictedPos(qreal xpos, qreal ypos)
 {
     if (!_restrictor.isNull())
-        _restrictor->restrictCoordinates(&xpos, &ypos);
+        _restrictor->restrictCoordinate(&xpos, &ypos);
 
     this->setX(xpos);
     this->setY(ypos);
 }
 
-void RestrictablePoint::setRestrictor(QScopedPointer<Restrictor> &restrictor)
+void RestrictablePoint::setRestrictor(QSharedPointer<Restrictor> &restrictor)
 {
-    _restrictor.swap(restrictor);
+    _restrictor = restrictor;
 }

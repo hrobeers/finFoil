@@ -20,22 +20,24 @@
  
 ****************************************************************************/
 
-#include "linerestrictor.h"
+#ifndef POINTRESTRICTOR_H
+#define POINTRESTRICTOR_H
 
-using namespace patheditor;
+#include <QPointF>
+#include "restrictor.h"
 
-LineRestrictor::LineRestrictor(QPointF point1, QPointF point2)
+namespace patheditor
 {
-    _point1 = point1;
-    _point2 = point2;
+    class PointRestrictor : public Restrictor
+    {
+    public:
+        explicit PointRestrictor(QPointF point);
+
+        virtual void restrictCoordinate(qreal *x, qreal *y);
+
+    private:
+        QPointF _point;
+    };
 }
 
-void LineRestrictor::restrictCoordinate(qreal *x, qreal *y)
-{
-    qreal r_numerator = (*x-_point1.rx())*(_point2.rx()-_point1.rx()) + (*y-_point1.ry())*(_point2.ry()-_point1.ry());
-    qreal r_denomenator = (_point2.rx()-_point1.rx())*(_point2.rx()-_point1.rx()) + (_point2.ry()-_point1.ry())*(_point2.ry()-_point1.ry());
-    qreal r = r_numerator / r_denomenator;
-
-    *x = _point1.rx() + r*(_point2.rx()-_point1.rx());
-    *y = _point1.ry() + r*(_point2.ry()-_point1.ry());
-}
+#endif // POINTRESTRICTOR_H
