@@ -27,10 +27,14 @@ using namespace patheditor;
 PathSettings::PathSettings()
 {
     _lineWidth = 2;
+    _controlLineWidth = 1;
     _handleSize = 10;
 
     // linePen
     _linePen.setWidth(_lineWidth);
+
+    // controlLinePen
+    _controlLinePen.setWidth(_controlLineWidth);
 
     // pointBrush
     _pointBrush.setStyle(Qt::SolidPattern);
@@ -53,6 +57,11 @@ PathSettings PathSettings::Default()
 QPen &PathSettings::linePen()
 {
     return _linePen;
+}
+
+QPen &PathSettings::controlLinePen()
+{
+    return _controlLinePen;
 }
 
 QBrush &PathSettings::pointBrush()

@@ -26,6 +26,7 @@
 #include <QGraphicsItem>
 #include <QList>
 #include "restrictablepoint.h"
+#include "pathsettings.h"
 
 namespace patheditor
 {
@@ -46,6 +47,9 @@ namespace patheditor
         virtual QRectF boundingRect() const = 0;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget) = 0;
+
+        // PathItem paint method
+        virtual void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
     private:
         QSharedPointer<RestrictablePoint> _startPoint;

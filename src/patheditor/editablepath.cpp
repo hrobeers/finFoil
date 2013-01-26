@@ -77,10 +77,8 @@ QRectF EditablePath::boundingRect() const
 
 void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setPen(_settings.linePen());
-
     foreach(QSharedPointer<PathItem> item, _pathItemList)
     {
-        item->paint(painter, option, widget);
+        item->paint(&_settings, painter, option, widget);
     }
 }

@@ -66,8 +66,24 @@ void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     painterPath.moveTo(*startPoint());
     painterPath.cubicTo(*_cPoint1, *_cPoint2, *endPoint());
+
     painter->drawPath(painterPath);
 
     // faster than bounding rect
     _boundingRect = painterPath.controlPointRect();
+}
+
+void CubicBezier::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setPen(settings->linePen());
+    paint(painter, option, widget);
+
+    painter->setPen(settings->controlLinePen());
+    QPainterPath painterPath;
+    painterPath.moveTo(*startPoint());
+    painterPath.lineTo(*_cPoint1);
+    painterPath.moveTo(*endPoint());
+    painterPath.lineTo(*_cPoint2);
+
+    painter->drawPath(painterPath);
 }

@@ -36,15 +36,18 @@ namespace patheditor
         static PathSettings Default();
 
         QPen& linePen();
+        QPen& controlLinePen();
 
         QBrush& pointBrush();
         QBrush& controlPointBrush();
 
     private:
         int _lineWidth;
+        int _controlLineWidth;
         int _handleSize;
 
         QPen _linePen;
+        QPen _controlLinePen;
 
         QBrush _pointBrush;
         QBrush _controlPointBrush;

@@ -45,6 +45,8 @@ namespace patheditor
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget);
 
+        void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     private:
         QList<QSharedPointer<RestrictablePoint> > _controlPoints;
 
