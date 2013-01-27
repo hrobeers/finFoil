@@ -22,17 +22,17 @@
 
 #include <QPainter>
 #include "line.h"
-#include "restrictablepoint.h"
+#include "pathpoint.h"
 
 using namespace patheditor;
 
-Line::Line(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
+Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
            QGraphicsItem *parent, QGraphicsScene *scene)
     : PathItem(startPoint, endPoint, parent, scene)
 {
 }
 
-QList<QSharedPointer<RestrictablePoint> > Line::controlPoints()
+QList<QSharedPointer<PathPoint> > Line::controlPoints()
 {
     return _controlPoints;
 }

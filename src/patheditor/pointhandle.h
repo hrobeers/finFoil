@@ -24,7 +24,7 @@
 #define POINTHANDLE_H
 
 #include <QGraphicsEllipseItem>
-#include "restrictablepoint.h"
+#include "pathpoint.h"
 
 namespace patheditor
 {
@@ -34,13 +34,13 @@ namespace patheditor
     class PointHandle : public QGraphicsEllipseItem
     {
     public:
-        explicit PointHandle(QSharedPointer<RestrictablePoint> point, QBrush &brush,
+        explicit PointHandle(QSharedPointer<PathPoint> point, QBrush &brush,
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
     private:
         QSharedPointer<QPen> _pen;
 
-        QSharedPointer<RestrictablePoint> _point;
+        QSharedPointer<PathPoint> _point;
         QPointF _originToCenter;
 
         void setCenter(QSharedPointer<QPointF> point);

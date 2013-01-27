@@ -28,7 +28,7 @@
 
 using namespace patheditor;
 
-PointHandle::PointHandle(QSharedPointer<RestrictablePoint> point,
+PointHandle::PointHandle(QSharedPointer<PathPoint> point,
                          QBrush &brush, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsEllipseItem(0, 0, 10, 10, parent, scene)
 {

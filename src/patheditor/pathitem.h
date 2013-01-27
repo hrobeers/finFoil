@@ -25,7 +25,7 @@
 
 #include <QGraphicsItem>
 #include <QList>
-#include "restrictablepoint.h"
+#include "pathpoint.h"
 #include "pathsettings.h"
 
 namespace patheditor
@@ -33,19 +33,19 @@ namespace patheditor
     class PathItem : public QGraphicsItem
     {
     public:
-        explicit PathItem(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
+        explicit PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
                           QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
 
         //
         // Functions needed by EditablePath for editing
         //
-        virtual QSharedPointer<RestrictablePoint> startPoint();
-        virtual QSharedPointer<RestrictablePoint> endPoint();
-        virtual void setStartPoint(QSharedPointer<RestrictablePoint> startPoint);
-        virtual void setEndPoint(QSharedPointer<RestrictablePoint> endPoint);
+        virtual QSharedPointer<PathPoint> startPoint();
+        virtual QSharedPointer<PathPoint> endPoint();
+        virtual void setStartPoint(QSharedPointer<PathPoint> startPoint);
+        virtual void setEndPoint(QSharedPointer<PathPoint> endPoint);
 
-        virtual QList<QSharedPointer<RestrictablePoint> > controlPoints() = 0;
+        virtual QList<QSharedPointer<PathPoint> > controlPoints() = 0;
 
         virtual QWeakPointer<PathItem> nextPathItem();
         virtual QWeakPointer<PathItem> prevPathItem();
@@ -66,8 +66,8 @@ namespace patheditor
         virtual void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
     private:
-        QSharedPointer<RestrictablePoint> _startPoint;
-        QSharedPointer<RestrictablePoint> _endPoint;
+        QSharedPointer<PathPoint> _startPoint;
+        QSharedPointer<PathPoint> _endPoint;
 
         QWeakPointer<PathItem> _nextPathItem;
         QWeakPointer<PathItem> _prevPathItem;

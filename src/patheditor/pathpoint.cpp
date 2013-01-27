@@ -20,27 +20,25 @@
  
 ****************************************************************************/
 
-#ifndef RESTRICTABLEPOINT_H
-#define RESTRICTABLEPOINT_H
+#include "pathpoint.h"
 
-#include <QPointF>
-#include <QSharedPointer>
-#include "restrictor.h"
+using namespace patheditor;
 
-namespace patheditor
+PathPoint::PathPoint(qreal xpos, qreal ypos)
+    : QPointF(xpos, ypos)
 {
-    class RestrictablePoint : public QPointF
-    {
-    public:
-        explicit RestrictablePoint(qreal xpos, qreal ypos);
-
-        void setRestrictedPos(qreal xpos, qreal ypos);
-
-        void setRestrictor(QSharedPointer<Restrictor> &restrictor);
-
-    private:
-        QSharedPointer<Restrictor> _restrictor;
-    };
 }
 
-#endif // RESTRICTABLEPOINT_H
+void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
+{
+    if (!_restrictor.isNull())
+        _restrictor->restrictCoordinate(&xpos, &ypos);
+
+    this->setX(xpos);
+    this->setY(ypos);
+}
+
+void PathPoint::setRestrictor(QSharedPointer<Restrictor> &restrictor)
+{
+    _restrictor = restrictor;
+}

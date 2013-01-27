@@ -24,7 +24,7 @@
 
 using namespace patheditor;
 
-PathItem::PathItem(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
+PathItem::PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
                    QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsItem(parent, scene)
 {
@@ -32,22 +32,22 @@ PathItem::PathItem(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<
     setEndPoint(endPoint);
 }
 
-QSharedPointer<RestrictablePoint> PathItem::startPoint()
+QSharedPointer<PathPoint> PathItem::startPoint()
 {
     return _startPoint;
 }
 
-QSharedPointer<RestrictablePoint> PathItem::endPoint()
+QSharedPointer<PathPoint> PathItem::endPoint()
 {
     return _endPoint;
 }
 
-void PathItem::setStartPoint(QSharedPointer<RestrictablePoint> startPoint)
+void PathItem::setStartPoint(QSharedPointer<PathPoint> startPoint)
 {
     _startPoint = startPoint;
 }
 
-void PathItem::setEndPoint(QSharedPointer<RestrictablePoint> endPoint)
+void PathItem::setEndPoint(QSharedPointer<PathPoint> endPoint)
 {
     _endPoint = endPoint;
 }

@@ -34,11 +34,11 @@ namespace patheditor
     class Line : public PathItem
     {
     public:
-        explicit Line(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
+        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
              QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
         // implementing PathItem
-        QList<QSharedPointer<RestrictablePoint> > controlPoints();
+        QList<QSharedPointer<PathPoint> > controlPoints();
 
         // Implementing QGraphicsItem
         QRectF boundingRect() const;
@@ -48,7 +48,7 @@ namespace patheditor
         void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:
-        QList<QSharedPointer<RestrictablePoint> > _controlPoints;
+        QList<QSharedPointer<PathPoint> > _controlPoints;
 
         QRectF _boundingRect;
     };

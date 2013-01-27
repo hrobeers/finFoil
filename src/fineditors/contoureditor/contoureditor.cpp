@@ -35,10 +35,10 @@ ContourEditor::ContourEditor(QWidget *parent) :
 {
     _pathEditor = new patheditor::PathEditorWidget(this);
 
-    QSharedPointer<RestrictablePoint> point1(new RestrictablePoint(0,0));
-    QSharedPointer<RestrictablePoint> point2(new RestrictablePoint(100,100));
-    QSharedPointer<RestrictablePoint> point3(new RestrictablePoint(100,0));
-    QSharedPointer<RestrictablePoint> point4(new RestrictablePoint(200,0));
+    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
+    QSharedPointer<PathPoint> point2(new PathPoint(100,100));
+    QSharedPointer<PathPoint> point3(new PathPoint(100,0));
+    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
 
     QSharedPointer<Restrictor> xAxisRestrictor(new LineRestrictor(QPointF(0,0), QPointF(1,0)));
     QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(QPointF(0,0)));
