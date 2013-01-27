@@ -42,7 +42,7 @@ ContourEditor::ContourEditor(QWidget *parent) :
 
     QSharedPointer<Restrictor> xAxisRestrictor(new LineRestrictor(QPointF(0,0), QPointF(1,0)));
     QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(QPointF(0,0)));
-    point1->setRestrictor(originRestrictor);
+    point1->setRestrictor(xAxisRestrictor);
     point4->setRestrictor(xAxisRestrictor);
 
     EditablePath* path = new EditablePath();

@@ -33,23 +33,16 @@ EditablePath::EditablePath(QGraphicsItem * parent, QGraphicsScene * scene)
 
 void EditablePath::append(QSharedPointer<PathItem> pathItem)
 {
-    // reparent
-    pathItem->setParentItem(this);
-
+    // Set pathItem next and prev
     if (!_pathItemList.isEmpty())
     {
-        pathItem->setStartPoint(_pathItemList.last()->endPoint());
-    }
-    else
-    {
-        // Add the startpoint pointHandle
-        _pointHandleList.append(QSharedPointer<PointHandle>(
-                                    new PointHandle(pathItem->startPoint(), _settings.pointBrush(), this, scene())));
+        QSharedPointer<PathItem> last = _pathItemList.last();
+        last->setNextPathItem(pathItem);
+        pathItem->setPrevPathItem(last);
     }
 
-    // Add the endpoint pointHandle
-    _pointHandleList.append(QSharedPointer<PointHandle>(
-                                new PointHandle(pathItem->endPoint(), _settings.pointBrush(), this, scene())));
+    // reparent
+    pathItem->setParentItem(this);
 
     // Add the controlPoint's pointHandles
     foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
@@ -58,12 +51,33 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
                                     new PointHandle(controlPoint, _settings.controlPointBrush(), this, scene())));
     }
 
-    // Set pathItem next and prev
     if (!_pathItemList.isEmpty())
     {
-        QSharedPointer<PathItem> last = _pathItemList.last();
-        last->setNextPathItem(pathItem);
-        pathItem->setPrevPathItem(last);
+        pathItem->setStartPoint(_pathItemList.last()->endPoint());
+    }
+    else
+    {
+        // Add the startpoint pointHandle
+        QSharedPointer<PointHandle> startPointHandle = QSharedPointer<PointHandle>(
+                    new PointHandle(pathItem->startPoint(), _settings.pointBrush(), this, scene()));
+        _pointHandleList.append(startPointHandle);
+    }
+
+    // Add the endpoint pointHandle
+    QSharedPointer<PointHandle> endPointHandle = QSharedPointer<PointHandle>(
+                new PointHandle(pathItem->endPoint(), _settings.pointBrush(), this, scene()));
+    _pointHandleList.append(endPointHandle);
+
+    if (!pathItem->prevPathItem().isNull())
+    {
+        if (!pathItem->prevPathItem().data()->controlPoints().isEmpty())
+        {
+            pathItem->startPoint()->addLinkedPoint(pathItem->prevPathItem().data()->controlPoints().last());
+        }
+    }
+    if (!pathItem->controlPoints().isEmpty())
+    {
+        pathItem->startPoint()->addLinkedPoint(pathItem->controlPoints().first());
     }
 
     _pathItemList.append(pathItem);

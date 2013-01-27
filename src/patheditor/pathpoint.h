@@ -38,8 +38,11 @@ namespace patheditor
 
         void setRestrictor(QSharedPointer<Restrictor> &restrictor);
 
+        void addLinkedPoint(QWeakPointer<PathPoint> linkedPoint);
+
     private:
         QSharedPointer<Restrictor> _restrictor;
+        QList<QWeakPointer<PathPoint> > _linkedPoints;
     };
 }
 

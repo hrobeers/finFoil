@@ -34,11 +34,29 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
     if (!_restrictor.isNull())
         _restrictor->restrictCoordinate(&xpos, &ypos);
 
+    qreal dx = xpos - this->rx();
+    qreal dy = ypos - this->ry();
+
     this->setX(xpos);
     this->setY(ypos);
+
+    foreach(QWeakPointer<PathPoint> linkedPoint, _linkedPoints)
+    {
+        if (!linkedPoint.isNull())
+        {
+            QSharedPointer<PathPoint> strongPnt = linkedPoint.toStrongRef();
+            strongPnt->setX(strongPnt->rx() + dx);
+            strongPnt->setY(strongPnt->ry() + dy);
+        }
+    }
 }
 
 void PathPoint::setRestrictor(QSharedPointer<Restrictor> &restrictor)
 {
     _restrictor = restrictor;
+}
+
+void PathPoint::addLinkedPoint(QWeakPointer<PathPoint> linkedPoint)
+{
+    _linkedPoints.append(linkedPoint);
 }
