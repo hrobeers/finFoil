@@ -36,24 +36,41 @@ namespace patheditor
         explicit PathItem(QSharedPointer<RestrictablePoint> startPoint, QSharedPointer<RestrictablePoint> endPoint,
                           QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
+
+        //
         // Functions needed by EditablePath for editing
+        //
         virtual QSharedPointer<RestrictablePoint> startPoint();
         virtual QSharedPointer<RestrictablePoint> endPoint();
         virtual void setStartPoint(QSharedPointer<RestrictablePoint> startPoint);
         virtual void setEndPoint(QSharedPointer<RestrictablePoint> endPoint);
+
         virtual QList<QSharedPointer<RestrictablePoint> > controlPoints() = 0;
 
+        virtual QSharedPointer<PathItem> nextPathItem();
+        virtual QSharedPointer<PathItem> prevPathItem();
+        virtual void setNextPathItem(QSharedPointer<PathItem> nextPathItem);
+        virtual void setPrevPathItem(QSharedPointer<PathItem> prevPathItem);
+
+
+        //
         // Implementing QGraphicsItem
+        //
         virtual QRectF boundingRect() const = 0;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget) = 0;
 
-        // PathItem paint method
+        //
+        // EditablePath paint method
+        //
         virtual void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
     private:
         QSharedPointer<RestrictablePoint> _startPoint;
         QSharedPointer<RestrictablePoint> _endPoint;
+
+        QSharedPointer<PathItem> _nextPathItem;
+        QSharedPointer<PathItem> _prevPathItem;
     };
 }
 
