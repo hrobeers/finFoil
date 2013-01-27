@@ -47,8 +47,8 @@ namespace patheditor
 
         virtual QList<QSharedPointer<RestrictablePoint> > controlPoints() = 0;
 
-        virtual QSharedPointer<PathItem> nextPathItem();
-        virtual QSharedPointer<PathItem> prevPathItem();
+        virtual QWeakPointer<PathItem> nextPathItem();
+        virtual QWeakPointer<PathItem> prevPathItem();
         virtual void setNextPathItem(QSharedPointer<PathItem> nextPathItem);
         virtual void setPrevPathItem(QSharedPointer<PathItem> prevPathItem);
 
@@ -69,8 +69,8 @@ namespace patheditor
         QSharedPointer<RestrictablePoint> _startPoint;
         QSharedPointer<RestrictablePoint> _endPoint;
 
-        QSharedPointer<PathItem> _nextPathItem;
-        QSharedPointer<PathItem> _prevPathItem;
+        QWeakPointer<PathItem> _nextPathItem;
+        QWeakPointer<PathItem> _prevPathItem;
     };
 }
 

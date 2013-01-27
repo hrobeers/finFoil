@@ -58,6 +58,14 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
                                     new PointHandle(controlPoint, _settings.controlPointBrush(), this, scene())));
     }
 
+    // Set pathItem next and prev
+    if (!_pathItemList.isEmpty())
+    {
+        QSharedPointer<PathItem> last = _pathItemList.last();
+        last->setNextPathItem(pathItem);
+        pathItem->setPrevPathItem(last);
+    }
+
     _pathItemList.append(pathItem);
 }
 

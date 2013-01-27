@@ -52,22 +52,22 @@ void PathItem::setEndPoint(QSharedPointer<RestrictablePoint> endPoint)
     _endPoint = endPoint;
 }
 
-QSharedPointer<PathItem> PathItem::nextPathItem()
+QWeakPointer<PathItem> PathItem::nextPathItem()
 {
     return _nextPathItem;
 }
 
-QSharedPointer<PathItem> PathItem::prevPathItem()
+QWeakPointer<PathItem> PathItem::prevPathItem()
 {
     return _prevPathItem;
 }
 
 void PathItem::setNextPathItem(QSharedPointer<PathItem> nextPathItem)
 {
-    _nextPathItem = nextPathItem;
+    _nextPathItem = nextPathItem.toWeakRef();
 }
 
 void PathItem::setPrevPathItem(QSharedPointer<PathItem> prevPathItem)
 {
-    _prevPathItem = prevPathItem;
+    _prevPathItem = prevPathItem.toWeakRef();
 }
