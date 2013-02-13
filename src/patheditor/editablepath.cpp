@@ -47,8 +47,7 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
     // Add the controlPoint's pointHandles
     foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
     {
-        _pointHandleList.append(QSharedPointer<PointHandle>(
-                                    new PointHandle(controlPoint, _settings.controlPointBrush(), this, scene())));
+        controlPoint->createPointHandle(_settings, this, scene());
     }
 
     if (!_pathItemList.isEmpty())
@@ -58,15 +57,11 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
     else
     {
         // Add the startpoint pointHandle
-        QSharedPointer<PointHandle> startPointHandle = QSharedPointer<PointHandle>(
-                    new PointHandle(pathItem->startPoint(), _settings.pointBrush(), this, scene()));
-        _pointHandleList.append(startPointHandle);
+        pathItem->startPoint()->createPointHandle(_settings, this, scene());
     }
 
     // Add the endpoint pointHandle
-    QSharedPointer<PointHandle> endPointHandle = QSharedPointer<PointHandle>(
-                new PointHandle(pathItem->endPoint(), _settings.pointBrush(), this, scene()));
-    _pointHandleList.append(endPointHandle);
+    pathItem->endPoint()->createPointHandle(_settings, this, scene());
 
     if (!pathItem->prevPathItem().isNull())
     {

@@ -26,23 +26,43 @@
 #include <QPointF>
 #include <QSharedPointer>
 #include "restrictor.h"
+#include "pointhandle.h"
 
 namespace patheditor
 {
+    // Forward declarations
+    class PathSettings;
+
+    // Enum Structs
+    struct PointType
+    {
+        enum e
+        {
+            Point,
+            ControlPoint
+        };
+    };
+
     class PathPoint : public QPointF
     {
     public:
-        explicit PathPoint(qreal xpos, qreal ypos);
+        explicit PathPoint(qreal xpos, qreal ypos, PointType::e type = PointType::Point);
 
         void setRestrictedPos(qreal xpos, qreal ypos);
 
         void setRestrictor(QSharedPointer<Restrictor> &restrictor);
 
+        void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
+
         void addLinkedPoint(QWeakPointer<PathPoint> linkedPoint);
 
     private:
+        PointType::e _type;
+
         QSharedPointer<Restrictor> _restrictor;
         QList<QWeakPointer<PathPoint> > _linkedPoints;
+
+        PointHandle *_pointHandle;
     };
 }
 

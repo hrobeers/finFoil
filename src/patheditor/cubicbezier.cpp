@@ -30,8 +30,8 @@ CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<Pa
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
-    _cPoint1 = QSharedPointer<PathPoint>(new PathPoint(0,0));
-    _cPoint2 = QSharedPointer<PathPoint>(new PathPoint(0,0));
+    _cPoint1 = QSharedPointer<PathPoint>(new PathPoint(0,0, PointType::ControlPoint));
+    _cPoint2 = QSharedPointer<PathPoint>(new PathPoint(0,0, PointType::ControlPoint));
     *_cPoint1 += *startPoint + increment;
     *_cPoint2 += *_cPoint1 + increment;
 

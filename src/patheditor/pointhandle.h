@@ -24,26 +24,28 @@
 #define POINTHANDLE_H
 
 #include <QGraphicsEllipseItem>
-#include "pathpoint.h"
 
 namespace patheditor
 {
+    // Forward declarations
+    class PathPoint;
+
     /**
      * @brief The handle object used by EditablePath to move control points
      */
     class PointHandle : public QGraphicsEllipseItem
     {
     public:
-        explicit PointHandle(QSharedPointer<PathPoint> point, QBrush &brush,
+        explicit PointHandle(PathPoint *point, QBrush &brush,
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
     private:
         QSharedPointer<QPen> _pen;
 
-        QSharedPointer<PathPoint> _point;
+        PathPoint *_point;
         QPointF _originToCenter;
 
-        void setCenter(QSharedPointer<QPointF> point);
+        void setCenter(QPointF *point);
 
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

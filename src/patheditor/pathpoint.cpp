@@ -21,12 +21,17 @@
 ****************************************************************************/
 
 #include "pathpoint.h"
+#include "pathsettings.h"
+#include <QGraphicsScene>
 
 using namespace patheditor;
 
-PathPoint::PathPoint(qreal xpos, qreal ypos)
+PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
     : QPointF(xpos, ypos)
 {
+    _pointHandle = NULL;
+
+    _type = type;
 }
 
 void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
@@ -54,6 +59,26 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 void PathPoint::setRestrictor(QSharedPointer<Restrictor> &restrictor)
 {
     _restrictor = restrictor;
+}
+
+void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
+{
+    if (_pointHandle != NULL)
+    {
+        _pointHandle->scene()->removeItem(_pointHandle);
+        delete _pointHandle;
+    }
+
+    switch (_type)
+    {
+    case PointType::Point:
+        _pointHandle = new PointHandle(this, settings.pointBrush(), parent, scene);
+        break;
+
+    case PointType::ControlPoint:
+        _pointHandle = new PointHandle(this, settings.controlPointBrush(), parent, scene);
+        break;
+    }
 }
 
 void PathPoint::addLinkedPoint(QWeakPointer<PathPoint> linkedPoint)
