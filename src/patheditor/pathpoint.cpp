@@ -50,8 +50,7 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
         if (!linkedPoint.isNull())
         {
             QSharedPointer<PathPoint> strongPnt = linkedPoint.toStrongRef();
-            strongPnt->setX(strongPnt->rx() + dx);
-            strongPnt->setY(strongPnt->ry() + dy);
+            strongPnt->setPos(strongPnt->rx() + dx, strongPnt->ry() + dy);
         }
     }
 }
@@ -84,4 +83,16 @@ void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent,
 void PathPoint::addLinkedPoint(QWeakPointer<PathPoint> linkedPoint)
 {
     _linkedPoints.append(linkedPoint);
+}
+
+void PathPoint::setPos(qreal xpos, qreal ypos)
+{
+    this->setX(xpos);
+    this->setY(ypos);
+
+    if (_pointHandle != NULL)
+    {
+        // taking adress of temporary is ok here, QPointF can be destroyed after setCenter
+        _pointHandle->setCenter(&QPointF(xpos, ypos));
+    }
 }

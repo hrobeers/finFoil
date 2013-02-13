@@ -57,6 +57,8 @@ namespace patheditor
         void addLinkedPoint(QWeakPointer<PathPoint> linkedPoint);
 
     private:
+        void setPos(qreal xpos, qreal ypos);
+
         PointType::e _type;
 
         QSharedPointer<Restrictor> _restrictor;

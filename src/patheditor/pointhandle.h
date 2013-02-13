@@ -39,13 +39,13 @@ namespace patheditor
         explicit PointHandle(PathPoint *point, QBrush &brush,
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
+        void setCenter(QPointF *point);
+
     private:
         QSharedPointer<QPen> _pen;
 
         PathPoint *_point;
         QPointF _originToCenter;
-
-        void setCenter(QPointF *point);
 
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
