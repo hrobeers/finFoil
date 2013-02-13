@@ -23,7 +23,6 @@
 #ifndef PATHSETTINGS_H
 #define PATHSETTINGS_H
 
-#include <QScopedPointer>
 #include <QPen>
 
 namespace patheditor

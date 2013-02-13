@@ -25,4 +25,5 @@ include(../patheditor/patheditor.pri)
 include(../fineditors/contoureditor/contoureditor.pri)
 
 OTHER_FILES += ../../LICENSE.BSD \
-            ../../README
+            ../../README \
+    ../../TODO

@@ -1,0 +1,6 @@
+General TODO's
+==============
+
+* Cleanup unused includes
+* Forward declaration of classes (instead of includes in header files) to speedup compilation
+* Add documentation comments
