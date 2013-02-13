@@ -30,6 +30,16 @@
 
 namespace patheditor
 {
+    struct Features
+    {
+        enum e
+        {
+            None = 0,
+            HorizontalAxis = 1,
+            VerticalAxis = 2
+        };
+    };
+
     class PathEditorWidget : public QWidget
     {
         Q_OBJECT
@@ -49,15 +59,28 @@ namespace patheditor
          */
         void addPath(EditablePath *path);
 
+        /**
+         * Enables a specific feature
+         *
+         * @param feature to enable
+         */
+        void enableFeature(Features::e feature);
+
     signals:
 
-    public slots:
+    private slots:
+        void onSceneRectChanged ( const QRectF & rect );
 
     private:
         QGraphicsView* _view;
         QGraphicsScene* _scene;
         QVBoxLayout* _mainLayout;
 
+
+        // Features
+        int _enabledFeatures;
+        QGraphicsLineItem* _horizontalAxis;
+        QGraphicsLineItem* _verticalAxis;
     };
 }
 

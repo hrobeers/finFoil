@@ -22,6 +22,8 @@
 
 #include "patheditorwidget.h"
 
+#define featureEnabled(feat) ((_enabledFeatures & feat) == feat)
+
 using namespace patheditor;
 
 PathEditorWidget::PathEditorWidget(QWidget *parent) :
@@ -31,6 +33,7 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     _scene = new QGraphicsScene(this);
     _view = new QGraphicsView(_scene, this);
     _mainLayout = new QVBoxLayout(this);
+    _enabledFeatures = Features::None;
 
     // view options
     _view->setRenderHint(QPainter::Antialiasing);
@@ -38,6 +41,8 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     // layout
     _mainLayout->addWidget(_view);
     this->setLayout(_mainLayout);
+
+    connect(this->scene(), SIGNAL(sceneRectChanged(QRectF)), this, SLOT(onSceneRectChanged(QRectF)));
 }
 
 QGraphicsScene *PathEditorWidget::scene()
@@ -48,4 +53,38 @@ QGraphicsScene *PathEditorWidget::scene()
 void PathEditorWidget::addPath(EditablePath* path)
 {
     this->scene()->addItem(path);
+}
+
+void PathEditorWidget::enableFeature(Features::e feature)
+{
+    if (!featureEnabled(feature))
+    {
+        switch (feature)
+        {
+        case Features::HorizontalAxis:
+            _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
+                                                    this->scene()->sceneRect().right(), 0);
+            this->scene()->addItem(_horizontalAxis);
+            break;
+
+        case Features::VerticalAxis:
+            _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
+                                                  0, this->scene()->sceneRect().top());
+            this->scene()->addItem(_verticalAxis);
+            break;
+
+        case Features::None:
+            break;
+        }
+
+        _enabledFeatures = _enabledFeatures | feature;
+    }
+}
+
+void PathEditorWidget::onSceneRectChanged(const QRectF &rect)
+{
+    if (featureEnabled(Features::HorizontalAxis))
+        _horizontalAxis->setLine(rect.left(), 0, rect.right(), 0);
+    if (featureEnabled(Features::VerticalAxis))
+        _verticalAxis->setLine(0, rect.bottom(), 0, rect.top());
 }

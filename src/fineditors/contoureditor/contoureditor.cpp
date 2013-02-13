@@ -34,6 +34,8 @@ ContourEditor::ContourEditor(QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget(this);
+    _pathEditor->enableFeature(Features::HorizontalAxis);
+    _pathEditor->enableFeature(Features::VerticalAxis);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
     QSharedPointer<PathPoint> point2(new PathPoint(100,100));
@@ -55,20 +57,4 @@ ContourEditor::ContourEditor(QWidget *parent) :
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->addWidget(_pathEditor);
     this->setLayout(_mainLayout);
-
-    // TODO check if destructed
-    _horizontalAxis = new QGraphicsLineItem(_pathEditor->scene()->sceneRect().left(), 0,
-                                            _pathEditor->scene()->sceneRect().right(), 0);
-    _verticalAxis = new QGraphicsLineItem(0, _pathEditor->scene()->sceneRect().bottom(),
-                                          0, _pathEditor->scene()->sceneRect().top());
-    _pathEditor->scene()->addItem(_horizontalAxis);
-    _pathEditor->scene()->addItem(_verticalAxis);
-
-    connect(_pathEditor->scene(), SIGNAL(sceneRectChanged(QRectF)), this, SLOT(onSceneRectChanged(QRectF)));
-}
-
-void ContourEditor::onSceneRectChanged(const QRectF &rect)
-{
-    _horizontalAxis->setLine(rect.left(), 0, rect.right(), 0);
-    _verticalAxis->setLine(0, rect.bottom(), 0, rect.top());
 }
