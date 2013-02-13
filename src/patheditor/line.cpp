@@ -42,7 +42,7 @@ QRectF Line::boundingRect() const
     return _boundingRect;
 }
 
-void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     QPainterPath painterPath;
 
