@@ -35,6 +35,8 @@ namespace patheditor
 
         static PathSettings Default();
 
+        int& handleSize();
+
         QPen& linePen();
         QPen& controlLinePen();
 

@@ -36,7 +36,7 @@ namespace patheditor
     class PointHandle : public QGraphicsEllipseItem
     {
     public:
-        explicit PointHandle(PathPoint *point, QBrush &brush,
+        explicit PointHandle(PathPoint *point, int &size, QBrush &brush,
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
         void setCenter(QPointF *point);

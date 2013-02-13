@@ -73,11 +73,11 @@ void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent,
     switch (_type)
     {
     case PointType::Point:
-        _pointHandle = new PointHandle(this, settings.pointBrush(), parent, scene);
+        _pointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene);
         break;
 
     case PointType::ControlPoint:
-        _pointHandle = new PointHandle(this, settings.controlPointBrush(), parent, scene);
+        _pointHandle = new PointHandle(this, settings.handleSize(), settings.controlPointBrush(), parent, scene);
         break;
     }
 }

@@ -54,6 +54,11 @@ PathSettings PathSettings::Default()
     return PathSettings();
 }
 
+int &PathSettings::handleSize()
+{
+    return _handleSize;
+}
+
 QPen &PathSettings::linePen()
 {
     return _linePen;
