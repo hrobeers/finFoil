@@ -40,6 +40,7 @@ namespace patheditor
                              QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
         void setCenter(QPointF *point);
+        void setCenter(qreal &xpos, qreal &ypos);
 
     private:
         QSharedPointer<QPen> _pen;

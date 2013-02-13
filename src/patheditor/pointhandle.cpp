@@ -49,10 +49,16 @@ void PointHandle::setCenter(QPointF *point)
     this->setPos(*point - _originToCenter);
 }
 
+void PointHandle::setCenter(qreal &xpos, qreal &ypos)
+{
+    this->setPos(xpos - _originToCenter.rx(), ypos - _originToCenter.ry());
+}
+
 void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    _point->setRestrictedPos(this->pos().rx() + _originToCenter.rx(),
-                             this->pos().ry() + _originToCenter.ry());
+    qreal rx(this->pos().rx() + _originToCenter.rx());
+    qreal ry(this->pos().ry() + _originToCenter.ry());
+    _point->setRestrictedPos(rx, ry);
     this->scene()->update();
     QGraphicsEllipseItem::mouseMoveEvent(event);
 }

@@ -34,7 +34,7 @@ PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
     _type = type;
 }
 
-void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
+void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
 {
     if (!_restrictor.isNull())
         _restrictor->restrictCoordinate(&xpos, &ypos);
@@ -50,7 +50,9 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
         if (!linkedPoint.isNull())
         {
             QSharedPointer<PathPoint> strongPnt = linkedPoint.toStrongRef();
-            strongPnt->setPos(strongPnt->rx() + dx, strongPnt->ry() + dy);
+            qreal rx(strongPnt->rx() + dx);
+            qreal ry(strongPnt->ry() + dy);
+            strongPnt->setPos(rx, ry);
         }
     }
 }
@@ -85,14 +87,13 @@ void PathPoint::addLinkedPoint(QWeakPointer<PathPoint> linkedPoint)
     _linkedPoints.append(linkedPoint);
 }
 
-void PathPoint::setPos(qreal xpos, qreal ypos)
+void PathPoint::setPos(qreal &xpos, qreal &ypos)
 {
     this->setX(xpos);
     this->setY(ypos);
 
     if (_pointHandle != NULL)
     {
-        // taking adress of temporary is ok here, QPointF can be destroyed after setCenter
-        _pointHandle->setCenter(&QPointF(xpos, ypos));
+        _pointHandle->setCenter(xpos, ypos);
     }
 }
