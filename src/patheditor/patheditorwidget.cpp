@@ -21,6 +21,8 @@
 ****************************************************************************/
 
 #include "patheditorwidget.h"
+#include "linerestrictor.h"
+#include "pointrestrictor.h"
 
 #define featureEnabled(feat) ((_enabledFeatures & feat) == feat)
 
@@ -33,7 +35,12 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     _scene = new QGraphicsScene(this);
     _view = new QGraphicsView(_scene, this);
     _mainLayout = new QVBoxLayout(this);
+
     _enabledFeatures = Features::None;
+
+    _originRestrictor = QSharedPointer<Restrictor>(new PointRestrictor(QPointF(0,0)));
+    _horizontalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(QPointF(0,0), QPointF(1,0)));
+    _verticalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(QPointF(0,0), QPointF(0,1)));
 
     // view options
     _view->setRenderHint(QPainter::Antialiasing);
@@ -79,6 +86,21 @@ void PathEditorWidget::enableFeature(Features::e feature)
 
         _enabledFeatures = _enabledFeatures | feature;
     }
+}
+
+QSharedPointer<Restrictor> PathEditorWidget::originRestrictor()
+{
+    return _originRestrictor;
+}
+
+QSharedPointer<Restrictor> PathEditorWidget::horizontalAxisRestrictor()
+{
+    return _horizontalAxisRestrictor;
+}
+
+QSharedPointer<Restrictor> PathEditorWidget::verticalAxisRestrictor()
+{
+    return _verticalAxisRestrictor;
 }
 
 void PathEditorWidget::onSceneRectChanged(const QRectF &rect)

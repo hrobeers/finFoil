@@ -50,7 +50,7 @@ namespace patheditor
 
         void setRestrictedPos(qreal &xpos, qreal &ypos);
 
-        void setRestrictor(QSharedPointer<Restrictor> &restrictor);
+        void setRestrictor(QSharedPointer<Restrictor> restrictor);
 
         void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
 

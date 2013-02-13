@@ -66,6 +66,19 @@ namespace patheditor
          */
         void enableFeature(Features::e feature);
 
+        /**
+         * Returns a Restrictor that can be used to pin PathPoints to the origin
+         */
+        QSharedPointer<Restrictor> originRestrictor();
+        /**
+         * Returns a Restrictor that can be used to pin PathPoints to the horizontal axis
+         */
+        QSharedPointer<Restrictor> horizontalAxisRestrictor();
+        /**
+         * Returns a Restrictor that can be used to pin PathPoints to the vertical axis
+         */
+        QSharedPointer<Restrictor> verticalAxisRestrictor();
+
     signals:
 
     private slots:
@@ -76,11 +89,15 @@ namespace patheditor
         QGraphicsScene* _scene;
         QVBoxLayout* _mainLayout;
 
-
         // Features
         int _enabledFeatures;
         QGraphicsLineItem* _horizontalAxis;
         QGraphicsLineItem* _verticalAxis;
+
+        // Restrictors
+        QSharedPointer<Restrictor> _originRestrictor;
+        QSharedPointer<Restrictor> _horizontalAxisRestrictor;
+        QSharedPointer<Restrictor> _verticalAxisRestrictor;
     };
 }
 

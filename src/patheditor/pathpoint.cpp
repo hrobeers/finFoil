@@ -57,7 +57,7 @@ void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
     }
 }
 
-void PathPoint::setRestrictor(QSharedPointer<Restrictor> &restrictor)
+void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
 {
     _restrictor = restrictor;
 }
