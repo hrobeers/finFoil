@@ -60,7 +60,7 @@ QRectF CubicBezier::boundingRect() const
     return _boundingRect;
 }
 
-void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     QPainterPath painterPath;
 
