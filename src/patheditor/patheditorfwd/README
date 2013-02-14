@@ -3,4 +3,4 @@ This folder contains header files for forward declaration of classes to speed up
 You can include this header file before all other includes in your header file.
 Do not forget to include the header files of the used classes in your source file.
 
-fwdpatheditor.h:    Forward declarations for all patheditor classes.
+patheditorfwd.h:    Forward declarations for all patheditor classes.

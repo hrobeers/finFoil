@@ -23,7 +23,7 @@
 #ifndef CUBICBEZIER_H
 #define CUBICBEZIER_H
 
-#include "forward/patheditorfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include "pathitem.h"
 

@@ -23,7 +23,7 @@
 #ifndef PATHITEM_H
 #define PATHITEM_H
 
-#include "forward/patheditorfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QGraphicsItem>
 #include "pathpoint.h"

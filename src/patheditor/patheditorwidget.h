@@ -23,7 +23,7 @@
 #ifndef PATHEDITORWIDGET_H
 #define PATHEDITORWIDGET_H
 
-#include "forward/patheditorfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QWidget>
 #include <QGraphicsView>

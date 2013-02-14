@@ -23,7 +23,7 @@
 #ifndef RESTRICTABLEPOINT_H
 #define RESTRICTABLEPOINT_H
 
-#include "forward/patheditorfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QPointF>
 #include <QSharedPointer>
