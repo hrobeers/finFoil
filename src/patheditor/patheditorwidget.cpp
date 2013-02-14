@@ -21,6 +21,9 @@
 ****************************************************************************/
 
 #include "patheditorwidget.h"
+
+#include <QGraphicsView>
+#include <QLayout>
 #include "linerestrictor.h"
 #include "pointrestrictor.h"
 #include "editablepath.h"
@@ -39,9 +42,14 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
 
     _enabledFeatures = Features::None;
 
-    _originRestrictor = QSharedPointer<Restrictor>(new PointRestrictor(QPointF(0,0)));
-    _horizontalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(QPointF(0,0), QPointF(1,0)));
-    _verticalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(QPointF(0,0), QPointF(0,1)));
+    QPointF origin(0,0);
+    _originRestrictor = QSharedPointer<Restrictor>(new PointRestrictor(origin));
+
+    QPointF right(1,0);
+    _horizontalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(origin, right));
+
+    QPointF under(0,1);
+    _verticalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(origin, under));
 
     // view options
     _view->setRenderHint(QPainter::Antialiasing);

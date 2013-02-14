@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include "pathitem.h"
+
 #include "pathsettings.h"
 
 using namespace patheditor;

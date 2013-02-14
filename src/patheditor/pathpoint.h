@@ -25,7 +25,6 @@
 
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QPointF>
 #include <QSharedPointer>
 #include "restrictor.h"
 #include "pointhandle.h"

@@ -24,10 +24,9 @@
 #define PATHEDITORWIDGET_H
 
 #include "patheditorfwd/patheditorfwd.h"
+#include "patheditorfwd/qtfwd.h"
 
 #include <QWidget>
-#include <QGraphicsView>
-#include <QLayout>
 #include "restrictor.h"
 
 namespace patheditor

@@ -20,9 +20,10 @@
 
 ****************************************************************************/
 
+#include "editablepath.h"
+
 #include <QPainter>
 #include <QGraphicsItem>
-#include "editablepath.h"
 
 using namespace patheditor;
 

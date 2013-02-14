@@ -20,8 +20,9 @@
  
 ****************************************************************************/
 
-#include <QPainter>
 #include "cubicbezier.h"
+
+#include <QPainter>
 #include "pathsettings.h"
 
 using namespace patheditor;

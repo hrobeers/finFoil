@@ -33,7 +33,7 @@ namespace patheditor
     class PointRestrictor : public Restrictor
     {
     public:
-        explicit PointRestrictor(QPointF point);
+        explicit PointRestrictor(QPointF &point);
 
         virtual void restrictCoordinate(qreal *x, qreal *y);
 

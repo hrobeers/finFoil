@@ -25,7 +25,6 @@
 
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QGraphicsItem>
 #include "pathpoint.h"
 
 namespace patheditor

@@ -24,7 +24,7 @@
 
 using namespace patheditor;
 
-LineRestrictor::LineRestrictor(QPointF point1, QPointF point2)
+LineRestrictor::LineRestrictor(QPointF &point1, QPointF &point2)
 {
     _point1 = point1;
     _point2 = point2;

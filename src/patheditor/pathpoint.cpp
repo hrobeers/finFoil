@@ -21,8 +21,9 @@
 ****************************************************************************/
 
 #include "pathpoint.h"
-#include "pathsettings.h"
+
 #include <QGraphicsScene>
+#include "pathsettings.h"
 
 using namespace patheditor;
 

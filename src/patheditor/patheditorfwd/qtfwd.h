@@ -20,53 +20,19 @@
  
 ****************************************************************************/
 
-#include "pointhandle.h"
+#ifndef QTFWD_H
+#define QTFWD_H
 
-#include <QGraphicsItem>
-#include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
-#include <QPainter>
-#include "pathpoint.h"
+#include <QtGlobal>
 
-using namespace patheditor;
+QT_BEGIN_NAMESPACE
 
-PointHandle::PointHandle(PathPoint *point,
-                         int &size, QBrush &brush, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsEllipseItem(0, 0, size, size, parent, scene)
-{
-    _point = point;
-    _originToCenter.setX(this->rect().width()/2);
-    _originToCenter.setY(this->rect().height()/2);
+class QGraphicsView;
+class QGraphicsScene;
+class QVBoxLayout;
+class QHBoxLayout;
+class QGraphicsLineItem;
 
-    setCenter(_point);
+QT_END_NAMESPACE
 
-    this->setZValue(1);
-    this->setBrush(brush);
-    this->setFlag(QGraphicsItem::ItemIsMovable);
-}
-
-void PointHandle::setCenter(QPointF *point)
-{
-    this->setPos(*point - _originToCenter);
-}
-
-void PointHandle::setCenter(qreal &xpos, qreal &ypos)
-{
-    this->setPos(xpos - _originToCenter.rx(), ypos - _originToCenter.ry());
-}
-
-void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    qreal rx(this->pos().rx() + _originToCenter.rx());
-    qreal ry(this->pos().ry() + _originToCenter.ry());
-    _point->setRestrictedPos(rx, ry);
-    this->scene()->update();
-    QGraphicsEllipseItem::mouseMoveEvent(event);
-}
-
-void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    setCenter(_point);
-    this->scene()->update();
-    QGraphicsEllipseItem::mouseReleaseEvent(event);
-}
+#endif // QTFWD_H

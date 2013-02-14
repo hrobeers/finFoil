@@ -10,7 +10,8 @@ HEADERS += \
     ../patheditor/linerestrictor.h \
     ../patheditor/pointrestrictor.h \
     ../patheditor/pathpoint.h \
-    ../patheditor/patheditorfwd/patheditorfwd.h
+    ../patheditor/patheditorfwd/patheditorfwd.h \
+    ../patheditor/patheditorfwd/qtfwd.h
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
