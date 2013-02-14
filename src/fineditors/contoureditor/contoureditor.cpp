@@ -21,6 +21,8 @@
 ****************************************************************************/
 
 #include "contoureditor.h"
+
+#include <QVBoxLayout>
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "line.h"
