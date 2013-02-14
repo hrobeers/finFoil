@@ -23,6 +23,10 @@
 #ifndef FWDPATHEDITOR_H
 #define FWDPATHEDITOR_H
 
+/*
+ * Forward declarations for all patheditor classes.
+ */
+
 namespace patheditor
 {
     class CubicBezier;

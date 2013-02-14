@@ -25,7 +25,6 @@
 
 #include "forward/fwdpatheditor.h"
 
-#include <QPainter>
 #include "pathitem.h"
 
 namespace patheditor

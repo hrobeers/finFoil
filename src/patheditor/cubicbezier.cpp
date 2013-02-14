@@ -20,6 +20,7 @@
  
 ****************************************************************************/
 
+#include <QPainter>
 #include "cubicbezier.h"
 #include "pathsettings.h"
 

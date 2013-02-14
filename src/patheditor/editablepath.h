@@ -25,7 +25,6 @@
 
 #include "forward/fwdpatheditor.h"
 
-#include <QGraphicsItem>
 #include <QLinkedList>
 #include "pathitem.h"
 #include "pathsettings.h"

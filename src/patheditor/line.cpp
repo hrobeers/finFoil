@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include <QPainter>
+#include <QGraphicsItem>
 #include "line.h"
 #include "pathpoint.h"
 #include "pathsettings.h"
