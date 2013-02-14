@@ -23,7 +23,7 @@
 #ifndef EDITABLEPATH_H
 #define EDITABLEPATH_H
 
-#include "forward/fwdpatheditor.h"
+#include "forward/patheditorfwd.h"
 
 #include <QLinkedList>
 #include "pathitem.h"

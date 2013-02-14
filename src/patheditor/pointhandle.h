@@ -23,7 +23,7 @@
 #ifndef POINTHANDLE_H
 #define POINTHANDLE_H
 
-#include "forward/fwdpatheditor.h"
+#include "forward/patheditorfwd.h"
 
 #include <QGraphicsEllipseItem>
 

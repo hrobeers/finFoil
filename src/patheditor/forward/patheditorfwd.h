@@ -20,11 +20,11 @@
  
 ****************************************************************************/
 
-#ifndef FWDPATHEDITOR_H
-#define FWDPATHEDITOR_H
+#ifndef PATHEDITORFWD_H
+#define PATHEDITORFWD_H
 
 /*
- * Forward declarations for all patheditor classes.
+    Forward declarations for all patheditor classes.
  */
 
 namespace patheditor
@@ -42,4 +42,4 @@ namespace patheditor
     class Restrictor;
 }
 
-#endif // FWDPATHEDITOR_H
+#endif // PATHEDITORFWD_H

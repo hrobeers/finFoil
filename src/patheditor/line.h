@@ -23,7 +23,7 @@
 #ifndef LINE_H
 #define LINE_H
 
-#include "forward/fwdpatheditor.h"
+#include "forward/patheditorfwd.h"
 
 #include "pathitem.h"
 

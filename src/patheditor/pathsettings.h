@@ -23,7 +23,7 @@
 #ifndef PATHSETTINGS_H
 #define PATHSETTINGS_H
 
-#include "forward/fwdpatheditor.h"
+#include "forward/patheditorfwd.h"
 
 #include <QPen>
 
