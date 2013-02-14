@@ -23,10 +23,11 @@
 #ifndef PATHITEM_H
 #define PATHITEM_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QGraphicsItem>
 #include <QList>
 #include "pathpoint.h"
-#include "pathsettings.h"
 
 namespace patheditor
 {

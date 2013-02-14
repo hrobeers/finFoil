@@ -23,6 +23,8 @@
 #ifndef LINERESTRICTOR_H
 #define LINERESTRICTOR_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QPointF>
 #include "restrictor.h"
 

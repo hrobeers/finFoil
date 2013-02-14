@@ -23,6 +23,7 @@
 #include "patheditorwidget.h"
 #include "linerestrictor.h"
 #include "pointrestrictor.h"
+#include "editablepath.h"
 
 #define featureEnabled(feat) ((_enabledFeatures & feat) == feat)
 

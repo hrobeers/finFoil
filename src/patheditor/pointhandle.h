@@ -23,13 +23,12 @@
 #ifndef POINTHANDLE_H
 #define POINTHANDLE_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QGraphicsEllipseItem>
 
 namespace patheditor
 {
-    // Forward declarations
-    class PathPoint;
-
     /**
      * @brief The handle object used by EditablePath to move control points
      */

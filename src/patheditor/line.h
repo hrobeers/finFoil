@@ -23,6 +23,8 @@
 #ifndef LINE_H
 #define LINE_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QGraphicsItem>
 #include "pathitem.h"
 

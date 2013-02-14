@@ -23,6 +23,8 @@
 #ifndef EDITABLEPATH_H
 #define EDITABLEPATH_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QGraphicsItem>
 #include <QLinkedList>
 #include "pathitem.h"

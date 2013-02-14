@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include "cubicbezier.h"
+#include "pathsettings.h"
 
 using namespace patheditor;
 

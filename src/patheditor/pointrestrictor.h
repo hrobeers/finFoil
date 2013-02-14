@@ -23,6 +23,8 @@
 #ifndef POINTRESTRICTOR_H
 #define POINTRESTRICTOR_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QPointF>
 #include "restrictor.h"
 

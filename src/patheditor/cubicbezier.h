@@ -23,6 +23,8 @@
 #ifndef CUBICBEZIER_H
 #define CUBICBEZIER_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QPainter>
 #include "pathitem.h"
 

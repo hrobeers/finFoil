@@ -23,6 +23,7 @@
 #include <QPainter>
 #include "line.h"
 #include "pathpoint.h"
+#include "pathsettings.h"
 
 using namespace patheditor;
 

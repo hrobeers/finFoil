@@ -23,10 +23,12 @@
 #ifndef PATHEDITORWIDGET_H
 #define PATHEDITORWIDGET_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QWidget>
 #include <QGraphicsView>
 #include <QLayout>
-#include "editablepath.h"
+#include "restrictor.h"
 
 namespace patheditor
 {

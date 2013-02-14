@@ -1,0 +1,3 @@
+This folder contains header files for forward declaration of classes to speed up compilation.
+
+fwdpatheditor.h:    Forward declarations for all patheditor classes.

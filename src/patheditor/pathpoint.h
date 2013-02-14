@@ -23,6 +23,8 @@
 #ifndef RESTRICTABLEPOINT_H
 #define RESTRICTABLEPOINT_H
 
+#include "forward/fwdpatheditor.h"
+
 #include <QPointF>
 #include <QSharedPointer>
 #include "restrictor.h"
@@ -30,9 +32,6 @@
 
 namespace patheditor
 {
-    // Forward declarations
-    class PathSettings;
-
     // Enum Structs
     struct PointType
     {
