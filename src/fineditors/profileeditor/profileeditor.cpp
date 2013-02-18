@@ -25,7 +25,8 @@
 #include <QVBoxLayout>
 #include "editablepath.h"
 #include "cubicbezier.h"
-#include "line.h"
+#include "linerestrictor.h"
+
 
 using namespace fineditors;
 using namespace patheditor;
@@ -35,20 +36,26 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
 {
     _pathEditor = new patheditor::PathEditorWidget(this);
     _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point2(new PathPoint(100,100));
-    QSharedPointer<PathPoint> point3(new PathPoint(100,0));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+    QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
+    QSharedPointer<PathPoint> point3(new PathPoint(200,0));
+    QSharedPointer<PathPoint> point4(new PathPoint(0,-24));
 
-    point1->setRestrictor(_pathEditor->horizontalAxisRestrictor());
-    point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+    _topRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(*point4, *point2));
+
+    point1->setRestrictor(_pathEditor->originRestrictor());
+    point2->setRestrictor(_topRestrictor);
+    point3->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+
+    QSharedPointer<CubicBezier> part1(new CubicBezier(point1, point2));
+    QSharedPointer<CubicBezier> part2(new CubicBezier(point2, point3));
+    part1->controlPoint2()->setRestrictor(_topRestrictor);
+    part2->controlPoint1()->setRestrictor(_topRestrictor);
 
     EditablePath* path = new EditablePath();
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
-    path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
+    path->append(part1);
+    path->append(part2);
 
     _pathEditor->addPath(path);
 

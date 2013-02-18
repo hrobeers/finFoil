@@ -23,6 +23,8 @@
 #ifndef PROFILEEDITOR_H
 #define PROFILEEDITOR_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QWidget>
 #include "patheditorwidget.h"
 
@@ -41,6 +43,7 @@ namespace fineditors
     private:
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
+        QSharedPointer<patheditor::Restrictor> _topRestrictor;
 
     };
 }

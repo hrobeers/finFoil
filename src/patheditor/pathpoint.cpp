@@ -61,6 +61,7 @@ void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
 void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
 {
     _restrictor = restrictor;
+    setRestrictedPos(this->rx(), this->ry());
 }
 
 void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
