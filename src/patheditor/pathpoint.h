@@ -58,7 +58,7 @@ namespace patheditor
 
         void select();
 
-        const bool selected();
+        bool selected() const;
 
     private:
         void setPos(qreal &xpos, qreal &ypos);

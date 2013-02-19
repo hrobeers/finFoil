@@ -112,7 +112,7 @@ void PathPoint::select()
         select(this);
 }
 
-const bool PathPoint::selected()
+bool PathPoint::selected() const
 {
     return _selected;
 }
