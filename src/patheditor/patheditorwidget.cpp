@@ -28,7 +28,7 @@
 #include "pointrestrictor.h"
 #include "editablepath.h"
 
-#define featureEnabled(feat) ((_enabledFeatures & feat) == feat)
+#define featureEnabled(feat) (_enabledFeatures & feat)
 
 using namespace patheditor;
 
