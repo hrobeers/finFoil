@@ -62,7 +62,7 @@ namespace patheditor
         //
         // EditablePath paint method
         //
-        virtual void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
+        virtual void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:
         QSharedPointer<PathPoint> _startPoint;

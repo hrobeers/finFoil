@@ -22,6 +22,7 @@
 
 #include "pathitem.h"
 
+#include <QPainter>
 #include "pathsettings.h"
 
 using namespace patheditor;
@@ -72,4 +73,24 @@ void PathItem::setNextPathItem(QSharedPointer<PathItem> nextPathItem)
 void PathItem::setPrevPathItem(QSharedPointer<PathItem> prevPathItem)
 {
     _prevPathItem = prevPathItem.toWeakRef();
+}
+
+void PathItem::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setPen(settings->controlLinePen());
+    QPainterPath painterPath;
+
+    if (startPoint()->selected())
+    {
+        painterPath.moveTo(*startPoint());
+        painterPath.lineTo(*(controlPoints().first()));
+    }
+
+    if (endPoint()->selected())
+    {
+        painterPath.moveTo(*endPoint());
+        painterPath.lineTo(*(controlPoints().last()));
+    }
+
+    painter->drawPath(painterPath);
 }

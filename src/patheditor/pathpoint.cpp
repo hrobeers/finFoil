@@ -27,10 +27,14 @@
 
 using namespace patheditor;
 
+static PathPoint *s_prevSelected = NULL;
+
 PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
     : QPointF(xpos, ypos)
 {
+    _selected = false;
     _pointHandle = NULL;
+    _toFollowPoint = NULL;
 
     _type = type;
 }
@@ -46,7 +50,7 @@ void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
     this->setX(xpos);
     this->setY(ypos);
 
-    foreach(QWeakPointer<PathPoint> linkedPoint, _linkedPoints)
+    foreach(QWeakPointer<PathPoint> linkedPoint, _followingPoints)
     {
         if (!linkedPoint.isNull())
         {
@@ -84,9 +88,33 @@ void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent,
     }
 }
 
-void PathPoint::addLinkedPoint(QWeakPointer<PathPoint> linkedPoint)
+void PathPoint::addFollowingPoint(QSharedPointer<PathPoint> point)
 {
-    _linkedPoints.append(linkedPoint);
+    point->_toFollowPoint = this;
+    _followingPoints.append(point.toWeakRef());
+}
+
+bool PathPoint::visible()
+{
+    if (_toFollowPoint == NULL)
+    {
+        return true;
+    }
+    else
+    {
+        return _toFollowPoint->selected();
+    }
+}
+
+void PathPoint::select()
+{
+    if (_toFollowPoint == NULL)
+        select(this);
+}
+
+const bool PathPoint::selected()
+{
+    return _selected;
 }
 
 void PathPoint::setPos(qreal &xpos, qreal &ypos)
@@ -98,4 +126,13 @@ void PathPoint::setPos(qreal &xpos, qreal &ypos)
     {
         _pointHandle->setCenter(xpos, ypos);
     }
+}
+
+void PathPoint::select(PathPoint *point)
+{
+    if (s_prevSelected != NULL)
+        s_prevSelected->_selected = false;
+
+    s_prevSelected = point;
+    point->_selected = true;
 }

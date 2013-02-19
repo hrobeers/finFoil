@@ -66,10 +66,10 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
     pathItem->endPoint()->createPointHandle(_settings, this, scene());
 
     // Link endpoints to controlpoints
-    if (!pathItem->controlPoints().isEmpty())
+    if (pathItem->controlPoints().count() >= 2)
     {
-        pathItem->startPoint()->addLinkedPoint(pathItem->controlPoints().first());
-        pathItem->endPoint()->addLinkedPoint(pathItem->controlPoints().last());
+        pathItem->startPoint()->addFollowingPoint(pathItem->controlPoints().first());
+        pathItem->endPoint()->addFollowingPoint(pathItem->controlPoints().last());
     }
 
     _pathItemList.append(pathItem);

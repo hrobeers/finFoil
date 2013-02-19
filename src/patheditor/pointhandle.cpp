@@ -55,6 +55,18 @@ void PointHandle::setCenter(qreal &xpos, qreal &ypos)
     this->setPos(xpos - _originToCenter.rx(), ypos - _originToCenter.ry());
 }
 
+void PointHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    if (_point->visible())
+        QGraphicsEllipseItem::paint(painter, option, widget);
+}
+
+void PointHandle::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    _point->select();
+    QGraphicsEllipseItem::mousePressEvent(event);
+}
+
 void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qreal rx(this->pos().rx() + _originToCenter.rx());

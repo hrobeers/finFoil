@@ -52,17 +52,28 @@ namespace patheditor
 
         void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
 
-        void addLinkedPoint(QWeakPointer<PathPoint> linkedPoint);
+        void addFollowingPoint(QSharedPointer<PathPoint> point);
+
+        bool visible();
+
+        void select();
+
+        const bool selected();
 
     private:
         void setPos(qreal &xpos, qreal &ypos);
 
+        bool _selected;
+        static void select(PathPoint *point);
+
         PointType::e _type;
 
         QSharedPointer<Restrictor> _restrictor;
-        QList<QWeakPointer<PathPoint> > _linkedPoints;
+        PathPoint* _toFollowPoint;
+        QList<QWeakPointer<PathPoint> > _followingPoints;
 
         PointHandle *_pointHandle;
+
     };
 }
 

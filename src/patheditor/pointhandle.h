@@ -41,12 +41,15 @@ namespace patheditor
         void setCenter(QPointF *point);
         void setCenter(qreal &xpos, qreal &ypos);
 
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     private:
         QSharedPointer<QPen> _pen;
 
         PathPoint *_point;
         QPointF _originToCenter;
 
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     };
