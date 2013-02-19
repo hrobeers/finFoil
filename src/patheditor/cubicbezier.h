@@ -46,8 +46,8 @@ namespace patheditor
 
         // Implementing QGraphicsItem
         QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/,
-                        QWidget * /*unused*/);
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem * option,
+                        QWidget * widget);
 
         void paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

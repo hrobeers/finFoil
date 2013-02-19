@@ -75,7 +75,7 @@ void PathItem::setPrevPathItem(QSharedPointer<PathItem> prevPathItem)
     _prevPathItem = prevPathItem.toWeakRef();
 }
 
-void PathItem::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void PathItem::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     painter->setPen(settings->controlLinePen());
     QPainterPath painterPath;
