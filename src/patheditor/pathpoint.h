@@ -64,7 +64,7 @@ namespace patheditor
         void setPos(qreal &xpos, qreal &ypos);
 
         bool _selected;
-        static void select(PathPoint *point);
+        static void select(PathPoint *point, QGraphicsScene *scene);
 
         PointType::e _type;
 

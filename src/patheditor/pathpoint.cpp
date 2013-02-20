@@ -27,7 +27,7 @@
 
 using namespace patheditor;
 
-static PathPoint *s_prevSelected = NULL;
+static QHash<QGraphicsScene*, PathPoint*> s_prevSelected;
 
 PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
     : QPointF(xpos, ypos)
@@ -108,8 +108,10 @@ bool PathPoint::visible()
 
 void PathPoint::select()
 {
+    QGraphicsScene* scene = this->_pointHandle->scene();
+
     if (_toFollowPoint == NULL)
-        select(this);
+        select(this, scene);
 }
 
 bool PathPoint::selected() const
@@ -128,11 +130,11 @@ void PathPoint::setPos(qreal &xpos, qreal &ypos)
     }
 }
 
-void PathPoint::select(PathPoint *point)
+void PathPoint::select(PathPoint *point, QGraphicsScene *scene)
 {
-    if (s_prevSelected != NULL)
-        s_prevSelected->_selected = false;
+    if (s_prevSelected.contains(scene))
+        s_prevSelected[scene]->_selected = false;
 
-    s_prevSelected = point;
+    s_prevSelected[scene] = point;
     point->_selected = true;
 }
