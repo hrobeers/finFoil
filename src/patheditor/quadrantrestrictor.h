@@ -20,27 +20,40 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITORFWD_H
-#define PATHEDITORFWD_H
+#ifndef QUADRANTRESTRICTOR_H
+#define QUADRANTRESTRICTOR_H
 
-/*
-    Forward declarations for all patheditor classes.
- */
+#include "patheditorfwd/patheditorfwd.h"
+
+#include <QPointF>
+#include "restrictor.h"
 
 namespace patheditor
 {
-    class CubicBezier;
-    class EditablePath;
-    class Line;
-    class LineRestrictor;
-    class PathEditorWidget;
-    class PathItem;
-    class PathPoint;
-    class PathSettings;
-    class PointHandle;
-    class PointRestrictor;
-    class Restrictor;
-    class QuadrantRestrictor;
+    struct Quadrants
+    {
+        enum e
+        {
+            None = 0,
+            I = 1,
+            II = 2,
+            III = 4,
+            IV = 8
+        };
+    };
+
+    class QuadrantRestrictor : public Restrictor
+    {
+    public:
+        explicit QuadrantRestrictor(int quadrants);
+        explicit QuadrantRestrictor(QPointF &origin, int quadrants);
+
+        virtual void restrictCoordinate(qreal *x, qreal *y);
+
+    private:
+        QPointF _origin;
+        int _quadrants;
+    };
 }
 
-#endif // PATHEDITORFWD_H
+#endif // QUADRANTRESTRICTOR_H

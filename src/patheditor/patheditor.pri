@@ -11,7 +11,8 @@ HEADERS += \
     ../patheditor/pointrestrictor.h \
     ../patheditor/pathpoint.h \
     ../patheditor/patheditorfwd/patheditorfwd.h \
-    ../patheditor/patheditorfwd/qtfwd.h
+    ../patheditor/patheditorfwd/qtfwd.h \
+    ../patheditor/quadrantrestrictor.h
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
@@ -23,7 +24,8 @@ SOURCES += \
     ../patheditor/line.cpp \
     ../patheditor/linerestrictor.cpp \
     ../patheditor/pointrestrictor.cpp \
-    ../patheditor/pathpoint.cpp
+    ../patheditor/pathpoint.cpp \
+    ../patheditor/quadrantrestrictor.cpp
 
 OTHER_FILES += \
     ../patheditor/patheditorfwd/README

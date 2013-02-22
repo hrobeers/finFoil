@@ -32,6 +32,7 @@ class QGraphicsScene;
 class QVBoxLayout;
 class QHBoxLayout;
 class QGraphicsLineItem;
+class QPointF;
 
 QT_END_NAMESPACE
 
