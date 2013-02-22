@@ -20,21 +20,41 @@
  
 ****************************************************************************/
 
-#ifndef QTFWD_H
-#define QTFWD_H
+#ifndef EXCEPTIONS_H
+#define EXCEPTIONS_H
 
-#include <QtGlobal>
+#include <QString>
+#include <string>
 
-QT_BEGIN_NAMESPACE
+#include "qtconcurrentexception.h"
 
-class QGraphicsView;
-class QGraphicsScene;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGraphicsLineItem;
-class QPointF;
-class QString;
+namespace patheditor
+{
+    class PathEditorException : public QtConcurrent::Exception
+    {
+    public:
+        explicit PathEditorException(QString &message) throw();
+        explicit PathEditorException(QString &message, std::exception &innerException) throw();
 
-QT_END_NAMESPACE
+        virtual const QString& message() const;
+        virtual const std::exception& innerException() const;
 
-#endif // QTFWD_H
+        void raise() const { throw *this; }
+        Exception *clone() const { return new PathEditorException(*this); }
+
+        virtual ~PathEditorException() throw();
+
+    protected:
+        explicit PathEditorException() throw();
+        QString _message;
+        std::exception *_innerException;
+    };
+
+    class UnkownPathEditorException : public PathEditorException
+    {
+    public:
+        explicit UnkownPathEditorException(std::exception &innerException) throw();
+    };
+}
+
+#endif // EXCEPTIONS_H

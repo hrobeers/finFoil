@@ -20,21 +20,43 @@
  
 ****************************************************************************/
 
-#ifndef QTFWD_H
-#define QTFWD_H
+#include "exceptions.h"
 
-#include <QtGlobal>
+using namespace patheditor;
 
-QT_BEGIN_NAMESPACE
+PathEditorException::PathEditorException(QString &message) throw()
+{
+    _message = message;
+    _innerException = NULL;
+}
 
-class QGraphicsView;
-class QGraphicsScene;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGraphicsLineItem;
-class QPointF;
-class QString;
+PathEditorException::PathEditorException(QString &message, exception &innerException) throw()
+{
+    _message = message;
+    _innerException = &innerException;
+}
 
-QT_END_NAMESPACE
+const QString &PathEditorException::message() const
+{
+    return _message;
+}
 
-#endif // QTFWD_H
+const std::exception &PathEditorException::innerException() const
+{
+    return *_innerException;
+}
+
+PathEditorException::~PathEditorException() throw()
+{
+}
+
+PathEditorException::PathEditorException() throw()
+{
+    _innerException = NULL;
+}
+
+UnkownPathEditorException::UnkownPathEditorException(std::exception &innerException) throw()
+{
+    _message = "UnkownException thrown by a PathEditor";
+    _innerException = &innerException;
+}
