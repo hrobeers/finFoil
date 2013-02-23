@@ -103,7 +103,22 @@ void QuadrantRestrictor::restrictCoordinate(qreal *x, qreal *y)
     //
 
     default:
-        // TODO throw unsupported exception
+        QString message("Unsupported quadrant combination: ");
+
+        if (_quadrants & Quadrants::I)
+            message.append("I");
+        if (_quadrants & Quadrants::II)
+            message.append(", II");
+        if (_quadrants & Quadrants::III)
+            message.append(", III");
+        if (_quadrants & Quadrants::IV)
+            message.append(", IV");
+
+        throw QuadrantRestrictorException(message);
         break;
     }
 }
+
+
+QuadrantRestrictorException::QuadrantRestrictorException(QString &message) throw()
+    : PathEditorException(message) { }

@@ -23,34 +23,43 @@
 #include <QtGui/QApplication>
 #include <QLayout>
 #include <QGraphicsView>
+#include <QDebug>
 #include "mainwindow.h"
 #include "fineditors.h"
+#include "patheditorexception.h"
 
 using namespace fineditors;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    try
+    {
+        QApplication a(argc, argv);
 
-    ContourEditor* contourEditor = new ContourEditor();
-    ProfileEditor* profileEditor = new ProfileEditor();
-    ThicknessEditor* thicknessEditor = new ThicknessEditor();
+        ContourEditor* contourEditor = new ContourEditor();
+        ProfileEditor* profileEditor = new ProfileEditor();
+        ThicknessEditor* thicknessEditor = new ThicknessEditor();
 
-    QHBoxLayout* mainLayout = new QHBoxLayout();
-    QVBoxLayout* ptLayout = new QVBoxLayout();
+        QHBoxLayout* mainLayout = new QHBoxLayout();
+        QVBoxLayout* ptLayout = new QVBoxLayout();
 
-    ptLayout->addWidget(thicknessEditor);
-    ptLayout->addWidget(profileEditor);
+        ptLayout->addWidget(thicknessEditor);
+        ptLayout->addWidget(profileEditor);
 
-    mainLayout->addWidget(contourEditor);
-    mainLayout->addLayout(ptLayout);
+        mainLayout->addWidget(contourEditor);
+        mainLayout->addLayout(ptLayout);
 
-    QWidget* centralWidget = new QWidget();
-    centralWidget->setLayout(mainLayout);
+        QWidget* centralWidget = new QWidget();
+        centralWidget->setLayout(mainLayout);
 
-    MainWindow w;
-    w.setCentralWidget(centralWidget);
-    w.show();
+        MainWindow w;
+        w.setCentralWidget(centralWidget);
+        w.show();
 
-    return a.exec();
+        return a.exec();
+    }
+    catch (patheditor::PathEditorException &ex)
+    {
+        qDebug() << ex.what() << " " << ex.message();
+    }
 }

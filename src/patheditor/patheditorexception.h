@@ -20,43 +20,31 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
+#ifndef PATHEDITOREXCEPTION_H
+#define PATHEDITOREXCEPTION_H
 
-using namespace patheditor;
+#include <QString>
+#include <string>
+#include <exception>
 
-PathEditorException::PathEditorException(QString &message) throw()
+namespace patheditor
 {
-    _message = message;
-    _innerException = NULL;
+    class PathEditorException : public std::exception
+    {
+    public:
+        virtual const QString& message() const;
+        virtual const std::exception& innerException() const;
+
+        virtual ~PathEditorException() throw();
+
+    protected:
+        explicit PathEditorException() throw();
+        explicit PathEditorException(QString &message) throw();
+        explicit PathEditorException(QString &message, std::exception &innerException) throw();
+
+        QString _message;
+        std::exception *_innerException;
+    };
 }
 
-PathEditorException::PathEditorException(QString &message, exception &innerException) throw()
-{
-    _message = message;
-    _innerException = &innerException;
-}
-
-const QString &PathEditorException::message() const
-{
-    return _message;
-}
-
-const std::exception &PathEditorException::innerException() const
-{
-    return *_innerException;
-}
-
-PathEditorException::~PathEditorException() throw()
-{
-}
-
-PathEditorException::PathEditorException() throw()
-{
-    _innerException = NULL;
-}
-
-UnkownPathEditorException::UnkownPathEditorException(std::exception &innerException) throw()
-{
-    _message = "UnkownException thrown by a PathEditor";
-    _innerException = &innerException;
-}
+#endif // PATHEDITOREXCEPTION_H

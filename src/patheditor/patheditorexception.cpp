@@ -20,41 +20,37 @@
  
 ****************************************************************************/
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#include "patheditorexception.h"
 
-#include <QString>
-#include <string>
+using namespace patheditor;
 
-#include "qtconcurrentexception.h"
-
-namespace patheditor
+PathEditorException::PathEditorException() throw()
 {
-    class PathEditorException : public QtConcurrent::Exception
-    {
-    public:
-        explicit PathEditorException(QString &message) throw();
-        explicit PathEditorException(QString &message, std::exception &innerException) throw();
-
-        virtual const QString& message() const;
-        virtual const std::exception& innerException() const;
-
-        void raise() const { throw *this; }
-        Exception *clone() const { return new PathEditorException(*this); }
-
-        virtual ~PathEditorException() throw();
-
-    protected:
-        explicit PathEditorException() throw();
-        QString _message;
-        std::exception *_innerException;
-    };
-
-    class UnkownPathEditorException : public PathEditorException
-    {
-    public:
-        explicit UnkownPathEditorException(std::exception &innerException) throw();
-    };
+    _innerException = NULL;
 }
 
-#endif // EXCEPTIONS_H
+PathEditorException::PathEditorException(QString &message) throw()
+{
+    _message = message;
+    _innerException = NULL;
+}
+
+PathEditorException::PathEditorException(QString &message, exception &innerException) throw()
+{
+    _message = message;
+    _innerException = &innerException;
+}
+
+const QString &PathEditorException::message() const
+{
+    return _message;
+}
+
+const std::exception &PathEditorException::innerException() const
+{
+    return *_innerException;
+}
+
+PathEditorException::~PathEditorException() throw()
+{
+}
