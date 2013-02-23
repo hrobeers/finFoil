@@ -23,6 +23,7 @@ DEPENDPATH += ..
 
 include(../patheditor/patheditor.pri)
 include(../fineditors/fineditors.pri)
+include(../hrlib/hrlib.pri)
 
 OTHER_FILES +=  ../../LICENSE.BSD \
                 ../../README \

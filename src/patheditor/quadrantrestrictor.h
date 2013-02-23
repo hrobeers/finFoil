@@ -27,7 +27,7 @@
 
 #include <QPointF>
 #include "restrictor.h"
-#include "patheditorexception.h"
+#include "../hrlib/exceptions.h"
 
 namespace patheditor
 {
@@ -54,13 +54,6 @@ namespace patheditor
     private:
         QPointF _origin;
         int _quadrants;
-    };
-
-
-    class QuadrantRestrictorException : public PathEditorException
-    {
-    public:
-        explicit QuadrantRestrictorException(QString &message) throw();
     };
 }
 

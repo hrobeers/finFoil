@@ -20,31 +20,54 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITOREXCEPTION_H
-#define PATHEDITOREXCEPTION_H
+#include "exceptions.h"
 
-#include <QString>
-#include <string>
-#include <exception>
+#include <QObject>
 
-namespace patheditor
+using namespace hrlib;
+
+Exception::Exception(QObject *thrower) throw()
 {
-    class PathEditorException : public std::exception
-    {
-    public:
-        virtual const QString& message() const;
-        virtual const std::exception& innerException() const;
-
-        virtual ~PathEditorException() throw();
-
-    protected:
-        explicit PathEditorException() throw();
-        explicit PathEditorException(QString &message) throw();
-        explicit PathEditorException(QString &message, std::exception &innerException) throw();
-
-        QString _message;
-        std::exception *_innerException;
-    };
+    QString prefix("Exception thrown in ");
+    _message = prefix.append(thrower->metaObject()->className());
+    _innerException = NULL;
 }
 
-#endif // PATHEDITOREXCEPTION_H
+Exception::Exception(QString &message, QObject *thrower) throw()
+{
+    setMessage(message, thrower);
+    _innerException = NULL;
+}
+
+Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
+{
+    setMessage(message, thrower);
+    _innerException = &innerException;
+}
+
+void Exception::setMessage(QString &message, QObject *thrower) throw()
+{
+    if (thrower != NULL)
+    {
+        QString prefix("Exception thrown in ");
+        prefix.append(thrower->metaObject()->className());
+        prefix.append(": ");
+        message.prepend(prefix);
+    }
+
+    _message = message;
+}
+
+const QString &Exception::message() const
+{
+    return _message;
+}
+
+const std::exception &Exception::innerException() const
+{
+    return *_innerException;
+}
+
+
+ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
+    : Exception(message, thrower) { }

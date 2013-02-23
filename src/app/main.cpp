@@ -26,7 +26,7 @@
 #include <QDebug>
 #include "mainwindow.h"
 #include "fineditors.h"
-#include "patheditorexception.h"
+#include "../hrlib/exceptions.h"
 
 using namespace fineditors;
 
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
 
         return a.exec();
     }
-    catch (patheditor::PathEditorException &ex)
+    catch (hrlib::Exception &ex)
     {
-        qDebug() << ex.what() << " " << ex.message();
+        qDebug() << ex.message();
     }
 }

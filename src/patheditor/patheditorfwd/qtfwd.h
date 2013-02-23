@@ -27,6 +27,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QObject;
 class QGraphicsView;
 class QGraphicsScene;
 class QVBoxLayout;

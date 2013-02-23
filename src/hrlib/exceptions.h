@@ -20,37 +20,40 @@
  
 ****************************************************************************/
 
-#include "patheditorexception.h"
+#ifndef EXCEPTIONS_H
+#define EXCEPTIONS_H
 
-using namespace patheditor;
+#include <QObject>
+#include <QString>
+#include <exception>
 
-PathEditorException::PathEditorException() throw()
+namespace hrlib
 {
-    _innerException = NULL;
+    class Exception : public std::exception
+    {
+    public:
+        explicit Exception(QObject *thrower = NULL) throw();
+        explicit Exception(QString &message, QObject *thrower = NULL) throw();
+        explicit Exception(QString &message, std::exception &innerException, QObject *thrower = NULL) throw();
+
+        virtual const QString& message() const;
+        virtual const std::exception& innerException() const;
+
+        virtual ~Exception() throw() { }
+
+    protected:
+        void setMessage(QString &message, QObject *thrower = NULL) throw();
+
+        QString _message;
+        std::exception *_innerException;
+    };
+
+
+    class ArgumentException : public Exception
+    {
+    public:
+        explicit ArgumentException(QString &message, QObject *thrower = NULL) throw();
+    };
 }
 
-PathEditorException::PathEditorException(QString &message) throw()
-{
-    _message = message;
-    _innerException = NULL;
-}
-
-PathEditorException::PathEditorException(QString &message, exception &innerException) throw()
-{
-    _message = message;
-    _innerException = &innerException;
-}
-
-const QString &PathEditorException::message() const
-{
-    return _message;
-}
-
-const std::exception &PathEditorException::innerException() const
-{
-    return *_innerException;
-}
-
-PathEditorException::~PathEditorException() throw()
-{
-}
+#endif // EXCEPTIONS_H

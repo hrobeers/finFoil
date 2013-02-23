@@ -114,11 +114,7 @@ void QuadrantRestrictor::restrictCoordinate(qreal *x, qreal *y)
         if (_quadrants & Quadrants::IV)
             message.append(", IV");
 
-        throw QuadrantRestrictorException(message);
+        throw hrlib::ArgumentException(message);
         break;
     }
 }
-
-
-QuadrantRestrictorException::QuadrantRestrictorException(QString &message) throw()
-    : PathEditorException(message) { }
