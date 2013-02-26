@@ -61,5 +61,6 @@ int main(int argc, char *argv[])
     catch (hrlib::Exception &ex)
     {
         qDebug() << ex.message();
+        return 1;
     }
 }
