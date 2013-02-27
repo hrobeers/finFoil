@@ -20,40 +20,28 @@
  
 ****************************************************************************/
 
-#ifndef HR_EXCEPTIONS_H
-#define HR_EXCEPTIONS_H
+#ifndef HR_VERSION_H
+#define HR_VERSION_H
 
-#include <QObject>
 #include <QString>
-#include <exception>
 
 namespace hrlib
 {
-    class Exception : public std::exception
+    class Version
     {
     public:
-        explicit Exception(QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, std::exception &innerException, QObject *thrower = NULL) throw();
+        explicit Version(int major, int minor, int build, QString commit);
 
-        virtual const QString& message() const;
-        virtual const std::exception& innerException() const;
+        QString toString();
+        QString commit();
 
-        virtual ~Exception() throw() { }
-
-    protected:
-        void setMessage(QString &message, QObject *thrower = NULL) throw();
-
-        QString _message;
-        std::exception *_innerException;
-    };
-
-
-    class ArgumentException : public Exception
-    {
-    public:
-        explicit ArgumentException(QString &message, QObject *thrower = NULL) throw();
+    private:
+        int _major;
+        int _minor;
+        int _build;
+        QString _commit;
+        QString _string;
     };
 }
 
-#endif // HR_EXCEPTIONS_H
+#endif // HR_VERSION_H

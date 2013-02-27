@@ -24,14 +24,21 @@
 #include <QLayout>
 #include <QGraphicsView>
 #include <QDebug>
+#include "finfoil_version.h"
 #include "mainwindow.h"
 #include "fineditors.h"
 #include "../hrlib/exceptions.h"
+
+#include <iostream>
 
 using namespace fineditors;
 
 int main(int argc, char *argv[])
 {
+    hrlib::Version version = finfoil::version();
+    qDebug() << "Starting finFoil" << version.toString().toStdString().c_str()
+             << "git-hash" << version.commit().toStdString().c_str();
+
     try
     {
         QApplication a(argc, argv);

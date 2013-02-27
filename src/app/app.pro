@@ -12,12 +12,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    finfoil_version.h \
+    ../version_autogen.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH += ../patheditor/ \
-            ../fineditors/
+INCLUDEPATH +=  ../ \
+                ../patheditor/ \
+                ../fineditors/
 
 DEPENDPATH += ..
 

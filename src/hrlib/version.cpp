@@ -20,40 +20,27 @@
  
 ****************************************************************************/
 
-#ifndef HR_EXCEPTIONS_H
-#define HR_EXCEPTIONS_H
+#include "version.h"
 
-#include <QObject>
-#include <QString>
-#include <exception>
+using namespace hrlib;
 
-namespace hrlib
+Version::Version(int major, int minor, int build, QString commit)
 {
-    class Exception : public std::exception
-    {
-    public:
-        explicit Exception(QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, std::exception &innerException, QObject *thrower = NULL) throw();
+    _major = major;
+    _minor = minor;
+    _build = build;
+    _commit = commit;
 
-        virtual const QString& message() const;
-        virtual const std::exception& innerException() const;
-
-        virtual ~Exception() throw() { }
-
-    protected:
-        void setMessage(QString &message, QObject *thrower = NULL) throw();
-
-        QString _message;
-        std::exception *_innerException;
-    };
-
-
-    class ArgumentException : public Exception
-    {
-    public:
-        explicit ArgumentException(QString &message, QObject *thrower = NULL) throw();
-    };
+    // Create string
+    _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.').append(QString::number(_build));
 }
 
-#endif // HR_EXCEPTIONS_H
+QString hrlib::Version::toString()
+{
+    return _string;
+}
+
+QString Version::commit()
+{
+    return _commit;
+}
