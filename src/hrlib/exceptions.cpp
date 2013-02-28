@@ -30,13 +30,13 @@ Exception::Exception(QObject *thrower) throw()
 {
     QString prefix("Exception thrown in ");
     _message = prefix.append(thrower->metaObject()->className());
-    _innerException = NULL;
+    _innerException = 0;
 }
 
 Exception::Exception(QString &message, QObject *thrower) throw()
 {
     setMessage(message, thrower);
-    _innerException = NULL;
+    _innerException = 0;
 }
 
 Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
@@ -47,7 +47,7 @@ Exception::Exception(QString &message, exception &innerException, QObject *throw
 
 void Exception::setMessage(QString &message, QObject *thrower) throw()
 {
-    if (thrower != NULL)
+    if (thrower)
     {
         QString prefix("Exception thrown in ");
         prefix.append(thrower->metaObject()->className());

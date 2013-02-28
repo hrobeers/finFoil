@@ -32,9 +32,9 @@ namespace hrlib
     class Exception : public std::exception
     {
     public:
-        explicit Exception(QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, QObject *thrower = NULL) throw();
-        explicit Exception(QString &message, std::exception &innerException, QObject *thrower = NULL) throw();
+        explicit Exception(QObject *thrower = 0) throw();
+        explicit Exception(QString &message, QObject *thrower = 0) throw();
+        explicit Exception(QString &message, std::exception &innerException, QObject *thrower = 0) throw();
 
         virtual const QString& message() const;
         virtual const std::exception& innerException() const;
@@ -42,7 +42,7 @@ namespace hrlib
         virtual ~Exception() throw() { }
 
     protected:
-        void setMessage(QString &message, QObject *thrower = NULL) throw();
+        void setMessage(QString &message, QObject *thrower = 0) throw();
 
         QString _message;
         std::exception *_innerException;
@@ -52,7 +52,7 @@ namespace hrlib
     class ArgumentException : public Exception
     {
     public:
-        explicit ArgumentException(QString &message, QObject *thrower = NULL) throw();
+        explicit ArgumentException(QString &message, QObject *thrower = 0) throw();
     };
 }
 

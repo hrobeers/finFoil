@@ -33,8 +33,8 @@ PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
     : QPointF(xpos, ypos)
 {
     _selected = false;
-    _pointHandle = NULL;
-    _toFollowPoint = NULL;
+    _pointHandle = 0;
+    _toFollowPoint = 0;
 
     _type = type;
 }
@@ -70,7 +70,7 @@ void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
 
 void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
 {
-    if (_pointHandle != NULL)
+    if (_pointHandle)
     {
         _pointHandle->scene()->removeItem(_pointHandle);
         delete _pointHandle;
@@ -96,13 +96,13 @@ void PathPoint::addFollowingPoint(QSharedPointer<PathPoint> point)
 
 bool PathPoint::visible()
 {
-    if (_toFollowPoint == NULL)
+    if (_toFollowPoint)
     {
-        return true;
+        return _toFollowPoint->selected();
     }
     else
     {
-        return _toFollowPoint->selected();
+        return true;
     }
 }
 
@@ -110,7 +110,7 @@ void PathPoint::select()
 {
     QGraphicsScene* scene = this->_pointHandle->scene();
 
-    if (_toFollowPoint == NULL)
+    if (!_toFollowPoint)
         select(this, scene);
 }
 
@@ -124,7 +124,7 @@ void PathPoint::setPos(qreal &xpos, qreal &ypos)
     this->setX(xpos);
     this->setY(ypos);
 
-    if (_pointHandle != NULL)
+    if (_pointHandle)
     {
         _pointHandle->setCenter(xpos, ypos);
     }
