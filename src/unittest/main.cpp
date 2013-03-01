@@ -30,5 +30,5 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    return runTests(app);
+    return UnitTests::runTests(app);
 }

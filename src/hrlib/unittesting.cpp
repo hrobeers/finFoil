@@ -29,12 +29,12 @@
 using namespace hrlib;
 
 
-void hrlib::addTest(TestFactoryBase* test, const char* testName)
+void UnitTests::addTest(TestFactoryBase* test, const char* testName)
 {
-    TestFactoryBase::getTests().insert(QString(testName), test);
+    UnitTests::getTests().insert(QString(testName), test);
 }
 
-int hrlib::runTests(QCoreApplication& app)
+int UnitTests::runTests(QCoreApplication& app)
 {
     bool runAllTests = true;
     Q_FOREACH(const QString& arg, app.arguments()) {
@@ -45,12 +45,12 @@ int hrlib::runTests(QCoreApplication& app)
             // Run this test
             QString testName(arg.mid(6));
 
-            if (!TestFactoryBase::getTests().contains(testName)) {
+            if (!UnitTests::getTests().contains(testName)) {
                 qDebug() << "Test" << testName << "not registered";
                 return -1;
             }
 
-            QObject* test = TestFactoryBase::getTests().value(testName)->createTest();
+            QObject* test = UnitTests::getTests().value(testName)->createTest();
             const int ret = QTest::qExec(test);
             delete test;
             if (ret != 0)
@@ -62,7 +62,7 @@ int hrlib::runTests(QCoreApplication& app)
     }
 
     if (runAllTests) {
-        QHash<QString, TestFactoryBase*>& tests(TestFactoryBase::getTests());
+        QHash<QString, TestFactoryBase*>& tests(UnitTests::getTests());
         for (QHash<QString, TestFactoryBase*>::const_iterator i = tests.constBegin(); i != tests.constEnd(); ++i) {
             QObject* test = i.value()->createTest();
             const int ret = QTest::qExec(test);

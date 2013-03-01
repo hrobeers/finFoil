@@ -25,28 +25,35 @@
 
 #include <QTest>
 
-namespace hrlib {
-    class TestFactoryBase {
+namespace hrlib
+{
+    class TestFactoryBase
+    {
     public:
         virtual ~TestFactoryBase() {}
 
         virtual QObject* createTest() = 0;
+    };
 
+    class UnitTests
+    {
+    public:
         static QHash<QString, TestFactoryBase*>& getTests()
         {
             static QHash<QString, TestFactoryBase*> tests;
             return tests;
         }
+
+        static void addTest(TestFactoryBase* test, const char* testName);
+        static int runTests(QCoreApplication& app);
     };
 
-    void addTest(TestFactoryBase* test, const char* testName);
-    int runTests(QCoreApplication& app);
-
-    template <typename T> class TestFactory : public TestFactoryBase {
+    template <typename T> class TestFactory : public TestFactoryBase
+    {
     public:
         TestFactory(const char* testName)
         {
-            addTest(this, testName);
+            UnitTests::addTest(this, testName);
         }
 
         virtual QObject* createTest() { return new T; }
