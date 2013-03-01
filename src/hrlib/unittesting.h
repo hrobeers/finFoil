@@ -40,6 +40,7 @@ namespace hrlib {
     };
 
     void addTest(TestFactoryBase* test, const char* testName);
+    int runTests(QCoreApplication& app);
 
     template <typename T> class TestFactory : public TestFactoryBase {
     public:

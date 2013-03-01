@@ -22,10 +22,56 @@
 
 #include "unittesting.h"
 
+#include <QDir>
+#include <QHash>
+#include <QDebug>
+
 using namespace hrlib;
 
 
 void hrlib::addTest(TestFactoryBase* test, const char* testName)
 {
     TestFactoryBase::getTests().insert(QString(testName), test);
+}
+
+int hrlib::runTests(QCoreApplication& app)
+{
+    bool runAllTests = true;
+    Q_FOREACH(const QString& arg, app.arguments()) {
+        if (arg.startsWith("-dir=")) {
+            // Run in this directory
+            QDir::setCurrent(arg.mid(5));
+        } else if (arg.startsWith("-test=")) {
+            // Run this test
+            QString testName(arg.mid(6));
+
+            if (!TestFactoryBase::getTests().contains(testName)) {
+                qDebug() << "Test" << testName << "not registered";
+                return -1;
+            }
+
+            QObject* test = TestFactoryBase::getTests().value(testName)->createTest();
+            const int ret = QTest::qExec(test);
+            delete test;
+            if (ret != 0)
+                return ret;
+
+            // We have run a test manually, so don't run them all
+            runAllTests = false;
+        }
+    }
+
+    if (runAllTests) {
+        QHash<QString, TestFactoryBase*>& tests(TestFactoryBase::getTests());
+        for (QHash<QString, TestFactoryBase*>::const_iterator i = tests.constBegin(); i != tests.constEnd(); ++i) {
+            QObject* test = i.value()->createTest();
+            const int ret = QTest::qExec(test);
+            delete test;
+            if (ret != 0) {
+                return ret;
+            }
+        }
+    }
+
+    return 0;
 }
