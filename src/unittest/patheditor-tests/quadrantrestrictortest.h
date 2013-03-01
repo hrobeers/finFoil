@@ -20,57 +20,18 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
+#ifndef QUADRANTRESTRICTORTEST_H
+#define QUADRANTRESTRICTORTEST_H
 
 #include <QObject>
 
-using namespace hrlib;
-
-Exception::Exception(QObject *thrower) throw()
+class QuadrantRestrictorTest : public QObject
 {
-    QString prefix("Exception thrown in ");
+    Q_OBJECT
 
-    if (thrower)
-        _message = prefix.append(thrower->metaObject()->className());
+private slots:
+    void testException();
+    
+};
 
-    _innerException = 0;
-}
-
-Exception::Exception(QString &message, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = 0;
-}
-
-Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = &innerException;
-}
-
-void Exception::setMessage(QString &message, QObject *thrower) throw()
-{
-    if (thrower)
-    {
-        QString prefix("Exception thrown in ");
-        prefix.append(thrower->metaObject()->className());
-        prefix.append(": ");
-        message.prepend(prefix);
-    }
-
-    _message = message;
-}
-
-const QString &Exception::message() const
-{
-    return _message;
-}
-
-const std::exception &Exception::innerException() const
-{
-    return *_innerException;
-}
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
+#endif // QUADRANTRESTRICTORTEST_H

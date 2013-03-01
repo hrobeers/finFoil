@@ -20,57 +20,47 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
+#ifndef UNITTESTING_H
+#define UNITTESTING_H
 
-#include <QObject>
+#include <QTest>
 
-using namespace hrlib;
+namespace hrlib {
+    class TestFactoryBase {
+    public:
+        virtual ~TestFactoryBase() {}
 
-Exception::Exception(QObject *thrower) throw()
-{
-    QString prefix("Exception thrown in ");
+        virtual QObject* createTest() = 0;
 
-    if (thrower)
-        _message = prefix.append(thrower->metaObject()->className());
+        static QHash<QString, TestFactoryBase*>& getTests()
+        {
+            static QHash<QString, TestFactoryBase*> tests;
+            return tests;
+        }
+    };
 
-    _innerException = 0;
+    void addTest(TestFactoryBase* test, const char* testName);
+
+    template <typename T> class TestFactory : public TestFactoryBase {
+    public:
+        TestFactory(const char* testName)
+        {
+            addTest(this, testName);
+        }
+
+        virtual QObject* createTest() { return new T; }
+    };
 }
 
-Exception::Exception(QString &message, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = 0;
-}
+#define HR_ADD_TEST(testClass) static hrlib::TestFactory<testClass> testFactory(#testClass);
 
-Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = &innerException;
-}
-
-void Exception::setMessage(QString &message, QObject *thrower) throw()
-{
-    if (thrower)
-    {
-        QString prefix("Exception thrown in ");
-        prefix.append(thrower->metaObject()->className());
-        prefix.append(": ");
-        message.prepend(prefix);
+// This one is missing from the Qt test lib
+#define HR_ASSERT_THROW(code, exc) \
+    try { \
+        code; \
+        QFAIL("Exception #exc not thrown"); \
+    } catch (exc&) { \
+        /* All is well */ \
     }
 
-    _message = message;
-}
-
-const QString &Exception::message() const
-{
-    return _message;
-}
-
-const std::exception &Exception::innerException() const
-{
-    return *_innerException;
-}
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
+#endif // UNITTESTING_H

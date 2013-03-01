@@ -20,57 +20,56 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
+#include <QCoreApplication>
+#include <QDir>
+#include <QHash>
+#include <QDebug>
 
-#include <QObject>
+#include "hrlib/unittesting.h"
 
 using namespace hrlib;
 
-Exception::Exception(QObject *thrower) throw()
+// TODO move to internal logic into unittesting.cpp
+int main(int argc, char *argv[])
 {
-    QString prefix("Exception thrown in ");
+    QCoreApplication app(argc, argv);
 
-    if (thrower)
-        _message = prefix.append(thrower->metaObject()->className());
+    bool runAllTests = true;
+    Q_FOREACH(const QString& arg, app.arguments()) {
+        if (arg.startsWith("-dir=")) {
+            // Run in this directory
+            QDir::setCurrent(arg.mid(5));
+        } else if (arg.startsWith("-test=")) {
+            // Run this test
+            QString testName(arg.mid(6));
 
-    _innerException = 0;
-}
+            if (!TestFactoryBase::getTests().contains(testName)) {
+                qDebug() << "Test" << testName << "not registered";
+                return -1;
+            }
 
-Exception::Exception(QString &message, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = 0;
-}
+            QObject* test = TestFactoryBase::getTests().value(testName)->createTest();
+            const int ret = QTest::qExec(test);
+            delete test;
+            if (ret != 0)
+                return ret;
 
-Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = &innerException;
-}
-
-void Exception::setMessage(QString &message, QObject *thrower) throw()
-{
-    if (thrower)
-    {
-        QString prefix("Exception thrown in ");
-        prefix.append(thrower->metaObject()->className());
-        prefix.append(": ");
-        message.prepend(prefix);
+            // We have run a test manually, so don't run them all
+            runAllTests = false;
+        }
     }
 
-    _message = message;
+    if (runAllTests) {
+        QHash<QString, TestFactoryBase*>& tests(TestFactoryBase::getTests());
+        for (QHash<QString, TestFactoryBase*>::const_iterator i = tests.constBegin(); i != tests.constEnd(); ++i) {
+            QObject* test = i.value()->createTest();
+            const int ret = QTest::qExec(test);
+            delete test;
+            if (ret != 0) {
+                return ret;
+            }
+        }
+    }
+
+    return 0;
 }
-
-const QString &Exception::message() const
-{
-    return _message;
-}
-
-const std::exception &Exception::innerException() const
-{
-    return *_innerException;
-}
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }

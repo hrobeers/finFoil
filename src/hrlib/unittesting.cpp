@@ -20,57 +20,12 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
-
-#include <QObject>
+#include "unittesting.h"
 
 using namespace hrlib;
 
-Exception::Exception(QObject *thrower) throw()
+
+void hrlib::addTest(TestFactoryBase* test, const char* testName)
 {
-    QString prefix("Exception thrown in ");
-
-    if (thrower)
-        _message = prefix.append(thrower->metaObject()->className());
-
-    _innerException = 0;
+    TestFactoryBase::getTests().insert(QString(testName), test);
 }
-
-Exception::Exception(QString &message, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = 0;
-}
-
-Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = &innerException;
-}
-
-void Exception::setMessage(QString &message, QObject *thrower) throw()
-{
-    if (thrower)
-    {
-        QString prefix("Exception thrown in ");
-        prefix.append(thrower->metaObject()->className());
-        prefix.append(": ");
-        message.prepend(prefix);
-    }
-
-    _message = message;
-}
-
-const QString &Exception::message() const
-{
-    return _message;
-}
-
-const std::exception &Exception::innerException() const
-{
-    return *_innerException;
-}
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }

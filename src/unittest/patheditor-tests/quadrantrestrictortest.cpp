@@ -20,57 +20,25 @@
  
 ****************************************************************************/
 
-#include "exceptions.h"
+#include "quadrantrestrictortest.h"
+#include "patheditor/quadrantrestrictor.h"
+#include "hrlib/unittesting.h"
 
-#include <QObject>
 
-using namespace hrlib;
-
-Exception::Exception(QObject *thrower) throw()
+void QuadrantRestrictorTest::testException()
 {
-    QString prefix("Exception thrown in ");
-
-    if (thrower)
-        _message = prefix.append(thrower->metaObject()->className());
-
-    _innerException = 0;
-}
-
-Exception::Exception(QString &message, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = 0;
-}
-
-Exception::Exception(QString &message, exception &innerException, QObject *thrower) throw()
-{
-    setMessage(message, thrower);
-    _innerException = &innerException;
-}
-
-void Exception::setMessage(QString &message, QObject *thrower) throw()
-{
-    if (thrower)
+    try
     {
-        QString prefix("Exception thrown in ");
-        prefix.append(thrower->metaObject()->className());
-        prefix.append(": ");
-        message.prepend(prefix);
+        patheditor::QuadrantRestrictor res(patheditor::Quadrants::I | patheditor::Quadrants::III);
+
+        qreal a(1);
+
+        HR_ASSERT_THROW(res.restrictCoordinate(&a, &a), hrlib::ArgumentException)
     }
-
-    _message = message;
+    catch(...)
+    {
+        QFAIL("Unexpected exception during test");
+    }
 }
 
-const QString &Exception::message() const
-{
-    return _message;
-}
-
-const std::exception &Exception::innerException() const
-{
-    return *_innerException;
-}
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
+HR_ADD_TEST(QuadrantRestrictorTest)
