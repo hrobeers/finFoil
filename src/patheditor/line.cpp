@@ -56,9 +56,8 @@ void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/,
     _boundingRect = painterPath.boundingRect();
 }
 
-void Line::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
+                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
-    painter->setPen(settings->linePen());
-
-    paint(painter, option, widget);
+    totalPainterPath->lineTo(*endPoint());
 }

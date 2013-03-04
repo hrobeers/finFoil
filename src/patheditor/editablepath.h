@@ -53,6 +53,8 @@ namespace patheditor
     private:
         PathSettings _settings;
 
+        QScopedPointer<QPainterPath> _painterPath;
+
         QLinkedList<QSharedPointer<PathItem> > _pathItemList;
     };
 }

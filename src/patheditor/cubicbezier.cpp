@@ -76,10 +76,10 @@ void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*un
     _boundingRect = painterPath.controlPointRect();
 }
 
-void CubicBezier::paint(PathSettings *settings, QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
+                        const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
-    PathItem::paint(settings, painter, option, widget);
+    paintControlPoints(settings, painter);
 
-    painter->setPen(settings->linePen());
-    paint(painter, option, widget);
+    totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *endPoint());
 }
