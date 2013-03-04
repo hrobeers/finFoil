@@ -26,6 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QLinkedList>
+#include <QMutex>
 #include "pathitem.h"
 #include "pathsettings.h"
 
@@ -50,9 +51,17 @@ namespace patheditor
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget);
 
+        /**
+         * @brief get the last drawn QPainterPath. The caller takes ownership of the pointer.
+         *        This funtion is threadsafe and can be called from any thread.
+         * @return
+         */
+        QPainterPath* takePainterPath();
+
     private:
         PathSettings _settings;
 
+        QMutex _painterPathLock;
         QScopedPointer<QPainterPath> _painterPath;
 
         QLinkedList<QSharedPointer<PathItem> > _pathItemList;

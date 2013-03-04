@@ -93,14 +93,32 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     if (!_pathItemList.isEmpty())
     {
-        _painterPath.reset(new QPainterPath(*(_pathItemList.first()->startPoint())));
+        QScopedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_pathItemList.first()->startPoint())));
 
         foreach(QSharedPointer<PathItem> item, _pathItemList)
         {
-            item->paintPathItem(&_settings, _painterPath.data(), painter, option, widget);
+            item->paintPathItem(&_settings, newPainterPath.data(), painter, option, widget);
         }
 
         painter->setPen(_settings.linePen());
-        painter->drawPath(*(_painterPath.data()));
+        painter->drawPath(*(newPainterPath.data()));
+
+        if(_painterPathLock.tryLock())
+        {
+            _painterPath.reset(newPainterPath.take());
+            _painterPathLock.unlock();
+        }
     }
+}
+
+QPainterPath *EditablePath::takePainterPath()
+{
+    QPainterPath* retVal = 0;
+
+    _painterPathLock.lock();
+    if (!_painterPath.isNull())
+        retVal = _painterPath.take();
+    _painterPathLock.unlock();
+
+    return retVal;
 }
