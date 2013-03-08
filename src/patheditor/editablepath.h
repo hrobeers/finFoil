@@ -26,7 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QLinkedList>
-//#include <QMutex>
+#include <QMutex>
 #include "pathitem.h"
 #include "pathsettings.h"
 
@@ -35,10 +35,11 @@ namespace patheditor
     /**
      * @brief A compound path, build by PathItems, that can be edited by dragging control points
      */
-    class EditablePath : public QGraphicsItem
+    class EditablePath : public QGraphicsObject
     {
+        Q_OBJECT
     public:
-        explicit EditablePath(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit EditablePath(QGraphicsItem * parent = 0);
 
         /**
          * @brief append Append a new path item to the editable path
@@ -53,15 +54,19 @@ namespace patheditor
 
         /**
          * @brief get the last drawn QPainterPath. The caller takes ownership of the pointer.
-         *        This funtion is not threadsafe and cannot be called from any thread.
+         *        This funtion is threadsafe and can be called from any thread.
+         *        Typically used when pathChanged is emitted.
          * @return
          */
         QPainterPath* takePainterPath();
 
+    signals:
+        void pathChanged(EditablePath *sender);
+
     private:
         PathSettings _settings;
 
-//        QMutex _painterPathLock;
+        QMutex _painterPathLock;
         QScopedPointer<QPainterPath> _painterPath;
 
         QLinkedList<QSharedPointer<PathItem> > _pathItemList;
