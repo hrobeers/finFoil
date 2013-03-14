@@ -1,4 +1,4 @@
-* Edit the fineditors to their specific needs (are identical now)
+* Probably best to remove locking from EditablePath and put in ThicknessContours where multithreading will happen
 
 General TODO's
 ==============

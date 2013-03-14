@@ -20,33 +20,40 @@
  
 ****************************************************************************/
 
-#ifndef CONTOUREDITOR_H
-#define CONTOUREDITOR_H
+#include "thicknesscontours.h"
 
-#include <QWidget>
-#include "patheditorwidget.h"
+#include<QPainter>
+#include "editablepath.h"
 
-namespace fineditors
+using namespace fineditors;
+
+ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
+    QGraphicsObject(parent)
 {
-    /**
-     * Editor to edit fin contours.
-     * This editor can display the thickness contours while editing.
-     */
-    class ContourEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit ContourEditor(QWidget *parent = 0);
-
-    signals:
-
-    public slots:
-
-    private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-
-    };
 }
 
-#endif // CONTOUREDITOR_H
+void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    if (!_outline.isNull())
+    {
+        _outline->setFillRule(Qt::WindingFill);
+        painter->setBrush(QColor(122, 163, 39));
+        painter->drawPath(*_outline);
+    }
+}
+
+QRectF ThicknessContours::boundingRect() const
+{
+    if (!_outline.isNull())
+    {
+        return _outline->boundingRect();
+    }
+
+    QRectF retVal;
+    return retVal;
+}
+
+void ThicknessContours::onOutlineChange(EditablePath *sender)
+{
+    _outline.reset(sender->takePainterPath());
+}

@@ -59,6 +59,7 @@ namespace patheditor
          * @param path The EditablePath to add
          */
         void addPath(EditablePath *path);
+        void addGraphicsItem(QGraphicsItem *item);
 
         /**
          * Enables a specific feature

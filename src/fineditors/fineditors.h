@@ -23,7 +23,7 @@
 #ifndef FINEDITORS_H
 #define FINEDITORS_H
 
-#include "contoureditor/contoureditor.h"
+#include "outlineeditor/outlineeditor.h"
 #include "profileeditor/profileeditor.h"
 #include "thicknesseditor/thicknesseditor.h"
 

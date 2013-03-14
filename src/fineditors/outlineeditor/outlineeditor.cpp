@@ -20,18 +20,19 @@
  
 ****************************************************************************/
 
-#include "contoureditor.h"
+#include "outlineeditor.h"
 
 #include <QVBoxLayout>
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "line.h"
 #include "quadrantrestrictor.h"
+#include "thicknesscontours.h"
 
 using namespace fineditors;
 using namespace patheditor;
 
-ContourEditor::ContourEditor(QWidget *parent) :
+OutlineEditor::OutlineEditor(QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget(this);
@@ -54,6 +55,10 @@ ContourEditor::ContourEditor(QWidget *parent) :
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
     path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
 
+    ThicknessContours *contours = new ThicknessContours();
+    connect(path, SIGNAL(pathChanged(EditablePath*)), contours, SLOT(onOutlineChange(EditablePath*)));
+
+    _pathEditor->addGraphicsItem(contours);
     _pathEditor->addPath(path);
 
     _mainLayout = new QVBoxLayout(this);

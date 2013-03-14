@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        ContourEditor* contourEditor = new ContourEditor();
+        OutlineEditor* contourEditor = new OutlineEditor();
         ProfileEditor* profileEditor = new ProfileEditor();
         ThicknessEditor* thicknessEditor = new ThicknessEditor();
 

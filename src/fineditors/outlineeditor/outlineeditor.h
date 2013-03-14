@@ -20,24 +20,33 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSCONTOURS_H
-#define THICKNESSCONTOURS_H
+#ifndef OUTLINEEDITOR_H
+#define OUTLINEEDITOR_H
 
-#include <QGraphicsObject>
+#include <QWidget>
+#include "patheditorwidget.h"
 
 namespace fineditors
 {
-    class ThicknessContours : public QGraphicsObject
+    /**
+     * Editor to edit the fin outline.
+     * This editor can display the thickness contours while editing.
+     */
+    class OutlineEditor : public QWidget
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(QGraphicsItem *parent = 0);
+        explicit OutlineEditor(QWidget *parent = 0);
 
     signals:
 
     public slots:
 
+    private:
+        QVBoxLayout* _mainLayout;
+        patheditor::PathEditorWidget* _pathEditor;
+
     };
 }
 
-#endif // THICKNESSCONTOURS_H
+#endif // OUTLINEEDITOR_H

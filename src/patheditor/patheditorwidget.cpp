@@ -71,6 +71,11 @@ void PathEditorWidget::addPath(EditablePath* path)
     this->scene()->addItem(path);
 }
 
+void PathEditorWidget::addGraphicsItem(QGraphicsItem *item)
+{
+    this->scene()->addItem(item);
+}
+
 void PathEditorWidget::enableFeature(Features::e feature)
 {
     if (!featureEnabled(feature))

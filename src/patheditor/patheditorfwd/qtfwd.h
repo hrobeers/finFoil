@@ -30,6 +30,7 @@ QT_BEGIN_NAMESPACE
 class QObject;
 class QGraphicsView;
 class QGraphicsScene;
+class QGraphicsItem;
 class QVBoxLayout;
 class QHBoxLayout;
 class QGraphicsLineItem;

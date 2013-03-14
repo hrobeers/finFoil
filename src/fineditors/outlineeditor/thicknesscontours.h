@@ -20,11 +20,33 @@
  
 ****************************************************************************/
 
-#include "thicknesscontours.h"
+#ifndef THICKNESSCONTOURS_H
+#define THICKNESSCONTOURS_H
 
-using namespace fineditors;
+#include <QGraphicsObject>
+#include "patheditorfwd/patheditorfwd.h"
 
-ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
-    QGraphicsObject(parent)
+using namespace patheditor;
+
+namespace fineditors
 {
+    class ThicknessContours : public QGraphicsObject
+    {
+        Q_OBJECT
+    public:
+        explicit ThicknessContours(QGraphicsItem *parent = 0);
+
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual QRectF boundingRect() const;
+
+    signals:
+
+    public slots:
+        void onOutlineChange(EditablePath *sender);
+
+    private:
+        QScopedPointer<QPainterPath> _outline;
+    };
 }
+
+#endif // THICKNESSCONTOURS_H
