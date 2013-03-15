@@ -28,6 +28,8 @@
 #include <QWidget>
 #include "patheditorwidget.h"
 
+using namespace patheditor;
+
 namespace fineditors
 {
     class ProfileEditor : public QWidget
@@ -37,6 +39,7 @@ namespace fineditors
         explicit ProfileEditor(QWidget *parent = 0);
 
     signals:
+        void profileChanged(EditablePath *sender);
 
     public slots:
 

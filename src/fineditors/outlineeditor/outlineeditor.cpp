@@ -30,7 +30,6 @@
 #include "thicknesscontours.h"
 
 using namespace fineditors;
-using namespace patheditor;
 
 OutlineEditor::OutlineEditor(QWidget *parent) :
     QWidget(parent)
@@ -57,6 +56,8 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
 
     ThicknessContours *contours = new ThicknessContours();
     connect(path, SIGNAL(pathChanged(EditablePath*)), contours, SLOT(onOutlineChange(EditablePath*)));
+    connect(this, SIGNAL(profileChanged(EditablePath*)), contours, SLOT(onProfileChange(EditablePath*)));
+    connect(this, SIGNAL(thicknessChanged(EditablePath*)), contours, SLOT(onThicknessChange(EditablePath*)));
 
     _pathEditor->addGraphicsItem(contours);
     _pathEditor->addPath(path);
@@ -64,4 +65,14 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->addWidget(_pathEditor);
     this->setLayout(_mainLayout);
+}
+
+void OutlineEditor::onProfileChange(EditablePath *sender)
+{
+    emit profileChanged(sender);
+}
+
+void OutlineEditor::onThicknessChange(EditablePath *sender)
+{
+    emit thicknessChanged(sender);
 }

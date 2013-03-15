@@ -26,6 +26,8 @@
 #include <QWidget>
 #include "patheditorwidget.h"
 
+using namespace patheditor;
+
 namespace fineditors
 {
     class ThicknessEditor : public QWidget
@@ -35,6 +37,7 @@ namespace fineditors
         explicit ThicknessEditor(QWidget *parent = 0);
 
     signals:
+        void thicknessChanged(EditablePath *sender);
 
     public slots:
 

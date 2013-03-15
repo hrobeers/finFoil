@@ -43,9 +43,13 @@ namespace fineditors
 
     public slots:
         void onOutlineChange(EditablePath *sender);
+        void onProfileChange(EditablePath *sender);
+        void onThicknessChange(EditablePath *sender);
 
     private:
         QScopedPointer<QPainterPath> _outline;
+        QScopedPointer<QPainterPath> _profile;
+        QScopedPointer<QPainterPath> _thickness;
     };
 }
 

@@ -41,9 +41,12 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        OutlineEditor* contourEditor = new OutlineEditor();
+        OutlineEditor* outlineEditor = new OutlineEditor();
         ProfileEditor* profileEditor = new ProfileEditor();
         ThicknessEditor* thicknessEditor = new ThicknessEditor();
+
+        QObject::connect(profileEditor, SIGNAL(profileChanged(EditablePath*)), outlineEditor, SLOT(onProfileChange(EditablePath*)));
+        QObject::connect(thicknessEditor, SIGNAL(thicknessChanged(EditablePath*)), outlineEditor, SLOT(onThicknessChange(EditablePath*)));
 
         QHBoxLayout* mainLayout = new QHBoxLayout();
         QVBoxLayout* ptLayout = new QVBoxLayout();
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
         ptLayout->addWidget(thicknessEditor);
         ptLayout->addWidget(profileEditor);
 
-        mainLayout->addWidget(contourEditor);
+        mainLayout->addWidget(outlineEditor);
         mainLayout->addLayout(ptLayout);
 
         QWidget* centralWidget = new QWidget();

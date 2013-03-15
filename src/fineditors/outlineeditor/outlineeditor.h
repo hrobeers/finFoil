@@ -26,6 +26,8 @@
 #include <QWidget>
 #include "patheditorwidget.h"
 
+using namespace patheditor;
+
 namespace fineditors
 {
     /**
@@ -39,8 +41,12 @@ namespace fineditors
         explicit OutlineEditor(QWidget *parent = 0);
 
     signals:
+        void profileChanged(EditablePath *sender);
+        void thicknessChanged(EditablePath *sender);
 
     public slots:
+        void onProfileChange(EditablePath *sender);
+        void onThicknessChange(EditablePath *sender);
 
     private:
         QVBoxLayout* _mainLayout;

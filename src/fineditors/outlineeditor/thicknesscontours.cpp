@@ -57,3 +57,13 @@ void ThicknessContours::onOutlineChange(EditablePath *sender)
 {
     _outline.reset(sender->takePainterPath());
 }
+
+void ThicknessContours::onProfileChange(EditablePath *sender)
+{
+    _profile.reset(sender->takePainterPath());
+}
+
+void ThicknessContours::onThicknessChange(EditablePath *sender)
+{
+    _thickness.reset(sender->takePainterPath());
+}

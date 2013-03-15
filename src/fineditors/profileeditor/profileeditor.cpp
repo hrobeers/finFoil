@@ -27,9 +27,7 @@
 #include "cubicbezier.h"
 #include "linerestrictor.h"
 
-
 using namespace fineditors;
-using namespace patheditor;
 
 ProfileEditor::ProfileEditor(QWidget *parent) :
     QWidget(parent)
@@ -56,6 +54,8 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
     EditablePath* path = new EditablePath();
     path->append(part1);
     path->append(part2);
+    // Pipe the pathChanged signal
+    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
 
     _pathEditor->addPath(path);
 

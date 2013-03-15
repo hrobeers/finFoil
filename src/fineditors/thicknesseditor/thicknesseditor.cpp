@@ -28,7 +28,6 @@
 #include "line.h"
 
 using namespace fineditors;
-using namespace patheditor;
 
 ThicknessEditor::ThicknessEditor(QWidget *parent) :
     QWidget(parent)
@@ -49,6 +48,8 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
     path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
+    // Pipe the pathchanged signal
+    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
 
     _pathEditor->addPath(path);
 
