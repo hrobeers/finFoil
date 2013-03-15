@@ -36,34 +36,85 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 {
     if (!_outline.isNull())
     {
-        _outline->setFillRule(Qt::WindingFill);
-        painter->setBrush(QColor(122, 163, 39));
+        int min = 0;
+        int max = 255;
+        int a = 100;
+        int increment = 0;
+
+        painter->setBrush(QColor(min, 0, max, a));
         painter->drawPath(*_outline);
+
+        int numberOfContours = _contours.length();
+        if (numberOfContours > 0)
+        {
+            increment = (max - min) / numberOfContours;
+            foreach (const QSharedPointer<QPainterPath>& contour, _contours)
+            {
+                min += increment;
+                max -= increment;
+
+                painter->setBrush(QColor(min, 0, max, a));
+                painter->scale(0.9,0.9); // TODO remove (only for demo purposes)
+                painter->drawPath(*contour);
+            }
+        }
     }
 }
 
 QRectF ThicknessContours::boundingRect() const
 {
-    if (!_outline.isNull())
+    if (_outline.isNull())
     {
-        return _outline->boundingRect();
+        QRectF retVal;
+        return retVal;
     }
 
-    QRectF retVal;
-    return retVal;
+    return _outline->boundingRect();
 }
 
 void ThicknessContours::onOutlineChange(EditablePath *sender)
 {
     _outline.reset(sender->takePainterPath());
+    calcContours();
 }
 
 void ThicknessContours::onProfileChange(EditablePath *sender)
 {
     _profile.reset(sender->takePainterPath());
+    calcContours();
 }
 
 void ThicknessContours::onThicknessChange(EditablePath *sender)
 {
     _thickness.reset(sender->takePainterPath());
+    calcContours();
+}
+
+void ThicknessContours::calcContours()
+{
+    _contours.clear();
+    if (profilesSet())
+    {
+        QSharedPointer<QPainterPath> outline(new QPainterPath(*_outline));
+        QSharedPointer<QPainterPath> outline2(new QPainterPath(*outline));
+        QSharedPointer<QPainterPath> outline3(new QPainterPath(*outline2));
+
+        _contours.append(outline);
+        _contours.append(outline2);
+        _contours.append(outline3);
+    }
+}
+
+bool ThicknessContours::profilesSet()
+{
+    if (_outline.isNull())
+        return false;
+
+    if (_profile.isNull())
+        return false;
+
+    if (_thickness.isNull())
+        return false;
+
+    return true;
 }

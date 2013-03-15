@@ -50,6 +50,11 @@ namespace fineditors
         QScopedPointer<QPainterPath> _outline;
         QScopedPointer<QPainterPath> _profile;
         QScopedPointer<QPainterPath> _thickness;
+
+        QList<QSharedPointer<QPainterPath> > _contours;
+
+        void calcContours();
+        bool profilesSet();
     };
 }
 
