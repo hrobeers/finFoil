@@ -32,7 +32,7 @@ ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
 {
 }
 
-void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     if (!_outline.isNull())
     {

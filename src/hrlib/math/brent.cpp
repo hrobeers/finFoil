@@ -361,7 +361,7 @@ double Brent::local_min ( double a, double b, double t, func_base& f,
 //
 {
   double c;
-  double d;
+  double d = 0;
   double e;
   double eps;
   double fu;
