@@ -24,6 +24,7 @@
 #define THICKNESSCONTOURS_H
 
 #include <QGraphicsObject>
+#include <QMutex>
 #include "patheditorfwd/patheditorfwd.h"
 
 using namespace patheditor;
@@ -47,6 +48,8 @@ namespace fineditors
         void onThicknessChange(EditablePath *sender);
 
     private:
+        QMutex _calcLock;
+
         QScopedPointer<QPainterPath> _outline;
         QScopedPointer<QPainterPath> _profile;
         QScopedPointer<QPainterPath> _thickness;

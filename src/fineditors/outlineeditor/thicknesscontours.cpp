@@ -92,16 +92,20 @@ void ThicknessContours::onThicknessChange(EditablePath *sender)
 
 void ThicknessContours::calcContours()
 {
-    _contours.clear();
-    if (profilesSet())
+    if (_calcLock.tryLock())
     {
-        QSharedPointer<QPainterPath> outline(new QPainterPath(*_outline));
-        QSharedPointer<QPainterPath> outline2(new QPainterPath(*outline));
-        QSharedPointer<QPainterPath> outline3(new QPainterPath(*outline2));
+        _contours.clear();
+        if (profilesSet())
+        {
+            QSharedPointer<QPainterPath> outline(new QPainterPath(*_outline));
+            QSharedPointer<QPainterPath> outline2(new QPainterPath(*outline));
+            QSharedPointer<QPainterPath> outline3(new QPainterPath(*outline2));
 
-        _contours.append(outline);
-        _contours.append(outline2);
-        _contours.append(outline3);
+            _contours.append(outline);
+            _contours.append(outline2);
+            _contours.append(outline3);
+        }
+        _calcLock.unlock();
     }
 }
 
