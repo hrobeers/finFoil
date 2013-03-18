@@ -47,8 +47,11 @@ CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<Co
                          QGraphicsItem *parent, QGraphicsScene *scene)
     : PathItem(startPoint, endPoint, parent, scene)
 {
-    _controlPoints.append(controlPoint1);
-    _controlPoints.append(controlPoint2);
+    _cPoint1 = controlPoint1;
+    _cPoint2 = controlPoint2;
+
+    _controlPoints.append(_cPoint1);
+    _controlPoints.append(_cPoint2);
 }
 
 QSharedPointer<ControlPoint> CubicBezier::controlPoint1()

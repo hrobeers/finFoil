@@ -36,18 +36,16 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
     _pathEditor->enableFeature(Features::HorizontalAxis);
     _pathEditor->enableFeature(Features::VerticalAxis);
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point2(new PathPoint(100,100));
-    QSharedPointer<PathPoint> point3(new PathPoint(100,0));
+    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
+    QSharedPointer<ControlPoint> point2(new ControlPoint(100,-30));
+    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
     QSharedPointer<PathPoint> point4(new PathPoint(200,0));
 
-    point1->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+    point1->setRestrictor(_pathEditor->verticalAxisRestrictor());
     point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
 
     EditablePath* path = new EditablePath();
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
-    path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
+    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
     // Pipe the pathchanged signal
     connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
 
