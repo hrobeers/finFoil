@@ -60,6 +60,8 @@ namespace patheditor
 
         bool selected() const;
 
+        virtual ~PathPoint() {}
+
     private:
         void setPos(qreal &xpos, qreal &ypos);
 

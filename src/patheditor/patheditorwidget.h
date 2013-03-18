@@ -81,6 +81,8 @@ namespace patheditor
          */
         QSharedPointer<Restrictor> verticalAxisRestrictor();
 
+        virtual ~PathEditorWidget() {}
+
     signals:
 
     private slots:

@@ -66,6 +66,8 @@ namespace patheditor
         virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
                            const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
+        virtual ~PathItem() {}
+
     private:
         QSharedPointer<PathPoint> _startPoint;
         QSharedPointer<PathPoint> _endPoint;

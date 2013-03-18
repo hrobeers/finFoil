@@ -40,6 +40,8 @@ namespace fineditors
     public:
         explicit OutlineEditor(QWidget *parent = 0);
 
+        virtual ~OutlineEditor() {}
+
     signals:
         void profileChanged(EditablePath *sender);
         void thicknessChanged(EditablePath *sender);

@@ -31,6 +31,8 @@ namespace patheditor
     {
     public:
         virtual void restrictCoordinate(qreal* x, qreal* y) = 0;
+
+        virtual ~Restrictor() {}
     };
 }
 

@@ -53,6 +53,8 @@ namespace hrlib
     {
     public:
         explicit ArgumentException(QString &message, QObject *thrower = 0) throw();
+
+        virtual ~ArgumentException() throw() {}
     };
 }
 

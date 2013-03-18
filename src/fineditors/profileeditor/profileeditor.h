@@ -38,6 +38,8 @@ namespace fineditors
     public:
         explicit ProfileEditor(QWidget *parent = 0);
 
+        virtual ~ProfileEditor() {}
+
     signals:
         void profileChanged(EditablePath *sender);
 

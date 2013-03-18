@@ -40,6 +40,8 @@ namespace fineditors
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         virtual QRectF boundingRect() const;
 
+        virtual ~ThicknessContours() {}
+
     signals:
 
     public slots:

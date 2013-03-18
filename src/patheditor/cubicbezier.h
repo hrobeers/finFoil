@@ -52,6 +52,8 @@ namespace patheditor
         void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
                    const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+        virtual ~CubicBezier() {}
+
     private:
         QSharedPointer<PathPoint> _cPoint1;
         QSharedPointer<PathPoint> _cPoint2;

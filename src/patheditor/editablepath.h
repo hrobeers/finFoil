@@ -58,6 +58,8 @@ namespace patheditor
          */
         QPainterPath* takePainterPath();
 
+        virtual ~EditablePath() {}
+
     signals:
         void pathChanged(EditablePath *sender);
 

@@ -51,6 +51,8 @@ namespace patheditor
 
         virtual void restrictCoordinate(qreal *x, qreal *y);
 
+        virtual ~QuadrantRestrictor() {}
+
     private:
         QPointF _origin;
         int _quadrants;

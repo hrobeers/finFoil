@@ -49,6 +49,8 @@ namespace patheditor
         void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
                    const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+        virtual ~Line() {}
+
     private:
         QList<QSharedPointer<PathPoint> > _controlPoints;
 

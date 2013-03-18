@@ -43,6 +43,8 @@ namespace patheditor
 
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+        virtual ~PointHandle() {}
+
     private:
         QSharedPointer<QPen> _pen;
 

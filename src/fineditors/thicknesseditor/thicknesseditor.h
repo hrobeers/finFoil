@@ -36,6 +36,8 @@ namespace fineditors
     public:
         explicit ThicknessEditor(QWidget *parent = 0);
 
+        virtual ~ThicknessEditor() {}
+
     signals:
         void thicknessChanged(EditablePath *sender);
 
