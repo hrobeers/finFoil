@@ -36,6 +36,7 @@ namespace patheditor
     class PathEditorWidget;
     class PathItem;
     class PathPoint;
+    class ControlPoint;
     class PathSettings;
     class PointHandle;
     class PointRestrictor;

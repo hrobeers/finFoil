@@ -29,14 +29,12 @@ using namespace patheditor;
 
 static QHash<QGraphicsScene*, PathPoint*> s_prevSelected;
 
-PathPoint::PathPoint(qreal xpos, qreal ypos, PointType::e type)
+PathPoint::PathPoint(qreal xpos, qreal ypos)
     : QPointF(xpos, ypos)
 {
     _selected = false;
     _pointHandle = 0;
     _toFollowPoint = 0;
-
-    _type = type;
 }
 
 void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
@@ -70,22 +68,7 @@ void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
 
 void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
 {
-    if (_pointHandle)
-    {
-        _pointHandle->scene()->removeItem(_pointHandle);
-        delete _pointHandle;
-    }
-
-    switch (_type)
-    {
-    case PointType::Point:
-        _pointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene);
-        break;
-
-    case PointType::ControlPoint:
-        _pointHandle = new PointHandle(this, settings.handleSize(), settings.controlPointBrush(), parent, scene);
-        break;
-    }
+    replaceCurrentPointHandle(new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene));
 }
 
 void PathPoint::addFollowingPoint(QSharedPointer<PathPoint> point)
@@ -117,6 +100,17 @@ void PathPoint::select()
 bool PathPoint::selected() const
 {
     return _selected;
+}
+
+void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
+{
+    if (_pointHandle)
+    {
+        _pointHandle->scene()->removeItem(_pointHandle);
+        delete _pointHandle;
+    }
+
+    _pointHandle = pointHandle;
 }
 
 void PathPoint::setPos(qreal &xpos, qreal &ypos)

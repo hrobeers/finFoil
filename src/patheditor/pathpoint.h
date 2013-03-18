@@ -31,26 +31,24 @@
 
 namespace patheditor
 {
-    // Enum Structs
-    struct PointType
-    {
-        enum e
-        {
-            Point,
-            ControlPoint
-        };
-    };
-
     class PathPoint : public QPointF
     {
     public:
-        explicit PathPoint(qreal xpos, qreal ypos, PointType::e type = PointType::Point);
+        explicit PathPoint(qreal xpos, qreal ypos);
 
         void setRestrictedPos(qreal &xpos, qreal &ypos);
 
         void setRestrictor(QSharedPointer<Restrictor> restrictor);
 
-        void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
+        /**
+         * Creates a PointHandle and adds it to the passed scene.
+         * When overriding, use replaceCurrentPointHandle(PointHandle *pointHandle)
+         * to replace the current PointHandle.
+         *
+         * @param settings The PathSettings to use
+         * @param scene The QGraphicsScene to add the PointHandle to
+         */
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
 
         void addFollowingPoint(QSharedPointer<PathPoint> point);
 
@@ -62,13 +60,19 @@ namespace patheditor
 
         virtual ~PathPoint() {}
 
+    protected:
+        /**
+         * Replaces the current PointHandle and takes ownership of the passed pointHandle
+         *
+         * @param pointHandle PointHandle to replace the current handle with
+         */
+        void replaceCurrentPointHandle(PointHandle *pointHandle);
+
     private:
         void setPos(qreal &xpos, qreal &ypos);
 
         bool _selected;
         static void select(PathPoint *point, QGraphicsScene *scene);
-
-        PointType::e _type;
 
         QSharedPointer<Restrictor> _restrictor;
         PathPoint* _toFollowPoint;

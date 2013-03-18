@@ -20,44 +20,22 @@
  
 ****************************************************************************/
 
-#include "line.h"
+#ifndef CONTROLPOINT_H
+#define CONTROLPOINT_H
 
-#include <QPainter>
-#include <QGraphicsItem>
 #include "pathpoint.h"
-#include "pathsettings.h"
 
-using namespace patheditor;
-
-Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-           QGraphicsItem *parent, QGraphicsScene *scene)
-    : PathItem(startPoint, endPoint, parent, scene)
+namespace patheditor
 {
+    class ControlPoint : public PathPoint
+    {
+    public:
+        explicit ControlPoint(qreal xpos, qreal ypos);
+
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
+
+        virtual ~ControlPoint() {}
+    };
 }
 
-QList<QSharedPointer<ControlPoint> > Line::controlPoints()
-{
-    return _controlPoints;
-}
-
-QRectF Line::boundingRect() const
-{
-    return _boundingRect;
-}
-
-void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    QPainterPath painterPath;
-
-    painterPath.moveTo(*startPoint());
-    painterPath.lineTo(*endPoint());
-    painter->drawPath(painterPath);
-
-    _boundingRect = painterPath.boundingRect();
-}
-
-void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
-                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    totalPainterPath->lineTo(*endPoint());
-}
+#endif // CONTROLPOINT_H

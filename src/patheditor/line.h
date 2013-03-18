@@ -39,7 +39,7 @@ namespace patheditor
              QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 
         // implementing PathItem
-        QList<QSharedPointer<PathPoint> > controlPoints();
+        QList<QSharedPointer<ControlPoint> > controlPoints();
 
         // Implementing QGraphicsItem
         QRectF boundingRect() const;
@@ -52,7 +52,7 @@ namespace patheditor
         virtual ~Line() {}
 
     private:
-        QList<QSharedPointer<PathPoint> > _controlPoints;
+        QList<QSharedPointer<ControlPoint> > _controlPoints;
 
         QRectF _boundingRect;
     };

@@ -20,44 +20,19 @@
  
 ****************************************************************************/
 
-#include "line.h"
+#include "controlpoint.h"
 
-#include <QPainter>
-#include <QGraphicsItem>
-#include "pathpoint.h"
+#include <QGraphicsScene>
 #include "pathsettings.h"
 
 using namespace patheditor;
 
-Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-           QGraphicsItem *parent, QGraphicsScene *scene)
-    : PathItem(startPoint, endPoint, parent, scene)
+ControlPoint::ControlPoint(qreal xpos, qreal ypos)
+    : PathPoint(xpos, ypos)
 {
 }
 
-QList<QSharedPointer<ControlPoint> > Line::controlPoints()
+void ControlPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
 {
-    return _controlPoints;
-}
-
-QRectF Line::boundingRect() const
-{
-    return _boundingRect;
-}
-
-void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    QPainterPath painterPath;
-
-    painterPath.moveTo(*startPoint());
-    painterPath.lineTo(*endPoint());
-    painter->drawPath(painterPath);
-
-    _boundingRect = painterPath.boundingRect();
-}
-
-void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
-                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    totalPainterPath->lineTo(*endPoint());
+    replaceCurrentPointHandle(new PointHandle(this, settings.handleSize(), settings.controlPointBrush(), parent, scene));
 }

@@ -26,6 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include "pathpoint.h"
+#include "controlpoint.h"
 
 namespace patheditor
 {
@@ -44,7 +45,7 @@ namespace patheditor
         virtual void setStartPoint(QSharedPointer<PathPoint> startPoint);
         virtual void setEndPoint(QSharedPointer<PathPoint> endPoint);
 
-        virtual QList<QSharedPointer<PathPoint> > controlPoints() = 0;
+        virtual QList<QSharedPointer<ControlPoint> > controlPoints() = 0;
 
         virtual QWeakPointer<PathItem> nextPathItem();
         virtual QWeakPointer<PathItem> prevPathItem();
