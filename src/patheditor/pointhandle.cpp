@@ -40,7 +40,6 @@ PointHandle::PointHandle(PathPoint *point,
 
     setCenter(_point);
 
-    this->setZValue(1);
     this->setBrush(brush);
     this->setFlag(QGraphicsItem::ItemIsMovable);
 }

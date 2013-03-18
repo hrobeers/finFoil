@@ -34,5 +34,7 @@ ControlPoint::ControlPoint(qreal xpos, qreal ypos)
 
 void ControlPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
 {
-    replaceCurrentPointHandle(new PointHandle(this, settings.handleSize(), settings.controlPointBrush(), parent, scene));
+    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.controlPointBrush(), parent, scene);
+    newPointHandle->setZValue(2);
+    replaceCurrentPointHandle(newPointHandle);
 }

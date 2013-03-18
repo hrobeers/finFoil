@@ -68,7 +68,9 @@ void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
 
 void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
 {
-    replaceCurrentPointHandle(new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene));
+    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene);
+    newPointHandle->setZValue(1);
+    replaceCurrentPointHandle(newPointHandle);
 }
 
 void PathPoint::addFollowingPoint(QSharedPointer<PathPoint> point)
@@ -95,6 +97,8 @@ void PathPoint::select()
 
     if (!_toFollowPoint)
         select(this, scene);
+    else
+        select(_toFollowPoint, scene);
 }
 
 bool PathPoint::selected() const
