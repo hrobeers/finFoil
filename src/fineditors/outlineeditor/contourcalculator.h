@@ -20,24 +20,28 @@
  
 ****************************************************************************/
 
-#ifndef QTFWD_H
-#define QTFWD_H
+#ifndef CONTOURCALCULATOR_H
+#define CONTOURCALCULATOR_H
 
-#include <QtGlobal>
+#include <QRunnable>
 
-QT_BEGIN_NAMESPACE
+#include "patheditorfwd/qtfwd.h"
 
-class QObject;
-class QGraphicsView;
-class QGraphicsScene;
-class QGraphicsItem;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGraphicsLineItem;
-class QPointF;
-class QString;
-class QPainterPath;
+namespace fineditors
+{
+    class ContourCalculator : public QRunnable
+    {
+    public:
+        explicit ContourCalculator(qreal height, QPainterPath *result);
 
-QT_END_NAMESPACE
+        virtual void run();
 
-#endif // QTFWD_H
+        virtual ~ContourCalculator();
+
+    private:
+        qreal _height;
+        QPainterPath *_result;
+    };
+}
+
+#endif // CONTOURCALCULATOR_H

@@ -41,7 +41,7 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
     QSharedPointer<PathPoint> point4(new PathPoint(0,-24));
 
     QSharedPointer<ControlPoint> cPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> cPoint2(new ControlPoint(30,-24));
+    QSharedPointer<ControlPoint> cPoint2(new ControlPoint(0,-24));
     QSharedPointer<ControlPoint> cPoint3(new ControlPoint(90,-24));
     QSharedPointer<ControlPoint> cPoint4(new ControlPoint(200,0));
 
@@ -67,4 +67,8 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->addWidget(_pathEditor);
     this->setLayout(_mainLayout);
+}
+
+ProfileEditor::~ProfileEditor()
+{
 }

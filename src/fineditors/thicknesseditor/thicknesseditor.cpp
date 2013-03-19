@@ -37,7 +37,7 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
     _pathEditor->enableFeature(Features::VerticalAxis);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(100,-30));
+    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
     QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
     QSharedPointer<PathPoint> point4(new PathPoint(200,0));
 
@@ -54,4 +54,8 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->addWidget(_pathEditor);
     this->setLayout(_mainLayout);
+}
+
+ThicknessEditor::~ThicknessEditor()
+{
 }

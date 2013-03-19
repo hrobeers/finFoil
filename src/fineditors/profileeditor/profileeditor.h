@@ -38,7 +38,7 @@ namespace fineditors
     public:
         explicit ProfileEditor(QWidget *parent = 0);
 
-        virtual ~ProfileEditor() {}
+        virtual ~ProfileEditor();
 
     signals:
         void profileChanged(EditablePath *sender);
@@ -47,8 +47,8 @@ namespace fineditors
 
     private:
         QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-        QSharedPointer<patheditor::Restrictor> _topRestrictor;
+        PathEditorWidget* _pathEditor;
+        QSharedPointer<Restrictor> _topRestrictor;
 
     };
 }

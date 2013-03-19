@@ -20,24 +20,22 @@
  
 ****************************************************************************/
 
-#ifndef QTFWD_H
-#define QTFWD_H
+#include "contourcalculator.h"
 
-#include <QtGlobal>
+#include <QPainterPath>
 
-QT_BEGIN_NAMESPACE
+using namespace fineditors;
 
-class QObject;
-class QGraphicsView;
-class QGraphicsScene;
-class QGraphicsItem;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGraphicsLineItem;
-class QPointF;
-class QString;
-class QPainterPath;
+ContourCalculator::ContourCalculator(qreal height, QPainterPath *result)
+{
+    _height = height;
+    _result = result;
+}
 
-QT_END_NAMESPACE
+void ContourCalculator::run()
+{
+}
 
-#endif // QTFWD_H
+ContourCalculator::~ContourCalculator()
+{
+}
