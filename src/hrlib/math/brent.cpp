@@ -12,8 +12,8 @@ namespace hrlib
 
 //****************************************************************************80
 
-double Brent::glomin ( double a, double b, double c, double m, double e, double t,
-  func_base& f, double &x )
+qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
+  func_base& f, qreal &x )
 
 //****************************************************************************80
 //
@@ -49,54 +49,54 @@ double Brent::glomin ( double a, double b, double c, double m, double e, double 
 //
 //  Parameters:
 //
-//    Input, double A, B, the endpoints of the interval.
+//    Input, qreal A, B, the endpoints of the interval.
 //    It must be the case that A < B.
 //
-//    Input, double C, an initial guess for the global
+//    Input, qreal C, an initial guess for the global
 //    minimizer.  If no good guess is known, C = A or B is acceptable.
 //
-//    Input, double M, the bound on the second derivative.
+//    Input, qreal M, the bound on the second derivative.
 //
-//    Input, double E, a positive tolerance, a bound for the
+//    Input, qreal E, a positive tolerance, a bound for the
 //    absolute error in the evaluation of F(X) for any X in [A,B].
 //
-//    Input, double T, a positive error tolerance.
+//    Input, qreal T, a positive error tolerance.
 //
 //    Input, func_base& F, a user-supplied c++ functor whose
 //    global minimum is being sought.  The input and output
-//    of F() are of type double.
+//    of F() are of type qreal.
 //
-//    Output, double &X, the estimated value of the abscissa
+//    Output, qreal &X, the estimated value of the abscissa
 //    for which F attains its global minimum value in [A,B].
 //
-//    Output, double GLOMIN, the value F(X).
+//    Output, qreal GLOMIN, the value F(X).
 //
 {
-  double a0;
-  double a2;
-  double a3;
-  double d0;
-  double d1;
-  double d2;
-  double h;
+  qreal a0;
+  qreal a2;
+  qreal a3;
+  qreal d0;
+  qreal d1;
+  qreal d2;
+  qreal h;
   int k;
-  double m2;
-  double macheps;
-  double p;
-  double q;
-  double qs;
-  double r;
-  double s;
-  double sc;
-  double y;
-  double y0;
-  double y1;
-  double y2;
-  double y3;
-  double yb;
-  double z0;
-  double z1;
-  double z2;
+  qreal m2;
+  qreal macheps;
+  qreal p;
+  qreal q;
+  qreal qs;
+  qreal r;
+  qreal s;
+  qreal sc;
+  qreal y;
+  qreal y0;
+  qreal y1;
+  qreal y2;
+  qreal y3;
+  qreal yb;
+  qreal z0;
+  qreal z1;
+  qreal z2;
 
   a0 = b;
   x = a0;
@@ -176,7 +176,7 @@ double Brent::glomin ( double a, double b, double c, double m, double e, double 
         }
         k = ( ( 1611 * k ) % 1048576 );
         q = 1.0;
-        r = ( b - a ) * 0.00001 * ( double ) ( k );
+        r = ( b - a ) * 0.00001 * ( qreal ) ( k );
 
         if ( z2 <= r )
         {
@@ -188,7 +188,7 @@ double Brent::glomin ( double a, double b, double c, double m, double e, double 
     {
       k = ( ( 1611 * k ) % 1048576 );
       q = 1.0;
-      r = ( b - a ) * 0.00001 * ( double ) ( k );
+      r = ( b - a ) * 0.00001 * ( qreal ) ( k );
 
       while ( r < z2 )
       {
@@ -206,7 +206,7 @@ double Brent::glomin ( double a, double b, double c, double m, double e, double 
         }
         k = ( ( 1611 * k ) % 1048576 );
         q = 1.0;
-        r = ( b - a ) * 0.00001 * ( double ) ( k );
+        r = ( b - a ) * 0.00001 * ( qreal ) ( k );
       }
     }
 
@@ -294,8 +294,8 @@ double Brent::glomin ( double a, double b, double c, double m, double e, double 
 }
 //****************************************************************************80
 
-double Brent::local_min ( double a, double b, double t, func_base& f,
-  double &x )
+qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
+  qreal &x )
 
 //****************************************************************************80
 //
@@ -346,39 +346,39 @@ double Brent::local_min ( double a, double b, double t, func_base& f,
 //
 //  Parameters:
 //
-//    Input, double A, B, the endpoints of the interval.
+//    Input, qreal A, B, the endpoints of the interval.
 //
-//    Input, double T, a positive absolute error tolerance.
+//    Input, qreal T, a positive absolute error tolerance.
 //
 //    Input, func_base& F, a user-supplied c++ functor whose
 //    local minimum is being sought.  The input and output
-//    of F() are of type double.
+//    of F() are of type qreal.
 //
-//    Output, double &X, the estimated value of an abscissa
+//    Output, qreal &X, the estimated value of an abscissa
 //    for which F attains a local minimum value in [A,B].
 //
-//    Output, double LOCAL_MIN, the value F(X).
+//    Output, qreal LOCAL_MIN, the value F(X).
 //
 {
-  double c;
-  double d = 0;
-  double e;
-  double eps;
-  double fu;
-  double fv;
-  double fw;
-  double fx;
-  double m;
-  double p;
-  double q;
-  double r;
-  double sa;
-  double sb;
-  double t2;
-  double tol;
-  double u;
-  double v;
-  double w;
+  qreal c;
+  qreal d = 0;
+  qreal e;
+  qreal eps;
+  qreal fu;
+  qreal fv;
+  qreal fw;
+  qreal fx;
+  qreal m;
+  qreal p;
+  qreal q;
+  qreal r;
+  qreal sa;
+  qreal sb;
+  qreal t2;
+  qreal tol;
+  qreal u;
+  qreal v;
+  qreal w;
 //
 //  C is the square of the inverse of the golden ratio.
 //
@@ -535,7 +535,7 @@ double Brent::local_min ( double a, double b, double t, func_base& f,
 }
 //****************************************************************************80
 
-double Brent::local_min_rc ( double &a, double &b, int &status, double value )
+qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
 
 //****************************************************************************80
 //
@@ -593,7 +593,7 @@ double Brent::local_min_rc ( double &a, double &b, int &status, double value )
 //
 //  Parameters
 //
-//    Input/output, double &A, &B.  On input, the left and right
+//    Input/output, qreal &A, &B.  On input, the left and right
 //    endpoints of the initial interval.  On output, the lower and upper
 //    bounds for an interval containing the minimizer.  It is required
 //    that A < B.
@@ -605,10 +605,10 @@ double Brent::local_min_rc ( double &a, double &b, int &status, double value )
 //    STATUS as 0, to indicate that the iteration is complete and that
 //    ARG is the estimated minimizer.
 //
-//    Input, double VALUE, the function value at ARG, as requested
+//    Input, qreal VALUE, the function value at ARG, as requested
 //    by the routine on the previous call.
 //
-//    Output, double LOCAL_MIN_RC, the currently considered point.
+//    Output, qreal LOCAL_MIN_RC, the currently considered point.
 //    On return with STATUS positive, the user is requested to evaluate the
 //    function at this point, and return the value in VALUE.  On return with
 //    STATUS zero, this is the routine's estimate for the function minimizer.
@@ -620,26 +620,26 @@ double Brent::local_min_rc ( double &a, double &b, int &status, double value )
 //    EPS is the square root of the relative machine precision.
 //
 {
-  static double arg;
-  static double c;
-  static double d;
-  static double e;
-  static double eps;
-  static double fu;
-  static double fv;
-  static double fw;
-  static double fx;
-  static double midpoint;
-  static double p;
-  static double q;
-  static double r;
-  static double tol;
-  static double tol1;
-  static double tol2;
-  static double u;
-  static double v;
-  static double w;
-  static double x;
+  static qreal arg;
+  static qreal c;
+  static qreal d;
+  static qreal e;
+  static qreal eps;
+  static qreal fu;
+  static qreal fv;
+  static qreal fw;
+  static qreal fx;
+  static qreal midpoint;
+  static qreal p;
+  static qreal q;
+  static qreal r;
+  static qreal tol;
+  static qreal tol1;
+  static qreal tol2;
+  static qreal u;
+  static qreal v;
+  static qreal w;
+  static qreal x;
 //
 //  STATUS (INPUT) = 0, startup.
 //
@@ -831,7 +831,7 @@ double Brent::local_min_rc ( double &a, double &b, int &status, double value )
 }
 //****************************************************************************80
 
-double Brent::r8_abs ( double x )
+qreal Brent::r8_abs ( qreal x )
 
 //****************************************************************************80
 //
@@ -853,12 +853,12 @@ double Brent::r8_abs ( double x )
 //
 //  Parameters:
 //
-//    Input, double X, the quantity whose absolute value is desired.
+//    Input, qreal X, the quantity whose absolute value is desired.
 //
-//    Output, double R8_ABS, the absolute value of X.
+//    Output, qreal R8_ABS, the absolute value of X.
 //
 {
-  double value;
+  qreal value;
 
   if ( 0.0 <= x )
   {
@@ -872,7 +872,7 @@ double Brent::r8_abs ( double x )
 }
 //****************************************************************************80
 
-double Brent::r8_epsilon ( )
+qreal Brent::r8_epsilon ( )
 
 //****************************************************************************80
 //
@@ -902,14 +902,14 @@ double Brent::r8_epsilon ( )
 //
 //  Parameters:
 //
-//    Output, double R8_EPSILON, the double precision round-off unit.
+//    Output, qreal R8_EPSILON, the qreal precision round-off unit.
 //
 {
-  double r;
+  qreal r;
 
   r = 1.0;
 
-  while ( 1.0 < ( double ) ( 1.0 + r )  )
+  while ( 1.0 < ( qreal ) ( 1.0 + r )  )
   {
     r = r / 2.0;
   }
@@ -918,7 +918,7 @@ double Brent::r8_epsilon ( )
 }
 //****************************************************************************80
 
-double Brent::r8_max ( double x, double y )
+qreal Brent::r8_max ( qreal x, qreal y )
 
 //****************************************************************************80
 //
@@ -940,12 +940,12 @@ double Brent::r8_max ( double x, double y )
 //
 //  Parameters:
 //
-//    Input, double X, Y, the quantities to compare.
+//    Input, qreal X, Y, the quantities to compare.
 //
-//    Output, double R8_MAX, the maximum of X and Y.
+//    Output, qreal R8_MAX, the maximum of X and Y.
 //
 {
-  double value;
+  qreal value;
 
   if ( y < x )
   {
@@ -959,7 +959,7 @@ double Brent::r8_max ( double x, double y )
 }
 //****************************************************************************80
 
-double Brent::r8_sign ( double x )
+qreal Brent::r8_sign ( qreal x )
 
 //****************************************************************************80
 //
@@ -981,12 +981,12 @@ double Brent::r8_sign ( double x )
 //
 //  Parameters:
 //
-//    Input, double X, the number whose sign is desired.
+//    Input, qreal X, the number whose sign is desired.
 //
-//    Output, double R8_SIGN, the sign of X.
+//    Output, qreal R8_SIGN, the sign of X.
 //
 {
-  double value;
+  qreal value;
 
   if ( x < 0.0 )
   {
@@ -1046,7 +1046,7 @@ void Brent::timestamp ( )
 }
 //****************************************************************************80
 
-double Brent::zero ( double a, double b, double t, func_base& f )
+qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
 
 //****************************************************************************80
 //
@@ -1090,33 +1090,33 @@ double Brent::zero ( double a, double b, double t, func_base& f )
 //
 //  Parameters:
 //
-//    Input, double A, B, the endpoints of the change of sign interval.
+//    Input, qreal A, B, the endpoints of the change of sign interval.
 //
-//    Input, double T, a positive error tolerance.
+//    Input, qreal T, a positive error tolerance.
 //
 //    Input, func_base& F, the name of a user-supplied c++ functor
 //    whose zero is being sought.  The input and output
-//    of F() are of type double.
+//    of F() are of type qreal.
 //
-//    Output, double ZERO, the estimated value of a zero of
+//    Output, qreal ZERO, the estimated value of a zero of
 //    the function F.
 //
 {
-  double c;
-  double d;
-  double e;
-  double fa;
-  double fb;
-  double fc;
-  double m;
-  double macheps;
-  double p;
-  double q;
-  double r;
-  double s;
-  double sa;
-  double sb;
-  double tol;
+  qreal c;
+  qreal d;
+  qreal e;
+  qreal fa;
+  qreal fb;
+  qreal fc;
+  qreal m;
+  qreal macheps;
+  qreal p;
+  qreal q;
+  qreal r;
+  qreal s;
+  qreal sa;
+  qreal sb;
+  qreal tol;
 //
 //  Make local copies of A and B.
 //
@@ -1227,8 +1227,8 @@ double Brent::zero ( double a, double b, double t, func_base& f )
 }
 //****************************************************************************80
 
-void Brent::zero_rc ( double a, double b, double t, double &arg, int &status,
-  double value )
+void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
+  qreal value )
 
 //****************************************************************************80
 //
@@ -1274,11 +1274,11 @@ void Brent::zero_rc ( double a, double b, double t, double &arg, int &status,
 //
 //  Parameters:
 //
-//    Input, double A, B, the endpoints of the change of sign interval.
+//    Input, qreal A, B, the endpoints of the change of sign interval.
 //
-//    Input, double T, a positive error tolerance.
+//    Input, qreal T, a positive error tolerance.
 //
-//    Output, double &ARG, the currently considered point.  The user
+//    Output, qreal &ARG, the currently considered point.  The user
 //    does not need to initialize this value.  On return with STATUS positive,
 //    the user is requested to evaluate the function at ARG, and return
 //    the value in VALUE.  On return with STATUS zero, ARG is the routine's
@@ -1291,25 +1291,25 @@ void Brent::zero_rc ( double a, double b, double t, double &arg, int &status,
 //    STATUS as 0, to indicate that the iteration is complete and that
 //    ARG is the estimated zero
 //
-//    Input, double VALUE, the function value at ARG, as requested
+//    Input, qreal VALUE, the function value at ARG, as requested
 //    by the routine on the previous call.
 //
 {
-  static double c;
-  static double d;
-  static double e;
-  static double fa;
-  static double fb;
-  static double fc;
-  double m;
-  static double macheps;
-  double p;
-  double q;
-  double r;
-  double s;
-  static double sa;
-  static double sb;
-  double tol;
+  static qreal c;
+  static qreal d;
+  static qreal e;
+  static qreal fa;
+  static qreal fb;
+  static qreal fc;
+  qreal m;
+  static qreal macheps;
+  qreal p;
+  qreal q;
+  qreal r;
+  qreal s;
+  static qreal sa;
+  static qreal sb;
+  qreal tol;
 //
 //  Input STATUS = 0.
 //  Initialize, request F(A).
@@ -1463,40 +1463,40 @@ void Brent::zero_rc ( double a, double b, double t, double &arg, int &status,
 // === The three functions are the same as above,
 // === except that they take a plain function F
 // === instead of a c++ functor.  In all cases, the
-// === input and output of F() are of type double.
+// === input and output of F() are of type qreal.
 
-typedef double DoubleOfDouble (double);
+typedef qreal qrealOfqreal (qreal);
 
 class func_wrapper : public func_base {
-  DoubleOfDouble* func;
+  qrealOfqreal* func;
 public:
-  func_wrapper(DoubleOfDouble* f) {
+  func_wrapper(qrealOfqreal* f) {
     func = f;
   }
-  virtual double operator() (double x){
+  virtual qreal operator() (qreal x){
     return func(x);
   }
 };
 
 //****************************************************************************80
 
-double Brent::glomin ( double a, double b, double c, double m, double e,
-         double t, double f ( double x ), double &x ){
+qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e,
+         qreal t, qreal f ( qreal x ), qreal &x ){
   func_wrapper foo(f);
   return glomin(a, b, c, m, e, t, foo, x);
 }
 
 //****************************************************************************80
 
-double Brent::local_min ( double a, double b, double t, double f ( double x ),
-  double &x ){
+qreal Brent::local_min ( qreal a, qreal b, qreal t, qreal f ( qreal x ),
+  qreal &x ){
   func_wrapper foo(f);
   return local_min(a, b, t, foo, x);
 }
 
 //****************************************************************************80
 
-double Brent::zero ( double a, double b, double t, double f ( double x ) ){
+qreal Brent::zero ( qreal a, qreal b, qreal t, qreal f ( qreal x ) ){
   func_wrapper foo(f);
   return zero(a, b, t, foo);
 }
@@ -1505,8 +1505,8 @@ double Brent::zero ( double a, double b, double t, double f ( double x ) ){
 // Generally useful functor to evaluate a monic polynomial.
 // For details, see class definition in brent.hpp
 
-double monicPoly::operator()(double x){
-  double rslt(1);
+qreal monicPoly::operator()(qreal x){
+  qreal rslt(1);
   for (int ii = coeff.size()-1; ii >= 0; ii--){
     rslt *= x;
     rslt += coeff[ii];
@@ -1515,8 +1515,8 @@ double monicPoly::operator()(double x){
 }
 
 // Similarly, evaluate a general polynomial (not necessarily monic):
-double Poly::operator()(double x){
-  double rslt(0);
+qreal Poly::operator()(qreal x){
+  qreal rslt(0);
   for (int ii = coeff.size()-1; ii >= 0; ii--){
     rslt *= x;
     rslt += coeff[ii];
