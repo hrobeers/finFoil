@@ -20,36 +20,27 @@
  
 ****************************************************************************/
 
-#ifndef CONTOURCALCULATOR_H
-#define CONTOURCALCULATOR_H
+#ifndef PATHFUNCTORS_H
+#define PATHFUNCTORS_H
 
-#include <QRunnable>
-
-#include "patheditorfwd/qtfwd.h"
+#include "hrlib/math/brent.hpp"
 
 namespace fineditors
 {
-    class ContourCalculator : public QRunnable
+    class yValue : public hrlib::func_base
     {
-    public:
-        explicit ContourCalculator(qreal height, QPainterPath *outline, QPainterPath *profile,
-                                   QPainterPath *thickness, QPainterPath *result);
-
-        virtual void run();
-
-        virtual ~ContourCalculator();
-
     private:
-        qreal _height;
-        QPainterPath *_outline;
-        QPainterPath *_profile;
-        QPainterPath *_thickness;
-        QPainterPath *_result;
+        QPainterPath *_path;
 
-        int _sectionCount;
+    public:
+        explicit yValue(QPainterPath *path){
+            _path = path;
+        }
 
-        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
+        virtual qreal operator ()(qreal t){
+            return _path->pointAtPercent(t).y();
+        }
     };
 }
 
-#endif // CONTOURCALCULATOR_H
+#endif // PATHFUNCTORS_H

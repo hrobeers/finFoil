@@ -24,6 +24,7 @@
 
 #include<QPainter>
 #include "editablepath.h"
+#include "contourcalculator.h"
 
 using namespace fineditors;
 
@@ -96,7 +97,10 @@ void ThicknessContours::calcContours()
     {
         _contours.clear();
         if (profilesSet())
-        {
+        {            
+            ContourCalculator calc(0.5, _outline.data(), _profile.data(),_thickness.data(), 0);
+            calc.run();
+
             QSharedPointer<QPainterPath> outline(new QPainterPath(*_outline));
             QSharedPointer<QPainterPath> outline2(new QPainterPath(*outline));
             QSharedPointer<QPainterPath> outline3(new QPainterPath(*outline2));

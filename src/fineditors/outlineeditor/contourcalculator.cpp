@@ -23,19 +23,63 @@
 #include "contourcalculator.h"
 
 #include <QPainterPath>
+#include "pathfunctors.h"
 
 using namespace fineditors;
 
-ContourCalculator::ContourCalculator(qreal height, QPainterPath *result)
+ContourCalculator::ContourCalculator(qreal height, QPainterPath *outline, QPainterPath *profile,
+                                     QPainterPath *thickness, QPainterPath *result)
 {
     _height = height;
+    _outline = outline;
+    _profile = profile;
+    _thickness = thickness;
     _result = result;
+
+    _sectionCount = 50;
 }
 
 void ContourCalculator::run()
 {
+    // discretise and normalise the thickness profile in different cross sections
+    qreal sectionHeightArray[_sectionCount];
+    qreal thicknessArray[_sectionCount];
+    sampleThickess(sectionHeightArray, thicknessArray);
+
+    // find the top of the outline
+    yValue yOutline(_outline);
+    qreal t_top;
+    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top);
 }
 
 ContourCalculator::~ContourCalculator()
 {
+}
+
+void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[])
+{
+    qreal increment = qreal(1) / _sectionCount;
+    qreal t = 0;
+    qreal baseThickness = 1;
+    qreal height = 1;
+    for (int i=0; i<_sectionCount; i++)
+    {
+
+        if (i==0)
+        {
+            baseThickness = _thickness->pointAtPercent(0).y();
+            height = _thickness->pointAtPercent(1).x();
+
+            sectionHeightArray[0] = 0;
+            thicknessArray[0] = 1;
+        }
+        else
+        {
+            t += increment;
+            QPointF p = _thickness->pointAtPercent(t);
+
+            sectionHeightArray[i] = p.rx() / height;
+            thicknessArray[i] = p.ry() / baseThickness;
+        }
+    }
 }
