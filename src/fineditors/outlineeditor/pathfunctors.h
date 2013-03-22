@@ -24,21 +24,28 @@
 #define PATHFUNCTORS_H
 
 #include "hrlib/math/brent.hpp"
+#include "patheditorfwd/qtfwd.h"
 
 namespace fineditors
 {
-    class yValue : public hrlib::func_base
+    class f_yValueAtPercent : public hrlib::func_base
     {
     private:
         QPainterPath *_path;
+        qreal _offset;
 
     public:
-        explicit yValue(QPainterPath *path){
+        explicit f_yValueAtPercent(QPainterPath *path, qreal offset = 0){
             _path = path;
+            _offset = offset;
         }
 
         virtual qreal operator ()(qreal t){
-            return _path->pointAtPercent(t).y();
+            return _path->pointAtPercent(t).y() - _offset;
+        }
+
+        void setOffset(qreal offset){
+            _offset = offset;
         }
     };
 }

@@ -47,9 +47,20 @@ void ContourCalculator::run()
     sampleThickess(sectionHeightArray, thicknessArray);
 
     // find the top of the outline
-    yValue yOutline(_outline);
+    f_yValueAtPercent yOutline(_outline);
     qreal t_top;
-    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top);
+//    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top);
+    qreal y_top = hrlib::Brent::glomin(0, 1, 0.5, 10, 0.01, 0.0001, yOutline, t_top);
+
+    // create the leading and trailing edge t arrays
+    qreal t_leadingEdge[_sectionCount];
+    qreal t_trailingEdge[_sectionCount];
+    for (int i=0; i<_sectionCount; i++)
+    {
+        yOutline.setOffset(sectionHeightArray[i] * y_top);
+        t_leadingEdge[i] = hrlib::Brent::zero(0, t_top, 0.0001, yOutline);
+        t_trailingEdge[i] = hrlib::Brent::zero(t_top, 1, 0.0001, yOutline);
+    }
 }
 
 ContourCalculator::~ContourCalculator()
