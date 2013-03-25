@@ -38,21 +38,24 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point2(new PathPoint(100,-100));
-    QSharedPointer<PathPoint> point3(new PathPoint(100,0));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+    QSharedPointer<PathPoint> point2(new PathPoint(40,-100));
+    QSharedPointer<PathPoint> point3(new PathPoint(100,-200));
+    QSharedPointer<PathPoint> point4(new PathPoint(150,-100));
+    QSharedPointer<PathPoint> point5(new PathPoint(120,0));
 
     QSharedPointer<Restrictor> _aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
 
     point1->setRestrictor(_pathEditor->horizontalAxisRestrictor());
     point2->setRestrictor(_aboveHorizontalRestrictor);
     point3->setRestrictor(_aboveHorizontalRestrictor);
-    point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+    point4->setRestrictor(_aboveHorizontalRestrictor);
+    point5->setRestrictor(_pathEditor->horizontalAxisRestrictor());
 
     EditablePath* path = new EditablePath();
     path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2)));
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point3)));
-    path->append(QSharedPointer<PathItem>(new Line(point1, point4)));
+    path->append(QSharedPointer<PathItem>(new CubicBezier(point2, point3)));
+    path->append(QSharedPointer<PathItem>(new CubicBezier(point3, point4)));
+    path->append(QSharedPointer<PathItem>(new Line(point4, point5)));
 
     ThicknessContours *contours = new ThicknessContours();
     connect(path, SIGNAL(pathChanged(EditablePath*)), contours, SLOT(onOutlineChange(EditablePath*)));

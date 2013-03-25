@@ -55,7 +55,6 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
                 max -= increment;
 
                 painter->setBrush(QColor(min, 0, max, a));
-                painter->scale(0.9,0.9); // TODO remove (only for demo purposes)
                 painter->drawPath(*contour);
             }
         }
@@ -97,19 +96,25 @@ void ThicknessContours::calcContours()
     {
         _contours.clear();
         if (profilesSet())
-        {            
-            ContourCalculator calc(0.5, _outline.data(), _profile.data(),_thickness.data(), 0);
-            calc.run();
+        {
+            QSharedPointer<QPainterPath> one(new QPainterPath());
+            ContourCalculator calc1(0.25, _outline.data(), _profile.data(),_thickness.data(), one.data());
+            calc1.run();
 
-            QSharedPointer<QPainterPath> outline(new QPainterPath(*_outline));
-            QSharedPointer<QPainterPath> outline2(new QPainterPath(*outline));
-            QSharedPointer<QPainterPath> outline3(new QPainterPath(*outline2));
+            QSharedPointer<QPainterPath> two(new QPainterPath());
+            ContourCalculator calc2(0.5, _outline.data(), _profile.data(),_thickness.data(), two.data());
+            calc2.run();
 
-            _contours.append(outline);
-            _contours.append(outline2);
-            _contours.append(outline3);
+            QSharedPointer<QPainterPath> three(new QPainterPath());
+            ContourCalculator calc3(0.75, _outline.data(), _profile.data(),_thickness.data(), three.data());
+            calc3.run();
+
+            _contours.append(one);
+            _contours.append(two);
+            _contours.append(three);
         }
         _calcLock.unlock();
+        this->update(boundingRect());
     }
 }
 

@@ -23,16 +23,16 @@
 #ifndef CONTOURCALCULATOR_H
 #define CONTOURCALCULATOR_H
 
-#include <QRunnable>
-
 #include "patheditorfwd/qtfwd.h"
+
+#include <QRunnable>
 
 namespace fineditors
 {
     class ContourCalculator : public QRunnable
     {
     public:
-        explicit ContourCalculator(qreal height, QPainterPath *outline, QPainterPath *profile,
+        explicit ContourCalculator(qreal percContourHeight, QPainterPath *outline, QPainterPath *profile,
                                    QPainterPath *thickness, QPainterPath *result);
 
         virtual void run();
@@ -40,13 +40,15 @@ namespace fineditors
         virtual ~ContourCalculator();
 
     private:
-        qreal _height;
+        qreal _percContourHeight;
         QPainterPath *_outline;
         QPainterPath *_profile;
         QPainterPath *_thickness;
         QPainterPath *_result;
 
         int _sectionCount;
+        qreal _tTol;
+        qreal _fTol;
 
         void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
     };
