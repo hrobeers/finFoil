@@ -22,7 +22,8 @@
 
 #include "thicknesscontours.h"
 
-#include<QPainter>
+#include <QPainter>
+#include <QtAlgorithms>
 #include "editablepath.h"
 #include "contourcalculator.h"
 
@@ -31,6 +32,11 @@ using namespace fineditors;
 ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
+    _contourThicknesses.append(0.25);
+    _contourThicknesses.append(0.5);
+    _contourThicknesses.append(0.75);
+
+    qSort(_contourThicknesses);
 }
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
@@ -92,30 +98,23 @@ void ThicknessContours::onThicknessChange(EditablePath *sender)
 
 void ThicknessContours::calcContours()
 {
-    if (_calcLock.tryLock())
-    {
+//    if (_calcLock.tryLock())
+//    {
         _contours.clear();
         if (profilesSet())
         {
-            QSharedPointer<QPainterPath> one(new QPainterPath());
-            ContourCalculator calc1(0.25, _outline.data(), _profile.data(),_thickness.data(), one.data());
-            calc1.run();
+            foreach (qreal thickness, _contourThicknesses)
+            {
+                QSharedPointer<QPainterPath> path(new QPainterPath());
+                _contours.append(path);
 
-            QSharedPointer<QPainterPath> two(new QPainterPath());
-            ContourCalculator calc2(0.5, _outline.data(), _profile.data(),_thickness.data(), two.data());
-            calc2.run();
-
-            QSharedPointer<QPainterPath> three(new QPainterPath());
-            ContourCalculator calc3(0.75, _outline.data(), _profile.data(),_thickness.data(), three.data());
-            calc3.run();
-
-            _contours.append(one);
-            _contours.append(two);
-            _contours.append(three);
+                _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data()));
+            }
+            _tPool.waitForDone();
         }
-        _calcLock.unlock();
+//        _calcLock.unlock();
         this->update(boundingRect());
-    }
+//    }
 }
 
 bool ThicknessContours::profilesSet()
