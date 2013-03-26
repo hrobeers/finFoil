@@ -32,9 +32,14 @@ using namespace fineditors;
 ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
-    _contourThicknesses.append(0.25);
-    _contourThicknesses.append(0.5);
-    _contourThicknesses.append(0.75);
+    int numOfContours = std::max(_tPool.maxThreadCount(), 3);
+    qreal increment = qreal(1) / qreal(numOfContours);
+    qreal thickness = 0;
+    for (int i = 0; i < numOfContours; i++)
+    {
+        thickness += increment;
+        _contourThicknesses.append(thickness);
+    }
 
     qSort(_contourThicknesses);
 }
@@ -88,12 +93,14 @@ void ThicknessContours::onProfileChange(EditablePath *sender)
 {
     _profile.reset(sender->takePainterPath());
     calcContours();
+    this->update(boundingRect());
 }
 
 void ThicknessContours::onThicknessChange(EditablePath *sender)
 {
     _thickness.reset(sender->takePainterPath());
     calcContours();
+    this->update(boundingRect());
 }
 
 void ThicknessContours::calcContours()
@@ -113,7 +120,6 @@ void ThicknessContours::calcContours()
             _tPool.waitForDone();
         }
 //        _calcLock.unlock();
-        this->update(boundingRect());
 //    }
 }
 
