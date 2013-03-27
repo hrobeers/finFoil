@@ -9,6 +9,10 @@ QT       += core gui
 TARGET = finFoil
 TEMPLATE = app
 
+CONFIG(proceduralDebug) {
+    DEFINES += PROCEDURAL
+}
+
 SOURCES += main.cpp\
         mainwindow.cpp
 

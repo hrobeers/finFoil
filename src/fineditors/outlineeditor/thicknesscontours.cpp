@@ -33,7 +33,7 @@ ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
     int numOfContours = std::max(_tPool.maxThreadCount(), 3);
-    qreal increment = qreal(1) / qreal(numOfContours);
+    qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
     for (int i = 0; i < numOfContours; i++)
     {
@@ -110,6 +110,17 @@ void ThicknessContours::calcContours()
         _contours.clear();
         if (profilesSet())
         {
+#ifdef PROCEDURAL
+            foreach (qreal thickness, _contourThicknesses)
+            {
+                QSharedPointer<QPainterPath> path(new QPainterPath());
+                _contours.append(path);
+
+                ContourCalculator calc(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data());
+                calc.run();
+            }
+#endif
+#ifndef PROCEDURAL
             foreach (qreal thickness, _contourThicknesses)
             {
                 QSharedPointer<QPainterPath> path(new QPainterPath());
@@ -118,6 +129,7 @@ void ThicknessContours::calcContours()
                 _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data()));
             }
             _tPool.waitForDone();
+#endif
         }
 //        _calcLock.unlock();
 //    }
