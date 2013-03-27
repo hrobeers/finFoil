@@ -11,7 +11,6 @@ HEADERS += \
     ../patheditor/pointrestrictor.h \
     ../patheditor/pathpoint.h \
     ../patheditor/patheditorfwd/patheditorfwd.h \
-    ../patheditor/patheditorfwd/qtfwd.h \
     ../patheditor/quadrantrestrictor.h \
     ../patheditor/controlpoint.h
 

@@ -24,7 +24,7 @@
 #define PATHEDITORWIDGET_H
 
 #include "patheditorfwd/patheditorfwd.h"
-#include "patheditorfwd/qtfwd.h"
+#include "hrlibfwd/qtfwd.h"
 
 #include <QWidget>
 #include "restrictor.h"

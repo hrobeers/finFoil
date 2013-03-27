@@ -20,34 +20,20 @@
  
 ****************************************************************************/
 
-#ifndef PATHFUNCTORS_H
-#define PATHFUNCTORS_H
+#ifndef PATHUTILS_H
+#define PATHUTILS_H
 
-#include "hrlib/math/brent.hpp"
 #include "hrlibfwd/qtfwd.h"
 
-namespace fineditors
+namespace hrlib
 {
-    class f_yValueAtPercent : public hrlib::func_base
+    class PathUtils
     {
-    private:
-        QPainterPath *_path;
-        qreal _offset;
-
     public:
-        explicit f_yValueAtPercent(QPainterPath *path, qreal offset = 0){
-            _path = path;
-            _offset = offset;
-        }
+        PathUtils();
 
-        virtual qreal operator ()(qreal t){
-            return _path->pointAtPercent(t).y() - _offset;
-        }
 
-        void setOffset(qreal offset){
-            _offset = offset;
-        }
     };
 }
 
-#endif // PATHFUNCTORS_H
+#endif // PATHUTILS_H

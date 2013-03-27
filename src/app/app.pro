@@ -24,7 +24,8 @@ FORMS    += mainwindow.ui
 
 INCLUDEPATH +=  ../ \
                 ../patheditor/ \
-                ../fineditors/
+                ../fineditors/ \
+                ../hrlib/
 
 DEPENDPATH += ..
 

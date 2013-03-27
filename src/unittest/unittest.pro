@@ -12,7 +12,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../
+INCLUDEPATH += ../ \
+                ../patheditor/ \
+                ../fineditors/ \
+                ../hrlib/
+
 DEPENDPATH += ../
 
 SOURCES += main.cpp

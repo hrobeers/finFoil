@@ -23,7 +23,7 @@
 #ifndef CONTOURCALCULATOR_H
 #define CONTOURCALCULATOR_H
 
-#include "patheditorfwd/qtfwd.h"
+#include "hrlibfwd/qtfwd.h"
 
 #include <QRunnable>
 
