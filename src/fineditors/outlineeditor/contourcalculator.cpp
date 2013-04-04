@@ -65,11 +65,14 @@ void ContourCalculator::run()
     //
     // calculate the contour points
     //
-    QQueue<QPointF> leadingEdgeQueue;
-    QStack<QPointF> trailingEdgeStack;
+    int dblSectionCount = _sectionCount * 2;
+    QPointF contourPnts[_sectionCount * 2];
 
+    int lastIndex = _sectionCount - 1;
     for (int i=0; i<_sectionCount; i++)
     {
+        int TEindex = dblSectionCount - (i + 1);
+
         yOutline.setOffset(sectionHeightArray[i] * y_top);
         qreal t_outlineLeadingEdge = hrlib::Brent::zero(0, t_top, _tTol, yOutline);
         qreal t_outlineTrailingEdge = hrlib::Brent::zero(t_top, 1, _tTol, yOutline);
@@ -77,7 +80,12 @@ void ContourCalculator::run()
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
         qreal offsetPercent = _percContourHeight / thicknessArray[i];
-        if (offsetPercent > 1) break;
+        if (offsetPercent > 1)
+        {
+            lastIndex = i;
+            break;
+        }
+
         qreal profileOffset = offsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
@@ -87,16 +95,22 @@ void ContourCalculator::run()
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
-        QPointF leadingEdge(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
-        QPointF trailingEdge(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
+        QPointF leadingEdgePnt(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
+        QPointF trailingEdgePnt(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
 
-        leadingEdgeQueue.enqueue(leadingEdge);
-        trailingEdgeStack.push(trailingEdge);
+        contourPnts[i] = leadingEdgePnt;
+        contourPnts[TEindex] = trailingEdgePnt;
     }
 
-    _result->moveTo(leadingEdgeQueue.dequeue());
-    while (!leadingEdgeQueue.empty()) _result->lineTo(leadingEdgeQueue.dequeue());
-    while (!trailingEdgeStack.empty()) _result->lineTo(trailingEdgeStack.pop());
+    _result->moveTo(contourPnts[0]);
+    for (int i=1; i<lastIndex; i++)
+    {
+        _result->lineTo(contourPnts[i]);
+    }
+    for (int i=dblSectionCount - (lastIndex); i<dblSectionCount; i++)
+    {
+        _result->lineTo(contourPnts[i]);
+    }
 }
 
 ContourCalculator::~ContourCalculator()
