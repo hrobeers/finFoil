@@ -66,9 +66,8 @@ void ContourCalculator::run()
     // calculate the contour points
     //
     int dblSectionCount = _sectionCount * 2;
-    QPointF contourPnts[_sectionCount * 2];
+    QPointF* contourPnts[_sectionCount * 2];
 
-    int lastIndex = _sectionCount - 1;
     for (int i=0; i<_sectionCount; i++)
     {
         int TEindex = dblSectionCount - (i + 1);
@@ -82,8 +81,9 @@ void ContourCalculator::run()
         qreal offsetPercent = _percContourHeight / thicknessArray[i];
         if (offsetPercent > 1)
         {
-            lastIndex = i;
-            break;
+            contourPnts[i] = 0;
+            contourPnts[TEindex] = 0;
+            continue;
         }
 
         qreal profileOffset = offsetPercent * y_profileTop;
@@ -95,21 +95,43 @@ void ContourCalculator::run()
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
-        QPointF leadingEdgePnt(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
-        QPointF trailingEdgePnt(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
+        QPointF* leadingEdgePnt = new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
+        QPointF* trailingEdgePnt = new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
 
         contourPnts[i] = leadingEdgePnt;
         contourPnts[TEindex] = trailingEdgePnt;
     }
 
-    _result->moveTo(contourPnts[0]);
-    for (int i=1; i<lastIndex; i++)
+    int firstIndex = 0;
+    for (int i=0; i<_sectionCount; i++)
     {
-        _result->lineTo(contourPnts[i]);
+        if (contourPnts[i] != 0)
+        {
+            if (i == 0 || contourPnts[i-1] == 0)
+            {
+                _result->moveTo(*contourPnts[i]);
+                firstIndex = i;
+            }
+            else
+            {
+                _result->lineTo(*contourPnts[i]);
+            }
+            if (i == _sectionCount-1 || contourPnts[i+1] == 0)
+            {
+                for (int j = dblSectionCount - i; j < dblSectionCount-firstIndex; j++)
+                {
+                    _result->lineTo(*contourPnts[j]);
+                }
+                if (firstIndex != 0)
+                    _result->lineTo(*contourPnts[firstIndex]);
+            }
+        }
     }
-    for (int i=dblSectionCount - (lastIndex); i<dblSectionCount; i++)
+
+    for (int i = 0; i < dblSectionCount; i++)
     {
-        _result->lineTo(contourPnts[i]);
+        if (contourPnts[i] != 0)
+            delete contourPnts[i];
     }
 }
 
