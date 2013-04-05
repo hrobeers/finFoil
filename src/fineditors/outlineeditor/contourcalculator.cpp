@@ -70,21 +70,21 @@ void ContourCalculator::run()
 
     for (int i=0; i<_sectionCount; i++)
     {
-        yOutline.setOffset(sectionHeightArray[i] * y_top);
-        qreal t_outlineLeadingEdge = hrlib::Brent::zero(0, t_top, _tTol, yOutline);
-        qreal t_outlineTrailingEdge = hrlib::Brent::zero(t_top, 1, _tTol, yOutline);
-        QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
-        QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
-
-        qreal offsetPercent = _percContourHeight / thicknessArray[i];
-        if (offsetPercent > 1)
+        qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
+        if (thicknessOffsetPercent > 1)
         {
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
             continue;
         }
 
-        qreal profileOffset = offsetPercent * y_profileTop;
+        yOutline.setOffset(sectionHeightArray[i] * y_top);
+        qreal t_outlineLeadingEdge = hrlib::Brent::zero(0, t_top, _tTol, yOutline);
+        qreal t_outlineTrailingEdge = hrlib::Brent::zero(t_top, 1, _tTol, yOutline);
+        QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
+        QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
+
+        qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
         qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
