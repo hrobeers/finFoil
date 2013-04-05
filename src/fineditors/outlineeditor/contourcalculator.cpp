@@ -65,20 +65,26 @@ void ContourCalculator::run()
     //
     // calculate the contour points
     //
-    QQueue<QPointF> leadingEdgeQueue;
-    QStack<QPointF> trailingEdgeStack;
+    QPointF* leadingEdgePnts[_sectionCount];
+    QPointF* trailingEdgePnts[_sectionCount];
 
     for (int i=0; i<_sectionCount; i++)
     {
+        qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
+        if (thicknessOffsetPercent > 1)
+        {
+            leadingEdgePnts[i] = 0;
+            trailingEdgePnts[i] = 0;
+            continue;
+        }
+
         yOutline.setOffset(sectionHeightArray[i] * y_top);
         qreal t_outlineLeadingEdge = hrlib::Brent::zero(0, t_top, _tTol, yOutline);
         qreal t_outlineTrailingEdge = hrlib::Brent::zero(t_top, 1, _tTol, yOutline);
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
-        qreal offsetPercent = _percContourHeight / thicknessArray[i];
-        if (offsetPercent > 1) break;
-        qreal profileOffset = offsetPercent * y_profileTop;
+        qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
         qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
@@ -87,16 +93,44 @@ void ContourCalculator::run()
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
-        QPointF leadingEdge(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
-        QPointF trailingEdge(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
-
-        leadingEdgeQueue.enqueue(leadingEdge);
-        trailingEdgeStack.push(trailingEdge);
+        leadingEdgePnts[i] = new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
+        trailingEdgePnts[i] = new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
     }
 
-    _result->moveTo(leadingEdgeQueue.dequeue());
-    while (!leadingEdgeQueue.empty()) _result->lineTo(leadingEdgeQueue.dequeue());
-    while (!trailingEdgeStack.empty()) _result->lineTo(trailingEdgeStack.pop());
+    int firstIndex = 0;
+    for (int i=0; i<_sectionCount; i++)
+    {
+        if (leadingEdgePnts[i] != 0)
+        {
+            if (i == 0 || leadingEdgePnts[i-1] == 0)
+            {
+                _result->moveTo(*leadingEdgePnts[i]);
+                firstIndex = i;
+            }
+            else
+            {
+                _result->lineTo(*leadingEdgePnts[i]);
+            }
+            if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
+            {
+                for (int j = i; j >= firstIndex; j--)
+                {
+                    _result->lineTo(*trailingEdgePnts[j]);
+                }
+                if (firstIndex != 0)
+                    _result->lineTo(*leadingEdgePnts[firstIndex]);
+            }
+        }
+    }
+
+    for (int i = 0; i < _sectionCount; i++)
+    {
+        if (leadingEdgePnts[i] != 0)
+        {
+            delete leadingEdgePnts[i];
+            delete trailingEdgePnts[i];
+        }
+    }
 }
 
 ContourCalculator::~ContourCalculator()
