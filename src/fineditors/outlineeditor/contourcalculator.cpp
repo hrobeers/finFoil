@@ -103,23 +103,10 @@ void ContourCalculator::run()
         if (leadingEdgePnts[i] != 0)
         {
             if (i == 0 || leadingEdgePnts[i-1] == 0)
-            {
-                _result->moveTo(*leadingEdgePnts[i]);
                 firstIndex = i;
-            }
-            else
-            {
-                _result->lineTo(*leadingEdgePnts[i]);
-            }
+
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
-            {
-                for (int j = i; j >= firstIndex; j--)
-                {
-                    _result->lineTo(*trailingEdgePnts[j]);
-                }
-                if (firstIndex != 0)
-                    _result->lineTo(*leadingEdgePnts[firstIndex]);
-            }
+                createPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
         }
     }
 
@@ -163,4 +150,18 @@ void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thickne
             thicknessArray[i] = p.ry() / baseThickness;
         }
     }
+}
+
+void ContourCalculator::createPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
+{
+    _result->moveTo(*leadingEdgePnts[firstIndex]);
+
+    for (int i = firstIndex + 1; i <= lastIndex; i++)
+        _result->lineTo(*leadingEdgePnts[i]);
+
+    for (int i = lastIndex; i >= firstIndex; i--)
+        _result->lineTo(*trailingEdgePnts[i]);
+
+    if (firstIndex != 0)
+        _result->lineTo(*leadingEdgePnts[firstIndex]);
 }
