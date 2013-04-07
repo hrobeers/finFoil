@@ -51,7 +51,8 @@ namespace fineditors
         qreal _fTol;
 
         void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
-        void createPath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createCubicPath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
     };
 }
 
