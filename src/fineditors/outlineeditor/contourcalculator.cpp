@@ -25,7 +25,7 @@
 #include <QPainterPath>
 #include <QQueue>
 #include <QStack>
-#include <cmath>
+#include <qmath.h>
 #include "pathfunctors.h"
 
 using namespace fineditors;
@@ -189,12 +189,14 @@ void ContourCalculator::createCubicPath(QPointF *leadingEdgePnts[], QPointF *tra
     for (int i = 0; i < extCount - 1; i++)
     {
         c[i] = (*curve[i] + *curve[i+1]) / 2;
-        len[i] = sqrt((*curve[i+1] - *curve[i]).manhattanLength());
+        QPointF diff = *curve[i+1] - *curve[i];
+        len[i] = qSqrt(qPow(diff.x(),2) + qPow(diff.y(),2));
     }
 
     QPointF cPnt[cPntCount];
     for (int i = 0; i < cPntCount; i++)
     {
+        // TODO move k & m out. Calculated twice.
         if (i % 2 == 0)
         {
             int index = i / 2;

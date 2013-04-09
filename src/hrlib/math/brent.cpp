@@ -1,6 +1,6 @@
 # include <cstdlib>
 # include <iostream>
-# include <cmath>
+# include <qmath.h>
 # include <ctime>
 
 using namespace std;
@@ -211,7 +211,7 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
     }
 
     r = m2 * d0 * d1 * d2;
-    s = sqrt ( ( ( y2 - y ) + t ) / m2 );
+    s = qSqrt ( ( ( y2 - y ) + t ) / m2 );
     h = 0.5 * ( 1.0 + h );
     p = h * ( p + 2.0 * r * s );
     q = q + 0.5 * qs;
@@ -382,9 +382,9 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
 //
 //  C is the square of the inverse of the golden ratio.
 //
-  c = 0.5 * ( 3.0 - sqrt ( 5.0 ) );
+  c = 0.5 * ( 3.0 - qSqrt ( 5.0 ) );
 
-  eps = sqrt ( r8_epsilon ( ) );
+  eps = qSqrt ( r8_epsilon ( ) );
 
   sa = a;
   sb = b;
@@ -655,9 +655,9 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
       status = -1;
       exit ( 1 );
     }
-    c = 0.5 * ( 3.0 - sqrt ( 5.0 ) );
+    c = 0.5 * ( 3.0 - qSqrt ( 5.0 ) );
 
-    eps = sqrt ( r8_epsilon ( ) );
+    eps = qSqrt ( r8_epsilon ( ) );
     tol = r8_epsilon ( );
 
     v = a + c * ( b - a );
