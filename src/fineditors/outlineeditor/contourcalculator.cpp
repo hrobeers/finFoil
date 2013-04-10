@@ -22,11 +22,15 @@
 
 #include "contourcalculator.h"
 
+#include <QVarLengthArray>
 #include <QPainterPath>
 #include <QQueue>
 #include <QStack>
 #include <qmath.h>
+#include <limits>
 #include "pathfunctors.h"
+
+#define INITCNT 64
 
 using namespace fineditors;
 
@@ -169,54 +173,76 @@ void ContourCalculator::createLinePath(QPointF *leadingEdgePnts[], QPointF *trai
 
 void ContourCalculator::createCubicPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
 {
-    int edgeCount = lastIndex - firstIndex + 1;
-    int totalCount = 2 * edgeCount;
-    int extCount = totalCount + 2;
-    int cPntCount = totalCount * 2 - 2;
+    bool closePath = (firstIndex != 0);
 
-    QPointF* curve[extCount];
-    for (int i = 0; i < edgeCount; i++)
+    int edgePntCount = lastIndex - firstIndex + 1;
+    int totalPntCount = 2 * edgePntCount;
+    int extPntCount = totalPntCount + 3;
+    int cPntCount = extPntCount * 2 - 6;
+
+    QVarLengthArray<QPointF*, INITCNT> curve(extPntCount);
+    QVarLengthArray<QPointF, INITCNT> c(extPntCount - 1);
+    QVarLengthArray<qreal, INITCNT> len(extPntCount - 1);
+    QVarLengthArray<QPointF, INITCNT> m(extPntCount - 2);
+    QVarLengthArray<QPointF, INITCNT> cPnt(cPntCount);
+
+
+    for (int i = 0; i < edgePntCount; i++)
     {
         curve[i + 1] = leadingEdgePnts[firstIndex + i];
-        curve[edgeCount + i + 1] = trailingEdgePnts[lastIndex - i];
+        curve[edgePntCount + i + 1] = trailingEdgePnts[lastIndex - i];
     }
-    curve[0] = curve[1];
-    curve[extCount - 1] = curve[extCount - 2];
 
-    QPointF c[extCount - 1];
-    qreal len[extCount - 1];
+    if (!closePath)
+    {
+        curve[extPntCount - 2] = curve[extPntCount - 3];
+        curve[extPntCount - 1] = curve[extPntCount - 2];
+        curve[0] = curve[1];
+    }
+    else
+    {
+        curve[extPntCount - 2] = curve[1];
+        curve[extPntCount - 1] = curve[2];
+        curve[0] = curve[extPntCount - 3];
+    }
 
-    for (int i = 0; i < extCount - 1; i++)
+
+    for (int i = 0; i < c.size(); i++)
     {
         c[i] = (*curve[i] + *curve[i+1]) / 2;
         QPointF diff = *curve[i+1] - *curve[i];
         len[i] = qSqrt(qPow(diff.x(),2) + qPow(diff.y(),2));
     }
 
-    QPointF cPnt[cPntCount];
+    for (int i = 0; i < m.size(); i++)
+    {
+        qreal k = len[i] / (len[i] + len[i + 1]);
+        m[i] = c[i] + (c[i + 1] - c[i]) * k;
+    }
+
     for (int i = 0; i < cPntCount; i++)
     {
-        // TODO move k & m out. Calculated twice.
         if (i % 2 == 0)
         {
             int index = i / 2;
-            qreal k = len[index] / (len[index] + len[index + 1]);
-            QPointF m = c[index] + (c[index + 1] - c[index]) * k;
-            cPnt[i] = (c[index + 1] - m) * 0.4 + *curve[index + 1];
+            cPnt[i] = (c[index + 1] - m[index]) * 0.4 + *curve[index + 1];
         }
         else
         {
-            int index = (i + 1) / 2;
-            qreal k = len[index] / (len[index] + len[index + 1]);
-            QPointF m = c[index] + (c[index + 1] - c[index]) * k;
-            cPnt[i] = (c[index] - m) * 0.4 + *curve[index + 1];
+            int index = (i - 1) / 2;
+            cPnt[i] = (c[index + 1] - m[index + 1]) * 0.4 + *curve[index + 2];
         }
     }
 
     _result->moveTo(*curve[1]);
-    for (int i = 0; i < totalCount - 1; i++)
+    for (int i = 2; i < totalPntCount + 1; i++)
     {
-        int cIndex = i + i;
-        _result->cubicTo(cPnt[cIndex], cPnt[cIndex + 1], *curve[i + 2]);
+        int cIndex = i + i - 4;
+        _result->cubicTo(cPnt[cIndex], cPnt[cIndex + 1], *curve[i]);
+    }
+    if (closePath)
+    {
+        int cIndex = totalPntCount + totalPntCount - 2;
+        _result->cubicTo(cPnt[cIndex], cPnt[cIndex + 1], *curve[totalPntCount + 1]);
     }
 }
