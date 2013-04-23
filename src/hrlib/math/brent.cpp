@@ -1,3 +1,9 @@
+/****************************************************************************
+
+ This code is distributed under the GNU LGPL license.
+
+****************************************************************************/
+
 # include <cstdlib>
 # include <iostream>
 # include <qmath.h>

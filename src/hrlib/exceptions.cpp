@@ -74,3 +74,7 @@ const std::exception &Exception::innerException() const
 
 ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
     : Exception(message, thrower) { }
+
+
+NotImplementedException::NotImplementedException(QString &message, QObject *thrower) throw()
+    : Exception(message, thrower) { }

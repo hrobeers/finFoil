@@ -29,6 +29,7 @@
 #include <qmath.h>
 #include <limits>
 #include "pathfunctors.h"
+#include "hrlib/math/spline.hpp"
 
 #define INITCNT 64
 
@@ -111,7 +112,7 @@ void ContourCalculator::run()
                 firstIndex = i;
 
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
-                createCubicPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
         }
     }
 
@@ -169,6 +170,13 @@ void ContourCalculator::createLinePath(QPointF *leadingEdgePnts[], QPointF *trai
 
     if (firstIndex != 0)
         _result->lineTo(*leadingEdgePnts[firstIndex]);
+}
+
+void ContourCalculator::createOverhauserPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
+{
+    int valueCount = lastIndex - firstIndex + 1;
+    // qreal[] tdata = 0 -> 1
+    // hrlib::spline_overhauser_val(2, valueCount, )
 }
 
 void ContourCalculator::createCubicPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
