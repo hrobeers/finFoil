@@ -59,8 +59,7 @@ void ContourCalculator::run()
     // find the top of the outline
     f_yValueAtPercent yOutline(_outline);
     qreal t_top;
-//    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top);
-    qreal y_top = hrlib::Brent::glomin(0, 1, 0.5, 10, _fTol, _tTol, yOutline, t_top);
+    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top); // glomin isn't finding a correct top
 
     // find dimensions of the profile
     f_yValueAtPercent yProfile(_profile);
@@ -112,7 +111,10 @@ void ContourCalculator::run()
                 firstIndex = i;
 
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
-                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+            {
+//                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+                createCubicPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+            }
         }
     }
 
