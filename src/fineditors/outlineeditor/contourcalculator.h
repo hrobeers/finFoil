@@ -39,7 +39,9 @@ namespace fineditors
 
         virtual ~ContourCalculator();
 
-    private:
+    private:        
+        enum SplineFunction { bSpline, overhauser };
+
         qreal _percContourHeight;
         QPainterPath *_outline;
         QPainterPath *_profile;
@@ -47,12 +49,13 @@ namespace fineditors
         QPainterPath *_result;
 
         int _sectionCount;
+        int _resolution;
         qreal _tTol;
         qreal _fTol;
 
         void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
         void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
-        void createOverhauserPath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
         void createCubicPath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
     };
 }

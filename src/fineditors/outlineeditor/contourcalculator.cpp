@@ -45,6 +45,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outl
     _result = result;
 
     _sectionCount = 20;
+    _resolution = 100;
     _tTol = 0.0001;
     _fTol = 0.01;
 }
@@ -113,7 +114,9 @@ void ContourCalculator::run()
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
             {
 //                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
-                createCubicPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+//                createCubicPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, bSpline);
+//                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, overhauser);
             }
         }
     }
@@ -154,8 +157,8 @@ void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thickne
             t += increment;
             QPointF p = _thickness->pointAtPercent(t);
 
-            sectionHeightArray[i] = p.rx() / height;
-            thicknessArray[i] = p.ry() / baseThickness;
+            sectionHeightArray[i] = p.x() / height;
+            thicknessArray[i] = p.y() / baseThickness;
         }
     }
 }
@@ -174,11 +177,87 @@ void ContourCalculator::createLinePath(QPointF *leadingEdgePnts[], QPointF *trai
         _result->lineTo(*leadingEdgePnts[firstIndex]);
 }
 
-void ContourCalculator::createOverhauserPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
+void ContourCalculator::createSplinePath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[],
+                                         int firstIndex, int lastIndex, SplineFunction splineFunction)
 {
-    int valueCount = lastIndex - firstIndex + 1;
-    // qreal[] tdata = 0 -> 1
-    // hrlib::spline_overhauser_val(2, valueCount, )
+    if (firstIndex >= lastIndex)
+        return;
+
+    bool closing = firstIndex != 0;
+    QVarLengthArray<qreal, INITCNT> points_x;
+    QVarLengthArray<qreal, INITCNT> points_y;
+
+    if (closing)
+    {
+        points_x.append(trailingEdgePnts[firstIndex]->x());
+        points_y.append(trailingEdgePnts[firstIndex]->y());
+    }
+    for (int i = firstIndex; i <= lastIndex; i++)
+    {
+        points_x.append(leadingEdgePnts[i]->x());
+        points_y.append(leadingEdgePnts[i]->y());
+    }
+    for (int i = lastIndex; i >= firstIndex; i--)
+    {
+        points_x.append(trailingEdgePnts[i]->x());
+        points_y.append(trailingEdgePnts[i]->y());
+    }
+    if (closing)
+    {
+        points_x.append(points_x[1]);
+        points_y.append(points_y[1]);
+
+        points_x.append(points_x[2]);
+        points_y.append(points_y[2]);
+    }
+
+    int pointCount = points_x.count();
+
+    QVarLengthArray<qreal, INITCNT> t_data(pointCount);
+    for (int i = 0; i < t_data.count(); i++)
+        t_data[i] = i;
+
+    qreal t_val = 0;
+    qreal t_valStep;
+    if (closing)
+    {
+        t_val = 1;
+        t_valStep = (pointCount-3) / qreal(_resolution);
+    }
+    else
+    {
+        t_valStep = (pointCount-1) / qreal(_resolution);
+    }
+
+    qreal x, y;
+    switch(splineFunction)
+    {
+    case bSpline:
+        x = hrlib::spline_b_val(pointCount, t_data.data(), points_x.data(), t_val);
+        y = hrlib::spline_b_val(pointCount, t_data.data(), points_y.data(), t_val);
+        _result->moveTo(x, y);
+        for (int i = 1; i <= _resolution; i++)
+        {
+            t_val += t_valStep;
+            x = hrlib::spline_b_val(pointCount, t_data.data(), points_x.data(), t_val);
+            y = hrlib::spline_b_val(pointCount, t_data.data(), points_y.data(), t_val);
+            _result->lineTo(x, y);
+        }
+        break;
+
+    case overhauser:
+        x = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_x.data(), t_val);
+        y = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_y.data(), t_val);
+        _result->moveTo(x, y);
+        for (int i = 1; i <= _resolution; i++)
+        {
+            t_val += t_valStep;
+            x = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_x.data(), t_val);
+            y = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_y.data(), t_val);
+            _result->lineTo(x, y);
+        }
+        break;
+    }
 }
 
 void ContourCalculator::createCubicPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
