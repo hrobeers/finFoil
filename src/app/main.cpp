@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 
         MainWindow w;
         w.setCentralWidget(centralWidget);
+        w.setWindowTitle("finFoil v" + version.toString());
         w.show();
 
         return a.exec();
