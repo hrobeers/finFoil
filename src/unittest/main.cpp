@@ -22,7 +22,7 @@
 
 #include <QCoreApplication>
 
-#include "hrlib/unittesting.h"
+#include "hrtestlib/unittesting.h"
 
 using namespace hrlib;
 

@@ -15,7 +15,8 @@ TEMPLATE = app
 INCLUDEPATH += ../ \
                 ../patheditor/ \
                 ../fineditors/ \
-                ../hrlib/
+                ../hrlib/ \
+                ../hrtestlib \
 
 DEPENDPATH += ../
 
@@ -24,6 +25,7 @@ SOURCES += main.cpp
 HEADERS +=
 
 include(../hrlib/hrlib.pri)
+include(../hrtestlib/hrtestlib.pri)
 include(../patheditor/patheditor.pri)
 
 include(patheditor-tests/patheditor-tests.pri)
