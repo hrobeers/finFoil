@@ -24,15 +24,17 @@
 
 using namespace hrlib;
 
-Version::Version(int major, int minor, int build, QString commit)
+Version::Version(int major, int minor, int revision, int build, QString commit)
 {
     _major = major;
     _minor = minor;
+    _revision = revision;
     _build = build;
     _commit = commit;
 
     // Create string
-    _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.').append(QString::number(_build));
+    _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.')
+            .append(QString::number(_revision)).append('.').append(QString::number(_build));
 }
 
 QString hrlib::Version::toString()

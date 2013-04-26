@@ -28,12 +28,13 @@
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 0
+#define REVISION 0
 
 #include <QString>
 
 namespace finfoil
 {
-hrlib::Version version() { return hrlib::Version(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER, COMMIT_HASH); }
+hrlib::Version version() { return hrlib::Version(MAJOR_VERSION, MINOR_VERSION, REVISION, BUILD_NUMBER, COMMIT_HASH); }
 }
 
 #endif // FINFOIL_VERSION_H

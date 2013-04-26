@@ -30,7 +30,7 @@ namespace hrlib
     class Version
     {
     public:
-        explicit Version(int major, int minor, int build, QString commit);
+        explicit Version(int major, int minor, int revision, int build, QString commit);
 
         QString toString();
         QString commit();
@@ -38,6 +38,7 @@ namespace hrlib
     private:
         int _major;
         int _minor;
+        int _revision;
         int _build;
         QString _commit;
         QString _string;
