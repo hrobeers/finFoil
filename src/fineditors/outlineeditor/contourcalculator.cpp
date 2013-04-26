@@ -44,9 +44,9 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outl
     _thickness = thickness;
     _result = result;
 
-    _sectionCount = 20;
+    _sectionCount = 15;
     _resolution = 100;
-    _tTol = 0.0001;
+    _tTol = 0.002;
     _fTol = 0.01;
 }
 
