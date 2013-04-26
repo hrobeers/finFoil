@@ -24,17 +24,40 @@
 
 using namespace hrlib;
 
-Version::Version(int major, int minor, int revision, int build, QString commit)
+Version::Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType)
 {
     _major = major;
     _minor = minor;
     _revision = revision;
     _build = build;
     _commit = commit;
+    _releaseType = releaseType;
 
     // Create string
     _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.')
             .append(QString::number(_revision)).append('.').append(QString::number(_build));
+
+    switch (_releaseType)
+    {
+    case ReleaseType::PreAlpha:
+        _string.append(" pre-alpha");
+        break;
+
+    case ReleaseType::Aplha:
+        _string.append(" alpha");
+        break;
+
+    case ReleaseType::Beta:
+        _string.append(" beta");
+        break;
+
+    case ReleaseType::Nightly:
+        _string.append(" nightly");
+        break;
+
+    case ReleaseType::Release:
+        break;
+    }
 }
 
 QString hrlib::Version::toString()

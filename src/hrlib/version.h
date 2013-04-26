@@ -27,10 +27,15 @@
 
 namespace hrlib
 {
+    struct ReleaseType
+    {
+        enum e { PreAlpha, Aplha, Beta, Nightly, Release };
+    };
+
     class Version
     {
     public:
-        explicit Version(int major, int minor, int revision, int build, QString commit);
+        explicit Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType);
 
         QString toString();
         QString commit();
@@ -42,6 +47,7 @@ namespace hrlib
         int _build;
         QString _commit;
         QString _string;
+        ReleaseType::e _releaseType;
     };
 }
 
