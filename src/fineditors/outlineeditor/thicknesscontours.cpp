@@ -69,6 +69,8 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
                 painter->drawPath(*contour);
             }
         }
+
+        calcContours();
     }
 }
 
@@ -86,20 +88,17 @@ QRectF ThicknessContours::boundingRect() const
 void ThicknessContours::onOutlineChange(EditablePath *sender)
 {
     _outline.reset(sender->takePainterPath());
-    calcContours();
 }
 
 void ThicknessContours::onProfileChange(EditablePath *sender)
 {
     _profile.reset(sender->takePainterPath());
-    calcContours();
     this->update(boundingRect());
 }
 
 void ThicknessContours::onThicknessChange(EditablePath *sender)
 {
     _thickness.reset(sender->takePainterPath());
-    calcContours();
     this->update(boundingRect());
 }
 
