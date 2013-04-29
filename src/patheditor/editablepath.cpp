@@ -43,9 +43,6 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
         pathItem->setPrevPathItem(last);
     }
 
-    // reparent
-    pathItem->setParentItem(this);
-
     // Add the controlPoint's pointHandles
     foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
     {
