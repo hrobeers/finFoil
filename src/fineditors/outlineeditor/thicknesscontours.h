@@ -24,7 +24,6 @@
 #define THICKNESSCONTOURS_H
 
 #include <QGraphicsObject>
-//#include <QMutex>
 #include <QThreadPool>
 #include "patheditorfwd/patheditorfwd.h"
 
@@ -51,7 +50,6 @@ namespace fineditors
         void onThicknessChange(EditablePath *sender);
 
     private:
-//        QMutex _calcLock;
         QThreadPool _tPool;
 
         QScopedPointer<QPainterPath> _outline;
@@ -60,6 +58,8 @@ namespace fineditors
 
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;
+
+        bool _nextDetailed;
 
         void calcContours();
         bool profilesSet();

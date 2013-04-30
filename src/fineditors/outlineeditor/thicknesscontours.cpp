@@ -32,6 +32,8 @@ using namespace fineditors;
 ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
+    _nextDetailed = false;
+
     int numOfContours = std::max(_tPool.maxThreadCount(), 3);
     qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
@@ -104,34 +106,30 @@ void ThicknessContours::onThicknessChange(EditablePath *sender)
 
 void ThicknessContours::calcContours()
 {
-//    if (_calcLock.tryLock())
-//    {
-        _contours.clear();
-        if (profilesSet())
-        {
+    _contours.clear();
+    if (profilesSet())
+    {
 #ifdef PROCEDURAL
-            foreach (qreal thickness, _contourThicknesses)
-            {
-                QSharedPointer<QPainterPath> path(new QPainterPath());
-                _contours.append(path);
+        foreach (qreal thickness, _contourThicknesses)
+        {
+            QSharedPointer<QPainterPath> path(new QPainterPath());
+            _contours.append(path);
 
-                ContourCalculator calc(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data());
-                calc.run();
-            }
+            ContourCalculator calc(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data(), true);
+            calc.run();
+        }
 #endif
 #ifndef PROCEDURAL
-            foreach (qreal thickness, _contourThicknesses)
-            {
-                QSharedPointer<QPainterPath> path(new QPainterPath());
-                _contours.append(path);
+        foreach (qreal thickness, _contourThicknesses)
+        {
+            QSharedPointer<QPainterPath> path(new QPainterPath());
+            _contours.append(path);
 
-                _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data()));
-            }
-            _tPool.waitForDone();
-#endif
+            _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data(), true));
         }
-//        _calcLock.unlock();
-//    }
+        _tPool.waitForDone();
+#endif
+    }
 }
 
 bool ThicknessContours::profilesSet()

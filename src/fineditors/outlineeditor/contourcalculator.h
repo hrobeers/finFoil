@@ -33,7 +33,7 @@ namespace fineditors
     {
     public:
         explicit ContourCalculator(qreal percContourHeight, QPainterPath *outline, QPainterPath *profile,
-                                   QPainterPath *thickness, QPainterPath *result);
+                                   QPainterPath *thickness, QPainterPath *result, bool fast = false);
 
         virtual void run();
 

@@ -31,12 +31,12 @@
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
 
-#define INITCNT 64
+#define INITCNT 256
 
 using namespace fineditors;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outline, QPainterPath *profile,
-                                     QPainterPath *thickness, QPainterPath *result)
+                                     QPainterPath *thickness, QPainterPath *result, bool fast)
 {
     _percContourHeight = percContourHeight;
     _outline = outline;
@@ -44,10 +44,20 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outl
     _thickness = thickness;
     _result = result;
 
-    _sectionCount = 15;
-    _resolution = 100;
-    _tTol = 0.002;
-    _fTol = 0.01;
+    if (fast)
+    {
+        _sectionCount = 15;
+        _resolution = 100;
+        _tTol = 0.002;
+        _fTol = 0.01;
+    }
+    else
+    {
+        _sectionCount = 100;
+        _resolution = 200;
+        _tTol = 0.0001;
+        _fTol = 0.001;
+    }
 }
 
 void ContourCalculator::run()
