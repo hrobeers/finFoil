@@ -78,3 +78,6 @@ ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
 
 NotImplementedException::NotImplementedException(QString &message, QObject *thrower) throw()
     : Exception(message, thrower) { }
+
+ImplementationException::ImplementationException(QString &message, QObject *thrower) throw()
+    : Exception(message, thrower) { }

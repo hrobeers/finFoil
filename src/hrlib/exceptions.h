@@ -64,6 +64,14 @@ namespace hrlib
 
         virtual ~NotImplementedException() throw() {}
     };
+
+    class ImplementationException : public Exception
+    {
+    public:
+        explicit ImplementationException(QString &message, QObject *thrower = 0) throw();
+
+        virtual ~ImplementationException() throw() {}
+    };
 }
 
 #endif // HR_EXCEPTIONS_H

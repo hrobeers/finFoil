@@ -24,6 +24,7 @@
 
 #include <QGraphicsScene>
 #include "pathsettings.h"
+#include "exceptions.h"
 
 using namespace patheditor;
 
@@ -35,6 +36,12 @@ PathPoint::PathPoint(qreal xpos, qreal ypos)
     _selected = false;
     _pointHandle = 0;
     _toFollowPoint = 0;
+}
+
+void PathPoint::setParent(QObject *object)
+{
+    QString message("Cannot use setParent() on a PathPoint. Use smart pointers to manage PathPoint objects.");
+    throw hrlib::ImplementationException(message, this);
 }
 
 void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
@@ -135,4 +142,14 @@ void PathPoint::select(PathPoint *point, QGraphicsScene *scene)
 
     s_prevSelected[scene] = point;
     point->_selected = true;
+}
+
+void PathPoint::onPointDrag(QGraphicsSceneMouseEvent *event)
+{
+    emit pointDrag(event, this);
+}
+
+void PathPoint::onPointRelease(QGraphicsSceneMouseEvent *event)
+{
+    emit pointRelease(event, this);
 }

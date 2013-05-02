@@ -26,15 +26,19 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QSharedPointer>
+#include <QPen>
 #include "restrictor.h"
 #include "pointhandle.h"
 
 namespace patheditor
 {
-    class PathPoint : public QPointF
+    class PathPoint : public QObject, public QPointF
     {
+        Q_OBJECT
     public:
         explicit PathPoint(qreal xpos, qreal ypos);
+
+        virtual void setParent(QObject *object);
 
         void setRestrictedPos(qreal &xpos, qreal &ypos);
 
@@ -59,6 +63,14 @@ namespace patheditor
         bool selected() const;
 
         virtual ~PathPoint() {}
+
+    signals:
+        void pointDrag(QGraphicsSceneMouseEvent *event, PathPoint *sender);
+        void pointRelease(QGraphicsSceneMouseEvent *event, PathPoint *sender);
+
+    public slots:
+        void onPointDrag(QGraphicsSceneMouseEvent *event);
+        void onPointRelease(QGraphicsSceneMouseEvent *event);
 
     protected:
         /**
