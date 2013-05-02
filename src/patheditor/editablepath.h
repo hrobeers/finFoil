@@ -52,11 +52,12 @@ namespace patheditor
                         QWidget *widget);
 
         /**
-         * @brief get the last drawn QPainterPath. The caller takes ownership of the pointer.
+         * @brief get the last drawn QPainterPath. EditablePath still owns the pointer.
+         *        This method is NOT thread safe!
          *        Typically used when pathChanged is emitted.
          * @return
          */
-        QPainterPath* takePainterPath();
+        QPainterPath* painterPath();
 
         virtual ~EditablePath() {}
 

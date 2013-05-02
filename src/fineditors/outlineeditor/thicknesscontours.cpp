@@ -34,6 +34,10 @@ ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
 {
     _nextDetailed = false;
 
+    _outline = 0;
+    _profile = 0;
+    _thickness = 0;
+
     int numOfContours = std::max(_tPool.maxThreadCount(), 3);
     qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
@@ -48,7 +52,7 @@ ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
-    if (!_outline.isNull())
+    if (_outline != 0)
     {
         int min = 0;
         int max = 255;
@@ -78,7 +82,7 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
 QRectF ThicknessContours::boundingRect() const
 {
-    if (_outline.isNull())
+    if (_outline == 0)
     {
         QRectF retVal;
         return retVal;
@@ -89,18 +93,18 @@ QRectF ThicknessContours::boundingRect() const
 
 void ThicknessContours::onOutlineChange(EditablePath *sender)
 {
-    _outline.reset(sender->takePainterPath());
+    _outline = sender->painterPath();
 }
 
 void ThicknessContours::onProfileChange(EditablePath *sender)
 {
-    _profile.reset(sender->takePainterPath());
+    _profile = sender->painterPath();
     this->update(boundingRect());
 }
 
 void ThicknessContours::onThicknessChange(EditablePath *sender)
 {
-    _thickness.reset(sender->takePainterPath());
+    _thickness = sender->painterPath();
     this->update(boundingRect());
 }
 
@@ -115,7 +119,7 @@ void ThicknessContours::calcContours()
             QSharedPointer<QPainterPath> path(new QPainterPath());
             _contours.append(path);
 
-            ContourCalculator calc(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data(), true);
+            ContourCalculator calc(thickness, _outline, _profile, _thickness, path.data(), true);
             calc.run();
         }
 #endif
@@ -125,7 +129,7 @@ void ThicknessContours::calcContours()
             QSharedPointer<QPainterPath> path(new QPainterPath());
             _contours.append(path);
 
-            _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(),_thickness.data(), path.data(), true));
+            _tPool.start(new ContourCalculator(thickness, _outline, _profile, _thickness, path.data(), true));
         }
         _tPool.waitForDone();
 #endif
@@ -134,13 +138,13 @@ void ThicknessContours::calcContours()
 
 bool ThicknessContours::profilesSet()
 {
-    if (_outline.isNull())
+    if (_outline == 0)
         return false;
 
-    if (_profile.isNull())
+    if (_profile == 0)
         return false;
 
-    if (_thickness.isNull())
+    if (_thickness == 0)
         return false;
 
     return true;

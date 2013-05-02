@@ -100,23 +100,15 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->setPen(_settings.linePen());
         painter->drawPath(*(newPainterPath.data()));
 
-//        if(_painterPathLock.tryLock())
-//        {
-            _painterPath.reset(newPainterPath.take());
-//            _painterPathLock.unlock();
-            emit pathChanged(this);
-//        }
+        _painterPath.reset(newPainterPath.take());
+        emit pathChanged(this);
     }
 }
 
-QPainterPath *EditablePath::takePainterPath()
+QPainterPath *EditablePath::painterPath()
 {
-    QPainterPath* retVal = 0;
-
-//    _painterPathLock.lock();
-    if (!_painterPath.isNull())
-        retVal = _painterPath.take();
-//    _painterPathLock.unlock();
-
-    return retVal;
+    if (_painterPath.isNull())
+        return 0;
+    else
+        return _painterPath.data();
 }
