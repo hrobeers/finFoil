@@ -59,6 +59,8 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->setBrush(QColor(min, 0, max, a));
         painter->drawPath(*_outline);
 
+        calcContours();
+
         int numberOfContours = _contours.length();
         if (numberOfContours > 0)
         {
@@ -72,8 +74,6 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
                 painter->drawPath(*contour);
             }
         }
-
-        calcContours();
     }
 }
 
@@ -90,17 +90,20 @@ QRectF ThicknessContours::boundingRect() const
 
 void ThicknessContours::onOutlineChange(EditablePath *sender)
 {
+    _fastCalc = !(sender->released());
     _outline = sender->painterPath();
 }
 
 void ThicknessContours::onProfileChange(EditablePath *sender)
 {
+    _fastCalc = !(sender->released());
     _profile = sender->painterPath();
     this->scene()->update(boundingRect());
 }
 
 void ThicknessContours::onThicknessChange(EditablePath *sender)
 {
+    _fastCalc = !(sender->released());
     _thickness = sender->painterPath();
     this->scene()->update(boundingRect());
 }
@@ -116,7 +119,7 @@ void ThicknessContours::calcContours()
             QSharedPointer<QPainterPath> path(new QPainterPath());
             _contours.append(path);
 
-            ContourCalculator calc(thickness, _outline.data(), _profile.data(), _thickness.data(), path.data(), true);
+            ContourCalculator calc(thickness, _outline.data(), _profile.data(), _thickness.data(), path.data(), _fastCalc);
             calc.run();
         }
 #endif
@@ -126,7 +129,7 @@ void ThicknessContours::calcContours()
             QSharedPointer<QPainterPath> path(new QPainterPath());
             _contours.append(path);
 
-            _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(), _thickness.data(), path.data(), true));
+            _tPool.start(new ContourCalculator(thickness, _outline.data(), _profile.data(), _thickness.data(), path.data(), _fastCalc));
         }
         _tPool.waitForDone();
 #endif

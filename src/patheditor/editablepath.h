@@ -58,6 +58,8 @@ namespace patheditor
          */
         QSharedPointer<QPainterPath> painterPath();
 
+        bool released();
+
         virtual ~EditablePath() {}
 
     signals:
@@ -69,6 +71,7 @@ namespace patheditor
 
     private:
         bool _firstPaint;
+        bool _released;
 
         PathSettings _settings;
 

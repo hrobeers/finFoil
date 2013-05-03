@@ -50,6 +50,7 @@ namespace fineditors
         void onThicknessChange(EditablePath *sender);
 
     private:
+        bool _fastCalc;
         QThreadPool _tPool;
 
         QSharedPointer<QPainterPath> _outline;

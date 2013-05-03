@@ -32,6 +32,7 @@ EditablePath::EditablePath(QGraphicsItem * parent)
     : QGraphicsObject(parent)
 {
     _firstPaint = true;
+    _released = true;
     _settings = PathSettings::Default();
 }
 
@@ -118,16 +119,23 @@ QSharedPointer<QPainterPath> EditablePath::painterPath()
     return _painterPath;
 }
 
+bool EditablePath::released()
+{
+    return _released;
+}
+
 void EditablePath::onPointDrag(PathPoint* /*unused*/)
 {
-    this->scene()->update(boundingRect());
+    _released = false;
     emit pathChanged(this);
+    this->scene()->update(boundingRect());
 }
 
 void EditablePath::onPointRelease(PathPoint* /*unused*/)
 {
-    this->scene()->update(boundingRect());
+    _released = true;
     emit pathChanged(this);
+    this->scene()->update(boundingRect());
 }
 
 void EditablePath::connectPoints(PathItem *pathItem)
