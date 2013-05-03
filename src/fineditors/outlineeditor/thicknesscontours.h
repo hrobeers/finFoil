@@ -52,9 +52,9 @@ namespace fineditors
     private:
         QThreadPool _tPool;
 
-        QPainterPath* _outline;
-        QPainterPath* _profile;
-        QPainterPath* _thickness;
+        QSharedPointer<QPainterPath> _outline;
+        QSharedPointer<QPainterPath> _profile;
+        QSharedPointer<QPainterPath> _thickness;
 
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;

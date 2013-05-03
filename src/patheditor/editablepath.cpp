@@ -24,12 +24,14 @@
 
 #include <QPainter>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
 
 using namespace patheditor;
 
 EditablePath::EditablePath(QGraphicsItem * parent)
     : QGraphicsObject(parent)
 {
+    _firstPaint = true;
     _settings = PathSettings::Default();
 }
 
@@ -69,6 +71,7 @@ void EditablePath::append(QSharedPointer<PathItem> pathItem)
         pathItem->endPoint()->addFollowingPoint(pathItem->controlPoints().last());
     }
 
+    connectPoints(pathItem.data());
     _pathItemList.append(pathItem);
 }
 
@@ -90,7 +93,7 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     if (!_pathItemList.isEmpty())
     {
-        QScopedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_pathItemList.first()->startPoint())));
+        QSharedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_pathItemList.first()->startPoint())));
 
         foreach(QSharedPointer<PathItem> item, _pathItemList)
         {
@@ -100,15 +103,50 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->setPen(_settings.linePen());
         painter->drawPath(*(newPainterPath.data()));
 
-        _painterPath.reset(newPainterPath.take());
-        emit pathChanged(this);
+        _painterPath.swap(newPainterPath);
+
+        if (_firstPaint)
+        {
+            _firstPaint = false;
+            emit pathChanged(this);
+        }
     }
 }
 
-QPainterPath *EditablePath::painterPath()
+QSharedPointer<QPainterPath> EditablePath::painterPath()
 {
-    if (_painterPath.isNull())
-        return 0;
-    else
-        return _painterPath.data();
+    return _painterPath;
+}
+
+void EditablePath::onPointDrag(PathPoint* /*unused*/)
+{
+    this->scene()->update(boundingRect());
+    emit pathChanged(this);
+}
+
+void EditablePath::onPointRelease(PathPoint* /*unused*/)
+{
+    this->scene()->update(boundingRect());
+    emit pathChanged(this);
+}
+
+void EditablePath::connectPoints(PathItem *pathItem)
+{
+    connect(pathItem->startPoint().data(), SIGNAL(pointDrag(PathPoint*)),
+            this, SLOT(onPointDrag(PathPoint*)), Qt::UniqueConnection);
+    connect(pathItem->startPoint().data(), SIGNAL(pointRelease(PathPoint*)),
+            this, SLOT(onPointRelease(PathPoint*)), Qt::UniqueConnection);
+
+    connect(pathItem->endPoint().data(), SIGNAL(pointDrag(PathPoint*)),
+            this, SLOT(onPointDrag(PathPoint*)), Qt::UniqueConnection);
+    connect(pathItem->endPoint().data(), SIGNAL(pointRelease(PathPoint*)),
+            this, SLOT(onPointRelease(PathPoint*)), Qt::UniqueConnection);
+
+    foreach(QSharedPointer<ControlPoint> cPoint, pathItem->controlPoints())
+    {
+        connect(cPoint.data(), SIGNAL(pointDrag(PathPoint*)),
+                this, SLOT(onPointDrag(PathPoint*)), Qt::UniqueConnection);
+        connect(cPoint.data(), SIGNAL(pointRelease(PathPoint*)),
+                this, SLOT(onPointRelease(PathPoint*)), Qt::UniqueConnection);
+    }
 }

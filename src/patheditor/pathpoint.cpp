@@ -144,12 +144,12 @@ void PathPoint::select(PathPoint *point, QGraphicsScene *scene)
     point->_selected = true;
 }
 
-void PathPoint::onPointDrag(QGraphicsSceneMouseEvent *event)
+void PathPoint::onPointDrag(QGraphicsSceneMouseEvent* /*unused*/)
 {
-    emit pointDrag(event, this);
+    emit pointDrag(this);
 }
 
-void PathPoint::onPointRelease(QGraphicsSceneMouseEvent *event)
+void PathPoint::onPointRelease(QGraphicsSceneMouseEvent* /*unused*/)
 {
-    emit pointRelease(event, this);
+    emit pointRelease(this);
 }

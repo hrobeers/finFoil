@@ -65,8 +65,8 @@ namespace patheditor
         virtual ~PathPoint() {}
 
     signals:
-        void pointDrag(QGraphicsSceneMouseEvent *event, PathPoint *sender);
-        void pointRelease(QGraphicsSceneMouseEvent *event, PathPoint *sender);
+        void pointDrag(PathPoint *sender);
+        void pointRelease(PathPoint *sender);
 
     public slots:
         void onPointDrag(QGraphicsSceneMouseEvent *event);

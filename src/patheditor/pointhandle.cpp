@@ -71,13 +71,13 @@ void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     qreal rx(this->pos().rx() + _originToCenter.rx());
     qreal ry(this->pos().ry() + _originToCenter.ry());
     _point->setRestrictedPos(rx, ry);
-    this->scene()->update();
+    _point->onPointDrag(event);
     QGraphicsEllipseItem::mouseMoveEvent(event);
 }
 
 void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     setCenter(_point);
-    this->scene()->update();
+    _point->onPointRelease(event);
     QGraphicsEllipseItem::mouseReleaseEvent(event);
 }
