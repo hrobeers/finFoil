@@ -1,11 +1,10 @@
-* Probably best to remove locking from EditablePath and put in ThicknessContours where multithreading will happen
-
 General TODO's
 ==============
 
 * Cleanup unused includes
 * Forward declaration of classes (instead of includes in header files) to speedup compilation
 * Add documentation comments
+* Unit testing
 
 
 Improvements with C++11

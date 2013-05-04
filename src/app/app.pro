@@ -34,5 +34,6 @@ include(../fineditors/fineditors.pri)
 include(../hrlib/hrlib.pri)
 
 OTHER_FILES +=  ../../LICENSE.BSD \
+                ../../LICENSE.LGPLv2 \
                 ../../README \
                 ../../TODO

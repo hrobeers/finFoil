@@ -1,13 +1,24 @@
-This is the finFoil repository for the Qt/C++ remake.
+This is the finFoil repository for the Qt/C++ remake (versions > 1.0).
 
-It is here that the excitement will happen!
 
-Have fun with it,
-hrobeers
+NOTE FOR GITORIOUS USERS
+========================
+The Gitorious repository is a mirror from the GitHub repository.
+The Gitorious repository is updated daily from the GitHub repository.
 
-NOTE FOR GITHUB USERS
-The GitHub repository is a mirror from the Gitorious repository.
-The GitHub repository is updated daily from the Gitorious repository.
 
 NOTE FOR SOURCEFORGE USERS
+==========================
 The sourceforge repository is a daily synchonised mirror.
+
+
+LICENSE
+=======
+The majority of the code is licensed under the 2-clause BSD license.
+However, parts of the code are licensed under the LGPLv2.
+Since Everything is statically linked, the total project inherits the LGPL license.
+It should be trivial for every Qt/C++ programmer to extract this code for dynamic linking
+so that a BSD licensed project is obtained with a dynamic dependency on a LGPL library.
+
+You should have received a copy of the licence agreement for both the 2-clause BSD license
+and the LGPLv2 license along with this source code bundle.
