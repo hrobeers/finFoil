@@ -37,6 +37,7 @@ class QGraphicsLineItem;
 class QPointF;
 class QString;
 class QPainterPath;
+class QDoubleSpinBox;
 
 QT_END_NAMESPACE
 

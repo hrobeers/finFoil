@@ -5,11 +5,13 @@ HEADERS += \
     ../fineditors/outlineeditor/thicknesscontours.h \
     ../fineditors/outlineeditor/outlineeditor.h \
     ../fineditors/outlineeditor/contourcalculator.h \
-    ../fineditors/outlineeditor/pathfunctors.h
+    ../fineditors/outlineeditor/pathfunctors.h \
+    ../fineditors/outlineeditor/outlinedatawidget.h
 
 SOURCES += \
     ../fineditors/profileeditor/profileeditor.cpp \
     ../fineditors/thicknesseditor/thicknesseditor.cpp \
     ../fineditors/outlineeditor/thicknesscontours.cpp \
     ../fineditors/outlineeditor/outlineeditor.cpp \
-    ../fineditors/outlineeditor/contourcalculator.cpp
+    ../fineditors/outlineeditor/contourcalculator.cpp \
+    ../fineditors/outlineeditor/outlinedatawidget.cpp

@@ -23,6 +23,7 @@
 #include "outlineeditor.h"
 
 #include <QVBoxLayout>
+#include "patheditor/patheditorwidget.h"
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "line.h"
@@ -34,6 +35,9 @@ using namespace fineditors;
 OutlineEditor::OutlineEditor(QWidget *parent) :
     QWidget(parent)
 {
+    //
+    // PathEditor
+    //
     _pathEditor = new patheditor::PathEditorWidget(this);
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
@@ -74,8 +78,19 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     _pathEditor->addGraphicsItem(contours);
     _pathEditor->addPath(path);
 
+
+    //
+    // OutlineDataWidget
+    //
+    _outlineDataWidget = new OutlineDataWidget(this);
+
+
+    //
+    // Layout
+    //
     _mainLayout = new QVBoxLayout(this);
     _mainLayout->addWidget(_pathEditor);
+    _mainLayout->addWidget(_outlineDataWidget);
     this->setLayout(_mainLayout);
 }
 

@@ -20,45 +20,36 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEEDITOR_H
-#define OUTLINEEDITOR_H
-
-#include "hrlibfwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
-
-#include <QWidget>
 #include "outlinedatawidget.h"
 
-using namespace patheditor;
+#include <QVBoxLayout>
+#include <QDoubleSpinBox>
+#include <QLabel>
 
-namespace fineditors
+using namespace fineditors;
+
+OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
+    QWidget(parent)
 {
-    /**
-     * Editor to edit the fin outline.
-     * This editor can display the thickness contours while editing.
-     */
-    class OutlineEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit OutlineEditor(QWidget *parent = 0);
+    _vLayout = new QVBoxLayout();
 
-        virtual ~OutlineEditor() {}
 
-    signals:
-        void profileChanged(EditablePath *sender);
-        void thicknessChanged(EditablePath *sender);
+    //
+    // Height section
+    //
+    QHBoxLayout* heightLayout = new QHBoxLayout();
+    QLabel* heightLabel = new QLabel(tr("Fin height:"));
+    _heightEdit = new QDoubleSpinBox();
+    heightLayout->addWidget(heightLabel);
+    heightLayout->addWidget(_heightEdit);
+    _vLayout->addLayout(heightLayout);
+    connect(_heightEdit, SIGNAL(valueChanged(double)), this, SLOT(onHeightChange(double)));
 
-    public slots:
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
-
-    private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-        OutlineDataWidget* _outlineDataWidget;
-
-    };
+    this->setLayout(_vLayout);
 }
 
-#endif // OUTLINEEDITOR_H
+
+void OutlineDataWidget::onHeightChange(double height)
+{
+    emit heightChanged((qreal)height);
+}
