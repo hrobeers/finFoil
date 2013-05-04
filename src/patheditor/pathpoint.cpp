@@ -38,7 +38,7 @@ PathPoint::PathPoint(qreal xpos, qreal ypos)
     _toFollowPoint = 0;
 }
 
-void PathPoint::setParent(QObject *object)
+void PathPoint::setParent(QObject* /*unused*/)
 {
     QString message("Cannot use setParent() on a PathPoint. Use smart pointers to manage PathPoint objects.");
     throw hrlib::ImplementationException(message, this);

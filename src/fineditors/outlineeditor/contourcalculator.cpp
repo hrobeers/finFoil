@@ -46,15 +46,15 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outl
 
     if (fast)
     {
-        _sectionCount = 15;
-        _resolution = 100;
+        _sectionCount = 20;
+        _resolution = 200;
         _tTol = 0.002;
         _fTol = 0.01;
     }
     else
     {
-        _sectionCount = 100;
-        _resolution = 200;
+        _sectionCount = 150;
+        _resolution = 400;
         _tTol = 0.0001;
         _fTol = 0.001;
     }
@@ -69,13 +69,13 @@ void ContourCalculator::run()
 
     // find the top of the outline
     f_yValueAtPercent yOutline(_outline);
-    qreal t_top;
-    qreal y_top = hrlib::Brent::local_min(0, 1, 0.01, yOutline, t_top); // glomin isn't finding a correct top
+    qreal t_top = 0.5; // start value
+    qreal y_top = hrlib::Brent::local_min(0, 1, _tTol, yOutline, t_top); // glomin isn't finding a correct top
 
     // find dimensions of the profile
     f_yValueAtPercent yProfile(_profile);
-    qreal t_profileTop;
-    qreal y_profileTop = hrlib::Brent::glomin(0, 1, 0.35, 3, _fTol, _tTol, yProfile, t_profileTop);
+    qreal t_profileTop = 0.3; // start value
+    qreal y_profileTop = hrlib::Brent::local_min(0, 1, _tTol, yProfile, t_profileTop);
     qreal profileLength = _profile->pointAtPercent(1).x();
 
     //
