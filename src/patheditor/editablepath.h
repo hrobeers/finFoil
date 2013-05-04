@@ -25,7 +25,7 @@
 
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QLinkedList>
+#include <QList>
 #include "pathitem.h"
 #include "pathsettings.h"
 
@@ -58,6 +58,8 @@ namespace patheditor
          */
         QSharedPointer<QPainterPath> painterPath();
 
+        QPointF pointAtPercent(qreal t);
+
         bool released();
 
         virtual ~EditablePath() {}
@@ -77,7 +79,7 @@ namespace patheditor
 
         QSharedPointer<QPainterPath> _painterPath;
 
-        QLinkedList<QSharedPointer<PathItem> > _pathItemList;
+        QList<QSharedPointer<PathItem> > _pathItemList;
 
         void connectPoints(PathItem *pathItem);
     };

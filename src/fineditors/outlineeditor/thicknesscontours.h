@@ -53,9 +53,9 @@ namespace fineditors
         bool _fastCalc;
         QThreadPool _tPool;
 
-        QSharedPointer<QPainterPath> _outline;
-        QSharedPointer<QPainterPath> _profile;
-        QSharedPointer<QPainterPath> _thickness;
+        EditablePath* _outline;
+        EditablePath* _profile;
+        EditablePath* _thickness;
 
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;

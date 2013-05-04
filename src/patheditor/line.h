@@ -40,6 +40,7 @@ namespace patheditor
 
         // implementing PathItem
         QList<QSharedPointer<ControlPoint> > controlPoints();
+        virtual QPointF pointAtPercent(qreal t);
 
         // Implementing QGraphicsItem
         QRectF boundingRect() const;

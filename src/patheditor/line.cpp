@@ -40,6 +40,11 @@ QList<QSharedPointer<ControlPoint> > Line::controlPoints()
     return _controlPoints;
 }
 
+QPointF Line::pointAtPercent(qreal t)
+{
+    return (*endPoint() - *startPoint()) * t + *startPoint();
+}
+
 QRectF Line::boundingRect() const
 {
     return _boundingRect;

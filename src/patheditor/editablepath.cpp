@@ -119,6 +119,23 @@ QSharedPointer<QPainterPath> EditablePath::painterPath()
     return _painterPath;
 }
 
+QPointF EditablePath::pointAtPercent(qreal t)
+{
+    int pathItemCount = _pathItemList.count();
+    qreal itemRange = 1/qreal(pathItemCount);
+
+    int item = 0;
+    while (t > itemRange)
+    {
+        t -= itemRange;
+        item++;
+    }
+
+    t = t/itemRange;
+
+    return _pathItemList[item]->pointAtPercent(t);
+}
+
 bool EditablePath::released()
 {
     return _released;

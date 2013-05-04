@@ -24,28 +24,31 @@
 #define CONTOURCALCULATOR_H
 
 #include "hrlibfwd/qtfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QRunnable>
+
+using namespace patheditor;
 
 namespace fineditors
 {
     class ContourCalculator : public QRunnable
     {
     public:
-        explicit ContourCalculator(qreal percContourHeight, QPainterPath *outline, QPainterPath *profile,
-                                   QPainterPath *thickness, QPainterPath *result, bool fast = false);
+        explicit ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile,
+                                   EditablePath *thickness, QPainterPath *result, bool fast = false);
 
         virtual void run();
 
         virtual ~ContourCalculator();
 
-    private:        
+    private:
         enum SplineFunction { bSpline, overhauser };
 
         qreal _percContourHeight;
-        QPainterPath *_outline;
-        QPainterPath *_profile;
-        QPainterPath *_thickness;
+        EditablePath *_outline;
+        EditablePath *_profile;
+        EditablePath *_thickness;
         QPainterPath *_result;
 
         int _sectionCount;

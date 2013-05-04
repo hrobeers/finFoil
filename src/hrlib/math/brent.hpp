@@ -16,6 +16,12 @@ public:
   virtual qreal operator() (qreal) = 0;
 };
 
+class func_offset_base : public func_base{
+public:
+  virtual qreal operator() (qreal) = 0;
+  virtual void setOffset(qreal offset) = 0;
+};
+
 class monicPoly : public func_base {
 public:
   std::vector<qreal> coeff;

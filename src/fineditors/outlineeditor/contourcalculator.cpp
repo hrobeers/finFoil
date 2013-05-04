@@ -35,28 +35,29 @@
 
 using namespace fineditors;
 
-ContourCalculator::ContourCalculator(qreal percContourHeight, QPainterPath *outline, QPainterPath *profile,
-                                     QPainterPath *thickness, QPainterPath *result, bool fast)
+ContourCalculator::ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile, EditablePath *thickness, QPainterPath *result, bool fast)
 {
-    _percContourHeight = percContourHeight;
     _outline = outline;
     _profile = profile;
     _thickness = thickness;
+
+
+    _percContourHeight = percContourHeight;
     _result = result;
 
     if (fast)
     {
-        _sectionCount = 20;
-        _resolution = 200;
-        _tTol = 0.002;
-        _fTol = 0.01;
+        _sectionCount = 200;
+        _resolution = 500;
+        _tTol = 0.0001;
+        _fTol = 0.001;
     }
     else
     {
-        _sectionCount = 150;
-        _resolution = 400;
-        _tTol = 0.0001;
-        _fTol = 0.001;
+        _sectionCount = 1000;
+        _resolution = 2000;
+        _tTol = 0.00001;
+        _fTol = 0.0001;
     }
 }
 
@@ -67,13 +68,15 @@ void ContourCalculator::run()
     qreal thicknessArray[_sectionCount];
     sampleThickess(sectionHeightArray, thicknessArray);
 
+    // create the pathfunctors
+    f_yValueAtPercentEPath yOutline(_outline);
+    f_yValueAtPercentEPath yProfile(_profile);
+
     // find the top of the outline
-    f_yValueAtPercent yOutline(_outline);
     qreal t_top = 0.5; // start value
     qreal y_top = hrlib::Brent::local_min(0, 1, _tTol, yOutline, t_top); // glomin isn't finding a correct top
 
     // find dimensions of the profile
-    f_yValueAtPercent yProfile(_profile);
     qreal t_profileTop = 0.3; // start value
     qreal y_profileTop = hrlib::Brent::local_min(0, 1, _tTol, yProfile, t_profileTop);
     qreal profileLength = _profile->pointAtPercent(1).x();
