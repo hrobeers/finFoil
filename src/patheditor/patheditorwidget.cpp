@@ -22,8 +22,8 @@
 
 #include "patheditorwidget.h"
 
-#include <QGraphicsView>
 #include <QLayout>
+#include "patheditorview.h"
 #include "linerestrictor.h"
 #include "pointrestrictor.h"
 #include "editablepath.h"
@@ -37,7 +37,7 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
 {
     // init member variables
     _scene = new QGraphicsScene(this);
-    _view = new QGraphicsView(_scene, this);
+    _view = new PathEditorView(_scene, this);
     _mainLayout = new QVBoxLayout(this);
 
     _enabledFeatures = Features::None;
