@@ -24,14 +24,10 @@
 
 #include <QVarLengthArray>
 #include <QPainterPath>
-#include <QQueue>
-#include <QStack>
-#include <qmath.h>
-#include <limits>
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
 
-#define INITCNT 256
+#define INITCNT 512
 
 using namespace fineditors;
 
@@ -47,7 +43,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, EditablePath *outl
 
     if (fast)
     {
-        _sectionCount = 200;
+        _sectionCount = INITCNT / 2;
         _resolution = 500;
         _tTol = 0.0001;
         _fTol = 0.001;
@@ -127,7 +123,6 @@ void ContourCalculator::run()
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
             {
 //                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
-//                createCubicPath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
                 createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, bSpline);
 //                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, overhauser);
             }
@@ -270,81 +265,5 @@ void ContourCalculator::createSplinePath(QPointF *leadingEdgePnts[], QPointF *tr
             _result->lineTo(x, y);
         }
         break;
-    }
-}
-
-void ContourCalculator::createCubicPath(QPointF *leadingEdgePnts[], QPointF *trailingEdgePnts[], int firstIndex, int lastIndex)
-{
-    bool closePath = (firstIndex != 0);
-
-    int edgePntCount = lastIndex - firstIndex + 1;
-    int totalPntCount = 2 * edgePntCount;
-    int extPntCount = totalPntCount + 3;
-    int cPntCount = extPntCount * 2 - 6;
-
-    QVarLengthArray<QPointF*, INITCNT> curve(extPntCount);
-    QVarLengthArray<QPointF, INITCNT> c(extPntCount - 1);
-    QVarLengthArray<qreal, INITCNT> len(extPntCount - 1);
-    QVarLengthArray<QPointF, INITCNT> m(extPntCount - 2);
-    QVarLengthArray<QPointF, INITCNT> cPnt(cPntCount);
-
-
-    for (int i = 0; i < edgePntCount; i++)
-    {
-        curve[i + 1] = leadingEdgePnts[firstIndex + i];
-        curve[edgePntCount + i + 1] = trailingEdgePnts[lastIndex - i];
-    }
-
-    if (!closePath)
-    {
-        curve[extPntCount - 2] = curve[extPntCount - 3];
-        curve[extPntCount - 1] = curve[extPntCount - 2];
-        curve[0] = curve[1];
-    }
-    else
-    {
-        curve[extPntCount - 2] = curve[1];
-        curve[extPntCount - 1] = curve[2];
-        curve[0] = curve[extPntCount - 3];
-    }
-
-
-    for (int i = 0; i < c.size(); i++)
-    {
-        c[i] = (*curve[i] + *curve[i+1]) / 2;
-        QPointF diff = *curve[i+1] - *curve[i];
-        len[i] = qSqrt(qPow(diff.x(),2) + qPow(diff.y(),2));
-    }
-
-    for (int i = 0; i < m.size(); i++)
-    {
-        qreal k = len[i] / (len[i] + len[i + 1]);
-        m[i] = c[i] + (c[i + 1] - c[i]) * k;
-    }
-
-    for (int i = 0; i < cPntCount; i++)
-    {
-        if (i % 2 == 0)
-        {
-            int index = i / 2;
-            cPnt[i] = (c[index + 1] - m[index]) * 0.4 + *curve[index + 1];
-        }
-        else
-        {
-            int index = (i - 1) / 2;
-            cPnt[i] = (c[index + 1] - m[index + 1]) * 0.4 + *curve[index + 2];
-        }
-    }
-
-    _result->moveTo(*curve[1]);
-    for (int i = 2; i < totalPntCount + 1; i++)
-    {
-        int cIndex = i + i - 4;
-        _result->cubicTo(cPnt[cIndex], cPnt[cIndex + 1], *curve[i]);
-    }
-    if (closePath)
-    {
-        int cIndex = totalPntCount + totalPntCount - 2;
-        _result->cubicTo(cPnt[cIndex], cPnt[cIndex + 1], *curve[totalPntCount + 1]);
     }
 }
