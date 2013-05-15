@@ -60,6 +60,8 @@ namespace patheditor
 
         QPointF pointAtPercent(qreal t);
 
+        qreal area(int resolution);
+
         bool released();
 
         virtual ~EditablePath() {}

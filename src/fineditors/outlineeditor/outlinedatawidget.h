@@ -24,8 +24,11 @@
 #define OUTLINEDATAWIDGET_H
 
 #include "hrlibfwd/qtfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QWidget>
+
+using namespace patheditor;
 
 namespace fineditors
 {
@@ -40,11 +43,14 @@ namespace fineditors
 
     public slots:
         void onHeightChange(double height);
+        void onOutlineChange(EditablePath *sender);
 
     private:
         QVBoxLayout* _vLayout;
 
         QDoubleSpinBox* _heightEdit;
+
+        QLineEdit* _areaEdit;
     };
 }
 

@@ -38,6 +38,7 @@ class QPointF;
 class QString;
 class QPainterPath;
 class QDoubleSpinBox;
+class QLineEdit;
 
 QT_END_NAMESPACE
 

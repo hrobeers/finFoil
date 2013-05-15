@@ -25,6 +25,9 @@
 #include <QVBoxLayout>
 #include <QDoubleSpinBox>
 #include <QLabel>
+#include <QLineEdit>
+
+#include "editablepath.h"
 
 using namespace fineditors;
 
@@ -45,6 +48,17 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     _vLayout->addLayout(heightLayout);
     connect(_heightEdit, SIGNAL(valueChanged(double)), this, SLOT(onHeightChange(double)));
 
+
+    //
+    // Area section
+    //
+    QHBoxLayout* areaLayout = new QHBoxLayout();
+    QLabel* areaLabel = new QLabel(tr("Fin area:"));
+    _areaEdit = new QLineEdit("0");
+    areaLayout->addWidget(areaLabel);
+    areaLayout->addWidget(_areaEdit);
+    _vLayout->addLayout(areaLayout);
+
     this->setLayout(_vLayout);
 }
 
@@ -52,4 +66,9 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
 void OutlineDataWidget::onHeightChange(double height)
 {
     emit heightChanged((qreal)height);
+}
+
+void OutlineDataWidget::onOutlineChange(EditablePath *sender)
+{
+    _areaEdit->setText(QString::number(sender->area(2000)));
 }

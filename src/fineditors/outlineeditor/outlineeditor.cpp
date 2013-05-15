@@ -83,6 +83,7 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     // OutlineDataWidget
     //
     _outlineDataWidget = new OutlineDataWidget(this);
+    connect(path, SIGNAL(pathChanged(EditablePath*)), _outlineDataWidget, SLOT(onOutlineChange(EditablePath*)));
 
 
     //
