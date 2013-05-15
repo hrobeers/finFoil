@@ -46,10 +46,11 @@ namespace fineditors
         void onOutlineChange(EditablePath *sender);
 
     private:
-        QVBoxLayout* _vLayout;
+        qreal _height;
+        EditablePath* _outlinePtr;
 
+        QFormLayout* _layout;
         QDoubleSpinBox* _heightEdit;
-
         QLineEdit* _areaEdit;
     };
 }

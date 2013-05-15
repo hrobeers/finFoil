@@ -22,7 +22,7 @@
 
 #include "outlinedatawidget.h"
 
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QDoubleSpinBox>
 #include <QLabel>
 #include <QLineEdit>
@@ -34,41 +34,49 @@ using namespace fineditors;
 OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     QWidget(parent)
 {
-    _vLayout = new QVBoxLayout();
+    _height = 0;
+    _outlinePtr = 0;
+
+    _layout = new QFormLayout();
 
 
     //
     // Height section
     //
-    QHBoxLayout* heightLayout = new QHBoxLayout();
-    QLabel* heightLabel = new QLabel(tr("Fin height:"));
     _heightEdit = new QDoubleSpinBox();
-    heightLayout->addWidget(heightLabel);
-    heightLayout->addWidget(_heightEdit);
-    _vLayout->addLayout(heightLayout);
+    _layout->addRow(tr("Height:"), _heightEdit);
     connect(_heightEdit, SIGNAL(valueChanged(double)), this, SLOT(onHeightChange(double)));
 
 
     //
     // Area section
     //
-    QHBoxLayout* areaLayout = new QHBoxLayout();
-    QLabel* areaLabel = new QLabel(tr("Fin area:"));
     _areaEdit = new QLineEdit("0");
-    areaLayout->addWidget(areaLabel);
-    areaLayout->addWidget(_areaEdit);
-    _vLayout->addLayout(areaLayout);
+    _areaEdit->setReadOnly(true);
+    _layout->addRow(tr("Area:"), _areaEdit);
 
-    this->setLayout(_vLayout);
+    this->setLayout(_layout);
 }
 
 
 void OutlineDataWidget::onHeightChange(double height)
 {
+    _height = height;
     emit heightChanged((qreal)height);
+
+    if (_outlinePtr != 0)
+        onOutlineChange(_outlinePtr);
 }
 
 void OutlineDataWidget::onOutlineChange(EditablePath *sender)
 {
-    _areaEdit->setText(QString::number(sender->area(2000)));
+    if (_height != 0)
+    {
+        qreal scale = -sender->minY() / _height;
+        _areaEdit->setText(QString::number(sender->area(2000) / (scale * scale)));
+    }
+    else
+        _areaEdit->setText("0");
+
+    _outlinePtr = sender;
 }

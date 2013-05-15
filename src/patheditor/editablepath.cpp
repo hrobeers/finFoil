@@ -25,6 +25,8 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+#include "hrlib/math/brent.hpp"
+#include "pathfunctors.h"
 
 using namespace patheditor;
 
@@ -134,6 +136,21 @@ QPointF EditablePath::pointAtPercent(qreal t)
     t = t/itemRange;
 
     return _pathItemList[item]->pointAtPercent(t);
+}
+
+qreal EditablePath::minY(qreal *t_top, qreal percTol)
+{
+    // pathfunctor
+    f_yValueAtPercentEPath yOutline(this);
+
+    // find the min of the path
+    if (t_top == 0)
+    {
+        qreal t = 0.5;
+        return hrlib::Brent::local_min(0, 1, percTol, yOutline, t);
+    }
+    else
+        return hrlib::Brent::local_min(0, 1, percTol, yOutline, *t_top);
 }
 
 qreal EditablePath::area(int resolution)

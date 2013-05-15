@@ -33,6 +33,7 @@ class QGraphicsScene;
 class QGraphicsItem;
 class QVBoxLayout;
 class QHBoxLayout;
+class QFormLayout;
 class QGraphicsLineItem;
 class QPointF;
 class QString;

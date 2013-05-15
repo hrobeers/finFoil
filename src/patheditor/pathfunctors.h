@@ -28,7 +28,7 @@
 #include "hrlib/math/brent.hpp"
 #include "editablepath.h"
 
-namespace fineditors
+namespace patheditor
 {
     class f_yValueAtPercentPPath : public hrlib::func_offset_base
     {
@@ -54,11 +54,11 @@ namespace fineditors
     class f_yValueAtPercentEPath : public hrlib::func_offset_base
     {
     private:
-        patheditor::EditablePath *_path;
+        EditablePath *_path;
         qreal _offset;
 
     public:
-        explicit f_yValueAtPercentEPath(patheditor::EditablePath *path, qreal offset = 0){
+        explicit f_yValueAtPercentEPath(EditablePath *path, qreal offset = 0){
             _path = path;
             _offset = offset;
         }

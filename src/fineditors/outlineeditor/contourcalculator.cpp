@@ -70,11 +70,11 @@ void ContourCalculator::run()
 
     // find the top of the outline
     qreal t_top = 0.5; // start value
-    qreal y_top = hrlib::Brent::local_min(0, 1, _tTol, yOutline, t_top); // glomin isn't finding a correct top
+    qreal y_top = _outline->minY(&t_top, _tTol);
 
     // find dimensions of the profile
     qreal t_profileTop = 0.3; // start value
-    qreal y_profileTop = hrlib::Brent::local_min(0, 1, _tTol, yProfile, t_profileTop);
+    qreal y_profileTop = _profile->minY(&t_profileTop, _tTol);
     qreal profileLength = _profile->pointAtPercent(1).x();
 
     //

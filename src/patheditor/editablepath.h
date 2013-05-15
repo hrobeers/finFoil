@@ -60,6 +60,8 @@ namespace patheditor
 
         QPointF pointAtPercent(qreal t);
 
+        qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
+
         qreal area(int resolution);
 
         bool released();

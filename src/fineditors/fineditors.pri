@@ -5,7 +5,6 @@ HEADERS += \
     ../fineditors/outlineeditor/thicknesscontours.h \
     ../fineditors/outlineeditor/outlineeditor.h \
     ../fineditors/outlineeditor/contourcalculator.h \
-    ../fineditors/outlineeditor/pathfunctors.h \
     ../fineditors/outlineeditor/outlinedatawidget.h
 
 SOURCES += \
