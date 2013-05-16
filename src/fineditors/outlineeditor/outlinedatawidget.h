@@ -44,6 +44,7 @@ namespace fineditors
     public slots:
         void onHeightChange(double height);
         void onOutlineChange(EditablePath *sender);
+        void onAreaChange(qreal area, EditablePath *sender);
 
     private:
         qreal _height;

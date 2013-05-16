@@ -28,15 +28,13 @@
 
 #include <QRunnable>
 
-using namespace patheditor;
-
 namespace fineditors
 {
     class ContourCalculator : public QRunnable
     {
     public:
-        explicit ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile,
-                                   EditablePath *thickness, QPainterPath *result, bool fast = false);
+        explicit ContourCalculator(qreal percContourHeight, patheditor::EditablePath* outline, patheditor::EditablePath* profile,
+                                   patheditor::EditablePath* thickness, QPainterPath* result, bool fast = false);
 
         virtual void run();
 
@@ -46,9 +44,9 @@ namespace fineditors
         enum SplineFunction { bSpline, overhauser };
 
         qreal _percContourHeight;
-        EditablePath *_outline;
-        EditablePath *_profile;
-        EditablePath *_thickness;
+        patheditor::EditablePath* _outline;
+        patheditor::EditablePath* _profile;
+        patheditor::EditablePath* _thickness;
         QPainterPath *_result;
 
         int _sectionCount;

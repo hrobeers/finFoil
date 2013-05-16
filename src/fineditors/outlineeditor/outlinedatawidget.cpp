@@ -22,9 +22,10 @@
 
 #include "outlinedatawidget.h"
 
+#include <cmath>
+#include <qmath.h>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
-#include <QLabel>
 #include <QLineEdit>
 
 #include "editablepath.h"
@@ -44,6 +45,7 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     // Height section
     //
     _heightEdit = new QDoubleSpinBox();
+    _heightEdit->setMaximum(10000);
     _layout->addRow(tr("Height:"), _heightEdit);
     connect(_heightEdit, SIGNAL(valueChanged(double)), this, SLOT(onHeightChange(double)));
 
@@ -70,10 +72,15 @@ void OutlineDataWidget::onHeightChange(double height)
 
 void OutlineDataWidget::onOutlineChange(EditablePath *sender)
 {
+    onAreaChange(sender->area(500), sender);
+}
+
+void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
+{
     if (_height != 0)
     {
         qreal scale = -sender->minY() / _height;
-        _areaEdit->setText(QString::number(sender->area(2000) / (scale * scale)));
+        _areaEdit->setText(QString::number(area / (scale * scale)));
     }
     else
         _areaEdit->setText("0");

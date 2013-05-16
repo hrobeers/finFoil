@@ -27,9 +27,10 @@
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
 
-#define INITCNT 512
+#define INITCNT 256
 
 using namespace fineditors;
+using namespace patheditor;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile, EditablePath *thickness, QPainterPath *result, bool fast)
 {
