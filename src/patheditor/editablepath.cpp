@@ -185,14 +185,14 @@ void EditablePath::onPointDrag(PathPoint* /*unused*/)
 {
     _released = false;
     emit pathChanged(this);
-    this->scene()->update(boundingRect());
+    this->scene()->update();
 }
 
 void EditablePath::onPointRelease(PathPoint* /*unused*/)
 {
     _released = true;
     emit pathChanged(this);
-    this->scene()->update(boundingRect());
+    this->scene()->update();
 }
 
 void EditablePath::connectPoints(PathItem *pathItem)

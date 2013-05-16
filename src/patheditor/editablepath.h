@@ -78,11 +78,8 @@ namespace patheditor
     private:
         bool _firstPaint;
         bool _released;
-
         PathSettings _settings;
-
         QSharedPointer<QPainterPath> _painterPath;
-
         QList<QSharedPointer<PathItem> > _pathItemList;
 
         void connectPoints(PathItem *pathItem);
