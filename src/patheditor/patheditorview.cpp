@@ -37,16 +37,13 @@ void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
     QPointF bottomLeft = rect.bottomLeft();
     QPointF topRight = rect.topRight();
 
-    qreal h = bottomLeft.y();
-    while (h > topRight.y())
-    {
+    for (qreal h = 0; h > topRight.y(); h -= 10)
         painter->drawLine(bottomLeft.x(), h, topRight.x(), h);
-        h -= 10;
-    }
-    qreal w = bottomLeft.x();
-    while (w < topRight.x())
-    {
+    for (qreal h = 10; h < bottomLeft.y(); h += 10)
+        painter->drawLine(bottomLeft.x(), h, topRight.x(), h);
+
+    for (qreal w = 0; w < topRight.x(); w += 10)
         painter->drawLine(w, bottomLeft.y(), w, topRight.y());
-        w += 10;
-    }
+    for (qreal w = -10; w > bottomLeft.x(); w -= 10)
+        painter->drawLine(w, bottomLeft.y(), w, topRight.y());
 }
