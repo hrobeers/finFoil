@@ -23,6 +23,7 @@
 #include "cubicbezier.h"
 
 #include <QPainter>
+#include <QRectF>
 #include "pathsettings.h"
 
 using namespace patheditor;
@@ -77,30 +78,38 @@ QPointF CubicBezier::pointAtPercent(qreal t)
     qreal tSq = t*t;
     qreal tCu = tSq * t;
 
-    qreal xAtPercent = (oneMt*oneMt*oneMt) * startPoint()->x() + 3 * (oneMt*oneMt) * t * _cPoint1->x() +
-            3 * oneMt * tSq * _cPoint2->x() + tCu * endPoint()->x();
-    qreal yAtPercent = (oneMt*oneMt*oneMt) * startPoint()->y() + 3 * (oneMt*oneMt) * t * _cPoint1->y() +
-            3 * oneMt * tSq * _cPoint2->y() + tCu * endPoint()->y();
+    qreal xAtPercent = (oneMt*oneMt*oneMt) * _startPoint->x() + 3 * (oneMt*oneMt) * t * _cPoint1->x() +
+            3 * oneMt * tSq * _cPoint2->x() + tCu * _endPoint->x();
+    qreal yAtPercent = (oneMt*oneMt*oneMt) * _startPoint->y() + 3 * (oneMt*oneMt) * t * _cPoint1->y() +
+            3 * oneMt * tSq * _cPoint2->y() + tCu * _endPoint->y();
 
     return QPointF(xAtPercent, yAtPercent);
 }
 
 QRectF CubicBezier::boundingRect() const
 {
-    return _boundingRect;
+    qreal left = qMin(qMin(_startPoint->x(), _endPoint->x()), qMin(_cPoint1->x(), _cPoint2->x()));
+    qreal right = qMax(qMax(_startPoint->x(), _endPoint->x()), qMax(_cPoint1->x(), _cPoint2->x()));
+
+    qreal top = qMin(qMin(_startPoint->y(), _endPoint->y()), qMin(_cPoint1->y(), _cPoint2->y()));
+    qreal bottom = qMax(qMax(_startPoint->y(), _endPoint->y()), qMax(_cPoint1->y(), _cPoint2->y()));
+
+    QPointF topLeft(left, top);
+    QPointF bottomRight(right, bottom);
+
+    QRectF retVal(topLeft, bottomRight);
+
+    return retVal;
 }
 
 void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     QPainterPath painterPath;
 
-    painterPath.moveTo(*startPoint());
-    painterPath.cubicTo(*_cPoint1, *_cPoint2, *endPoint());
+    painterPath.moveTo(*_startPoint);
+    painterPath.cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
 
     painter->drawPath(painterPath);
-
-    // faster than bounding rect
-    _boundingRect = painterPath.controlPointRect();
 }
 
 void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
@@ -108,5 +117,5 @@ void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPaint
 {
     paintControlPoints(settings, painter);
 
-    totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *endPoint());
+    totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
 }

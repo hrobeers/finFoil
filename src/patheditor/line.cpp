@@ -24,6 +24,7 @@
 
 #include <QPainter>
 #include <QGraphicsItem>
+#include <QRectF>
 #include "pathpoint.h"
 #include "pathsettings.h"
 
@@ -42,27 +43,36 @@ QList<QSharedPointer<ControlPoint> > Line::controlPoints()
 
 QPointF Line::pointAtPercent(qreal t)
 {
-    return (*endPoint() - *startPoint()) * t + *startPoint();
+    return (*_endPoint - *_startPoint) * t + *_startPoint;
 }
 
 QRectF Line::boundingRect() const
 {
-    return _boundingRect;
+    qreal left = qMin(_startPoint->x(), _endPoint->x());
+    qreal right = qMax(_startPoint->x(), _endPoint->x());
+
+    qreal top = qMin(_startPoint->y(), _endPoint->y());
+    qreal bottom = qMax(_startPoint->y(), _endPoint->y());
+
+    QPointF topLeft(left, top);
+    QPointF bottomRight(right, bottom);
+
+    QRectF retVal(topLeft, bottomRight);
+
+    return retVal;
 }
 
 void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
     QPainterPath painterPath;
 
-    painterPath.moveTo(*startPoint());
-    painterPath.lineTo(*endPoint());
+    painterPath.moveTo(*_startPoint);
+    painterPath.lineTo(*_endPoint);
     painter->drawPath(painterPath);
-
-    _boundingRect = painterPath.boundingRect();
 }
 
 void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
                  const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
-    totalPainterPath->lineTo(*endPoint());
+    totalPainterPath->lineTo(*_endPoint);
 }
