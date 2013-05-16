@@ -74,10 +74,11 @@ namespace patheditor
 
         virtual ~PathItem() {}
 
-    private:
+    protected:
         QSharedPointer<PathPoint> _startPoint;
         QSharedPointer<PathPoint> _endPoint;
 
+    private:
         QWeakPointer<PathItem> _nextPathItem;
         QWeakPointer<PathItem> _prevPathItem;
     };

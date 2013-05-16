@@ -64,8 +64,6 @@ namespace patheditor
         QSharedPointer<ControlPoint> _cPoint2;
 
         QList<QSharedPointer<ControlPoint> > _controlPoints;
-
-        QRectF _boundingRect;
     };
 }
 

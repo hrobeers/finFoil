@@ -54,8 +54,6 @@ namespace patheditor
 
     private:
         QList<QSharedPointer<ControlPoint> > _controlPoints;
-
-        QRectF _boundingRect;
     };
 }
 
