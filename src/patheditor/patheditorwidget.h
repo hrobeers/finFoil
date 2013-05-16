@@ -85,11 +85,14 @@ namespace patheditor
 
     signals:
 
+    public slots:
+        void setGridUnitSize(qreal pxPerUnit);
+
     private slots:
         void onSceneRectChanged ( const QRectF & rect );
 
     private:
-        QGraphicsView* _view;
+        PathEditorView* _view;
         QGraphicsScene* _scene;
         QVBoxLayout* _mainLayout;
 

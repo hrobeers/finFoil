@@ -33,12 +33,19 @@ namespace patheditor
     public:
         explicit PathEditorView(QGraphicsScene *scene, QWidget *parent = 0);
 
+        void setUnitSize(qreal pxPerUnit);
+
     signals:
 
     public slots:
 
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
+
+    private:
+        qreal _unitSize;
+
+        void drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect);
     };
 }
 

@@ -22,28 +22,67 @@
 
 #include "patheditorview.h"
 
+#define MIN_UNIT_SIZE 5
+
 using namespace patheditor;
 
 PathEditorView::PathEditorView(QGraphicsScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
+    _unitSize = 10;
+}
+
+void PathEditorView::setUnitSize(qreal pxPerUnit)
+{
+    if (pxPerUnit == 0)
+        _unitSize = 10;
+    else
+        _unitSize = pxPerUnit;
+
+    scene()->update(); // TODO fix double update (or move contour calculation out of paint method)
 }
 
 void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    QPen gridPen(QColor(0, 0, 0, 100), 1, Qt::SolidLine);
-    painter->setPen(gridPen);
+        qreal unitSize = _unitSize;
+        while (unitSize < MIN_UNIT_SIZE)
+            unitSize *= 10;
+
+        painter->setPen(QPen(QColor(0, 0, 0, 50), 1, Qt::SolidLine));
+        drawLinesWithInterval(unitSize, painter, rect);
+
+        painter->setPen(QPen(QColor(0, 0, 0, 100), 1, Qt::SolidLine));
+        drawLinesWithInterval(unitSize*10, painter, rect);
+}
+
+void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
+{
+    QVector<QPointF> pointPairs;
 
     QPointF bottomLeft = rect.bottomLeft();
     QPointF topRight = rect.topRight();
 
-    for (qreal h = 0; h > topRight.y(); h -= 10)
-        painter->drawLine(bottomLeft.x(), h, topRight.x(), h);
-    for (qreal h = 10; h < bottomLeft.y(); h += 10)
-        painter->drawLine(bottomLeft.x(), h, topRight.x(), h);
+    for (qreal h = 0; h > topRight.y(); h -= px)
+    {
+        pointPairs.append(QPointF(bottomLeft.x(), h));
+        pointPairs.append(QPointF(topRight.x(), h));
+    }
+    for (qreal h = px; h < bottomLeft.y(); h += px)
+    {
+        pointPairs.append(QPointF(bottomLeft.x(), h));
+        pointPairs.append(QPointF(topRight.x(), h));
+    }
 
-    for (qreal w = 0; w < topRight.x(); w += 10)
-        painter->drawLine(w, bottomLeft.y(), w, topRight.y());
-    for (qreal w = -10; w > bottomLeft.x(); w -= 10)
-        painter->drawLine(w, bottomLeft.y(), w, topRight.y());
+    for (qreal w = 0; w < topRight.x(); w += px)
+    {
+        pointPairs.append(QPointF(w, bottomLeft.y()));
+        pointPairs.append(QPointF(w, topRight.y()));
+    }
+    for (qreal w = -px; w > bottomLeft.x(); w -= px)
+    {
+        pointPairs.append(QPointF(w, bottomLeft.y()));
+        pointPairs.append(QPointF(w, topRight.y()));
+    }
+
+    painter->drawLines(pointPairs);
 }

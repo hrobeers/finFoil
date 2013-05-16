@@ -42,6 +42,7 @@ namespace patheditor
     class PointRestrictor;
     class Restrictor;
     class QuadrantRestrictor;
+    class PathEditorView;
 }
 
 #endif // PATHEDITORFWD_H
