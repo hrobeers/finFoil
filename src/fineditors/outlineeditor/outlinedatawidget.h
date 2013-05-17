@@ -39,21 +39,21 @@ namespace fineditors
         explicit OutlineDataWidget(QWidget *parent = 0);
 
     signals:
-        void heightChanged(qreal height);
+        void depthChanged(qreal depth);
         void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
-        void onHeightChange(double height);
+        void onDepthChange(double depth);
         void onOutlineChange(EditablePath *sender);
         void onAreaChange(qreal area, EditablePath *sender);
 
     private:
-        qreal _height;
+        qreal _depth;
         qreal _pxPerUnit;
         EditablePath* _outlinePtr;
 
         QFormLayout* _layout;
-        QDoubleSpinBox* _heightEdit;
+        QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
     };
 }

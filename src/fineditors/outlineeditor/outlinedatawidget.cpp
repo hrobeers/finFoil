@@ -35,19 +35,19 @@ using namespace fineditors;
 OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     QWidget(parent)
 {
-    _height = 0;
+    _depth = 0;
     _outlinePtr = 0;
 
     _layout = new QFormLayout();
 
 
     //
-    // Height section
+    // Depth section
     //
-    _heightEdit = new QDoubleSpinBox();
-    _heightEdit->setMaximum(10000);
-    _layout->addRow(tr("Height:"), _heightEdit);
-    connect(_heightEdit, SIGNAL(valueChanged(double)), this, SLOT(onHeightChange(double)));
+    _depthEdit = new QDoubleSpinBox();
+    _depthEdit->setMaximum(10000);
+    _layout->addRow(tr("Depth:"), _depthEdit);
+    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
 
 
     //
@@ -61,10 +61,10 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
 }
 
 
-void OutlineDataWidget::onHeightChange(double height)
+void OutlineDataWidget::onDepthChange(double depth)
 {
-    _height = height;
-    emit heightChanged((qreal)height);
+    _depth = depth;
+    emit depthChanged((qreal)depth);
 
     if (_outlinePtr != 0)
         onOutlineChange(_outlinePtr);
@@ -77,9 +77,9 @@ void OutlineDataWidget::onOutlineChange(EditablePath *sender)
 
 void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
 {
-    if (_height != 0)
+    if (_depth != 0)
     {
-        _pxPerUnit = -sender->minY() / _height;
+        _pxPerUnit = -sender->minY() / _depth;
         _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
     }
     else
