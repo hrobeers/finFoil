@@ -29,30 +29,31 @@ using namespace patheditor;
 PathEditorView::PathEditorView(QGraphicsScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
-    _unitSize = 10;
+    _pxPerUnit = 10;
 }
 
-void PathEditorView::setUnitSize(qreal pxPerUnit)
+void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
 {
     if (pxPerUnit == 0)
-        _unitSize = 10;
+        _pxPerUnit = 10;
     else
-        _unitSize = pxPerUnit;
+        _pxPerUnit = pxPerUnit;
 
-    scene()->update(); // TODO fix double update (or move contour calculation out of paint method)
+    scene()->update();
 }
 
 void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-        qreal unitSize = _unitSize;
-        while (unitSize < MIN_UNIT_SIZE)
-            unitSize *= 10;
+    // Find a suitable unitSize
+    qreal unitSize = _pxPerUnit/100;
+    while (unitSize < MIN_UNIT_SIZE)
+        unitSize *= 10;
 
-        painter->setPen(QPen(QColor(0, 0, 0, 50), 1, Qt::SolidLine));
-        drawLinesWithInterval(unitSize, painter, rect);
+    painter->setPen(QPen(QColor(0, 0, 0, 50), 1, Qt::SolidLine));
+    drawLinesWithInterval(unitSize, painter, rect);
 
-        painter->setPen(QPen(QColor(0, 0, 0, 100), 1, Qt::SolidLine));
-        drawLinesWithInterval(unitSize*10, painter, rect);
+    painter->setPen(QPen(QColor(0, 0, 0, 100), 1, Qt::SolidLine));
+    drawLinesWithInterval(unitSize*10, painter, rect);
 }
 
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)

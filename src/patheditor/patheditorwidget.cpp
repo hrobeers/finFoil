@@ -119,7 +119,7 @@ QSharedPointer<Restrictor> PathEditorWidget::verticalAxisRestrictor()
 
 void PathEditorWidget::setGridUnitSize(qreal pxPerUnit)
 {
-    _view->setUnitSize(pxPerUnit);
+    _view->setPixelsPerUnit(pxPerUnit);
 }
 
 void PathEditorWidget::onSceneRectChanged(const QRectF &rect)
