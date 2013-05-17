@@ -52,7 +52,7 @@ namespace fineditors
         qreal _pxPerUnit;
         EditablePath* _outlinePtr;
 
-        QFormLayout* _layout;
+        QFormLayout* _formLayout;
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
     };

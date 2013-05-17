@@ -22,9 +22,9 @@
 
 #include "outlinedatawidget.h"
 
-#include <cmath>
 #include <qmath.h>
 #include <QFormLayout>
+#include <QGroupBox>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 
@@ -38,7 +38,7 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     _depth = 0;
     _outlinePtr = 0;
 
-    _layout = new QFormLayout();
+    _formLayout = new QFormLayout();
 
 
     //
@@ -46,7 +46,7 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     //
     _depthEdit = new QDoubleSpinBox();
     _depthEdit->setMaximum(10000);
-    _layout->addRow(tr("Depth:"), _depthEdit);
+    _formLayout->addRow(tr("Depth:"), _depthEdit);
     connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
 
 
@@ -55,9 +55,14 @@ OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
     //
     _areaEdit = new QLineEdit("0");
     _areaEdit->setReadOnly(true);
-    _layout->addRow(tr("Area:"), _areaEdit);
+    _formLayout->addRow(tr("Area:"), _areaEdit);
 
-    this->setLayout(_layout);
+    QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
+    gb->setLayout(_formLayout);
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(gb);
+
+    this->setLayout(layout);
 }
 
 

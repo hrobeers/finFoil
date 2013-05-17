@@ -23,6 +23,7 @@
 #include "outlineeditor.h"
 
 #include <QVBoxLayout>
+#include <QGroupBox>
 #include "patheditor/patheditorwidget.h"
 #include "editablepath.h"
 #include "cubicbezier.h"
@@ -38,7 +39,7 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     //
     // PathEditor
     //
-    _pathEditor = new patheditor::PathEditorWidget(this);
+    _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
     qreal m = 2;
@@ -82,7 +83,7 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     //
     // OutlineDataWidget
     //
-    _outlineDataWidget = new OutlineDataWidget(this);
+    _outlineDataWidget = new OutlineDataWidget();
     connect(path, SIGNAL(pathChanged(EditablePath*)), _outlineDataWidget, SLOT(onOutlineChange(EditablePath*)));
     connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
 
@@ -90,9 +91,14 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     //
     // Layout
     //
-    _mainLayout = new QVBoxLayout(this);
-    _mainLayout->addWidget(_pathEditor);
-    _mainLayout->addWidget(_outlineDataWidget);
+    QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
+    QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_pathEditor);
+    gbLayout->addWidget(_outlineDataWidget);
+    gb->setLayout(gbLayout);
+
+    _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
 }
 

@@ -23,6 +23,7 @@
 #include "thicknesseditor.h"
 
 #include <QVBoxLayout>
+#include <QGroupBox>
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "line.h"
@@ -32,7 +33,7 @@ using namespace fineditors;
 ThicknessEditor::ThicknessEditor(QWidget *parent) :
     QWidget(parent)
 {
-    _pathEditor = new patheditor::PathEditorWidget(this);
+    _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
     _pathEditor->enableFeature(Features::VerticalAxis);
 
@@ -51,8 +52,13 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
 
     _pathEditor->addPath(path);
 
-    _mainLayout = new QVBoxLayout(this);
-    _mainLayout->addWidget(_pathEditor);
+    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
+    QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_pathEditor);
+    gb->setLayout(gbLayout);
+
+    _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
 }
 

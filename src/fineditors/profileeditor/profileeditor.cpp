@@ -23,6 +23,7 @@
 #include "profileeditor.h"
 
 #include <QVBoxLayout>
+#include <QGroupBox>
 #include "editablepath.h"
 #include "cubicbezier.h"
 #include "linerestrictor.h"
@@ -32,7 +33,7 @@ using namespace fineditors;
 ProfileEditor::ProfileEditor(QWidget *parent) :
     QWidget(parent)
 {
-    _pathEditor = new patheditor::PathEditorWidget(this);
+    _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
@@ -64,8 +65,13 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
 
     _pathEditor->addPath(path);
 
-    _mainLayout = new QVBoxLayout(this);
-    _mainLayout->addWidget(_pathEditor);
+    QGroupBox* gb = new QGroupBox(tr("Foil Editor"));
+    QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_pathEditor);
+    gb->setLayout(gbLayout);
+
+    _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
 }
 
