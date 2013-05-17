@@ -40,6 +40,7 @@ namespace fineditors
 
     signals:
         void heightChanged(qreal height);
+        void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
         void onHeightChange(double height);
@@ -48,6 +49,7 @@ namespace fineditors
 
     private:
         qreal _height;
+        qreal _pxPerUnit;
         EditablePath* _outlinePtr;
 
         QFormLayout* _layout;

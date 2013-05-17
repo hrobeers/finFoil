@@ -79,11 +79,16 @@ void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
 {
     if (_height != 0)
     {
-        qreal scale = -sender->minY() / _height;
-        _areaEdit->setText(QString::number(area / (scale * scale)));
+        _pxPerUnit = -sender->minY() / _height;
+        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
     }
     else
+    {
+        _pxPerUnit = 0;
         _areaEdit->setText("0");
+    }
 
     _outlinePtr = sender;
+
+    emit pxPerUnitChanged(_pxPerUnit);
 }

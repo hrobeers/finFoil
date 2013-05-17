@@ -84,6 +84,7 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     //
     _outlineDataWidget = new OutlineDataWidget(this);
     connect(path, SIGNAL(pathChanged(EditablePath*)), _outlineDataWidget, SLOT(onOutlineChange(EditablePath*)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
 
 
     //

@@ -53,6 +53,7 @@ ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
+    // TODO move calculations out of paint method
     if (_outline != 0)
     {
         int min = 0;
