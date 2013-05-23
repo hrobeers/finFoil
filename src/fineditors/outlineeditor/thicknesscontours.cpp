@@ -123,7 +123,7 @@ void ThicknessContours::calcContours(bool fastCalc)
     _contours.clear();
     if (profilesSet())
     {
-#ifdef PROCEDURAL
+#ifdef SERIAL
         foreach (qreal thickness, _contourThicknesses)
         {
             QSharedPointer<QPainterPath> path(new QPainterPath());
@@ -133,7 +133,7 @@ void ThicknessContours::calcContours(bool fastCalc)
             calc.run();
         }
 #endif
-#ifndef PROCEDURAL
+#ifndef SERIAL
         foreach (qreal thickness, _contourThicknesses)
         {
             QSharedPointer<QPainterPath> path(new QPainterPath());
