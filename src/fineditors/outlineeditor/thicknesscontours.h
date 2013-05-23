@@ -50,7 +50,6 @@ namespace fineditors
         void onThicknessChange(EditablePath *sender);
 
     private:
-        bool _fastCalc;
         QThreadPool _tPool;
 
         EditablePath* _outline;
@@ -62,7 +61,7 @@ namespace fineditors
 
         bool _nextDetailed;
 
-        void calcContours();
+        void calcContours(bool fastCalc);
         bool profilesSet();
     };
 }
