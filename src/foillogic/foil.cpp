@@ -22,13 +22,105 @@
 
 #include "foil.h"
 
+#include "pathpoint.h"
+#include "editablepath.h"
+#include "quadrantrestrictor.h"
+#include "linerestrictor.h"
+#include "pointrestrictor.h"
+#include "cubicbezier.h"
+
 using namespace foillogic;
+using namespace patheditor;
 
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
+    initOutline();
+    initProfile();
+    initThickness();
 }
 
 Foil::~Foil()
 {
+}
+
+void Foil::initOutline()
+{
+    qreal m = 2;
+    QSharedPointer<PathPoint> point1(new PathPoint(m*0, m*0));
+    QSharedPointer<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
+    QSharedPointer<ControlPoint> point3(new ControlPoint(m*70.39944295, m*-113.577872));
+    QSharedPointer<PathPoint> point4(new PathPoint(m*134.750359, m*-114.484482));
+    QSharedPointer<ControlPoint> point5(new ControlPoint(m*148.079229, m*-114.672267));
+    QSharedPointer<ControlPoint> point6(new ControlPoint(m*168.493739, m*-110.447322));
+    QSharedPointer<PathPoint> point7(new PathPoint(m*170.304549, m*-97.240702));
+    QSharedPointer<ControlPoint> point8(new ControlPoint(m*171.482419, m*-88.650189));
+    QSharedPointer<ControlPoint> point9(new ControlPoint(m*134.604629, m*-78.11541));
+    QSharedPointer<PathPoint> point10(new PathPoint(m*123.550789, m*-62.04205));
+    QSharedPointer<ControlPoint> point11(new ControlPoint(m*99.87859895, m*-27.6204));
+    QSharedPointer<ControlPoint> point12(new ControlPoint(m*116.439959, m*0));
+    QSharedPointer<PathPoint> point13(new PathPoint(m*116.439959, m*0));
+
+    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
+    QSharedPointer<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
+
+    point1->setRestrictor(horizontalAxisRestrictor);
+    point4->setRestrictor(aboveHorizontalRestrictor);
+    point7->setRestrictor(aboveHorizontalRestrictor);
+    point10->setRestrictor(aboveHorizontalRestrictor);
+    point13->setRestrictor(horizontalAxisRestrictor);
+
+    _outline = QSharedPointer<EditablePath>(new EditablePath());
+    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point4, point5, point6, point7)));
+    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point7, point8, point9, point10)));
+    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point10, point11, point12, point13)));
+}
+
+void Foil::initProfile()
+{
+    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
+    QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
+    QSharedPointer<PathPoint> point3(new PathPoint(200,0));
+    QSharedPointer<PathPoint> point4(new PathPoint(0,-24));
+
+    QSharedPointer<ControlPoint> cPoint1(new ControlPoint(0,0));
+    QSharedPointer<ControlPoint> cPoint2(new ControlPoint(0,-24));
+    QSharedPointer<ControlPoint> cPoint3(new ControlPoint(90,-24));
+    QSharedPointer<ControlPoint> cPoint4(new ControlPoint(200,0));
+
+    QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
+    QSharedPointer<Restrictor> topRestrictor(new LineRestrictor(*point4, *point2));
+    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
+
+    point1->setRestrictor(originRestrictor);
+    point2->setRestrictor(topRestrictor);
+    point3->setRestrictor(horizontalAxisRestrictor);
+
+    QSharedPointer<CubicBezier> part1(new CubicBezier(point1, cPoint1, cPoint2, point2));
+    QSharedPointer<CubicBezier> part2(new CubicBezier(point2, cPoint3, cPoint4, point3));
+    part1->controlPoint2()->setRestrictor(topRestrictor);
+    part2->controlPoint1()->setRestrictor(topRestrictor);
+
+    _profile = QSharedPointer<EditablePath>(new EditablePath());
+    _profile->append(part1);
+    _profile->append(part2);
+}
+
+void Foil::initThickness()
+{
+    QSharedPointer<PathPoint> point0(new PathPoint(0,0));
+    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
+    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
+    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
+    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+
+    QSharedPointer<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
+    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));
+
+    point1->setRestrictor(verticalAxisRestrictor);
+    point4->setRestrictor(horizontalAxisRestrictor);
+
+    _thickness = QSharedPointer<EditablePath>(new EditablePath());
+    _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
 }

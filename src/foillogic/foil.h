@@ -23,7 +23,10 @@
 #ifndef FOIL_H
 #define FOIL_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QObject>
+#include <QSharedPointer>
 
 namespace foillogic
 {
@@ -40,7 +43,14 @@ namespace foillogic
     public slots:
 
     private:
+        QSharedPointer<patheditor::EditablePath> _outline;
+        QSharedPointer<patheditor::EditablePath> _profile;
+        QSharedPointer<patheditor::EditablePath> _thickness;
 
+        // TODO move out of foil object
+        void initOutline();
+        void initProfile();
+        void initThickness();
     };
 }
 
