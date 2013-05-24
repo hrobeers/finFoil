@@ -31,7 +31,7 @@
 #include "quadrantrestrictor.h"
 #include "thicknesscontours.h"
 
-using namespace fineditors;
+using namespace foileditors;
 
 OutlineEditor::OutlineEditor(QWidget *parent) :
     QWidget(parent)

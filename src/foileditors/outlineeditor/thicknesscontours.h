@@ -20,44 +20,50 @@
  
 ****************************************************************************/
 
-#ifndef CONTOURCALCULATOR_H
-#define CONTOURCALCULATOR_H
+#ifndef THICKNESSCONTOURS_H
+#define THICKNESSCONTOURS_H
 
-#include "hrlibfwd/qtfwd.h"
+#include <QGraphicsObject>
+#include <QThreadPool>
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QRunnable>
+using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    class ContourCalculator : public QRunnable
+    class ThicknessContours : public QGraphicsObject
     {
+        Q_OBJECT
     public:
-        explicit ContourCalculator(qreal percContourHeight, patheditor::EditablePath* outline, patheditor::EditablePath* profile,
-                                   patheditor::EditablePath* thickness, QPainterPath* result, bool fast = false);
+        explicit ThicknessContours(QGraphicsItem *parent = 0);
 
-        virtual void run();
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual QRectF boundingRect() const;
 
-        virtual ~ContourCalculator();
+        virtual ~ThicknessContours() {}
+
+    signals:
+
+    public slots:
+        void onOutlineChange(EditablePath *sender);
+        void onProfileChange(EditablePath *sender);
+        void onThicknessChange(EditablePath *sender);
 
     private:
-        enum SplineFunction { bSpline, overhauser };
+        QThreadPool _tPool;
 
-        qreal _percContourHeight;
-        patheditor::EditablePath* _outline;
-        patheditor::EditablePath* _profile;
-        patheditor::EditablePath* _thickness;
-        QPainterPath *_result;
+        EditablePath* _outline;
+        EditablePath* _profile;
+        EditablePath* _thickness;
 
-        int _sectionCount;
-        int _resolution;
-        qreal _tTol;
-        qreal _fTol;
+        QList<qreal> _contourThicknesses;
+        QList<QSharedPointer<QPainterPath> > _contours;
 
-        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
-        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
-        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
+        bool _nextDetailed;
+
+        void calcContours(bool fastCalc);
+        bool profilesSet();
     };
 }
 
-#endif // CONTOURCALCULATOR_H
+#endif // THICKNESSCONTOURS_H

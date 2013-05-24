@@ -29,7 +29,7 @@
 
 #define INITCNT 256
 
-using namespace fineditors;
+using namespace foileditors;
 using namespace patheditor;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile, EditablePath *thickness, QPainterPath *result, bool fast)

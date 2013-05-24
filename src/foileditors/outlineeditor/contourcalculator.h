@@ -20,45 +20,44 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEEDITOR_H
-#define OUTLINEEDITOR_H
+#ifndef CONTOURCALCULATOR_H
+#define CONTOURCALCULATOR_H
 
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QWidget>
-#include "outlinedatawidget.h"
+#include <QRunnable>
 
-using namespace patheditor;
-
-namespace fineditors
+namespace foileditors
 {
-    /**
-     * Editor to edit the fin outline.
-     * This editor can display the thickness contours while editing.
-     */
-    class OutlineEditor : public QWidget
+    class ContourCalculator : public QRunnable
     {
-        Q_OBJECT
     public:
-        explicit OutlineEditor(QWidget *parent = 0);
+        explicit ContourCalculator(qreal percContourHeight, patheditor::EditablePath* outline, patheditor::EditablePath* profile,
+                                   patheditor::EditablePath* thickness, QPainterPath* result, bool fast = false);
 
-        virtual ~OutlineEditor() {}
+        virtual void run();
 
-    signals:
-        void profileChanged(EditablePath *sender);
-        void thicknessChanged(EditablePath *sender);
-
-    public slots:
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
+        virtual ~ContourCalculator();
 
     private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-        OutlineDataWidget* _outlineDataWidget;
+        enum SplineFunction { bSpline, overhauser };
 
+        qreal _percContourHeight;
+        patheditor::EditablePath* _outline;
+        patheditor::EditablePath* _profile;
+        patheditor::EditablePath* _thickness;
+        QPainterPath *_result;
+
+        int _sectionCount;
+        int _resolution;
+        qreal _tTol;
+        qreal _fTol;
+
+        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
+        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
     };
 }
 
-#endif // OUTLINEEDITOR_H
+#endif // CONTOURCALCULATOR_H

@@ -20,80 +20,48 @@
  
 ****************************************************************************/
 
-#include "outlinedatawidget.h"
+#include "thicknesseditor.h"
 
-#include <qmath.h>
-#include <QFormLayout>
+#include <QVBoxLayout>
 #include <QGroupBox>
-#include <QDoubleSpinBox>
-#include <QLineEdit>
-
 #include "editablepath.h"
+#include "cubicbezier.h"
+#include "line.h"
 
-using namespace fineditors;
+using namespace foileditors;
 
-OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
+ThicknessEditor::ThicknessEditor(QWidget *parent) :
     QWidget(parent)
 {
-    _depth = 0;
-    _outlinePtr = 0;
+    _pathEditor = new patheditor::PathEditorWidget();
+    _pathEditor->enableFeature(Features::HorizontalAxis);
+    _pathEditor->enableFeature(Features::VerticalAxis);
 
-    _formLayout = new QFormLayout();
+    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
+    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
+    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
+    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
 
+    point1->setRestrictor(_pathEditor->verticalAxisRestrictor());
+    point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
 
-    //
-    // Depth section
-    //
-    _depthEdit = new QDoubleSpinBox();
-    _depthEdit->setMaximum(10000);
-    _formLayout->addRow(tr("Depth:"), _depthEdit);
-    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
+    EditablePath* path = new EditablePath();
+    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    // Pipe the pathchanged signal
+    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
 
+    _pathEditor->addPath(path);
 
-    //
-    // Area section
-    //
-    _areaEdit = new QLineEdit("0");
-    _areaEdit->setReadOnly(true);
-    _formLayout->addRow(tr("Area:"), _areaEdit);
+    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
+    QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_pathEditor);
+    gb->setLayout(gbLayout);
 
-    QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
-    gb->setLayout(_formLayout);
-    QVBoxLayout* layout = new QVBoxLayout();
-    layout->addWidget(gb);
-
-    this->setLayout(layout);
+    _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(gb);
+    this->setLayout(_mainLayout);
 }
 
-
-void OutlineDataWidget::onDepthChange(double depth)
+ThicknessEditor::~ThicknessEditor()
 {
-    _depth = depth;
-    emit depthChanged((qreal)depth);
-
-    if (_outlinePtr != 0)
-        onOutlineChange(_outlinePtr);
-}
-
-void OutlineDataWidget::onOutlineChange(EditablePath *sender)
-{
-    onAreaChange(sender->area(500), sender);
-}
-
-void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
-{
-    if (_depth != 0)
-    {
-        _pxPerUnit = -sender->minY() / _depth;
-        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
-    }
-    else
-    {
-        _pxPerUnit = 0;
-        _areaEdit->setText("0");
-    }
-
-    _outlinePtr = sender;
-
-    emit pxPerUnitChanged(_pxPerUnit);
 }

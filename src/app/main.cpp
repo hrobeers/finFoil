@@ -26,10 +26,10 @@
 #include <QDebug>
 #include "finfoil_version.h"
 #include "mainwindow.h"
-#include "fineditors.h"
+#include "foileditors.h"
 #include "../hrlib/exceptions.h"
 
-using namespace fineditors;
+using namespace foileditors;
 
 int main(int argc, char *argv[])
 {

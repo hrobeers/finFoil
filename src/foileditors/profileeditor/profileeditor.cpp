@@ -28,7 +28,7 @@
 #include "cubicbezier.h"
 #include "linerestrictor.h"
 
-using namespace fineditors;
+using namespace foileditors;
 
 ProfileEditor::ProfileEditor(QWidget *parent) :
     QWidget(parent)

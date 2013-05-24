@@ -20,50 +20,34 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSCONTOURS_H
-#define THICKNESSCONTOURS_H
+#ifndef THICKNESSEDITOR_H
+#define THICKNESSEDITOR_H
 
-#include <QGraphicsObject>
-#include <QThreadPool>
-#include "patheditorfwd/patheditorfwd.h"
+#include <QWidget>
+#include "patheditorwidget.h"
 
 using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    class ThicknessContours : public QGraphicsObject
+    class ThicknessEditor : public QWidget
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(QGraphicsItem *parent = 0);
+        explicit ThicknessEditor(QWidget *parent = 0);
 
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        virtual QRectF boundingRect() const;
-
-        virtual ~ThicknessContours() {}
+        virtual ~ThicknessEditor();
 
     signals:
+        void thicknessChanged(EditablePath *sender);
 
     public slots:
-        void onOutlineChange(EditablePath *sender);
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
 
     private:
-        QThreadPool _tPool;
+        QVBoxLayout* _mainLayout;
+        patheditor::PathEditorWidget* _pathEditor;
 
-        EditablePath* _outline;
-        EditablePath* _profile;
-        EditablePath* _thickness;
-
-        QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _contours;
-
-        bool _nextDetailed;
-
-        void calcContours(bool fastCalc);
-        bool profilesSet();
     };
 }
 
-#endif // THICKNESSCONTOURS_H
+#endif // THICKNESSEDITOR_H

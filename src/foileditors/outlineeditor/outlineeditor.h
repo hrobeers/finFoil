@@ -20,34 +20,45 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSEDITOR_H
-#define THICKNESSEDITOR_H
+#ifndef OUTLINEEDITOR_H
+#define OUTLINEEDITOR_H
+
+#include "hrlibfwd/qtfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QWidget>
-#include "patheditorwidget.h"
+#include "outlinedatawidget.h"
 
 using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    class ThicknessEditor : public QWidget
+    /**
+     * Editor to edit the foil's outline.
+     * This editor can display the thickness contours while editing.
+     */
+    class OutlineEditor : public QWidget
     {
         Q_OBJECT
     public:
-        explicit ThicknessEditor(QWidget *parent = 0);
+        explicit OutlineEditor(QWidget *parent = 0);
 
-        virtual ~ThicknessEditor();
+        virtual ~OutlineEditor() {}
 
     signals:
+        void profileChanged(EditablePath *sender);
         void thicknessChanged(EditablePath *sender);
 
     public slots:
+        void onProfileChange(EditablePath *sender);
+        void onThicknessChange(EditablePath *sender);
 
     private:
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
+        OutlineDataWidget* _outlineDataWidget;
 
     };
 }
 
-#endif // THICKNESSEDITOR_H
+#endif // OUTLINEEDITOR_H

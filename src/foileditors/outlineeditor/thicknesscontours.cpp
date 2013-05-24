@@ -28,7 +28,7 @@
 #include "editablepath.h"
 #include "contourcalculator.h"
 
-using namespace fineditors;
+using namespace foileditors;
 
 ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
     QGraphicsObject(parent)

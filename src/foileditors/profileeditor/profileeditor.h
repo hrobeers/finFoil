@@ -20,42 +20,37 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEDATAWIDGET_H
-#define OUTLINEDATAWIDGET_H
+#ifndef PROFILEEDITOR_H
+#define PROFILEEDITOR_H
 
-#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QWidget>
+#include "patheditorwidget.h"
 
 using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    class OutlineDataWidget : public QWidget
+    class ProfileEditor : public QWidget
     {
         Q_OBJECT
     public:
-        explicit OutlineDataWidget(QWidget *parent = 0);
+        explicit ProfileEditor(QWidget *parent = 0);
+
+        virtual ~ProfileEditor();
 
     signals:
-        void depthChanged(qreal depth);
-        void pxPerUnitChanged(qreal pxPerUnit);
+        void profileChanged(EditablePath *sender);
 
     public slots:
-        void onDepthChange(double depth);
-        void onOutlineChange(EditablePath *sender);
-        void onAreaChange(qreal area, EditablePath *sender);
 
     private:
-        qreal _depth;
-        qreal _pxPerUnit;
-        EditablePath* _outlinePtr;
+        QVBoxLayout* _mainLayout;
+        PathEditorWidget* _pathEditor;
+        QSharedPointer<Restrictor> _topRestrictor;
 
-        QFormLayout* _formLayout;
-        QDoubleSpinBox* _depthEdit;
-        QLineEdit* _areaEdit;
     };
 }
 
-#endif // OUTLINEDATAWIDGET_H
+#endif // PROFILEEDITOR_H

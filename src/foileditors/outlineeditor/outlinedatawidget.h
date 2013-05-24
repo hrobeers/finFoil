@@ -20,48 +20,42 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#ifndef OUTLINEDATAWIDGET_H
+#define OUTLINEDATAWIDGET_H
 
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include "editablepath.h"
-#include "cubicbezier.h"
-#include "line.h"
+#include "hrlibfwd/qtfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
-using namespace fineditors;
+#include <QWidget>
 
-ThicknessEditor::ThicknessEditor(QWidget *parent) :
-    QWidget(parent)
+using namespace patheditor;
+
+namespace foileditors
 {
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
+    class OutlineDataWidget : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit OutlineDataWidget(QWidget *parent = 0);
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+    signals:
+        void depthChanged(qreal depth);
+        void pxPerUnitChanged(qreal pxPerUnit);
 
-    point1->setRestrictor(_pathEditor->verticalAxisRestrictor());
-    point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+    public slots:
+        void onDepthChange(double depth);
+        void onOutlineChange(EditablePath *sender);
+        void onAreaChange(qreal area, EditablePath *sender);
 
-    EditablePath* path = new EditablePath();
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    // Pipe the pathchanged signal
-    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
+    private:
+        qreal _depth;
+        qreal _pxPerUnit;
+        EditablePath* _outlinePtr;
 
-    _pathEditor->addPath(path);
-
-    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
-    QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
-    gb->setLayout(gbLayout);
-
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(gb);
-    this->setLayout(_mainLayout);
+        QFormLayout* _formLayout;
+        QDoubleSpinBox* _depthEdit;
+        QLineEdit* _areaEdit;
+    };
 }
 
-ThicknessEditor::~ThicknessEditor()
-{
-}
+#endif // OUTLINEDATAWIDGET_H
