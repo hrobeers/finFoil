@@ -181,6 +181,10 @@ bool EditablePath::released()
     return _released;
 }
 
+EditablePath::~EditablePath()
+{
+}
+
 void EditablePath::onPointDrag(PathPoint* /*unused*/)
 {
     _released = false;

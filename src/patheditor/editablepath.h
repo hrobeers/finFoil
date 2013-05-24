@@ -66,7 +66,7 @@ namespace patheditor
 
         bool released();
 
-        virtual ~EditablePath() {}
+        virtual ~EditablePath();
 
     signals:
         void pathChanged(EditablePath *sender);
