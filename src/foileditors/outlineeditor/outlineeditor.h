@@ -25,6 +25,7 @@
 
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
 #include "outlinedatawidget.h"
@@ -41,7 +42,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit OutlineEditor(QWidget *parent = 0);
+        explicit OutlineEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
         virtual ~OutlineEditor() {}
 

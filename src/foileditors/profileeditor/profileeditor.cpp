@@ -25,41 +25,18 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include "editablepath.h"
-#include "cubicbezier.h"
-#include "linerestrictor.h"
+#include "foil.h"
 
 using namespace foileditors;
+using namespace foillogic;
 
-ProfileEditor::ProfileEditor(QWidget *parent) :
+ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
-    QSharedPointer<PathPoint> point3(new PathPoint(200,0));
-    QSharedPointer<PathPoint> point4(new PathPoint(0,-24));
-
-    QSharedPointer<ControlPoint> cPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> cPoint2(new ControlPoint(0,-24));
-    QSharedPointer<ControlPoint> cPoint3(new ControlPoint(90,-24));
-    QSharedPointer<ControlPoint> cPoint4(new ControlPoint(200,0));
-
-    _topRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(*point4, *point2));
-
-    point1->setRestrictor(_pathEditor->originRestrictor());
-    point2->setRestrictor(_topRestrictor);
-    point3->setRestrictor(_pathEditor->horizontalAxisRestrictor());
-
-    QSharedPointer<CubicBezier> part1(new CubicBezier(point1, cPoint1, cPoint2, point2));
-    QSharedPointer<CubicBezier> part2(new CubicBezier(point2, cPoint3, cPoint4, point3));
-    part1->controlPoint2()->setRestrictor(_topRestrictor);
-    part2->controlPoint1()->setRestrictor(_topRestrictor);
-
-    EditablePath* path = new EditablePath();
-    path->append(part1);
-    path->append(part2);
+    EditablePath* path = foil->profile();
     // Pipe the pathChanged signal
     connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
 

@@ -36,6 +36,10 @@ namespace foillogic
     public:
         explicit Foil(QObject *parent = 0);
 
+        patheditor::EditablePath* outline();
+        patheditor::EditablePath* profile();
+        patheditor::EditablePath* thickness();
+
         virtual ~Foil();
 
     signals:

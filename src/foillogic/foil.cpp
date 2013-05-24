@@ -40,12 +40,29 @@ Foil::Foil(QObject *parent) :
     initThickness();
 }
 
+EditablePath *Foil::outline()
+{
+    return _outline.data();
+}
+
+EditablePath *Foil::profile()
+{
+    return _profile.data();
+}
+
+EditablePath *Foil::thickness()
+{
+    return _thickness.data();
+}
+
 Foil::~Foil()
 {
 }
 
 void Foil::initOutline()
 {
+    _outline = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+
     qreal m = 2;
     QSharedPointer<PathPoint> point1(new PathPoint(m*0, m*0));
     QSharedPointer<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
@@ -70,7 +87,6 @@ void Foil::initOutline()
     point10->setRestrictor(aboveHorizontalRestrictor);
     point13->setRestrictor(horizontalAxisRestrictor);
 
-    _outline = QSharedPointer<EditablePath>(new EditablePath());
     _outline->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
     _outline->append(QSharedPointer<PathItem>(new CubicBezier(point4, point5, point6, point7)));
     _outline->append(QSharedPointer<PathItem>(new CubicBezier(point7, point8, point9, point10)));
@@ -79,6 +95,8 @@ void Foil::initOutline()
 
 void Foil::initProfile()
 {
+    _profile = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
     QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
     QSharedPointer<PathPoint> point3(new PathPoint(200,0));
@@ -102,13 +120,14 @@ void Foil::initProfile()
     part1->controlPoint2()->setRestrictor(topRestrictor);
     part2->controlPoint1()->setRestrictor(topRestrictor);
 
-    _profile = QSharedPointer<EditablePath>(new EditablePath());
     _profile->append(part1);
     _profile->append(part2);
 }
 
 void Foil::initThickness()
 {
+    _thickness = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+
     QSharedPointer<PathPoint> point0(new PathPoint(0,0));
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
     QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
@@ -121,6 +140,5 @@ void Foil::initThickness()
     point1->setRestrictor(verticalAxisRestrictor);
     point4->setRestrictor(horizontalAxisRestrictor);
 
-    _thickness = QSharedPointer<EditablePath>(new EditablePath());
     _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
 }

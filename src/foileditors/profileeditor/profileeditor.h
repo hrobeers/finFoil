@@ -24,6 +24,7 @@
 #define PROFILEEDITOR_H
 
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
 #include "patheditorwidget.h"
@@ -36,7 +37,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit ProfileEditor(QWidget *parent = 0);
+        explicit ProfileEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
         virtual ~ProfileEditor();
 

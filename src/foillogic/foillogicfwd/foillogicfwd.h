@@ -20,36 +20,16 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSEDITOR_H
-#define THICKNESSEDITOR_H
+#ifndef FOILLOGICFWD_H
+#define FOILLOGICFWD_H
 
-#include "foillogicfwd/foillogicfwd.h"
+/*
+    Forward declarations for all foillogic classes.
+ */
 
-#include <QWidget>
-#include "patheditorwidget.h"
-
-using namespace patheditor;
-
-namespace foileditors
+namespace foillogic
 {
-    class ThicknessEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit ThicknessEditor(foillogic::Foil *foil, QWidget *parent = 0);
-
-        virtual ~ThicknessEditor();
-
-    signals:
-        void thicknessChanged(EditablePath *sender);
-
-    public slots:
-
-    private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-
-    };
+    class Foil;
 }
 
-#endif // THICKNESSEDITOR_H
+#endif // FOILLOGICFWD_H

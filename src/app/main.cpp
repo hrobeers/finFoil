@@ -28,8 +28,10 @@
 #include "mainwindow.h"
 #include "foileditors.h"
 #include "../hrlib/exceptions.h"
+#include "foil.h"
 
 using namespace foileditors;
+using namespace foillogic;
 
 int main(int argc, char *argv[])
 {
@@ -41,9 +43,11 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        OutlineEditor* outlineEditor = new OutlineEditor();
-        ProfileEditor* profileEditor = new ProfileEditor();
-        ThicknessEditor* thicknessEditor = new ThicknessEditor();
+        QScopedPointer<Foil> fin(new Foil());
+
+        OutlineEditor* outlineEditor = new OutlineEditor(fin.data());
+        ProfileEditor* profileEditor = new ProfileEditor(fin.data());
+        ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
 
         QObject::connect(profileEditor, SIGNAL(profileChanged(EditablePath*)), outlineEditor, SLOT(onProfileChange(EditablePath*)));
         QObject::connect(thicknessEditor, SIGNAL(thicknessChanged(EditablePath*)), outlineEditor, SLOT(onThicknessChange(EditablePath*)));
