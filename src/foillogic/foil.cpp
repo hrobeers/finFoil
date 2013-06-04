@@ -61,7 +61,7 @@ Foil::~Foil()
 
 void Foil::initOutline()
 {
-    _outline = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
+    _outline = QSharedPointer<Path>(new Path());
 
     qreal m = 2;
     QSharedPointer<PathPoint> point1(new PathPoint(m*0, m*0));
@@ -95,7 +95,7 @@ void Foil::initOutline()
 
 void Foil::initProfile()
 {
-    _profile = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
+    _profile = QSharedPointer<Path>(new Path());
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
     QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
@@ -126,7 +126,7 @@ void Foil::initProfile()
 
 void Foil::initThickness()
 {
-    _thickness = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
+    _thickness = QSharedPointer<Path>(new Path());
 
     QSharedPointer<PathPoint> point0(new PathPoint(0,0));
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
