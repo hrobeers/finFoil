@@ -36,9 +36,9 @@ namespace foillogic
     public:
         explicit Foil(QObject *parent = 0);
 
-        patheditor::EditablePath* outline();
-        patheditor::EditablePath* profile();
-        patheditor::EditablePath* thickness();
+        QSharedPointer<patheditor::Path> outline();
+        QSharedPointer<patheditor::Path> profile();
+        QSharedPointer<patheditor::Path> thickness();
 
         virtual ~Foil();
 
@@ -47,9 +47,9 @@ namespace foillogic
     public slots:
 
     private:
-        QSharedPointer<patheditor::EditablePath> _outline;
-        QSharedPointer<patheditor::EditablePath> _profile;
-        QSharedPointer<patheditor::EditablePath> _thickness;
+        QSharedPointer<patheditor::Path> _outline;
+        QSharedPointer<patheditor::Path> _profile;
+        QSharedPointer<patheditor::Path> _thickness;
 
         // TODO move out of foil object
         void initOutline();

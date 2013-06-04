@@ -30,6 +30,7 @@
 namespace patheditor
 {
     class CubicBezier;
+    class Path;
     class EditablePath;
     class Line;
     class LineRestrictor;

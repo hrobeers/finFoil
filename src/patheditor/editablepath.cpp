@@ -30,75 +30,31 @@
 
 using namespace patheditor;
 
-EditablePath::EditablePath(QGraphicsItem * parent)
+EditablePath::EditablePath(QSharedPointer<Path> path, QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
+    _path = path;
+    foreach(QSharedPointer<PathItem> item, _path->pathItems())
+        onAppend(item.data());
+    connect(path.data(), SIGNAL(onAppend(PathItem*)), this, SLOT(onAppend(PathItem*)));
+
     _firstPaint = true;
     _released = true;
     _settings = PathSettings::Default();
 }
 
-void EditablePath::append(QSharedPointer<PathItem> pathItem)
-{
-    // Set pathItem next and prev
-    if (!_pathItemList.isEmpty())
-    {
-        QSharedPointer<PathItem> last = _pathItemList.last();
-        last->setNextPathItem(pathItem);
-        pathItem->setPrevPathItem(last);
-    }
-
-    // Add the controlPoint's pointHandles
-    foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
-    {
-        controlPoint->createPointHandle(_settings, this, scene());
-    }
-
-    if (!_pathItemList.isEmpty())
-    {
-        pathItem->setStartPoint(_pathItemList.last()->endPoint());
-    }
-    else
-    {
-        // Add the startpoint pointHandle
-        pathItem->startPoint()->createPointHandle(_settings, this, scene());
-    }
-
-    // Add the endpoint pointHandle
-    pathItem->endPoint()->createPointHandle(_settings, this, scene());
-
-    // Link endpoints to controlpoints
-    if (pathItem->controlPoints().count() >= 2)
-    {
-        pathItem->startPoint()->addFollowingPoint(pathItem->controlPoints().first());
-        pathItem->endPoint()->addFollowingPoint(pathItem->controlPoints().last());
-    }
-
-    connectPoints(pathItem.data());
-    _pathItemList.append(pathItem);
-}
-
 QRectF EditablePath::boundingRect() const
 {
-    if (_pathItemList.count() <= 0)
-        return QRectF(0,0,0,0);
-
-    QRectF retVal = _pathItemList.first()->controlPointRect();
-    foreach(QSharedPointer<PathItem> item, _pathItemList)
-    {
-        retVal |= item->controlPointRect();
-    }
-
-    return retVal;
+    return _path->controlPointRect();
 }
 
 void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (!_pathItemList.isEmpty())
+    if (!_path->pathItems().isEmpty())
     {
-        QSharedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_pathItemList.first()->startPoint())));
+        QSharedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_path->pathItems().first()->startPoint())));
 
-        foreach(QSharedPointer<PathItem> item, _pathItemList)
+        foreach(QSharedPointer<PathItem> item, _path->pathItems())
         {
             item->paintPathItem(&_settings, newPainterPath.data(), painter, option, widget);
         }
@@ -123,19 +79,7 @@ QSharedPointer<QPainterPath> EditablePath::painterPath()
 
 QPointF EditablePath::pointAtPercent(qreal t)
 {
-    int pathItemCount = _pathItemList.count();
-    qreal itemRange = 1/qreal(pathItemCount);
-
-    int item = 0;
-    while (t > itemRange)
-    {
-        t -= itemRange;
-        item++;
-    }
-
-    t = t/itemRange;
-
-    return _pathItemList[item]->pointAtPercent(t);
+    return _path->pointAtPercent(t);
 }
 
 qreal EditablePath::minY(qreal *t_top, qreal percTol)
@@ -183,6 +127,23 @@ bool EditablePath::released()
 
 EditablePath::~EditablePath()
 {
+}
+
+void EditablePath::onAppend(PathItem *pathItem)
+{
+    // Add the startpoint pointHandle
+    pathItem->startPoint()->createPointHandle(_settings, this, scene());
+
+    // Add the endpoint pointHandle
+    pathItem->endPoint()->createPointHandle(_settings, this, scene());
+
+    // Add the controlPoint's pointHandles
+    foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
+    {
+        controlPoint->createPointHandle(_settings, this, scene());
+    }
+
+    connectPoints(pathItem);
 }
 
 void EditablePath::onPointDrag(PathPoint* /*unused*/)

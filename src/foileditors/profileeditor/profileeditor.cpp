@@ -36,7 +36,7 @@ ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    EditablePath* path = foil->profile();
+    EditablePath* path = new EditablePath(foil->profile());
     // Pipe the pathChanged signal
     connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
 

@@ -40,19 +40,19 @@ Foil::Foil(QObject *parent) :
     initThickness();
 }
 
-EditablePath *Foil::outline()
+QSharedPointer<Path> Foil::outline()
 {
-    return _outline.data();
+    return _outline;
 }
 
-EditablePath *Foil::profile()
+QSharedPointer<Path> Foil::profile()
 {
-    return _profile.data();
+    return _profile;
 }
 
-EditablePath *Foil::thickness()
+QSharedPointer<Path> Foil::thickness()
 {
-    return _thickness.data();
+    return _thickness;
 }
 
 Foil::~Foil()
@@ -61,7 +61,7 @@ Foil::~Foil()
 
 void Foil::initOutline()
 {
-    _outline = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+    _outline = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
 
     qreal m = 2;
     QSharedPointer<PathPoint> point1(new PathPoint(m*0, m*0));
@@ -95,7 +95,7 @@ void Foil::initOutline()
 
 void Foil::initProfile()
 {
-    _profile = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+    _profile = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
     QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
@@ -126,7 +126,7 @@ void Foil::initProfile()
 
 void Foil::initThickness()
 {
-    _thickness = QSharedPointer<EditablePath>(new EditablePath(), &QObject::deleteLater);
+    _thickness = QSharedPointer<Path>(new Path(), &QObject::deleteLater);
 
     QSharedPointer<PathPoint> point0(new PathPoint(0,0));
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));

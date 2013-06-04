@@ -14,7 +14,8 @@ HEADERS += \
     ../patheditor/quadrantrestrictor.h \
     ../patheditor/controlpoint.h \
     ../patheditor/patheditorview.h \
-    ../patheditor/pathfunctors.h
+    ../patheditor/pathfunctors.h \
+    ../patheditor/path.h
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
@@ -29,7 +30,8 @@ SOURCES += \
     ../patheditor/pathpoint.cpp \
     ../patheditor/quadrantrestrictor.cpp \
     ../patheditor/controlpoint.cpp \
-    ../patheditor/patheditorview.cpp
+    ../patheditor/patheditorview.cpp \
+    ../patheditor/path.cpp
 
 OTHER_FILES += \
     ../patheditor/patheditorfwd/README

@@ -41,7 +41,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    EditablePath* path = foil->outline();
+    EditablePath* path = new EditablePath(foil->outline());
 
     ThicknessContours *contours = new ThicknessContours();
     connect(path, SIGNAL(pathChanged(EditablePath*)), contours, SLOT(onOutlineChange(EditablePath*)));
