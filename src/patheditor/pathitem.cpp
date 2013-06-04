@@ -27,9 +27,7 @@
 
 using namespace patheditor;
 
-PathItem::PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-                   QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsItem(parent, scene)
+PathItem::PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
 {
     setStartPoint(startPoint);
     setEndPoint(endPoint);

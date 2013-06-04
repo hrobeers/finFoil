@@ -30,15 +30,14 @@
 
 namespace patheditor
 {
-    class PathItem : public QGraphicsItem
+    class PathItem
     {
     public:
-        explicit PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-                          QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
 
 
         //
-        // Functions needed by EditablePath for editing
+        // Functions needed by EditablePath
         //
         virtual QSharedPointer<PathPoint> startPoint();
         virtual QSharedPointer<PathPoint> endPoint();
@@ -52,13 +51,7 @@ namespace patheditor
         virtual void setNextPathItem(QSharedPointer<PathItem> nextPathItem);
         virtual void setPrevPathItem(QSharedPointer<PathItem> prevPathItem);
 
-
-        //
-        // Implementing QGraphicsItem
-        //
-        virtual QRectF boundingRect() const = 0;
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                        QWidget *widget) = 0;
+        virtual QRectF controlPointRect() const = 0;
 
         //
         // EditablePath paint methods

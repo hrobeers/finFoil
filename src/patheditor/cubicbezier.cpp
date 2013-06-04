@@ -28,9 +28,8 @@
 
 using namespace patheditor;
 
-CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-                         QGraphicsItem *parent, QGraphicsScene *scene)
-    : PathItem(startPoint, endPoint, parent, scene)
+CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
+    : PathItem(startPoint, endPoint)
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
@@ -44,9 +43,8 @@ CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<Pa
 }
 
 CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<ControlPoint> controlPoint1,
-                         QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint,
-                         QGraphicsItem *parent, QGraphicsScene *scene)
-    : PathItem(startPoint, endPoint, parent, scene)
+                         QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint)
+    : PathItem(startPoint, endPoint)
 {
     _cPoint1 = controlPoint1;
     _cPoint2 = controlPoint2;
@@ -86,7 +84,7 @@ QPointF CubicBezier::pointAtPercent(qreal t)
     return QPointF(xAtPercent, yAtPercent);
 }
 
-QRectF CubicBezier::boundingRect() const
+QRectF CubicBezier::controlPointRect() const
 {
     qreal left = qMin(qMin(_startPoint->x(), _endPoint->x()), qMin(_cPoint1->x(), _cPoint2->x()));
     qreal right = qMax(qMax(_startPoint->x(), _endPoint->x()), qMax(_cPoint1->x(), _cPoint2->x()));
@@ -100,16 +98,6 @@ QRectF CubicBezier::boundingRect() const
     QRectF retVal(topLeft, bottomRight);
 
     return retVal;
-}
-
-void CubicBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    QPainterPath painterPath;
-
-    painterPath.moveTo(*_startPoint);
-    painterPath.cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
-
-    painter->drawPath(painterPath);
 }
 
 void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,

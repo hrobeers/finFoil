@@ -30,9 +30,8 @@
 
 using namespace patheditor;
 
-Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-           QGraphicsItem *parent, QGraphicsScene *scene)
-    : PathItem(startPoint, endPoint, parent, scene)
+Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
+    : PathItem(startPoint, endPoint)
 {
 }
 
@@ -46,7 +45,7 @@ QPointF Line::pointAtPercent(qreal t)
     return (*_endPoint - *_startPoint) * t + *_startPoint;
 }
 
-QRectF Line::boundingRect() const
+QRectF Line::controlPointRect() const
 {
     qreal left = qMin(_startPoint->x(), _endPoint->x());
     qreal right = qMax(_startPoint->x(), _endPoint->x());
@@ -60,15 +59,6 @@ QRectF Line::boundingRect() const
     QRectF retVal(topLeft, bottomRight);
 
     return retVal;
-}
-
-void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
-{
-    QPainterPath painterPath;
-
-    painterPath.moveTo(*_startPoint);
-    painterPath.lineTo(*_endPoint);
-    painter->drawPath(painterPath);
 }
 
 void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,

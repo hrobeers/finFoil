@@ -83,10 +83,10 @@ QRectF EditablePath::boundingRect() const
     if (_pathItemList.count() <= 0)
         return QRectF(0,0,0,0);
 
-    QRectF retVal = _pathItemList.first()->boundingRect();
+    QRectF retVal = _pathItemList.first()->controlPointRect();
     foreach(QSharedPointer<PathItem> item, _pathItemList)
     {
-        retVal |= item->boundingRect();
+        retVal |= item->controlPointRect();
     }
 
     return retVal;
