@@ -4,7 +4,6 @@ HEADERS += \
     ../foileditors/foileditors.h \
     ../foileditors/outlineeditor/thicknesscontours.h \
     ../foileditors/outlineeditor/outlineeditor.h \
-    ../foileditors/outlineeditor/contourcalculator.h \
     ../foileditors/outlineeditor/outlinedatawidget.h
 
 SOURCES += \
@@ -12,5 +11,4 @@ SOURCES += \
     ../foileditors/thicknesseditor/thicknesseditor.cpp \
     ../foileditors/outlineeditor/thicknesscontours.cpp \
     ../foileditors/outlineeditor/outlineeditor.cpp \
-    ../foileditors/outlineeditor/contourcalculator.cpp \
     ../foileditors/outlineeditor/outlinedatawidget.cpp

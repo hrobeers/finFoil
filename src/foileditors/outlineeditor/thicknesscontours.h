@@ -26,6 +26,7 @@
 #include <QGraphicsObject>
 #include <QThreadPool>
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
 using namespace patheditor;
 
@@ -35,7 +36,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(QGraphicsItem *parent = 0);
+        explicit ThicknessContours(foillogic::FoilCalculator* calculator, QGraphicsItem *parent = 0);
 
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         virtual QRectF boundingRect() const;
@@ -45,24 +46,11 @@ namespace foileditors
     signals:
 
     public slots:
-        void onOutlineChange(EditablePath *sender);
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
 
     private:
-        QThreadPool _tPool;
-
-        EditablePath* _outline;
-        EditablePath* _profile;
-        EditablePath* _thickness;
-
-        QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _contours;
+        foillogic::FoilCalculator* _calculator;
 
         bool _nextDetailed;
-
-        void calcContours(bool fastCalc);
-        bool profilesSet();
     };
 }
 

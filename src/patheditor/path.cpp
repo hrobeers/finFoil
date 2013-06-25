@@ -22,6 +22,8 @@
 
 #include "path.h"
 
+#include "pathfunctors.h"
+
 using namespace patheditor;
 
 Path::Path(QObject *parent) :
@@ -90,4 +92,24 @@ QPointF Path::pointAtPercent(qreal t)
     t = t/itemRange;
 
     return _pathItemList[item]->pointAtPercent(t);
+}
+
+qreal Path::minY(qreal *t_top, qreal percTol)
+{
+    // pathfunctor
+    f_yValueAtPercentPath yOutline(this);
+
+    // find the min of the path
+    if (t_top == 0)
+    {
+        qreal t = 0.5;
+        return hrlib::Brent::local_min(0, 1, percTol, yOutline, t);
+    }
+    else
+        return hrlib::Brent::local_min(0, 1, percTol, yOutline, *t_top);
+}
+
+void Path::onPathChanged()
+{
+    emit pathChanged(this);
 }

@@ -49,10 +49,14 @@ namespace patheditor
 
         QPointF pointAtPercent(qreal t);
 
+        qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
+
     signals:
         void onAppend(PathItem *pathItem);
+        void pathChanged(Path *sender);
 
     public slots:
+        void onPathChanged();
 
     private:
         QList<QSharedPointer<PathItem> > _pathItemList;

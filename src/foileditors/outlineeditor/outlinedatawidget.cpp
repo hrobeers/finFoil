@@ -32,9 +32,11 @@
 
 using namespace foileditors;
 
-OutlineDataWidget::OutlineDataWidget(QWidget *parent) :
+OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
 {
+    _foilCalculator = foilCalculator;
+
     _depth = 0;
     _outlinePtr = 0;
 
@@ -77,23 +79,23 @@ void OutlineDataWidget::onDepthChange(double depth)
 
 void OutlineDataWidget::onOutlineChange(EditablePath *sender)
 {
-    onAreaChange(sender->area(500), sender);
+//    onAreaChange(sender->area(500), sender);
 }
 
-void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
-{
-    if (_depth != 0)
-    {
-        _pxPerUnit = -sender->minY() / _depth;
-        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
-    }
-    else
-    {
-        _pxPerUnit = 0;
-        _areaEdit->setText("0");
-    }
+//void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
+//{
+//    if (_depth != 0)
+//    {
+//        _pxPerUnit = -sender->minY() / _depth;
+//        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
+//    }
+//    else
+//    {
+//        _pxPerUnit = 0;
+//        _areaEdit->setText("0");
+//    }
 
-    _outlinePtr = sender;
+//    _outlinePtr = sender;
 
-    emit pxPerUnitChanged(_pxPerUnit);
-}
+//    emit pxPerUnitChanged(_pxPerUnit);
+//}

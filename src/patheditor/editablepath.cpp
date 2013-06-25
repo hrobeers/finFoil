@@ -25,8 +25,6 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
-#include "hrlib/math/brent.hpp"
-#include "pathfunctors.h"
 
 using namespace patheditor;
 
@@ -67,7 +65,7 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         if (_firstPaint)
         {
             _firstPaint = false;
-            emit pathChanged(this);
+            emitPathChanged();
         }
     }
 }
@@ -80,21 +78,6 @@ QSharedPointer<QPainterPath> EditablePath::painterPath()
 QPointF EditablePath::pointAtPercent(qreal t)
 {
     return _path->pointAtPercent(t);
-}
-
-qreal EditablePath::minY(qreal *t_top, qreal percTol)
-{
-    // pathfunctor
-    f_yValueAtPercentEPath yOutline(this);
-
-    // find the min of the path
-    if (t_top == 0)
-    {
-        qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, yOutline, t);
-    }
-    else
-        return hrlib::Brent::local_min(0, 1, percTol, yOutline, *t_top);
 }
 
 qreal EditablePath::area(int resolution)
@@ -149,14 +132,14 @@ void EditablePath::onAppend(PathItem *pathItem)
 void EditablePath::onPointDrag(PathPoint* /*unused*/)
 {
     _released = false;
-    emit pathChanged(this);
+    emitPathChanged();
     this->scene()->update();
 }
 
 void EditablePath::onPointRelease(PathPoint* /*unused*/)
 {
     _released = true;
-    emit pathChanged(this);
+    emitPathChanged();
     this->scene()->update();
 }
 
@@ -179,4 +162,10 @@ void EditablePath::connectPoints(PathItem *pathItem)
         connect(cPoint.data(), SIGNAL(pointRelease(PathPoint*)),
                 this, SLOT(onPointRelease(PathPoint*)), Qt::UniqueConnection);
     }
+}
+
+void EditablePath::emitPathChanged()
+{
+    _path->onPathChanged();
+    emit pathChanged(this);
 }

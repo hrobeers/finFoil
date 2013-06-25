@@ -30,6 +30,7 @@
 namespace foillogic
 {
     class Foil;
+    class FoilCalculator;
 }
 
 #endif // FOILLOGICFWD_H

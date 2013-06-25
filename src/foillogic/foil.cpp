@@ -38,6 +38,10 @@ Foil::Foil(QObject *parent) :
     initOutline();
     initProfile();
     initThickness();
+
+    connect(_outline.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
+    connect(_profile.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
+    connect(_thickness.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
 }
 
 QSharedPointer<Path> Foil::outline()
@@ -141,4 +145,9 @@ void Foil::initThickness()
     point4->setRestrictor(horizontalAxisRestrictor);
 
     _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+}
+
+void Foil::onFoilChanged()
+{
+    emit foilChanged(this);
 }

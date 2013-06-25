@@ -25,6 +25,7 @@
 
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
 
@@ -36,7 +37,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit OutlineDataWidget(QWidget *parent = 0);
+        explicit OutlineDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
         void depthChanged(qreal depth);
@@ -45,12 +46,13 @@ namespace foileditors
     public slots:
         void onDepthChange(double depth);
         void onOutlineChange(EditablePath *sender);
-        void onAreaChange(qreal area, EditablePath *sender);
+//        void onAreaChange(qreal area, EditablePath *sender);
 
     private:
         qreal _depth;
         qreal _pxPerUnit;
         EditablePath* _outlinePtr;
+        foillogic::FoilCalculator* _foilCalculator;
 
         QFormLayout* _formLayout;
         QDoubleSpinBox* _depthEdit;

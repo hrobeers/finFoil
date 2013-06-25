@@ -20,47 +20,44 @@
  
 ****************************************************************************/
 
-#ifndef FOIL_H
-#define FOIL_H
+#ifndef CONTOURCALCULATOR_H
+#define CONTOURCALCULATOR_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QObject>
-#include <QSharedPointer>
-#include "path.h"
+#include <QRunnable>
 
 namespace foillogic
 {
-    class Foil : public QObject
+    class ContourCalculator : public QRunnable
     {
-        Q_OBJECT
     public:
-        explicit Foil(QObject *parent = 0);
+        explicit ContourCalculator(qreal percContourHeight, patheditor::Path* outline, patheditor::Path* profile,
+                                   patheditor::Path* thickness, QPainterPath* result, bool fast = false);
 
-        QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<patheditor::Path> profile();
-        QSharedPointer<patheditor::Path> thickness();
+        virtual void run();
 
-        virtual ~Foil();
-
-    signals:
-        void foilChanged(Foil* sender);
-
-    public slots:
+        virtual ~ContourCalculator();
 
     private:
-        QSharedPointer<patheditor::Path> _outline;
-        QSharedPointer<patheditor::Path> _profile;
-        QSharedPointer<patheditor::Path> _thickness;
+        enum SplineFunction { bSpline, overhauser };
 
-        // TODO move out of foil object
-        void initOutline();
-        void initProfile();
-        void initThickness();
+        qreal _percContourHeight;
+        patheditor::Path* _outline;
+        patheditor::Path* _profile;
+        patheditor::Path* _thickness;
+        QPainterPath *_result;
 
-    private slots:
-        void onFoilChanged();
+        int _sectionCount;
+        int _resolution;
+        qreal _tTol;
+        qreal _fTol;
+
+        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
+        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
     };
 }
 
-#endif // FOIL_H
+#endif // CONTOURCALCULATOR_H

@@ -25,35 +25,36 @@
 #include <QPainter>
 #include <QtAlgorithms>
 #include <QGraphicsScene>
-#include "editablepath.h"
-#include "contourcalculator.h"
+#include "foilcalculator.h"
+#include "foil.h"
 
 using namespace foileditors;
 
-ThicknessContours::ThicknessContours(QGraphicsItem *parent) :
+ThicknessContours::ThicknessContours(foillogic::FoilCalculator *calculator, QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
+    _calculator = calculator;
+
     _nextDetailed = false;
 
-    _outline = 0;
-    _profile = 0;
-    _thickness = 0;
-
-    int numOfContours = std::max(_tPool.maxThreadCount(), 3);
+    int numOfContours = 3;
     qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
+    QList<qreal> thicknesses;
+    thicknesses.append(0);
     for (int i = 0; i < numOfContours; i++)
     {
         thickness += increment;
-        _contourThicknesses.append(thickness);
+        thicknesses.append(thickness);
     }
 
-    qSort(_contourThicknesses);
+    qSort(thicknesses);
+    _calculator->setContourThicknesses(thicknesses);
 }
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
 {
-    if (_outline != 0)
+    if (_calculator->calculated())
     {
         int min = 0;
         int max = 255;
@@ -61,13 +62,14 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         int increment = 0;
 
         painter->setBrush(QColor(min, 0, max, a));
-        painter->drawPath(*(_outline->painterPath()));
 
-        int numberOfContours = _contours.length();
+        QList<QSharedPointer<QPainterPath> > contours = _calculator->calculatedContours();
+
+        int numberOfContours = contours.length();
         if (numberOfContours > 0)
         {
             increment = (max - min) / numberOfContours;
-            foreach (const QSharedPointer<QPainterPath>& contour, _contours)
+            foreach (const QSharedPointer<QPainterPath>& contour, contours)
             {
                 min += increment;
                 max -= increment;
@@ -81,81 +83,11 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
 QRectF ThicknessContours::boundingRect() const
 {
-    if (_outline == 0)
+    if (!_calculator->calculated())
     {
         QRectF retVal;
         return retVal;
     }
 
-    return _outline->boundingRect();
-}
-
-void ThicknessContours::onOutlineChange(EditablePath *sender)
-{
-    bool fastCalc = !(sender->released());
-    _outline = sender;
-
-    calcContours(fastCalc);
-}
-
-void ThicknessContours::onProfileChange(EditablePath *sender)
-{
-    bool fastCalc = !(sender->released());
-    _profile = sender;
-
-    calcContours(fastCalc);
-
-    this->scene()->update(boundingRect());
-}
-
-void ThicknessContours::onThicknessChange(EditablePath *sender)
-{
-    bool fastCalc = !(sender->released());
-    _thickness = sender;
-
-    calcContours(fastCalc);
-
-    this->scene()->update(boundingRect());
-}
-
-void ThicknessContours::calcContours(bool fastCalc)
-{
-    _contours.clear();
-    if (profilesSet())
-    {
-#ifdef SERIAL
-        foreach (qreal thickness, _contourThicknesses)
-        {
-            QSharedPointer<QPainterPath> path(new QPainterPath());
-            _contours.append(path);
-
-            ContourCalculator calc(thickness, _outline, _profile, _thickness, path.data(), fastCalc);
-            calc.run();
-        }
-#endif
-#ifndef SERIAL
-        foreach (qreal thickness, _contourThicknesses)
-        {
-            QSharedPointer<QPainterPath> path(new QPainterPath());
-            _contours.append(path);
-
-            _tPool.start(new ContourCalculator(thickness, _outline, _profile, _thickness, path.data(), fastCalc));
-        }
-        _tPool.waitForDone();
-#endif
-    }
-}
-
-bool ThicknessContours::profilesSet()
-{
-    if (_outline == 0)
-        return false;
-
-    if (_profile == 0)
-        return false;
-
-    if (_thickness == 0)
-        return false;
-
-    return true;
+    return _calculator->foil()->outline()->controlPointRect();
 }

@@ -24,6 +24,7 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QGraphicsScene>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
@@ -41,23 +42,18 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    EditablePath* path = new EditablePath(foil->outline());
+    _finCalculator.reset(new FoilCalculator(foil));
 
-    ThicknessContours *contours = new ThicknessContours();
-    connect(path, SIGNAL(pathChanged(EditablePath*)), contours, SLOT(onOutlineChange(EditablePath*)));
-    connect(this, SIGNAL(profileChanged(EditablePath*)), contours, SLOT(onProfileChange(EditablePath*)));
-    connect(this, SIGNAL(thicknessChanged(EditablePath*)), contours, SLOT(onThicknessChange(EditablePath*)));
+    ThicknessContours *contours = new ThicknessContours(_finCalculator.data());
 
     _pathEditor->addGraphicsItem(contours);
-    _pathEditor->addPath(path);
+    _pathEditor->addPath(new EditablePath(foil->outline()));
 
 
     //
     // OutlineDataWidget
     //
-    _outlineDataWidget = new OutlineDataWidget();
-    connect(path, SIGNAL(pathChanged(EditablePath*)), _outlineDataWidget, SLOT(onOutlineChange(EditablePath*)));
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
+    _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
 
 
     //
@@ -72,14 +68,11 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
+
+    connect(_finCalculator->foil(), SIGNAL(foilChanged(Foil*)), this, SLOT(onFoilChange()));
 }
 
-void OutlineEditor::onProfileChange(EditablePath *sender)
+void OutlineEditor::onFoilChange()
 {
-    emit profileChanged(sender);
-}
-
-void OutlineEditor::onThicknessChange(EditablePath *sender)
-{
-    emit thicknessChanged(sender);
+    _pathEditor->scene()->update();
 }

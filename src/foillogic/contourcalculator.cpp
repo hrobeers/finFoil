@@ -29,10 +29,11 @@
 
 #define INITCNT 256
 
-using namespace foileditors;
+using namespace foillogic;
 using namespace patheditor;
 
-ContourCalculator::ContourCalculator(qreal percContourHeight, EditablePath *outline, EditablePath *profile, EditablePath *thickness, QPainterPath *result, bool fast)
+ContourCalculator::ContourCalculator(qreal percContourHeight, Path *outline, Path *profile, Path *thickness,
+                                     QPainterPath *result, bool fast)
 {
     _outline = outline;
     _profile = profile;
@@ -66,8 +67,8 @@ void ContourCalculator::run()
     sampleThickess(sectionHeightArray, thicknessArray);
 
     // create the pathfunctors
-    f_yValueAtPercentEPath yOutline(_outline);
-    f_yValueAtPercentEPath yProfile(_profile);
+    f_yValueAtPercentPath yOutline(_outline);
+    f_yValueAtPercentPath yProfile(_profile);
 
     // find the top of the outline
     qreal t_top = 0.5; // start value

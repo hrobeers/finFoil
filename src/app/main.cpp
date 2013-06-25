@@ -49,9 +49,6 @@ int main(int argc, char *argv[])
         ProfileEditor* profileEditor = new ProfileEditor(fin.data());
         ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
 
-        QObject::connect(profileEditor, SIGNAL(profileChanged(EditablePath*)), outlineEditor, SLOT(onProfileChange(EditablePath*)));
-        QObject::connect(thicknessEditor, SIGNAL(thicknessChanged(EditablePath*)), outlineEditor, SLOT(onThicknessChange(EditablePath*)));
-
         QHBoxLayout* mainLayout = new QHBoxLayout();
         QVBoxLayout* ptLayout = new QVBoxLayout();
 

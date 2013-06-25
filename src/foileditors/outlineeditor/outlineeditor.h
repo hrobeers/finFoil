@@ -29,6 +29,7 @@
 
 #include <QWidget>
 #include "outlinedatawidget.h"
+#include "foilcalculator.h"
 
 using namespace patheditor;
 
@@ -47,18 +48,18 @@ namespace foileditors
         virtual ~OutlineEditor() {}
 
     signals:
-        void profileChanged(EditablePath *sender);
-        void thicknessChanged(EditablePath *sender);
 
     public slots:
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
 
     private:
+        QScopedPointer<foillogic::FoilCalculator> _finCalculator;
+
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
         OutlineDataWidget* _outlineDataWidget;
 
+    private slots:
+        void onFoilChange();
     };
 }
 
