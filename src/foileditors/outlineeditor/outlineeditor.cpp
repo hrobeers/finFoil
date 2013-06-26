@@ -69,10 +69,10 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
 
-    connect(_finCalculator->foil(), SIGNAL(foilChanged(Foil*)), this, SLOT(onFoilChange()));
+    connect(_finCalculator.data(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
 }
 
-void OutlineEditor::onFoilChange()
+void OutlineEditor::onFoilCalculated()
 {
     _pathEditor->scene()->update();
 }

@@ -81,6 +81,7 @@ void FoilCalculator::calculate()
 //    }
 
     _calculated = true;
+    emit foilCalculated(this);
 }
 
 bool FoilCalculator::calculated()

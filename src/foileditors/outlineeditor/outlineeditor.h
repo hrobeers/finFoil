@@ -59,7 +59,7 @@ namespace foileditors
         OutlineDataWidget* _outlineDataWidget;
 
     private slots:
-        void onFoilChange();
+        void onFoilCalculated();
     };
 }
 

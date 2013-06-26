@@ -47,6 +47,7 @@ namespace foillogic
         bool calculated();
 
     signals:
+        void foilCalculated(FoilCalculator* sender);
 
     public slots:
 
