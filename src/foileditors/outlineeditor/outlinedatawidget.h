@@ -45,18 +45,20 @@ namespace foileditors
 
     public slots:
         void onDepthChange(double depth);
-        void onOutlineChange(EditablePath *sender);
-//        void onAreaChange(qreal area, EditablePath *sender);
 
     private:
         qreal _depth;
         qreal _pxPerUnit;
-        EditablePath* _outlinePtr;
         foillogic::FoilCalculator* _foilCalculator;
 
         QFormLayout* _formLayout;
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
+
+        void AreaChanged(qreal area);
+
+    private slots:
+        void onFoilCalculated();
     };
 }
 

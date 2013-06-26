@@ -54,31 +54,31 @@ QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours()
 void FoilCalculator::calculate()
 {
     _contours.clear();
-//    if (profilesSet())
-//    {
 #ifdef SERIAL
-        foreach (qreal thickness, _contourThicknesses)
-        {
-            QSharedPointer<QPainterPath> path(new QPainterPath());
-            _contours.append(path);
+    foreach (qreal thickness, _contourThicknesses)
+    {
+        QSharedPointer<QPainterPath> path(new QPainterPath());
+        _contours.append(path);
 
-            ContourCalculator calc(thickness, _foil->outline().data(), _foil->profile().data(),
-                                   _foil->thickness().data(), path.data(), false);
-            calc.run();
-        }
+        ContourCalculator calc(thickness, _foil->outline().data(), _foil->profile().data(),
+                               _foil->thickness().data(), path.data(), false);
+        calc.run();
+    }
 #endif
 #ifndef SERIAL
-        foreach (qreal thickness, _contourThicknesses)
-        {
-            QSharedPointer<QPainterPath> path(new QPainterPath());
-            _contours.append(path);
+    foreach (qreal thickness, _contourThicknesses)
+    {
+        QSharedPointer<QPainterPath> path(new QPainterPath());
+        _contours.append(path);
 
-            _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->profile().data(),
-                                               _foil->thickness().data(), path.data(), true));
-        }
-        _tPool.waitForDone();
+        _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->profile().data(),
+                                           _foil->thickness().data(), path.data(), true));
+    }
+
+    _tPool.start(new AreaCalculator(_foil, &_area));
+
+    _tPool.waitForDone();
 #endif
-//    }
 
     _calculated = true;
     emit foilCalculated(this);
@@ -89,7 +89,28 @@ bool FoilCalculator::calculated()
     return _calculated;
 }
 
+qreal FoilCalculator::area()
+{
+    return _area;
+}
+
 void FoilCalculator::foilChanged()
 {
     calculate();
+}
+
+
+AreaCalculator::AreaCalculator(Foil *foil, qreal *area)
+{
+    _foil = foil;
+    _area = area;
+}
+
+void AreaCalculator::run()
+{
+    *_area = _foil->outline()->area(500);
+}
+
+AreaCalculator::~AreaCalculator()
+{
 }

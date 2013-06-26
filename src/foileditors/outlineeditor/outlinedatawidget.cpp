@@ -29,6 +29,8 @@
 #include <QLineEdit>
 
 #include "editablepath.h"
+#include "foilcalculator.h"
+#include "foil.h"
 
 using namespace foileditors;
 
@@ -38,10 +40,10 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     _foilCalculator = foilCalculator;
 
     _depth = 0;
-    _outlinePtr = 0;
 
     _formLayout = new QFormLayout();
 
+    connect(_foilCalculator, SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
 
     //
     // Depth section
@@ -73,29 +75,26 @@ void OutlineDataWidget::onDepthChange(double depth)
     _depth = depth;
     emit depthChanged((qreal)depth);
 
-    if (_outlinePtr != 0)
-        onOutlineChange(_outlinePtr);
+    AreaChanged(_foilCalculator->area());
 }
 
-void OutlineDataWidget::onOutlineChange(EditablePath *sender)
+void OutlineDataWidget::AreaChanged(qreal area)
 {
-//    onAreaChange(sender->area(500), sender);
+    if (_depth != 0)
+    {
+        _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depth;
+        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
+    }
+    else
+    {
+        _pxPerUnit = 0;
+        _areaEdit->setText("0");
+    }
+
+    emit pxPerUnitChanged(_pxPerUnit);
 }
 
-//void OutlineDataWidget::onAreaChange(qreal area, EditablePath *sender)
-//{
-//    if (_depth != 0)
-//    {
-//        _pxPerUnit = -sender->minY() / _depth;
-//        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
-//    }
-//    else
-//    {
-//        _pxPerUnit = 0;
-//        _areaEdit->setText("0");
-//    }
-
-//    _outlinePtr = sender;
-
-//    emit pxPerUnitChanged(_pxPerUnit);
-//}
+void OutlineDataWidget::onFoilCalculated()
+{
+    AreaChanged(_foilCalculator->area());
+}

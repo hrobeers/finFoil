@@ -36,7 +36,7 @@ namespace foillogic
     {
         Q_OBJECT
     public:
-        explicit FoilCalculator(Foil *foil);
+        explicit FoilCalculator(Foil* foil);
 
         Foil* foil();
 
@@ -46,6 +46,8 @@ namespace foillogic
         void calculate();
         bool calculated();
 
+        qreal area();
+
     signals:
         void foilCalculated(FoilCalculator* sender);
 
@@ -53,15 +55,30 @@ namespace foillogic
 
     private:
         bool _calculated;
+        QThreadPool _tPool;
 
         Foil* _foil;
-        QThreadPool _tPool;
 
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;
+        qreal _area;
 
     private slots:
         void foilChanged();
+    };
+
+    class AreaCalculator : public QRunnable
+    {
+    public:
+        explicit AreaCalculator(Foil* foil, qreal* area);
+
+        virtual void run();
+
+        virtual ~AreaCalculator();
+
+    private:
+        Foil* _foil;
+        qreal* _area;
     };
 }
 

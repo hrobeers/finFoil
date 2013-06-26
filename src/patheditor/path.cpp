@@ -109,6 +109,29 @@ qreal Path::minY(qreal *t_top, qreal percTol)
         return hrlib::Brent::local_min(0, 1, percTol, yOutline, *t_top);
 }
 
+qreal Path::area(int resolution)
+{
+    qreal percStep = 1 / qreal(resolution);
+    QPointF points[resolution];
+    qreal perc = 0;
+    for (int i = 0; i < resolution; i++)
+    {
+        points[i] = pointAtPercent(perc);
+        perc += percStep;
+    }
+
+    qreal area = 0;
+    int j = 0;
+    for (int i = 0; i < resolution; i++)
+    {
+        j = (i + 1) % resolution;
+        area += points[i].x() * points[j].y();
+        area -= points[j].x() * points[i].y();
+    }
+
+    return qAbs(area) / 2;
+}
+
 void Path::onPathChanged()
 {
     emit pathChanged(this);

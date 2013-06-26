@@ -51,6 +51,8 @@ namespace patheditor
 
         qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
 
+        qreal area(int resolution);
+
     signals:
         void onAppend(PathItem *pathItem);
         void pathChanged(Path *sender);
