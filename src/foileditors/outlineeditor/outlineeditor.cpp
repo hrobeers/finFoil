@@ -54,6 +54,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     // OutlineDataWidget
     //
     _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
 
 
     //
