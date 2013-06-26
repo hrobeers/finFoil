@@ -61,6 +61,7 @@ namespace patheditor
 
     signals:
         void pathChanged(EditablePath *sender);
+        void pathReleased(EditablePath *sender);
 
     private slots:
         void onAppend(PathItem *pathItem);
@@ -76,6 +77,7 @@ namespace patheditor
 
         void connectPoints(PathItem *pathItem);
         void emitPathChanged();
+        void emitPathReleased();
     };
 }
 

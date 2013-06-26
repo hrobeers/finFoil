@@ -34,6 +34,7 @@ FoilCalculator::FoilCalculator(Foil *foil) :
     _foil = foil;
 
     connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()));
+    connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()));
 }
 
 Foil *FoilCalculator::foil()
@@ -51,7 +52,7 @@ QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours()
     return _contours;
 }
 
-void FoilCalculator::calculate()
+void FoilCalculator::calculate(bool fastCalc)
 {
     _contours.clear();
 #ifdef SERIAL
@@ -61,7 +62,7 @@ void FoilCalculator::calculate()
         _contours.append(path);
 
         ContourCalculator calc(thickness, _foil->outline().data(), _foil->profile().data(),
-                               _foil->thickness().data(), path.data(), false);
+                               _foil->thickness().data(), path.data(), fastCalc);
         calc.run();
     }
 #endif
@@ -72,7 +73,7 @@ void FoilCalculator::calculate()
         _contours.append(path);
 
         _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->profile().data(),
-                                           _foil->thickness().data(), path.data(), true));
+                                           _foil->thickness().data(), path.data(), fastCalc));
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
@@ -96,7 +97,12 @@ qreal FoilCalculator::area()
 
 void FoilCalculator::foilChanged()
 {
-    calculate();
+    calculate(true);
+}
+
+void FoilCalculator::foilReleased()
+{
+    calculate(false);
 }
 
 

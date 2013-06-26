@@ -42,6 +42,10 @@ Foil::Foil(QObject *parent) :
     connect(_outline.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
     connect(_profile.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
     connect(_thickness.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
+
+    connect(_outline.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
+    connect(_profile.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
+    connect(_thickness.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
 }
 
 QSharedPointer<Path> Foil::outline()
@@ -150,4 +154,9 @@ void Foil::initThickness()
 void Foil::onFoilChanged()
 {
     emit foilChanged(this);
+}
+
+void Foil::onFoilReleased()
+{
+    emit foilReleased(this);
 }

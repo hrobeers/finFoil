@@ -136,3 +136,8 @@ void Path::onPathChanged()
 {
     emit pathChanged(this);
 }
+
+void Path::onPathReleased()
+{
+    emit pathReleased(this);
+}

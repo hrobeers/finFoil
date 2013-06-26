@@ -43,7 +43,7 @@ namespace foillogic
         void setContourThicknesses(QList<qreal> thicknesses);
         QList<QSharedPointer<QPainterPath> > calculatedContours();
 
-        void calculate();
+        void calculate(bool fastCalc);
         bool calculated();
 
         qreal area();
@@ -65,6 +65,7 @@ namespace foillogic
 
     private slots:
         void foilChanged();
+        void foilReleased();
     };
 
     class AreaCalculator : public QRunnable

@@ -45,6 +45,7 @@ namespace foillogic
 
     signals:
         void foilChanged(Foil* sender);
+        void foilReleased(Foil* sender);
 
     public slots:
 
@@ -60,6 +61,7 @@ namespace foillogic
 
     private slots:
         void onFoilChanged();
+        void onFoilReleased();
     };
 }
 

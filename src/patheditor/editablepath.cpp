@@ -116,7 +116,7 @@ void EditablePath::onPointDrag(PathPoint* /*unused*/)
 void EditablePath::onPointRelease(PathPoint* /*unused*/)
 {
     _released = true;
-    emitPathChanged();
+    emitPathReleased();
     this->scene()->update();
 }
 
@@ -145,4 +145,10 @@ void EditablePath::emitPathChanged()
 {
     _path->onPathChanged();
     emit pathChanged(this);
+}
+
+void EditablePath::emitPathReleased()
+{
+    _path->onPathReleased();
+    emit pathReleased(this);
 }

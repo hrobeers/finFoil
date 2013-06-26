@@ -56,9 +56,11 @@ namespace patheditor
     signals:
         void onAppend(PathItem *pathItem);
         void pathChanged(Path *sender);
+        void pathReleased(Path *sender);
 
     public slots:
         void onPathChanged();
+        void onPathReleased();
 
     private:
         QList<QSharedPointer<PathItem> > _pathItemList;
