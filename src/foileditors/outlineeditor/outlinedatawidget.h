@@ -55,6 +55,7 @@ namespace foileditors
         QSpinBox* _layerEdit;
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
+        QLineEdit* _sweepEdit;
 
         void AreaChanged(qreal area);
 

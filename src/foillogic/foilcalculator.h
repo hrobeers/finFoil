@@ -48,6 +48,7 @@ namespace foillogic
         bool calculated();
 
         qreal area();
+        qreal sweep();
 
     signals:
         void foilCalculated(FoilCalculator* sender);
@@ -64,6 +65,7 @@ namespace foillogic
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;
         qreal _area;
+        qreal _sweep;
 
     private slots:
         void foilChanged();
@@ -82,6 +84,20 @@ namespace foillogic
     private:
         Foil* _foil;
         qreal* _area;
+    };
+
+    class SweepCalculator : public QRunnable
+    {
+    public:
+        explicit SweepCalculator(Foil* foil, qreal* sweep);
+
+        virtual void run();
+
+        virtual ~SweepCalculator();
+
+    private:
+        Foil* _foil;
+        qreal* _sweep;
     };
 }
 

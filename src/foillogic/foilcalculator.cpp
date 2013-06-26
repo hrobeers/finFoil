@@ -22,6 +22,7 @@
 
 #include "foilcalculator.h"
 
+#include "qmath.h"
 #include "foil.h"
 #include "contourcalculator.h"
 
@@ -97,6 +98,7 @@ void FoilCalculator::calculate(bool fastCalc)
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
+    _tPool.start(new SweepCalculator(_foil, &_sweep));
 
     _tPool.waitForDone();
 #endif
@@ -113,6 +115,11 @@ bool FoilCalculator::calculated()
 qreal FoilCalculator::area()
 {
     return _area;
+}
+
+qreal FoilCalculator::sweep()
+{
+    return _sweep;
 }
 
 void FoilCalculator::foilChanged()
@@ -138,5 +145,37 @@ void AreaCalculator::run()
 }
 
 AreaCalculator::~AreaCalculator()
+{
+}
+
+
+SweepCalculator::SweepCalculator(Foil *foil, qreal *sweep)
+{
+    _foil = foil;
+    _sweep = sweep;
+}
+
+void SweepCalculator::run()
+{
+    // find top
+    qreal t_top = 0;
+    _foil->outline()->minY(&t_top);
+    QPointF top = _foil->outline()->pointAtPercent(t_top);
+    qreal oEdge = _foil->outline()->pointAtPercent(1).x();
+
+    // find thickest point
+    qreal t_thick = 0;
+    _foil->profile()->minY(&t_thick);
+    qreal thick = _foil->profile()->pointAtPercent(t_thick).x();
+    qreal pEdge = _foil->profile()->pointAtPercent(1).x();
+    qreal thickX = thick/pEdge * oEdge;
+
+    qreal os = top.x() - thickX;
+    qreal ns = -top.y();
+
+    *_sweep = qAtan(os/ns) * 180 / M_PI;
+}
+
+SweepCalculator::~SweepCalculator()
 {
 }

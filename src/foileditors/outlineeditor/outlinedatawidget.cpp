@@ -71,6 +71,15 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     _areaEdit->setReadOnly(true);
     _formLayout->addRow(tr("Area:"), _areaEdit);
 
+
+    //
+    // Sweep section
+    //
+    _sweepEdit = new QLineEdit("0");
+    _sweepEdit->setReadOnly(true);
+    _formLayout->addRow(tr("Sweep:"), _sweepEdit);
+
+
     QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
     gb->setLayout(_formLayout);
     QVBoxLayout* layout = new QVBoxLayout();
@@ -107,6 +116,7 @@ void OutlineDataWidget::AreaChanged(qreal area)
 void OutlineDataWidget::onFoilCalculated()
 {
     AreaChanged(_foilCalculator->area());
+    _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
 }
 
 void OutlineDataWidget::onLayerChange(int layerCount)
