@@ -20,36 +20,38 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef THICKNESSCONTOURS_H
+#define THICKNESSCONTOURS_H
 
+#include <QGraphicsObject>
+#include <QThreadPool>
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
-#include "pathitem.h"
+using namespace patheditor;
 
-namespace patheditor
+namespace foileditors
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
+    class ThicknessContours : public QGraphicsObject
     {
+        Q_OBJECT
     public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit ThicknessContours(foillogic::FoilCalculator* calculator, QGraphicsItem *parent = 0);
 
-        // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
-        QRectF controlPointRect() const;
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual QRectF boundingRect() const;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual ~ThicknessContours() {}
 
-        virtual ~Line() {}
+    signals:
+
+    public slots:
 
     private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
+        foillogic::FoilCalculator* _calculator;
+
+        bool _nextDetailed;
     };
 }
 
-#endif // LINE_H
+#endif // THICKNESSCONTOURS_H

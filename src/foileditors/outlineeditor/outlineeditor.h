@@ -20,50 +20,47 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSCONTOURS_H
-#define THICKNESSCONTOURS_H
+#ifndef OUTLINEEDITOR_H
+#define OUTLINEEDITOR_H
 
-#include <QGraphicsObject>
-#include <QThreadPool>
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
+
+#include <QWidget>
+#include "outlinedatawidget.h"
+#include "foilcalculator.h"
 
 using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    class ThicknessContours : public QGraphicsObject
+    /**
+     * Editor to edit the foil's outline.
+     * This editor can display the thickness contours while editing.
+     */
+    class OutlineEditor : public QWidget
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(QGraphicsItem *parent = 0);
+        explicit OutlineEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        virtual QRectF boundingRect() const;
-
-        virtual ~ThicknessContours() {}
+        virtual ~OutlineEditor() {}
 
     signals:
 
     public slots:
-        void onOutlineChange(EditablePath *sender);
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
 
     private:
-        QThreadPool _tPool;
+        QScopedPointer<foillogic::FoilCalculator> _finCalculator;
 
-        EditablePath* _outline;
-        EditablePath* _profile;
-        EditablePath* _thickness;
+        QVBoxLayout* _mainLayout;
+        patheditor::PathEditorWidget* _pathEditor;
+        OutlineDataWidget* _outlineDataWidget;
 
-        QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _contours;
-
-        bool _nextDetailed;
-
-        void calcContours(bool fastCalc);
-        bool profilesSet();
+    private slots:
+        void onFoilCalculated();
     };
 }
 
-#endif // THICKNESSCONTOURS_H
+#endif // OUTLINEEDITOR_H

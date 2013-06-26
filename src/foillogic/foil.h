@@ -20,34 +20,49 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSEDITOR_H
-#define THICKNESSEDITOR_H
+#ifndef FOIL_H
+#define FOIL_H
 
-#include <QWidget>
-#include "patheditorwidget.h"
+#include "patheditorfwd/patheditorfwd.h"
 
-using namespace patheditor;
+#include <QObject>
+#include <QSharedPointer>
+#include "path.h"
 
-namespace fineditors
+namespace foillogic
 {
-    class ThicknessEditor : public QWidget
+    class Foil : public QObject
     {
         Q_OBJECT
     public:
-        explicit ThicknessEditor(QWidget *parent = 0);
+        explicit Foil(QObject *parent = 0);
 
-        virtual ~ThicknessEditor();
+        QSharedPointer<patheditor::Path> outline();
+        QSharedPointer<patheditor::Path> profile();
+        QSharedPointer<patheditor::Path> thickness();
+
+        virtual ~Foil();
 
     signals:
-        void thicknessChanged(EditablePath *sender);
+        void foilChanged(Foil* sender);
+        void foilReleased(Foil* sender);
 
     public slots:
 
     private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
+        QSharedPointer<patheditor::Path> _outline;
+        QSharedPointer<patheditor::Path> _profile;
+        QSharedPointer<patheditor::Path> _thickness;
 
+        // TODO move out of foil object
+        void initOutline();
+        void initProfile();
+        void initThickness();
+
+    private slots:
+        void onFoilChanged();
+        void onFoilReleased();
     };
 }
 
-#endif // THICKNESSEDITOR_H
+#endif // FOIL_H

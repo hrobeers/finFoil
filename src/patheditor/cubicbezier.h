@@ -35,12 +35,10 @@ namespace patheditor
     class CubicBezier : public PathItem
     {
     public:
-        explicit CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint,
-                             QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+        explicit CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
 
         explicit CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<ControlPoint> controlPoint1,
-                             QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint,
-                             QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+                             QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint);
 
         QSharedPointer<ControlPoint> controlPoint1();
         QSharedPointer<ControlPoint> controlPoint2();
@@ -48,11 +46,7 @@ namespace patheditor
         // implementing PathItem
         QList<QSharedPointer<ControlPoint> > controlPoints();
         virtual QPointF pointAtPercent(qreal t);
-
-        // Implementing QGraphicsItem
-        QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem * option,
-                        QWidget * widget);
+        QRectF controlPointRect() const;
 
         void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
                    const QStyleOptionGraphicsItem *option, QWidget *widget);

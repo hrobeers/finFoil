@@ -26,6 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QList>
+#include "path.h"
 #include "pathitem.h"
 #include "pathsettings.h"
 
@@ -38,13 +39,7 @@ namespace patheditor
     {
         Q_OBJECT
     public:
-        explicit EditablePath(QGraphicsItem * parent = 0);
-
-        /**
-         * @brief append Append a new path item to the editable path
-         * @param pathItem PathItem to append
-         */
-        virtual void append(QSharedPointer<PathItem> pathItem);
+        explicit EditablePath(QSharedPointer<Path> path, QGraphicsItem * parent = 0);
 
         // Implementing QGraphicsItem
         virtual QRectF boundingRect() const;
@@ -60,29 +55,29 @@ namespace patheditor
 
         QPointF pointAtPercent(qreal t);
 
-        qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
-
-        qreal area(int resolution);
-
         bool released();
 
-        virtual ~EditablePath() {}
+        virtual ~EditablePath();
 
     signals:
         void pathChanged(EditablePath *sender);
+        void pathReleased(EditablePath *sender);
 
     private slots:
+        void onAppend(PathItem *pathItem);
         void onPointDrag(PathPoint *sender);
         void onPointRelease(PathPoint *sender);
 
     private:
         bool _firstPaint;
         bool _released;
+        QSharedPointer<Path> _path;
         PathSettings _settings;
         QSharedPointer<QPainterPath> _painterPath;
-        QList<QSharedPointer<PathItem> > _pathItemList;
 
         void connectPoints(PathItem *pathItem);
+        void emitPathChanged();
+        void emitPathReleased();
     };
 }
 

@@ -117,7 +117,8 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
 {
     if (_pointHandle)
     {
-        _pointHandle->scene()->removeItem(_pointHandle);
+        if (_pointHandle->scene())
+            _pointHandle->scene()->removeItem(_pointHandle);
         delete _pointHandle;
     }
 

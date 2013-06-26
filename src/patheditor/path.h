@@ -20,36 +20,51 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef PATH_H
+#define PATH_H
 
 #include "patheditorfwd/patheditorfwd.h"
 
+#include <QObject>
+#include <QSharedPointer>
 #include "pathitem.h"
 
 namespace patheditor
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
+    class Path : public QObject
     {
+        Q_OBJECT
     public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit Path(QObject *parent = 0);
 
-        // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
+        /**
+         * @brief append Append a new path item to the path
+         * @param pathItem PathItem to append
+         */
+        virtual void append(QSharedPointer<PathItem> pathItem);
+
+        QList<QSharedPointer<PathItem> > pathItems();
+
         QRectF controlPointRect() const;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget);
+        QPointF pointAtPercent(qreal t);
 
-        virtual ~Line() {}
+        qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
+
+        qreal area(int resolution);
+
+    signals:
+        void onAppend(PathItem *pathItem);
+        void pathChanged(Path *sender);
+        void pathReleased(Path *sender);
+
+    public slots:
+        void onPathChanged();
+        void onPathReleased();
 
     private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
+        QList<QSharedPointer<PathItem> > _pathItemList;
     };
 }
 
-#endif // LINE_H
+#endif // PATH_H

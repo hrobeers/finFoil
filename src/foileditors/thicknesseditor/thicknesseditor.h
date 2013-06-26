@@ -20,44 +20,36 @@
  
 ****************************************************************************/
 
-#ifndef CONTOURCALCULATOR_H
-#define CONTOURCALCULATOR_H
+#ifndef THICKNESSEDITOR_H
+#define THICKNESSEDITOR_H
 
-#include "hrlibfwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
-#include <QRunnable>
+#include <QWidget>
+#include "patheditorwidget.h"
 
-namespace fineditors
+using namespace patheditor;
+
+namespace foileditors
 {
-    class ContourCalculator : public QRunnable
+    class ThicknessEditor : public QWidget
     {
+        Q_OBJECT
     public:
-        explicit ContourCalculator(qreal percContourHeight, patheditor::EditablePath* outline, patheditor::EditablePath* profile,
-                                   patheditor::EditablePath* thickness, QPainterPath* result, bool fast = false);
+        explicit ThicknessEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
-        virtual void run();
+        virtual ~ThicknessEditor();
 
-        virtual ~ContourCalculator();
+    signals:
+        void thicknessChanged(EditablePath *sender);
+
+    public slots:
 
     private:
-        enum SplineFunction { bSpline, overhauser };
+        QVBoxLayout* _mainLayout;
+        patheditor::PathEditorWidget* _pathEditor;
 
-        qreal _percContourHeight;
-        patheditor::EditablePath* _outline;
-        patheditor::EditablePath* _profile;
-        patheditor::EditablePath* _thickness;
-        QPainterPath *_result;
-
-        int _sectionCount;
-        int _resolution;
-        qreal _tTol;
-        qreal _fTol;
-
-        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
-        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
-        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
     };
 }
 
-#endif // CONTOURCALCULATOR_H
+#endif // THICKNESSEDITOR_H

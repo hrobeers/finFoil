@@ -20,48 +20,67 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#ifndef FOILCALCULATOR_H
+#define FOILCALCULATOR_H
 
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include "editablepath.h"
-#include "cubicbezier.h"
-#include "line.h"
+#include "foillogicfwd/foillogicfwd.h"
 
-using namespace fineditors;
+#include <QObject>
+#include <QThreadPool>
+#include <QSharedPointer>
+#include <QPainterPath>
 
-ThicknessEditor::ThicknessEditor(QWidget *parent) :
-    QWidget(parent)
+namespace foillogic
 {
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
+    class FoilCalculator : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit FoilCalculator(Foil* foil);
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+        Foil* foil();
 
-    point1->setRestrictor(_pathEditor->verticalAxisRestrictor());
-    point4->setRestrictor(_pathEditor->horizontalAxisRestrictor());
+        void setContourThicknesses(QList<qreal> thicknesses);
+        QList<QSharedPointer<QPainterPath> > calculatedContours();
 
-    EditablePath* path = new EditablePath();
-    path->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    // Pipe the pathchanged signal
-    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
+        void calculate(bool fastCalc);
+        bool calculated();
 
-    _pathEditor->addPath(path);
+        qreal area();
 
-    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
-    QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
-    gb->setLayout(gbLayout);
+    signals:
+        void foilCalculated(FoilCalculator* sender);
 
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(gb);
-    this->setLayout(_mainLayout);
+    public slots:
+
+    private:
+        bool _calculated;
+        QThreadPool _tPool;
+
+        Foil* _foil;
+
+        QList<qreal> _contourThicknesses;
+        QList<QSharedPointer<QPainterPath> > _contours;
+        qreal _area;
+
+    private slots:
+        void foilChanged();
+        void foilReleased();
+    };
+
+    class AreaCalculator : public QRunnable
+    {
+    public:
+        explicit AreaCalculator(Foil* foil, qreal* area);
+
+        virtual void run();
+
+        virtual ~AreaCalculator();
+
+    private:
+        Foil* _foil;
+        qreal* _area;
+    };
 }
 
-ThicknessEditor::~ThicknessEditor()
-{
-}
+#endif // FOILCALCULATOR_H

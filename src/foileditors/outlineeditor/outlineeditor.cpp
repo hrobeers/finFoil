@@ -20,36 +20,60 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#include "outlineeditor.h"
 
-#include "patheditorfwd/patheditorfwd.h"
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QGraphicsScene>
+#include "patheditor/patheditorwidget.h"
+#include "foil.h"
+#include "editablepath.h"
+#include "thicknesscontours.h"
 
-#include "pathitem.h"
+using namespace foileditors;
+using namespace foillogic;
 
-namespace patheditor
+OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
+    QWidget(parent)
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
-    {
-    public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+    //
+    // PathEditor
+    //
+    _pathEditor = new patheditor::PathEditorWidget();
+    _pathEditor->enableFeature(Features::HorizontalAxis);
 
-        // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
-        QRectF controlPointRect() const;
+    _finCalculator.reset(new FoilCalculator(foil));
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget);
+    ThicknessContours *contours = new ThicknessContours(_finCalculator.data());
 
-        virtual ~Line() {}
+    _pathEditor->addGraphicsItem(contours);
+    _pathEditor->addPath(new EditablePath(foil->outline()));
 
-    private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
-    };
+
+    //
+    // OutlineDataWidget
+    //
+    _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
+
+
+    //
+    // Layout
+    //
+    QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
+    QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_pathEditor);
+    gbLayout->addWidget(_outlineDataWidget);
+    gb->setLayout(gbLayout);
+
+    _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(gb);
+    this->setLayout(_mainLayout);
+
+    connect(_finCalculator.data(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
 }
 
-#endif // LINE_H
+void OutlineEditor::onFoilCalculated()
+{
+    _pathEditor->scene()->update();
+}

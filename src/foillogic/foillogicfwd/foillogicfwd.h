@@ -20,37 +20,17 @@
  
 ****************************************************************************/
 
-#ifndef PROFILEEDITOR_H
-#define PROFILEEDITOR_H
+#ifndef FOILLOGICFWD_H
+#define FOILLOGICFWD_H
 
-#include "patheditorfwd/patheditorfwd.h"
+/*
+    Forward declarations for all foillogic classes.
+ */
 
-#include <QWidget>
-#include "patheditorwidget.h"
-
-using namespace patheditor;
-
-namespace fineditors
+namespace foillogic
 {
-    class ProfileEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit ProfileEditor(QWidget *parent = 0);
-
-        virtual ~ProfileEditor();
-
-    signals:
-        void profileChanged(EditablePath *sender);
-
-    public slots:
-
-    private:
-        QVBoxLayout* _mainLayout;
-        PathEditorWidget* _pathEditor;
-        QSharedPointer<Restrictor> _topRestrictor;
-
-    };
+    class Foil;
+    class FoilCalculator;
 }
 
-#endif // PROFILEEDITOR_H
+#endif // FOILLOGICFWD_H

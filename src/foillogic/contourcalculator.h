@@ -20,36 +20,44 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef CONTOURCALCULATOR_H
+#define CONTOURCALCULATOR_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
-#include "pathitem.h"
+#include <QRunnable>
 
-namespace patheditor
+namespace foillogic
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
+    class ContourCalculator : public QRunnable
     {
     public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit ContourCalculator(qreal percContourHeight, patheditor::Path* outline, patheditor::Path* profile,
+                                   patheditor::Path* thickness, QPainterPath* result, bool fast = false);
 
-        // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
-        QRectF controlPointRect() const;
+        virtual void run();
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-        virtual ~Line() {}
+        virtual ~ContourCalculator();
 
     private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
+        enum SplineFunction { bSpline, overhauser };
+
+        qreal _percContourHeight;
+        patheditor::Path* _outline;
+        patheditor::Path* _profile;
+        patheditor::Path* _thickness;
+        QPainterPath *_result;
+
+        int _sectionCount;
+        int _resolution;
+        qreal _tTol;
+        qreal _fTol;
+
+        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
+        void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
+        void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
     };
 }
 
-#endif // LINE_H
+#endif // CONTOURCALCULATOR_H

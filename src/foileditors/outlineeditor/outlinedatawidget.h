@@ -20,45 +20,46 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEEDITOR_H
-#define OUTLINEEDITOR_H
+#ifndef OUTLINEDATAWIDGET_H
+#define OUTLINEDATAWIDGET_H
 
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
+#include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include "outlinedatawidget.h"
 
 using namespace patheditor;
 
-namespace fineditors
+namespace foileditors
 {
-    /**
-     * Editor to edit the fin outline.
-     * This editor can display the thickness contours while editing.
-     */
-    class OutlineEditor : public QWidget
+    class OutlineDataWidget : public QWidget
     {
         Q_OBJECT
     public:
-        explicit OutlineEditor(QWidget *parent = 0);
-
-        virtual ~OutlineEditor() {}
+        explicit OutlineDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
-        void profileChanged(EditablePath *sender);
-        void thicknessChanged(EditablePath *sender);
+        void depthChanged(qreal depth);
+        void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
-        void onProfileChange(EditablePath *sender);
-        void onThicknessChange(EditablePath *sender);
+        void onDepthChange(double depth);
 
     private:
-        QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
-        OutlineDataWidget* _outlineDataWidget;
+        qreal _depth;
+        qreal _pxPerUnit;
+        foillogic::FoilCalculator* _foilCalculator;
 
+        QFormLayout* _formLayout;
+        QDoubleSpinBox* _depthEdit;
+        QLineEdit* _areaEdit;
+
+        void AreaChanged(qreal area);
+
+    private slots:
+        void onFoilCalculated();
     };
 }
 
-#endif // OUTLINEEDITOR_H
+#endif // OUTLINEDATAWIDGET_H

@@ -20,14 +20,16 @@ FORMS    += mainwindow.ui
 
 INCLUDEPATH +=  ../ \
                 ../patheditor/ \
-                ../fineditors/ \
-                ../hrlib/
+                ../foileditors/ \
+                ../hrlib/ \
+		../foillogic/
 
 DEPENDPATH += ..
 
 include(../patheditor/patheditor.pri)
-include(../fineditors/fineditors.pri)
+include(../foileditors/foileditors.pri)
 include(../hrlib/hrlib.pri)
+include(../foillogic/foillogic.pri)
 
 OTHER_FILES +=  ../../LICENSE.BSD \
                 ../../LICENSE.LGPLv2 \
