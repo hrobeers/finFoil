@@ -25,6 +25,7 @@
 #include <qmath.h>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 
@@ -38,16 +39,24 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     QWidget(parent)
 {
     _foilCalculator = foilCalculator;
-
-    _depth = 0;
-
     _formLayout = new QFormLayout();
 
     connect(_foilCalculator, SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
 
+
+    //
+    // Layer section
+    //
+    _layerEdit = new QSpinBox();
+    _layerEdit->setValue(_foilCalculator->contourThicknesses().count()-1);
+    _formLayout->addRow(tr("#Layers:"), _layerEdit);
+    connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
+
+
     //
     // Depth section
     //
+    _depth = 0;
     _depthEdit = new QDoubleSpinBox();
     _depthEdit->setMaximum(10000);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
@@ -97,4 +106,20 @@ void OutlineDataWidget::AreaChanged(qreal area)
 void OutlineDataWidget::onFoilCalculated()
 {
     AreaChanged(_foilCalculator->area());
+}
+
+void OutlineDataWidget::onLayerChange(int layerCount)
+{
+    qreal increment = qreal(1) / qreal(layerCount+1);
+    qreal thickness = 0;
+    QList<qreal> thicknesses;
+    thicknesses.append(0);
+    for (int i = 0; i < layerCount; i++)
+    {
+        thickness += increment;
+        thicknesses.append(thickness);
+    }
+
+    qSort(thicknesses);
+    _foilCalculator->setContourThicknesses(thicknesses);
 }

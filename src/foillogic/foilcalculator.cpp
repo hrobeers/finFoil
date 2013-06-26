@@ -33,6 +33,20 @@ FoilCalculator::FoilCalculator(Foil *foil) :
     _calculated = false;
     _foil = foil;
 
+    int numOfContours = 3;
+    qreal increment = qreal(1) / qreal(numOfContours+1);
+    qreal thickness = 0;
+    QList<qreal> thicknesses;
+    thicknesses.append(0);
+    for (int i = 0; i < numOfContours; i++)
+    {
+        thickness += increment;
+        thicknesses.append(thickness);
+    }
+
+    qSort(thicknesses);
+    setContourThicknesses(thicknesses);
+
     connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()));
     connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()));
 }
@@ -42,9 +56,15 @@ Foil *FoilCalculator::foil()
     return _foil;
 }
 
+QList<qreal> FoilCalculator::contourThicknesses()
+{
+    return _contourThicknesses;
+}
+
 void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
 {
     _contourThicknesses = thicknesses;
+    calculate(false);
 }
 
 QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours()

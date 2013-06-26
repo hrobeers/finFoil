@@ -36,20 +36,6 @@ ThicknessContours::ThicknessContours(foillogic::FoilCalculator *calculator, QGra
     _calculator = calculator;
 
     _nextDetailed = false;
-
-    int numOfContours = 3;
-    qreal increment = qreal(1) / qreal(numOfContours+1);
-    qreal thickness = 0;
-    QList<qreal> thicknesses;
-    thicknesses.append(0);
-    for (int i = 0; i < numOfContours; i++)
-    {
-        thickness += increment;
-        thicknesses.append(thickness);
-    }
-
-    qSort(thicknesses);
-    _calculator->setContourThicknesses(thicknesses);
 }
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)

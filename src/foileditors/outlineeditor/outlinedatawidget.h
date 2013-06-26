@@ -52,6 +52,7 @@ namespace foileditors
         foillogic::FoilCalculator* _foilCalculator;
 
         QFormLayout* _formLayout;
+        QSpinBox* _layerEdit;
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
 
@@ -59,6 +60,7 @@ namespace foileditors
 
     private slots:
         void onFoilCalculated();
+        void onLayerChange(int layerCount);
     };
 }
 
