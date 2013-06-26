@@ -56,9 +56,10 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     //
     // Depth section
     //
-    _depth = 0;
+    _depth = 3;
     _depthEdit = new QDoubleSpinBox();
     _depthEdit->setMaximum(10000);
+    _depthEdit->setValue(_depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
     connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
 

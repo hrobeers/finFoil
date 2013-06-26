@@ -33,7 +33,7 @@ FoilCalculator::FoilCalculator(Foil *foil) :
     _calculated = false;
     _foil = foil;
 
-    int numOfContours = 3;
+    int numOfContours = 4;
     qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
     QList<qreal> thicknesses;
