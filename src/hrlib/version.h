@@ -29,7 +29,7 @@ namespace hrlib
 {
     struct ReleaseType
     {
-        enum e { PreAlpha, Aplha, Beta, Nightly, Release };
+        enum e { Dev, Aplha, Beta, Nightly, Release };
     };
 
     class Version

@@ -39,8 +39,8 @@ Version::Version(int major, int minor, int revision, int build, QString commit, 
 
     switch (_releaseType)
     {
-    case ReleaseType::PreAlpha:
-        _string.append(" pre-alpha");
+    case ReleaseType::Dev:
+        _string.append(" development preview");
         break;
 
     case ReleaseType::Aplha:
