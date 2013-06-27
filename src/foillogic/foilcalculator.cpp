@@ -157,22 +157,23 @@ SweepCalculator::SweepCalculator(Foil *foil, qreal *sweep)
 
 void SweepCalculator::run()
 {
-    // find top
+    // find top and outline edges
     qreal t_top = 0;
     _foil->outline()->minY(&t_top);
     QPointF top = _foil->outline()->pointAtPercent(t_top);
-    qreal oEdge = _foil->outline()->pointAtPercent(1).x();
+    qreal oLEdge = _foil->outline()->pointAtPercent(0).x();
+    qreal oTEdge = _foil->outline()->pointAtPercent(1).x();
 
     // find thickest point
     qreal t_thick = 0;
     _foil->profile()->minY(&t_thick);
     qreal thick = _foil->profile()->pointAtPercent(t_thick).x();
     qreal pEdge = _foil->profile()->pointAtPercent(1).x();
-    qreal thickX = thick/pEdge * oEdge;
+    qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
 
+    // calculate the sweep angle in degrees
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
-
     *_sweep = qAtan(os/ns) * 180 / M_PI;
 }
 
