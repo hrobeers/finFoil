@@ -82,9 +82,14 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        ContourCalculator calc(thickness, _foil->outline().data(), _foil->profile().data(),
+        ContourCalculator cCalc(thickness, _foil->outline().data(), _foil->profile().data(),
                                _foil->thickness().data(), path.data(), fastCalc);
-        calc.run();
+        AreaCalculator aCalc(_foil, &_area);
+        SweepCalculator sCalc(_foil, &_sweep);
+
+        cCalc.run();
+        aCalc.run();
+        sCalc.run();
     }
 #endif
 #ifndef SERIAL
@@ -144,10 +149,6 @@ void AreaCalculator::run()
     *_area = _foil->outline()->area(500);
 }
 
-AreaCalculator::~AreaCalculator()
-{
-}
-
 
 SweepCalculator::SweepCalculator(Foil *foil, qreal *sweep)
 {
@@ -175,8 +176,4 @@ void SweepCalculator::run()
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
     *_sweep = qAtan(os/ns) * 180 / M_PI;
-}
-
-SweepCalculator::~SweepCalculator()
-{
 }

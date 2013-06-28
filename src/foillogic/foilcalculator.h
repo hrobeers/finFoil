@@ -79,8 +79,6 @@ namespace foillogic
 
         virtual void run();
 
-        virtual ~AreaCalculator();
-
     private:
         Foil* _foil;
         qreal* _area;
@@ -92,8 +90,6 @@ namespace foillogic
         explicit SweepCalculator(Foil* foil, qreal* sweep);
 
         virtual void run();
-
-        virtual ~SweepCalculator();
 
     private:
         Foil* _foil;
