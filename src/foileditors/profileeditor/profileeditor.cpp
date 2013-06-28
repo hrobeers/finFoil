@@ -42,7 +42,7 @@ ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
 
     _pathEditor->addPath(path);
 
-    QGroupBox* gb = new QGroupBox(tr("Foil Editor"));
+    QGroupBox* gb = new QGroupBox(tr("Profile Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
     gbLayout->addWidget(_pathEditor);
     gb->setLayout(gbLayout);
