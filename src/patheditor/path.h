@@ -29,6 +29,8 @@
 #include <QSharedPointer>
 #include "pathitem.h"
 
+#define PATH_AREARES 512
+
 namespace patheditor
 {
     class Path : public QObject
@@ -51,7 +53,7 @@ namespace patheditor
 
         qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
 
-        qreal area(int resolution);
+        qreal area(int resolution = PATH_AREARES);
 
     signals:
         void onAppend(PathItem *pathItem);

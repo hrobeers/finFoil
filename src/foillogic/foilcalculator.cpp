@@ -146,7 +146,7 @@ AreaCalculator::AreaCalculator(Foil *foil, qreal *area)
 
 void AreaCalculator::run()
 {
-    *_area = _foil->outline()->area(500);
+    *_area = _foil->outline()->area();
 }
 
 

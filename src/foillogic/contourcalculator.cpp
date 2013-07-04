@@ -52,7 +52,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Path *outline, Pat
     }
     else
     {
-        _sectionCount = 1000;
+        _sectionCount = INITCNT * 2;
         _resolution = 2000;
         _tTol = 0.00001;
         _fTol = 0.0001;
@@ -62,9 +62,9 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Path *outline, Pat
 void ContourCalculator::run()
 {
     // discretise and normalise the thickness profile in different cross sections
-    qreal sectionHeightArray[_sectionCount];
-    qreal thicknessArray[_sectionCount];
-    sampleThickess(sectionHeightArray, thicknessArray);
+    QVarLengthArray<qreal, INITCNT> sectionHeightArray(_sectionCount);
+    QVarLengthArray<qreal, INITCNT> thicknessArray(_sectionCount);
+    sampleThickess(sectionHeightArray.data(), thicknessArray.data());
 
     // create the pathfunctors
     f_yValueAtPercentPath yOutline(_outline);
@@ -82,8 +82,8 @@ void ContourCalculator::run()
     //
     // calculate the contour points
     //
-    QPointF* leadingEdgePnts[_sectionCount];
-    QPointF* trailingEdgePnts[_sectionCount];
+    QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts(_sectionCount);
+    QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts(_sectionCount);
 
     for (int i=0; i<_sectionCount; i++)
     {
@@ -125,7 +125,7 @@ void ContourCalculator::run()
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
             {
 //                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
-                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, bSpline);
+                createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
 //                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, overhauser);
             }
         }

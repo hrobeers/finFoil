@@ -65,7 +65,7 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         if (_firstPaint)
         {
             _firstPaint = false;
-            emitPathChanged();
+            emitPathReleased();
         }
     }
 }

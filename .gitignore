@@ -3,6 +3,7 @@
 *.slo
 *.lo
 *.o
+*.obj
 *.a
 *.la
 *.lai
@@ -14,6 +15,7 @@
 
 *.pro.user
 *.pro.user.*
+ui_*h
 moc_*.cpp
 qrc_*.cpp
 Makefile
@@ -21,5 +23,19 @@ Makefile
 *.Release
 *-build-*
 
+# Visual Studio
+
+Backup*
+UpgradeLog*
+_UpgradeReport*
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.vcxproj*
+*.pdb
+
 src/app/debug
 src/app/release
+src/unittest/debug
+src/unittest/release

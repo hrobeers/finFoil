@@ -22,6 +22,7 @@
 
 #include "path.h"
 
+#include <QVarLengthArray>
 #include "pathfunctors.h"
 
 using namespace patheditor;
@@ -112,7 +113,7 @@ qreal Path::minY(qreal *t_top, qreal percTol)
 qreal Path::area(int resolution)
 {
     qreal percStep = 1 / qreal(resolution);
-    QPointF points[resolution];
+    QVarLengthArray<QPointF, PATH_AREARES> points(resolution);
     qreal perc = 0;
     for (int i = 0; i < resolution; i++)
     {
