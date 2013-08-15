@@ -38,7 +38,8 @@ namespace foillogic
         explicit Foil(QObject *parent = 0);
 
         QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<patheditor::Path> profile();
+        QSharedPointer<patheditor::Path> topProfile();
+        QSharedPointer<patheditor::Path> botProfile();
         QSharedPointer<patheditor::Path> thickness();
 
         virtual ~Foil();
@@ -51,7 +52,8 @@ namespace foillogic
 
     private:
         QSharedPointer<patheditor::Path> _outline;
-        QSharedPointer<patheditor::Path> _profile;
+        QSharedPointer<patheditor::Path> _topProfile;
+        QSharedPointer<patheditor::Path> _botProfile;
         QSharedPointer<patheditor::Path> _thickness;
 
         // TODO move out of foil object

@@ -40,11 +40,11 @@ Foil::Foil(QObject *parent) :
     initThickness();
 
     connect(_outline.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
-    connect(_profile.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
+    connect(_topProfile.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
     connect(_thickness.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
 
     connect(_outline.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
-    connect(_profile.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
+    connect(_topProfile.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
     connect(_thickness.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
 }
 
@@ -53,9 +53,14 @@ QSharedPointer<Path> Foil::outline()
     return _outline;
 }
 
-QSharedPointer<Path> Foil::profile()
+QSharedPointer<Path> Foil::topProfile()
 {
-    return _profile;
+    return _topProfile;
+}
+
+QSharedPointer<Path> Foil::botProfile()
+{
+    return _botProfile;
 }
 
 QSharedPointer<Path> Foil::thickness()
@@ -103,16 +108,24 @@ void Foil::initOutline()
 
 void Foil::initProfile()
 {
-    _profile = QSharedPointer<Path>(new Path());
+    _topProfile = QSharedPointer<Path>(new Path());
+    _botProfile = QSharedPointer<Path>(new Path());
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
     QSharedPointer<PathPoint> point3(new PathPoint(200,0));
 
-    QSharedPointer<ControlPoint> cPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> cPoint2(new ControlPoint(0,-24));
-    QSharedPointer<ControlPoint> cPoint3(new ControlPoint(90,-24));
-    QSharedPointer<ControlPoint> cPoint4(new ControlPoint(200,0));
+    QSharedPointer<PathPoint> tPoint(new PathPoint(60,-24));
+    QSharedPointer<PathPoint> bPoint(new PathPoint(60,24));
+
+    QSharedPointer<ControlPoint> tcPoint1(new ControlPoint(0,0));
+    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-24));
+    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(90,-24));
+    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(200,0));
+
+    QSharedPointer<ControlPoint> bcPoint1(new ControlPoint(0,0));
+    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,24));
+    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(90,24));
+    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(200,0));
 
     QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
     QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
@@ -120,11 +133,17 @@ void Foil::initProfile()
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    QSharedPointer<CubicBezier> part1(new CubicBezier(point1, cPoint1, cPoint2, point2));
-    QSharedPointer<CubicBezier> part2(new CubicBezier(point2, cPoint3, cPoint4, point3));
+    QSharedPointer<CubicBezier> tPart1(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
+    QSharedPointer<CubicBezier> tPart2(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
 
-    _profile->append(part1);
-    _profile->append(part2);
+    QSharedPointer<CubicBezier> bPart1(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
+    QSharedPointer<CubicBezier> bPart2(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
+
+    _topProfile->append(tPart1);
+    _topProfile->append(tPart2);
+
+    _botProfile->append(bPart1);
+    _botProfile->append(bPart2);
 }
 
 void Foil::initThickness()

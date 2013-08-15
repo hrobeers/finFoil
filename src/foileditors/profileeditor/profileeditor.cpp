@@ -36,11 +36,13 @@ ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    EditablePath* path = new EditablePath(foil->profile());
+    EditablePath* topProfile = new EditablePath(foil->topProfile());
+    EditablePath* botProfile = new EditablePath(foil->botProfile());
     // Pipe the pathChanged signal
-    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
+    connect(topProfile, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
 
-    _pathEditor->addPath(path);
+    _pathEditor->addPath(botProfile);
+    _pathEditor->addPath(topProfile);
 
     QGroupBox* gb = new QGroupBox(tr("Profile Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();

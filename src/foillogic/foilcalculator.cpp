@@ -98,7 +98,7 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->profile().data(),
+        _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->topProfile().data(),
                                            _foil->thickness().data(), path.data(), fastCalc));
     }
 
@@ -167,9 +167,9 @@ void SweepCalculator::run()
 
     // find thickest point
     qreal t_thick = 0;
-    _foil->profile()->minY(&t_thick);
-    qreal thick = _foil->profile()->pointAtPercent(t_thick).x();
-    qreal pEdge = _foil->profile()->pointAtPercent(1).x();
+    _foil->topProfile()->minY(&t_thick);
+    qreal thick = _foil->topProfile()->pointAtPercent(t_thick).x();
+    qreal pEdge = _foil->topProfile()->pointAtPercent(1).x();
     qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
 
     // calculate the sweep angle in degrees
