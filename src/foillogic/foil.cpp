@@ -108,7 +108,6 @@ void Foil::initProfile()
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
     QSharedPointer<PathPoint> point2(new PathPoint(60,-24));
     QSharedPointer<PathPoint> point3(new PathPoint(200,0));
-    QSharedPointer<PathPoint> point4(new PathPoint(0,-24));
 
     QSharedPointer<ControlPoint> cPoint1(new ControlPoint(0,0));
     QSharedPointer<ControlPoint> cPoint2(new ControlPoint(0,-24));
@@ -116,17 +115,13 @@ void Foil::initProfile()
     QSharedPointer<ControlPoint> cPoint4(new ControlPoint(200,0));
 
     QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
-    QSharedPointer<Restrictor> topRestrictor(new LineRestrictor(*point4, *point2));
     QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
 
     point1->setRestrictor(originRestrictor);
-    point2->setRestrictor(topRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
     QSharedPointer<CubicBezier> part1(new CubicBezier(point1, cPoint1, cPoint2, point2));
     QSharedPointer<CubicBezier> part2(new CubicBezier(point2, cPoint3, cPoint4, point3));
-    part1->controlPoint2()->setRestrictor(topRestrictor);
-    part2->controlPoint1()->setRestrictor(topRestrictor);
 
     _profile->append(part1);
     _profile->append(part2);
