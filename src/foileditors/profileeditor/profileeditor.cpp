@@ -38,6 +38,9 @@ ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
 
     EditablePath* topProfile = new EditablePath(foil->topProfile());
     EditablePath* botProfile = new EditablePath(foil->botProfile());
+    botProfile->setEditable(false);
+    topProfile->setEditable(true);
+
     // Pipe the pathChanged signal
     connect(topProfile, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
 

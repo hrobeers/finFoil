@@ -62,7 +62,7 @@ QRectF Line::controlPointRect() const
 }
 
 void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
-                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
+                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/, bool /*unused*/)
 {
     totalPainterPath->lineTo(*_endPoint);
 }

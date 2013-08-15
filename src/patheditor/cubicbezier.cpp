@@ -101,9 +101,10 @@ QRectF CubicBezier::controlPointRect() const
 }
 
 void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                        const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
+                        const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/, bool editable)
 {
-    paintControlPoints(settings, painter);
+    if (editable)
+        paintControlPoints(settings, painter);
 
     totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
 }

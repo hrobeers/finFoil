@@ -44,7 +44,7 @@ void PathPoint::setParent(QObject* /*unused*/)
     throw hrlib::ImplementationException(message, this);
 }
 
-void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
+void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 {
     if (!_restrictor.isNull())
         _restrictor->restrictCoordinate(&xpos, &ypos);
@@ -111,6 +111,11 @@ void PathPoint::select()
 bool PathPoint::selected() const
 {
     return _selected;
+}
+
+PointHandle *PathPoint::handle()
+{
+    return _pointHandle;
 }
 
 void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)

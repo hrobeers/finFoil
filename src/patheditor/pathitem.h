@@ -58,7 +58,7 @@ namespace patheditor
         //
         void paintControlPoints(PathSettings *settings, QPainter *painter);
         virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                           const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
+                           const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) = 0;
 
         //
         // Custom path calculation (preferably faster than using QPainterPath)

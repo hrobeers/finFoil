@@ -56,9 +56,9 @@ namespace patheditor
         qreal area(int resolution = PATH_AREARES);
 
     signals:
-        void onAppend(PathItem *pathItem);
-        void pathChanged(Path *sender);
-        void pathReleased(Path *sender);
+        void onAppend(patheditor::PathItem *pathItem);
+        void pathChanged(patheditor::Path *sender);
+        void pathReleased(patheditor::Path *sender);
 
     public slots:
         void onPathChanged();

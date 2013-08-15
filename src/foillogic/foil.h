@@ -51,19 +51,30 @@ namespace foillogic
     public slots:
 
     private:
+        bool symmetric;
+
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<patheditor::Path> _topProfile;
         QSharedPointer<patheditor::Path> _botProfile;
         QSharedPointer<patheditor::Path> _thickness;
 
-        // TODO move out of foil object
+        // parts of the profile for connecting when symmetric
+        QSharedPointer<patheditor::CubicBezier> _tPart1;
+        QSharedPointer<patheditor::CubicBezier> _tPart2;
+        QSharedPointer<patheditor::CubicBezier> _bPart1;
+        QSharedPointer<patheditor::CubicBezier> _bPart2;
+
         void initOutline();
         void initProfile();
         void initThickness();
 
+        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
+
     private slots:
         void onFoilChanged();
         void onFoilReleased();
+
+        void onProfileChange(patheditor::Path *path);
     };
 }
 

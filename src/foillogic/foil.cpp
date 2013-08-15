@@ -35,17 +35,19 @@ using namespace patheditor;
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
+    symmetric = true;
+
     initOutline();
     initProfile();
     initThickness();
 
-    connect(_outline.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
-    connect(_topProfile.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
-    connect(_thickness.data(), SIGNAL(pathChanged(Path*)), this, SLOT(onFoilChanged()));
+    connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_thickness.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
 
-    connect(_outline.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
-    connect(_topProfile.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
-    connect(_thickness.data(), SIGNAL(pathReleased(Path*)), this, SLOT(onFoilReleased()));
+    connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_thickness.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
 }
 
 QSharedPointer<Path> Foil::outline()
@@ -133,17 +135,21 @@ void Foil::initProfile()
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    QSharedPointer<CubicBezier> tPart1(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    QSharedPointer<CubicBezier> tPart2(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
+    _tPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
+    _tPart2 = QSharedPointer<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
 
-    QSharedPointer<CubicBezier> bPart1(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    QSharedPointer<CubicBezier> bPart2(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
+    _bPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
+    _bPart2 = QSharedPointer<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
 
-    _topProfile->append(tPart1);
-    _topProfile->append(tPart2);
+    _topProfile->append(_tPart1);
+    _topProfile->append(_tPart2);
 
-    _botProfile->append(bPart1);
-    _botProfile->append(bPart2);
+    _botProfile->append(_bPart1);
+    _botProfile->append(_bPart2);
+
+    // connect the profiles
+    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
+    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
 }
 
 void Foil::initThickness()
@@ -165,6 +171,15 @@ void Foil::initThickness()
     _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
 }
 
+void Foil::mirror(CubicBezier *source, CubicBezier *destination)
+{
+    destination->startPoint()->setRestrictedPos(source->startPoint()->x(), -source->startPoint()->y());
+    destination->endPoint()->setRestrictedPos(source->endPoint()->x(), -source->endPoint()->y());
+
+    destination->controlPoint1()->setRestrictedPos(source->controlPoint1()->x(), -source->controlPoint1()->y());
+    destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
+}
+
 void Foil::onFoilChanged()
 {
     emit foilChanged(this);
@@ -173,4 +188,21 @@ void Foil::onFoilChanged()
 void Foil::onFoilReleased()
 {
     emit foilReleased(this);
+}
+
+void Foil::onProfileChange(Path* path)
+{
+    if (symmetric)
+    {
+        if (path == _topProfile.data())
+        {
+            mirror(_tPart1.data(), _bPart1.data());
+            mirror(_tPart2.data(), _bPart2.data());
+        }
+        else
+        {
+            mirror(_bPart1.data(), _tPart1.data());
+            mirror(_bPart2.data(), _tPart2.data());
+        }
+    }
 }
