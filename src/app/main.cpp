@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QLayout>
 #include <QGraphicsView>
 #include <QDebug>

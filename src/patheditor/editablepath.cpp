@@ -92,15 +92,15 @@ EditablePath::~EditablePath()
 void EditablePath::onAppend(PathItem *pathItem)
 {
     // Add the startpoint pointHandle
-    pathItem->startPoint()->createPointHandle(_settings, this, scene());
+    pathItem->startPoint()->createPointHandle(_settings, this);
 
     // Add the endpoint pointHandle
-    pathItem->endPoint()->createPointHandle(_settings, this, scene());
+    pathItem->endPoint()->createPointHandle(_settings, this);
 
     // Add the controlPoint's pointHandles
     foreach(QSharedPointer<PathPoint> controlPoint, pathItem->controlPoints())
     {
-        controlPoint->createPointHandle(_settings, this, scene());
+        controlPoint->createPointHandle(_settings, this);
     }
 
     connectPoints(pathItem);

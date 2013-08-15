@@ -73,9 +73,9 @@ void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
     setRestrictedPos(this->rx(), this->ry());
 }
 
-void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene)
+void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent)
 {
-    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent, scene);
+    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent);
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
 }

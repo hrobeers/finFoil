@@ -36,7 +36,7 @@ namespace patheditor
     {
     public:
         explicit PointHandle(PathPoint *point, int &size, QBrush &brush,
-                             QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+                             QGraphicsItem *parent = 0);
 
         void setCenter(QPointF *point);
         void setCenter(qreal &xpos, qreal &ypos);

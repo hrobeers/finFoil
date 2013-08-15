@@ -52,7 +52,7 @@ namespace patheditor
          * @param settings The PathSettings to use
          * @param scene The QGraphicsScene to add the PointHandle to
          */
-        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
 
         void addFollowingPoint(QSharedPointer<PathPoint> point);
 

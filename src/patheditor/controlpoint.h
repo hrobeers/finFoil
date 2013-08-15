@@ -32,7 +32,7 @@ namespace patheditor
     public:
         explicit ControlPoint(qreal xpos, qreal ypos);
 
-        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent, QGraphicsScene *scene);
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
 
         virtual ~ControlPoint() {}
     };

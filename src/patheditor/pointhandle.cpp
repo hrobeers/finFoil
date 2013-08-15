@@ -31,8 +31,8 @@
 using namespace patheditor;
 
 PointHandle::PointHandle(PathPoint *point,
-                         int &size, QBrush &brush, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsEllipseItem(0, 0, size, size, parent, scene)
+                         int &size, QBrush &brush, QGraphicsItem *parent)
+    : QGraphicsEllipseItem(0, 0, size, size, parent)
 {
     _point = point;
     _originToCenter.setX(this->rect().width()/2);
