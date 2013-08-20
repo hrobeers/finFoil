@@ -52,8 +52,7 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
     qreal dx = xpos - this->rx();
     qreal dy = ypos - this->ry();
 
-    this->setX(xpos);
-    this->setY(ypos);
+    setPos(xpos, ypos);
 
     foreach(QWeakPointer<PathPoint> linkedPoint, _followingPoints)
     {
@@ -130,7 +129,7 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
     _pointHandle = pointHandle;
 }
 
-void PathPoint::setPos(qreal &xpos, qreal &ypos)
+void PathPoint::setPos(qreal xpos, qreal ypos)
 {
     this->setX(xpos);
     this->setY(ypos);

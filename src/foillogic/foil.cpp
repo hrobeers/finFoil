@@ -35,7 +35,7 @@ using namespace patheditor;
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
-    symmetric = true;
+    _symmetric = true;
 
     initOutline();
     initProfile();
@@ -68,6 +68,17 @@ QSharedPointer<Path> Foil::botProfile()
 QSharedPointer<Path> Foil::thickness()
 {
     return _thickness;
+}
+
+bool Foil::symmetric()
+{
+    return symmetric();
+}
+
+void Foil::setSymmetric(bool symmetric)
+{
+    _symmetric = symmetric;
+    onProfileChange(_topProfile.data());
 }
 
 Foil::~Foil()
@@ -192,7 +203,7 @@ void Foil::onFoilReleased()
 
 void Foil::onProfileChange(Path* path)
 {
-    if (symmetric)
+    if (_symmetric)
     {
         if (path == _topProfile.data())
         {

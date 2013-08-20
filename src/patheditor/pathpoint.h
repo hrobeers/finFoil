@@ -83,7 +83,7 @@ namespace patheditor
         void replaceCurrentPointHandle(PointHandle *pointHandle);
 
     private:
-        void setPos(qreal &xpos, qreal &ypos);
+        void setPos(qreal xpos, qreal ypos);
 
         bool _selected;
         static void select(PathPoint *point, QGraphicsScene *scene);

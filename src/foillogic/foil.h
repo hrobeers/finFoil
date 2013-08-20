@@ -42,6 +42,9 @@ namespace foillogic
         QSharedPointer<patheditor::Path> botProfile();
         QSharedPointer<patheditor::Path> thickness();
 
+        bool symmetric();
+        void setSymmetric(bool symmetric);
+
         virtual ~Foil();
 
     signals:
@@ -51,7 +54,7 @@ namespace foillogic
     public slots:
 
     private:
-        bool symmetric;
+        bool _symmetric;
 
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<patheditor::Path> _topProfile;

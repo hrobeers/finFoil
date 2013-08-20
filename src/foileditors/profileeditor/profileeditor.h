@@ -37,7 +37,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit ProfileEditor(foillogic::Foil *foil, QWidget *parent = 0);
+        explicit ProfileEditor(QSharedPointer<foillogic::Foil> foil, QWidget *parent = 0);
 
         virtual ~ProfileEditor();
 
@@ -47,10 +47,15 @@ namespace foileditors
     public slots:
 
     private:
+        QSharedPointer<foillogic::Foil> _foil;
+        EditablePath* _topProfile;
+        EditablePath* _botProfile;
+
         QVBoxLayout* _mainLayout;
         PathEditorWidget* _pathEditor;
-        QSharedPointer<Restrictor> _topRestrictor;
 
+    private slots:
+        void symmetryChanged(int sym);
     };
 }
 
