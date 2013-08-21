@@ -72,7 +72,7 @@ QSharedPointer<Path> Foil::thickness()
 
 bool Foil::symmetric()
 {
-    return symmetric();
+    return _symmetric;
 }
 
 void Foil::setSymmetric(bool symmetric)

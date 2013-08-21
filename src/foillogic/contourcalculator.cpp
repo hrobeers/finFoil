@@ -32,12 +32,13 @@
 using namespace foillogic;
 using namespace patheditor;
 
-ContourCalculator::ContourCalculator(qreal percContourHeight, Path *outline, Path *profile, Path *thickness,
-                                     QPainterPath *result, bool fast)
+ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, bool fast)
 {
-    _outline = outline;
-    _profile = profile;
-    _thickness = thickness;
+    _symmetric = foil->symmetric();
+    _outline = foil->outline().data();
+    _topProfile = foil->topProfile().data();
+    _botProfile = foil->botProfile().data();
+    _thickness = foil->thickness().data();
 
 
     _percContourHeight = percContourHeight;
@@ -68,7 +69,7 @@ void ContourCalculator::run()
 
     // create the pathfunctors
     f_yValueAtPercentPath yOutline(_outline);
-    f_yValueAtPercentPath yProfile(_profile);
+    f_yValueAtPercentPath yProfile(_topProfile);
 
     // find the top of the outline
     qreal t_top = 0.5; // start value
@@ -76,8 +77,8 @@ void ContourCalculator::run()
 
     // find dimensions of the profile
     qreal t_profileTop = 0.3; // start value
-    qreal y_profileTop = _profile->minY(&t_profileTop, _tTol);
-    qreal profileLength = _profile->pointAtPercent(1).x();
+    qreal y_profileTop = _topProfile->minY(&t_profileTop, _tTol);
+    qreal profileLength = _topProfile->pointAtPercent(1).x();
 
     //
     // calculate the contour points
@@ -105,8 +106,8 @@ void ContourCalculator::run()
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
         qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
-        qreal leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
-        qreal trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
+        qreal leadingEdgePerc = _topProfile->pointAtPercent(t_profileLE).x() / profileLength;
+        qreal trailingEdgePerc = _topProfile->pointAtPercent(t_profileTE).x() / profileLength;
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();

@@ -82,8 +82,7 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        ContourCalculator cCalc(thickness, _foil->outline().data(), _foil->topProfile().data(),
-                               _foil->thickness().data(), path.data(), fastCalc);
+        ContourCalculator cCalc(thickness, _foil, path.data(), fastCalc);
         AreaCalculator aCalc(_foil, &_area);
         SweepCalculator sCalc(_foil, &_sweep);
 
@@ -98,8 +97,7 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->topProfile().data(),
-                                           _foil->thickness().data(), path.data(), fastCalc));
+        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), fastCalc));
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
