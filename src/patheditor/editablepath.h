@@ -46,6 +46,8 @@ namespace patheditor
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget);
 
+        Path* path();
+
         /**
          * @brief get the last drawn QPainterPath.
          *        Typically used when pathChanged is emitted.

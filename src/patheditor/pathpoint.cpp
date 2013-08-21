@@ -44,6 +44,16 @@ void PathPoint::setParent(QObject* /*unused*/)
     throw hrlib::ImplementationException(message, this);
 }
 
+void PathPoint::setRestrictedX(qreal xpos)
+{
+    setRestrictedPos(xpos, y());
+}
+
+void PathPoint::setRestrictedY(qreal ypos)
+{
+    setRestrictedPos(x(), ypos);
+}
+
 void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 {
     if (!_restrictor.isNull())

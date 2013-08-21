@@ -53,6 +53,7 @@ ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
     QComboBox* symmetryCombo = new QComboBox();
     symmetryCombo->addItem(tr("Symmetric"));
     symmetryCombo->addItem(tr("Asymmetric"));
+    symmetryCombo->addItem(tr("Flat"));
     connect(symmetryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(symmetryChanged(int)));
 
     QGroupBox* gb = new QGroupBox(tr("Profile Editor"));
@@ -72,16 +73,32 @@ ProfileEditor::~ProfileEditor()
 
 void ProfileEditor::symmetryChanged(int sym)
 {
-    _foil->setSymmetric(!sym);
-
-    if (sym)
+    switch (sym)
     {
-        _botProfile->setEditable(true);
-    }
-    else
-    {
+    case 0:
+        _foil->setSymmetry(Symmetry::Symmetric);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
+        break;
+    case 1:
+        _foil->setSymmetry(Symmetry::Asymmetric);
+        _botProfile->setEditable(true);
+        break;
+    case 2:
+        _foil->setSymmetry(Symmetry::Flat);
+        _botProfile->setEditable(false);
+
+        // TODO: Move bottom profile logic into foil object.
+        foreach (QSharedPointer<PathItem> item, _botProfile->path()->pathItems())
+        {
+            item->startPoint()->setRestrictedY(0);
+            item->endPoint()->setRestrictedY(0);
+            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
+                pnt->setRestrictedY(0);
+        }
+
+        _topProfile->setEditable(true);
+        break;
     }
 
     _pathEditor->scene()->invalidate();

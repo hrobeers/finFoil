@@ -40,6 +40,8 @@ namespace patheditor
 
         virtual void setParent(QObject *object);
 
+        void setRestrictedX(qreal xpos);
+        void setRestrictedY(qreal ypos);
         void setRestrictedPos(qreal xpos, qreal ypos);
 
         void setRestrictor(QSharedPointer<Restrictor> restrictor);

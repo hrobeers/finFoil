@@ -31,6 +31,11 @@
 
 namespace foillogic
 {
+    struct Symmetry
+    {
+        enum e { Symmetric, Asymmetric, Flat };
+    };
+
     class Foil : public QObject
     {
         Q_OBJECT
@@ -42,8 +47,8 @@ namespace foillogic
         QSharedPointer<patheditor::Path> botProfile();
         QSharedPointer<patheditor::Path> thickness();
 
-        bool symmetric();
-        void setSymmetric(bool symmetric);
+        Symmetry::e symmetry();
+        void setSymmetry(Symmetry::e symmetry);
 
         virtual ~Foil();
 
@@ -54,7 +59,7 @@ namespace foillogic
     public slots:
 
     private:
-        bool _symmetric;
+        Symmetry::e _symmetry;
 
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<patheditor::Path> _topProfile;

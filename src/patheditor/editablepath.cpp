@@ -50,7 +50,7 @@ QRectF EditablePath::boundingRect() const
 
 void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (!_path->pathItems().isEmpty())
+    if (isVisible() && !_path->pathItems().isEmpty())
     {
         QSharedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_path->pathItems().first()->startPoint())));
 
@@ -70,6 +70,11 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
             emitPathReleased();
         }
     }
+}
+
+Path *EditablePath::path()
+{
+    return _path.data();
 }
 
 QSharedPointer<QPainterPath> EditablePath::painterPath()
