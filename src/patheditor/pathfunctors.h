@@ -55,6 +55,8 @@ namespace patheditor
         virtual void setOffset(qreal offset){
             _offset = offset;
         }
+
+        virtual ~f_xValueAtPercentPath() {}
     };
 
     class f_yValueAtPercentPath : public hrlib::func_mult_offset_base
@@ -82,6 +84,8 @@ namespace patheditor
         virtual void setOffset(qreal offset){
             _offset = offset;
         }
+
+        virtual ~f_yValueAtPercentPath() {}
     };
 }
 

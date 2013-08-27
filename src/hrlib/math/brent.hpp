@@ -21,6 +21,7 @@ public:
   virtual qreal operator() (qreal) = 0;
   virtual void setMultiplier(qreal multiplier) = 0;
   virtual void setOffset(qreal offset) = 0;
+  virtual ~func_mult_offset_base() {}
 };
 
 class monicPoly : public func_base {
