@@ -30,20 +30,26 @@
 
 namespace patheditor
 {
-    class f_yValueAtPercentPPath : public hrlib::func_offset_base
+    class f_xValueAtPercentPath : public hrlib::func_mult_offset_base
     {
     private:
-        QPainterPath *_path;
+        Path const *_path;
+        qreal _multiplier;
         qreal _offset;
 
     public:
-        explicit f_yValueAtPercentPPath(QPainterPath *path, qreal offset = 0){
+        explicit f_xValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0){
             _path = path;
+            _multiplier = multiplier;
             _offset = offset;
         }
 
         virtual qreal operator ()(qreal t){
-            return _path->pointAtPercent(t).y() - _offset;
+            return (_path->pointAtPercent(t).x() - _offset) * _multiplier;
+        }
+
+        virtual void setMultiplier(qreal multiplier){
+            _multiplier = multiplier;
         }
 
         virtual void setOffset(qreal offset){
@@ -51,20 +57,26 @@ namespace patheditor
         }
     };
 
-    class f_yValueAtPercentPath : public hrlib::func_offset_base
+    class f_yValueAtPercentPath : public hrlib::func_mult_offset_base
     {
     private:
-        Path *_path;
+        Path const *_path;
+        qreal _multiplier;
         qreal _offset;
 
     public:
-        explicit f_yValueAtPercentPath(Path *path, qreal offset = 0){
+        explicit f_yValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0){
             _path = path;
+            _multiplier = multiplier;
             _offset = offset;
         }
 
         virtual qreal operator ()(qreal t){
-            return _path->pointAtPercent(t).y() - _offset;
+            return (_path->pointAtPercent(t).y() - _offset) * _multiplier;
+        }
+
+        virtual void setMultiplier(qreal multiplier){
+            _multiplier = multiplier;
         }
 
         virtual void setOffset(qreal offset){

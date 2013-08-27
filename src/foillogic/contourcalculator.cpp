@@ -69,7 +69,7 @@ void ContourCalculator::run()
 
     // create the pathfunctors
     f_yValueAtPercentPath yOutline(_outline);
-    f_yValueAtPercentPath yProfile(_topProfile);
+    f_yValueAtPercentPath yTopProfile(_topProfile);
 
     // find the top of the outline
     qreal t_top = 0.5; // start value
@@ -103,9 +103,9 @@ void ContourCalculator::run()
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
         qreal profileOffset = thicknessOffsetPercent * y_profileTop;
-        yProfile.setOffset(profileOffset);
-        qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
-        qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
+        yTopProfile.setOffset(profileOffset);
+        qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yTopProfile);
+        qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yTopProfile);
         qreal leadingEdgePerc = _topProfile->pointAtPercent(t_profileLE).x() / profileLength;
         qreal trailingEdgePerc = _topProfile->pointAtPercent(t_profileTE).x() / profileLength;
 

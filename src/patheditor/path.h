@@ -30,6 +30,7 @@
 #include "pathitem.h"
 
 #define PATH_AREARES 512
+#define PATH_DEFAULT_PERCTOL 0.0001
 
 namespace patheditor
 {
@@ -47,13 +48,18 @@ namespace patheditor
 
         QList<QSharedPointer<PathItem> > pathItems();
 
+        // TODO unittest methods below
+
         QRectF controlPointRect() const;
 
-        QPointF pointAtPercent(qreal t);
+        QPointF pointAtPercent(qreal t) const;
 
-        qreal minY(qreal *t_top = 0, qreal percTol = 0.0001);
+        qreal minX(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
+        qreal maxX(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
+        qreal minY(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
+        qreal maxY(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
 
-        qreal area(int resolution = PATH_AREARES);
+        qreal area(int resolution = PATH_AREARES) const;
 
     signals:
         void onAppend(patheditor::PathItem *pathItem);
@@ -65,7 +71,12 @@ namespace patheditor
         void onPathReleased();
 
     private:
+        enum Ext { Min, Max };
+        enum Dimension { X, Y };
+
         QList<QSharedPointer<PathItem> > _pathItemList;
+
+        qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
 }
 
