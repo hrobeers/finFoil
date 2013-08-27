@@ -47,7 +47,7 @@ namespace foillogic
         QSharedPointer<patheditor::Path> botProfile();
         QSharedPointer<patheditor::Path> thickness();
 
-        Symmetry::e symmetry();
+        Symmetry::e symmetry() const;
         void setSymmetry(Symmetry::e symmetry);
 
         virtual ~Foil();

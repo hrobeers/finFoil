@@ -57,7 +57,7 @@ Foil *FoilCalculator::foil()
     return _foil;
 }
 
-QList<qreal> FoilCalculator::contourThicknesses()
+QList<qreal> FoilCalculator::contourThicknesses() const
 {
     return _contourThicknesses;
 }
@@ -110,17 +110,17 @@ void FoilCalculator::calculate(bool fastCalc)
     emit foilCalculated(this);
 }
 
-bool FoilCalculator::calculated()
+bool FoilCalculator::calculated() const
 {
     return _calculated;
 }
 
-qreal FoilCalculator::area()
+qreal FoilCalculator::area() const
 {
     return _area;
 }
 
-qreal FoilCalculator::sweep()
+qreal FoilCalculator::sweep() const
 {
     return _sweep;
 }

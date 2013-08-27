@@ -70,7 +70,7 @@ QSharedPointer<Path> Foil::thickness()
     return _thickness;
 }
 
-Symmetry::e Foil::symmetry()
+Symmetry::e Foil::symmetry() const
 {
     return _symmetry;
 }
