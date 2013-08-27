@@ -78,6 +78,18 @@ Symmetry::e Foil::symmetry()
 void Foil::setSymmetry(Symmetry::e symmetry)
 {
     _symmetry = symmetry;
+
+    if (_symmetry == Symmetry::Flat)
+    {
+        foreach (QSharedPointer<PathItem> item, _botProfile->pathItems())
+        {
+            item->startPoint()->setRestrictedY(0);
+            item->endPoint()->setRestrictedY(0);
+            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
+                pnt->setRestrictedY(0);
+        }
+    }
+
     onProfileChange(_topProfile.data());
 }
 

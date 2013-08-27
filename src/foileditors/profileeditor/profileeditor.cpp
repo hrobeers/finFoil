@@ -87,16 +87,6 @@ void ProfileEditor::symmetryChanged(int sym)
     case 2:
         _foil->setSymmetry(Symmetry::Flat);
         _botProfile->setEditable(false);
-
-        // TODO: Move bottom profile logic into foil object.
-        foreach (QSharedPointer<PathItem> item, _botProfile->path()->pathItems())
-        {
-            item->startPoint()->setRestrictedY(0);
-            item->endPoint()->setRestrictedY(0);
-            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
-                pnt->setRestrictedY(0);
-        }
-
         _topProfile->setEditable(true);
         break;
     }
