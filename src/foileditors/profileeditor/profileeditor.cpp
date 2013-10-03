@@ -44,9 +44,6 @@ ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
     _botProfile = new EditablePath(_foil->botProfile());
     symmetryChanged(0);
 
-    // Pipe the pathChanged signal
-    connect(_topProfile, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
-
     _pathEditor->addPath(_botProfile);
     _pathEditor->addPath(_topProfile);
 

@@ -41,7 +41,6 @@ namespace foileditors
         virtual ~ThicknessEditor();
 
     signals:
-        void thicknessChanged(EditablePath *sender);
 
     public slots:
 

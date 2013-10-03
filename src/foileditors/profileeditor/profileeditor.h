@@ -42,7 +42,6 @@ namespace foileditors
         virtual ~ProfileEditor();
 
     signals:
-        void profileChanged(EditablePath *sender);
 
     public slots:
 

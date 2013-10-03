@@ -38,8 +38,6 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     _pathEditor->enableFeature(Features::VerticalAxis);
 
     EditablePath* path = new EditablePath(foil->thickness());
-    // Pipe the pathchanged signal
-    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(thicknessChanged(EditablePath*)));
 
     _pathEditor->addPath(path);
 
