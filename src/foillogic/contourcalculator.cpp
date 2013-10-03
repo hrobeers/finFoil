@@ -24,6 +24,7 @@
 
 #include <QVarLengthArray>
 #include <QPainterPath>
+#include <qmath.h>
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
 
@@ -82,7 +83,8 @@ void ContourCalculator::run()
 
     // find dimensions of the profile
     qreal t_profileTop = 0.3; // start value
-    qreal y_profileTop = _profile->minY(&t_profileTop, _tTol);
+    // TODO maybe take total thickness as a reference for profileOffset (see usages of y_profileTop)
+    qreal y_profileTop = (_percContourHeight > 0) ? _profile->minY(&t_profileTop, _tTol) : _profile->maxY(&t_profileTop, _tTol);
     qreal profileLength = _profile->pointAtPercent(1).x();
 
     //
@@ -94,7 +96,7 @@ void ContourCalculator::run()
     for (int i=0; i<_sectionCount; i++)
     {
         qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
-        if (thicknessOffsetPercent > 1)
+        if (qAbs(thicknessOffsetPercent) > 1)
         {
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
@@ -125,7 +127,7 @@ void ContourCalculator::run()
     {
         if (leadingEdgePnts[i] != 0)
         {
-            if (i == 0 || leadingEdgePnts[i-1] == 0)
+            if (i == 0 || leadingEdgePnts[i-1] == 0) // first or nullptr
                 firstIndex = i;
 
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
