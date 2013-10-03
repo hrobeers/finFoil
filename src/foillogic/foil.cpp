@@ -43,10 +43,12 @@ Foil::Foil(QObject *parent) :
 
     connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
     connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
     connect(_thickness.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
 
     connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
     connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
     connect(_thickness.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
 }
 
@@ -91,6 +93,8 @@ void Foil::setSymmetry(Symmetry::e symmetry)
     }
 
     onProfileChange(_topProfile.data());
+
+    onFoilReleased();
 }
 
 Foil::~Foil()
