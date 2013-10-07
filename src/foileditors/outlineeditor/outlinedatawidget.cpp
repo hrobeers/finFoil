@@ -126,8 +126,8 @@ void OutlineDataWidget::onLayerChange(int layerCount)
     QList<qreal> thicknesses;
     for (int i = 0; i < layerCount; i++)
     {
-        thicknesses.append(thickness);
         thickness += increment;
+        thicknesses.append(thickness);
     }
 
     qSort(thicknesses);

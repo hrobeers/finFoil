@@ -45,8 +45,8 @@ namespace foillogic
 
         qreal _percContourHeight;
         bool _symmetric;
+        Foil* _foil;
         patheditor::Path* _outline;
-        patheditor::Path* _profile;
         patheditor::Path* _thickness;
         QPainterPath *_result;
 

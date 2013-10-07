@@ -150,6 +150,8 @@ void Path::onPathReleased()
 
 qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) const
 {
+    qreal multiplier = 1;
+
     QScopedPointer<hrlib::func_mult_offset_base> target;
 
     switch (dimension)
@@ -163,15 +165,18 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
     }
 
     if (ext == Max)
+    {
         target->setMultiplier(-1);
+        multiplier = -1;
+    }
 
 
     // find the min of the path
     if (t_ext == 0)
     {
         qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), t);
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), t) * multiplier;
     }
     else
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), *t_ext);
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), *t_ext) * multiplier;
 }
