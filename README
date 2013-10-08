@@ -13,7 +13,7 @@ The sourceforge repository is a daily synchonised mirror.
 
 Dependencies
 ============
-Qt5
+Qt4.8 (Qt5 unsupported)
 
 LICENSE
 =======

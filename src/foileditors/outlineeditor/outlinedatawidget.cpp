@@ -48,7 +48,7 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     // Layer section
     //
     _layerEdit = new QSpinBox();
-    _layerEdit->setValue(_foilCalculator->contourThicknesses().count());
+    _layerEdit->setValue(_foilCalculator->contourThicknesses().count() - 1);
     _formLayout->addRow(tr("#Layers:"), _layerEdit);
     connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
 
