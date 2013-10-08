@@ -24,19 +24,52 @@
 #define PROFILE_H
 
 #include <QObject>
+#include <QSharedPointer>
+#include "path.h"
 
 namespace foillogic
 {
+    struct Symmetry
+    {
+        enum e { Symmetric, Asymmetric, Flat };
+    };
+
     class Profile : public QObject
     {
         Q_OBJECT
     public:
         explicit Profile(QObject *parent = 0);
 
+        QSharedPointer<patheditor::Path> topProfile();
+        QSharedPointer<patheditor::Path> botProfile();
+
+        Symmetry::e symmetry() const;
+        void setSymmetry(Symmetry::e symmetry);
+
+        virtual ~Profile();
+
     signals:
 
     public slots:
+        void profileChanged(Profile* sender);
+        void profileReleased(Profile* sender);
 
+    private:
+        Symmetry::e _symmetry;
+
+        QSharedPointer<patheditor::Path> _topProfile;
+        QSharedPointer<patheditor::Path> _botProfile;
+
+        // parts of the profile for connecting when symmetric
+        QSharedPointer<patheditor::CubicBezier> _tPart1;
+        QSharedPointer<patheditor::CubicBezier> _tPart2;
+        QSharedPointer<patheditor::CubicBezier> _bPart1;
+        QSharedPointer<patheditor::CubicBezier> _bPart2;
+
+        void initProfile();
+
+    private slots:
+        void onProfileChange(patheditor::Path *path);
     };
 }
 

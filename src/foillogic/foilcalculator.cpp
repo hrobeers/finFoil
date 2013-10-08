@@ -165,9 +165,9 @@ void SweepCalculator::run()
 
     // find thickest point
     qreal t_thick = 0;
-    _foil->topProfile()->minY(&t_thick);
-    qreal thick = _foil->topProfile()->pointAtPercent(t_thick).x();
-    qreal pEdge = _foil->topProfile()->pointAtPercent(1).x();
+    _foil->profile()->topProfile()->minY(&t_thick);
+    qreal thick = _foil->profile()->topProfile()->pointAtPercent(t_thick).x();
+    qreal pEdge = _foil->profile()->topProfile()->pointAtPercent(1).x();
     qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
 
     // calculate the sweep angle in degrees

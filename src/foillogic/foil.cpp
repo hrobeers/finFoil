@@ -35,20 +35,15 @@ using namespace patheditor;
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
-    _symmetry = Symmetry::Symmetric;
-
     initOutline();
-    initProfile();
     initThickness();
 
     connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
     connect(_thickness.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
 
     connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
-    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
-    connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_profile.data(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
     connect(_thickness.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
 }
 
@@ -57,44 +52,9 @@ QSharedPointer<Path> Foil::outline()
     return _outline;
 }
 
-QSharedPointer<Path> Foil::topProfile()
-{
-    return _topProfile;
-}
-
-QSharedPointer<Path> Foil::botProfile()
-{
-    return _botProfile;
-}
-
 QSharedPointer<Path> Foil::thickness()
 {
     return _thickness;
-}
-
-Symmetry::e Foil::symmetry() const
-{
-    return _symmetry;
-}
-
-void Foil::setSymmetry(Symmetry::e symmetry)
-{
-    _symmetry = symmetry;
-
-    if (_symmetry == Symmetry::Flat)
-    {
-        foreach (QSharedPointer<PathItem> item, _botProfile->pathItems())
-        {
-            item->startPoint()->setRestrictedY(0);
-            item->endPoint()->setRestrictedY(0);
-            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
-                pnt->setRestrictedY(0);
-        }
-    }
-
-    onProfileChange(_topProfile.data());
-
-    onFoilReleased();
 }
 
 Foil::~Foil()
@@ -135,50 +95,6 @@ void Foil::initOutline()
     _outline->append(QSharedPointer<PathItem>(new CubicBezier(point10, point11, point12, point13)));
 }
 
-void Foil::initProfile()
-{
-    _topProfile = QSharedPointer<Path>(new Path());
-    _botProfile = QSharedPointer<Path>(new Path());
-
-    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point3(new PathPoint(200,0));
-
-    QSharedPointer<PathPoint> tPoint(new PathPoint(60,-24));
-    QSharedPointer<PathPoint> bPoint(new PathPoint(60,24));
-
-    QSharedPointer<ControlPoint> tcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-24));
-    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(90,-24));
-    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(200,0));
-
-    QSharedPointer<ControlPoint> bcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,24));
-    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(90,24));
-    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(200,0));
-
-    QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
-
-    point1->setRestrictor(originRestrictor);
-    point3->setRestrictor(horizontalAxisRestrictor);
-
-    _tPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    _tPart2 = QSharedPointer<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
-
-    _bPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    _bPart2 = QSharedPointer<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
-
-    _topProfile->append(_tPart1);
-    _topProfile->append(_tPart2);
-
-    _botProfile->append(_bPart1);
-    _botProfile->append(_bPart2);
-
-    // connect the profiles
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
-}
-
 void Foil::initThickness()
 {
     _thickness = QSharedPointer<Path>(new Path());
@@ -215,21 +131,4 @@ void Foil::onFoilChanged()
 void Foil::onFoilReleased()
 {
     emit foilReleased(this);
-}
-
-void Foil::onProfileChange(Path* path)
-{
-    if (_symmetry == Symmetry::Symmetric)
-    {
-        if (path == _topProfile.data())
-        {
-            mirror(_tPart1.data(), _bPart1.data());
-            mirror(_tPart2.data(), _bPart2.data());
-        }
-        else
-        {
-            mirror(_bPart1.data(), _tPart1.data());
-            mirror(_bPart2.data(), _tPart2.data());
-        }
-    }
 }

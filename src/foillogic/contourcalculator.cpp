@@ -36,7 +36,7 @@ using namespace patheditor;
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, bool fast)
 {
     _foil = foil;
-    _symmetric = foil->symmetry();
+    _symmetric = foil->profile()->symmetry();
     _outline = foil->outline().data();
     _thickness = foil->thickness().data();
 
