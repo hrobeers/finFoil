@@ -63,7 +63,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
 void ContourCalculator::run()
 {
     //
-    // find dimensions of the profile
+    // find dimensions of the profile TODO: move into a profileObejct
     //
 
     qreal t_topProfileTop = 0.3; // start value
