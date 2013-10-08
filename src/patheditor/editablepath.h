@@ -46,6 +46,8 @@ namespace patheditor
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                         QWidget *widget);
 
+        Path* path();
+
         /**
          * @brief get the last drawn QPainterPath.
          *        Typically used when pathChanged is emitted.
@@ -57,6 +59,9 @@ namespace patheditor
 
         bool released();
 
+        void setEditable(bool editable);
+        bool editable();
+
         virtual ~EditablePath();
 
     signals:
@@ -64,11 +69,12 @@ namespace patheditor
         void pathReleased(EditablePath *sender);
 
     private slots:
-        void onAppend(PathItem *pathItem);
+        void onAppend(patheditor::PathItem *pathItem);
         void onPointDrag(PathPoint *sender);
         void onPointRelease(PathPoint *sender);
 
     private:
+        bool _editable;
         bool _firstPaint;
         bool _released;
         QSharedPointer<Path> _path;

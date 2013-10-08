@@ -27,14 +27,14 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QRunnable>
+#include "foil.h"
 
 namespace foillogic
 {
     class ContourCalculator : public QRunnable
     {
     public:
-        explicit ContourCalculator(qreal percContourHeight, patheditor::Path* outline, patheditor::Path* profile,
-                                   patheditor::Path* thickness, QPainterPath* result, bool fast = false);
+        explicit ContourCalculator(qreal percContourHeight, Foil* foil, QPainterPath* result, bool fast = false);
 
         virtual void run();
 
@@ -44,8 +44,9 @@ namespace foillogic
         enum SplineFunction { bSpline, overhauser };
 
         qreal _percContourHeight;
+        bool _symmetric;
+        Foil* _foil;
         patheditor::Path* _outline;
-        patheditor::Path* _profile;
         patheditor::Path* _thickness;
         QPainterPath *_result;
 

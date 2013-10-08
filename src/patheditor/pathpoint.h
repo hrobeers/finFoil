@@ -40,7 +40,9 @@ namespace patheditor
 
         virtual void setParent(QObject *object);
 
-        void setRestrictedPos(qreal &xpos, qreal &ypos);
+        void setRestrictedX(qreal xpos);
+        void setRestrictedY(qreal ypos);
+        void setRestrictedPos(qreal xpos, qreal ypos);
 
         void setRestrictor(QSharedPointer<Restrictor> restrictor);
 
@@ -62,6 +64,8 @@ namespace patheditor
 
         bool selected() const;
 
+        PointHandle *handle();
+
         virtual ~PathPoint() {}
 
     signals:
@@ -81,7 +85,7 @@ namespace patheditor
         void replaceCurrentPointHandle(PointHandle *pointHandle);
 
     private:
-        void setPos(qreal &xpos, qreal &ypos);
+        void setPos(qreal xpos, qreal ypos);
 
         bool _selected;
         static void select(PathPoint *point, QGraphicsScene *scene);

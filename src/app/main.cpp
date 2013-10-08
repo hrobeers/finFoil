@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        QScopedPointer<Foil> fin(new Foil());
+        QSharedPointer<Foil> fin(new Foil());
 
         OutlineEditor* outlineEditor = new OutlineEditor(fin.data());
-        ProfileEditor* profileEditor = new ProfileEditor(fin.data());
+        ProfileEditor* profileEditor = new ProfileEditor(fin);
         ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
 
         QHBoxLayout* mainLayout = new QHBoxLayout();

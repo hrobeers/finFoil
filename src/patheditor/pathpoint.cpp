@@ -44,7 +44,17 @@ void PathPoint::setParent(QObject* /*unused*/)
     throw hrlib::ImplementationException(message, this);
 }
 
-void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
+void PathPoint::setRestrictedX(qreal xpos)
+{
+    setRestrictedPos(xpos, y());
+}
+
+void PathPoint::setRestrictedY(qreal ypos)
+{
+    setRestrictedPos(x(), ypos);
+}
+
+void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 {
     if (!_restrictor.isNull())
         _restrictor->restrictCoordinate(&xpos, &ypos);
@@ -52,8 +62,7 @@ void PathPoint::setRestrictedPos(qreal &xpos, qreal &ypos)
     qreal dx = xpos - this->rx();
     qreal dy = ypos - this->ry();
 
-    this->setX(xpos);
-    this->setY(ypos);
+    setPos(xpos, ypos);
 
     foreach(QWeakPointer<PathPoint> linkedPoint, _followingPoints)
     {
@@ -113,6 +122,11 @@ bool PathPoint::selected() const
     return _selected;
 }
 
+PointHandle *PathPoint::handle()
+{
+    return _pointHandle;
+}
+
 void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
 {
     if (_pointHandle)
@@ -125,7 +139,7 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
     _pointHandle = pointHandle;
 }
 
-void PathPoint::setPos(qreal &xpos, qreal &ypos)
+void PathPoint::setPos(qreal xpos, qreal ypos)
 {
     this->setX(xpos);
     this->setY(ypos);

@@ -78,7 +78,7 @@ QRectF Path::controlPointRect() const
     return retVal;
 }
 
-QPointF Path::pointAtPercent(qreal t)
+QPointF Path::pointAtPercent(qreal t) const
 {
     int pathItemCount = _pathItemList.count();
     qreal itemRange = 1/qreal(pathItemCount);
@@ -95,22 +95,27 @@ QPointF Path::pointAtPercent(qreal t)
     return _pathItemList[item]->pointAtPercent(t);
 }
 
-qreal Path::minY(qreal *t_top, qreal percTol)
+qreal Path::minX(qreal *t_top, qreal percTol) const
 {
-    // pathfunctor
-    f_yValueAtPercentPath yOutline(this);
-
-    // find the min of the path
-    if (t_top == 0)
-    {
-        qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, yOutline, t);
-    }
-    else
-        return hrlib::Brent::local_min(0, 1, percTol, yOutline, *t_top);
+    return extreme(Min, X, t_top, percTol);
 }
 
-qreal Path::area(int resolution)
+qreal Path::maxX(qreal *t_top, qreal percTol) const
+{
+    return extreme(Max, X, t_top, percTol);
+}
+
+qreal Path::minY(qreal *t_top, qreal percTol) const
+{
+    return extreme(Min, Y, t_top, percTol);
+}
+
+qreal Path::maxY(qreal *t_top, qreal percTol) const
+{
+    return extreme(Max, Y, t_top, percTol);
+}
+
+qreal Path::area(int resolution) const
 {
     qreal percStep = 1 / qreal(resolution);
     QVarLengthArray<QPointF, PATH_AREARES> points(resolution);
@@ -141,4 +146,37 @@ void Path::onPathChanged()
 void Path::onPathReleased()
 {
     emit pathReleased(this);
+}
+
+qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) const
+{
+    qreal multiplier = 1;
+
+    QScopedPointer<hrlib::func_mult_offset_base> target;
+
+    switch (dimension)
+    {
+    case X:
+        target.reset(new f_xValueAtPercentPath(this));
+        break;
+    case Y:
+        target.reset(new f_yValueAtPercentPath(this));
+        break;
+    }
+
+    if (ext == Max)
+    {
+        target->setMultiplier(-1);
+        multiplier = -1;
+    }
+
+
+    // find the min of the path
+    if (t_ext == 0)
+    {
+        qreal t = 0.5;
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), t) * multiplier;
+    }
+    else
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), *t_ext) * multiplier;
 }

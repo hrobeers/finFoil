@@ -40,15 +40,15 @@ namespace foillogic
 
         Foil* foil();
 
-        QList<qreal> contourThicknesses();
+        QList<qreal> contourThicknesses() const;
         void setContourThicknesses(QList<qreal> thicknesses);
         QList<QSharedPointer<QPainterPath> > calculatedContours();
 
         void calculate(bool fastCalc);
-        bool calculated();
+        bool calculated() const;
 
-        qreal area();
-        qreal sweep();
+        qreal area() const;
+        qreal sweep() const;
 
     signals:
         void foilCalculated(FoilCalculator* sender);
@@ -61,7 +61,6 @@ namespace foillogic
 
         Foil* _foil;
 
-        int _numberOfLayers;
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _contours;
         qreal _area;

@@ -34,7 +34,7 @@ FoilCalculator::FoilCalculator(Foil *foil) :
     _calculated = false;
     _foil = foil;
 
-    int numOfContours = 4;
+    int numOfContours = 5;
     qreal increment = qreal(1) / qreal(numOfContours+1);
     qreal thickness = 0;
     QList<qreal> thicknesses;
@@ -57,7 +57,7 @@ Foil *FoilCalculator::foil()
     return _foil;
 }
 
-QList<qreal> FoilCalculator::contourThicknesses()
+QList<qreal> FoilCalculator::contourThicknesses() const
 {
     return _contourThicknesses;
 }
@@ -82,8 +82,7 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        ContourCalculator cCalc(thickness, _foil->outline().data(), _foil->profile().data(),
-                               _foil->thickness().data(), path.data(), fastCalc);
+        ContourCalculator cCalc(thickness, _foil, path.data(), fastCalc);
         AreaCalculator aCalc(_foil, &_area);
         SweepCalculator sCalc(_foil, &_sweep);
 
@@ -98,8 +97,7 @@ void FoilCalculator::calculate(bool fastCalc)
         QSharedPointer<QPainterPath> path(new QPainterPath());
         _contours.append(path);
 
-        _tPool.start(new ContourCalculator(thickness, _foil->outline().data(), _foil->profile().data(),
-                                           _foil->thickness().data(), path.data(), fastCalc));
+        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), fastCalc));
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
@@ -112,17 +110,17 @@ void FoilCalculator::calculate(bool fastCalc)
     emit foilCalculated(this);
 }
 
-bool FoilCalculator::calculated()
+bool FoilCalculator::calculated() const
 {
     return _calculated;
 }
 
-qreal FoilCalculator::area()
+qreal FoilCalculator::area() const
 {
     return _area;
 }
 
-qreal FoilCalculator::sweep()
+qreal FoilCalculator::sweep() const
 {
     return _sweep;
 }
@@ -167,9 +165,9 @@ void SweepCalculator::run()
 
     // find thickest point
     qreal t_thick = 0;
-    _foil->profile()->minY(&t_thick);
-    qreal thick = _foil->profile()->pointAtPercent(t_thick).x();
-    qreal pEdge = _foil->profile()->pointAtPercent(1).x();
+    _foil->topProfile()->minY(&t_thick);
+    qreal thick = _foil->topProfile()->pointAtPercent(t_thick).x();
+    qreal pEdge = _foil->topProfile()->pointAtPercent(1).x();
     qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
 
     // calculate the sweep angle in degrees

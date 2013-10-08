@@ -43,7 +43,7 @@ namespace patheditor
         QRectF controlPointRect() const;
 
         void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget);
+                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true);
 
         virtual ~Line() {}
 

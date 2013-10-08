@@ -5,6 +5,7 @@ General TODO's
 * Forward declaration of classes (instead of includes in header files) to speedup compilation
 * Add documentation comments
 * Unit testing
+* GitHub issues
 
 
 Improvements with C++11

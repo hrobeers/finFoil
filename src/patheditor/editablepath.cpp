@@ -31,10 +31,12 @@ using namespace patheditor;
 EditablePath::EditablePath(QSharedPointer<Path> path, QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
+    _editable = true;
+
     _path = path;
     foreach(QSharedPointer<PathItem> item, _path->pathItems())
         onAppend(item.data());
-    connect(path.data(), SIGNAL(onAppend(PathItem*)), this, SLOT(onAppend(PathItem*)));
+    connect(path.data(), SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)));
 
     _firstPaint = true;
     _released = true;
@@ -48,13 +50,13 @@ QRectF EditablePath::boundingRect() const
 
 void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (!_path->pathItems().isEmpty())
+    if (isVisible() && !_path->pathItems().isEmpty())
     {
         QSharedPointer<QPainterPath> newPainterPath(new QPainterPath(*(_path->pathItems().first()->startPoint())));
 
         foreach(QSharedPointer<PathItem> item, _path->pathItems())
         {
-            item->paintPathItem(&_settings, newPainterPath.data(), painter, option, widget);
+            item->paintPathItem(&_settings, newPainterPath.data(), painter, option, widget, _editable);
         }
 
         painter->setPen(_settings.linePen());
@@ -70,6 +72,11 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     }
 }
 
+Path *EditablePath::path()
+{
+    return _path.data();
+}
+
 QSharedPointer<QPainterPath> EditablePath::painterPath()
 {
     return _painterPath;
@@ -83,6 +90,27 @@ QPointF EditablePath::pointAtPercent(qreal t)
 bool EditablePath::released()
 {
     return _released;
+}
+
+void EditablePath::setEditable(bool editable)
+{
+    _editable = editable;
+
+    foreach (QSharedPointer<PathItem> item, _path->pathItems())
+    {
+        item->startPoint()->handle()->setVisible(editable);
+        item->endPoint()->handle()->setVisible(editable);
+
+        foreach (QSharedPointer<ControlPoint> point, item->controlPoints())
+        {
+            point->handle()->setVisible(editable);
+        }
+    }
+}
+
+bool EditablePath::editable()
+{
+    return _editable;
 }
 
 EditablePath::~EditablePath()

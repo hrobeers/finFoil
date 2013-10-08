@@ -24,26 +24,38 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QComboBox>
+#include <QGraphicsScene>
 #include "editablepath.h"
 #include "foil.h"
 
 using namespace foileditors;
 using namespace foillogic;
 
-ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
+ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
     QWidget(parent)
 {
+    _foil = foil;
+
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    EditablePath* path = new EditablePath(foil->profile());
-    // Pipe the pathChanged signal
-    connect(path, SIGNAL(pathChanged(EditablePath*)), this, SIGNAL(profileChanged(EditablePath*)));
+    _topProfile = new EditablePath(_foil->topProfile());
+    _botProfile = new EditablePath(_foil->botProfile());
+    symmetryChanged(0);
 
-    _pathEditor->addPath(path);
+    _pathEditor->addPath(_botProfile);
+    _pathEditor->addPath(_topProfile);
+
+    QComboBox* symmetryCombo = new QComboBox();
+    symmetryCombo->addItem(tr("Symmetric"));
+    symmetryCombo->addItem(tr("Asymmetric"));
+    symmetryCombo->addItem(tr("Flat"));
+    connect(symmetryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(symmetryChanged(int)));
 
     QGroupBox* gb = new QGroupBox(tr("Profile Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(symmetryCombo);
     gbLayout->addWidget(_pathEditor);
     gb->setLayout(gbLayout);
 
@@ -54,4 +66,27 @@ ProfileEditor::ProfileEditor(Foil *foil, QWidget *parent) :
 
 ProfileEditor::~ProfileEditor()
 {
+}
+
+void ProfileEditor::symmetryChanged(int sym)
+{
+    switch (sym)
+    {
+    case 0:
+        _foil->setSymmetry(Symmetry::Symmetric);
+        _botProfile->setEditable(false);
+        _topProfile->setEditable(true);
+        break;
+    case 1:
+        _foil->setSymmetry(Symmetry::Asymmetric);
+        _botProfile->setEditable(true);
+        break;
+    case 2:
+        _foil->setSymmetry(Symmetry::Flat);
+        _botProfile->setEditable(false);
+        _topProfile->setEditable(true);
+        break;
+    }
+
+    _pathEditor->scene()->invalidate();
 }
