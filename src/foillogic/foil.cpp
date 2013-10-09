@@ -24,10 +24,10 @@
 
 #include "pathpoint.h"
 #include "editablepath.h"
-#include "quadrantrestrictor.h"
 #include "linerestrictor.h"
-#include "pointrestrictor.h"
+#include "quadrantrestrictor.h"
 #include "cubicbezier.h"
+#include "profile.h"
 
 using namespace foillogic;
 using namespace patheditor;
@@ -36,6 +36,7 @@ Foil::Foil(QObject *parent) :
     QObject(parent)
 {
     initOutline();
+    initProfile();
     initThickness();
 
     connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
@@ -50,6 +51,11 @@ Foil::Foil(QObject *parent) :
 QSharedPointer<Path> Foil::outline()
 {
     return _outline;
+}
+
+QSharedPointer<Profile> Foil::profile()
+{
+    return _profile;
 }
 
 QSharedPointer<Path> Foil::thickness()
@@ -95,6 +101,11 @@ void Foil::initOutline()
     _outline->append(QSharedPointer<PathItem>(new CubicBezier(point10, point11, point12, point13)));
 }
 
+void Foil::initProfile()
+{
+    _profile = QSharedPointer<Profile>(new Profile());
+}
+
 void Foil::initThickness()
 {
     _thickness = QSharedPointer<Path>(new Path());
@@ -112,15 +123,6 @@ void Foil::initThickness()
     point4->setRestrictor(horizontalAxisRestrictor);
 
     _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-}
-
-void Foil::mirror(CubicBezier *source, CubicBezier *destination)
-{
-    destination->startPoint()->setRestrictedPos(source->startPoint()->x(), -source->startPoint()->y());
-    destination->endPoint()->setRestrictedPos(source->endPoint()->x(), -source->endPoint()->y());
-
-    destination->controlPoint1()->setRestrictedPos(source->controlPoint1()->x(), -source->controlPoint1()->y());
-    destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
 }
 
 void Foil::onFoilChanged()

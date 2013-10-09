@@ -24,6 +24,7 @@
 
 #include "qmath.h"
 #include "foil.h"
+#include "profile.h"
 #include "contourcalculator.h"
 
 using namespace foillogic;

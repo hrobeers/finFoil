@@ -49,10 +49,10 @@ namespace foillogic
         virtual ~Profile();
 
     signals:
-
-    public slots:
         void profileChanged(Profile* sender);
         void profileReleased(Profile* sender);
+
+    public slots:
 
     private:
         Symmetry::e _symmetry;
@@ -68,8 +68,13 @@ namespace foillogic
 
         void initProfile();
 
+        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
+
     private slots:
         void onProfileChange(patheditor::Path *path);
+
+        void onProfileChanged();
+        void onProfileReleased();
     };
 }
 

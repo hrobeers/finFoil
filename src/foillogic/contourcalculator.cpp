@@ -27,6 +27,8 @@
 #include <qmath.h>
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
+#include "foil.h"
+#include "profile.h"
 
 #define INITCNT 256
 
@@ -68,8 +70,8 @@ void ContourCalculator::run()
 
     qreal t_topProfileTop = 0.3; // start value
     qreal t_botProfileTop = 0.3; // start value
-    qreal topProfileTop = _foil->topProfile()->minY(&t_topProfileTop, _tTol);
-    qreal botProfileTop = _foil->botProfile()->maxY(&t_botProfileTop, _tTol);
+    qreal topProfileTop = _foil->profile()->topProfile()->minY(&t_topProfileTop, _tTol);
+    qreal botProfileTop = _foil->profile()->botProfile()->maxY(&t_botProfileTop, _tTol);
     qreal thicknessRatio = -topProfileTop / botProfileTop; // TODO also output a profile ratio e.g. 70/30
     qreal profileThickness = botProfileTop - topProfileTop;
 
@@ -81,13 +83,13 @@ void ContourCalculator::run()
     bool useBotProfile = _percContourHeight < (botProfileTop / profileThickness);
     if (useBotProfile)
     {
-        profile = _foil->botProfile().data();
+        profile = _foil->profile()->botProfile().data();
         y_profileTop = botProfileTop;
         t_profileTop = t_botProfileTop;
     }
     else
     {
-        profile = _foil->topProfile().data();
+        profile = _foil->profile()->topProfile().data();
         y_profileTop = topProfileTop;
         t_profileTop = t_topProfileTop;
     }

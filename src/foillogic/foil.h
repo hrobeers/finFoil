@@ -23,12 +23,12 @@
 #ifndef FOIL_H
 #define FOIL_H
 
+#include "foillogicfwd/foillogicfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
 #include <QSharedPointer>
 #include "path.h"
-#include "profile.h"
 
 namespace foillogic
 {
@@ -56,9 +56,8 @@ namespace foillogic
         QSharedPointer<patheditor::Path> _thickness;
 
         void initOutline();
+        void initProfile();
         void initThickness();
-
-        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
 
     private slots:
         void onFoilChanged();

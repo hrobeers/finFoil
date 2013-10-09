@@ -20,7 +20,11 @@
  
 ****************************************************************************/
 
-#include "profile.h"
+#include "foillogic/profile.h"
+
+#include "pointrestrictor.h"
+#include "linerestrictor.h"
+#include "cubicbezier.h"
 
 using namespace foillogic;
 using namespace patheditor;
@@ -65,7 +69,7 @@ void Profile::setSymmetry(Symmetry::e symmetry)
 
     onProfileChange(_topProfile.data());
 
-    onFoilReleased();
+    onProfileReleased();
 }
 
 Profile::~Profile()
@@ -114,6 +118,19 @@ void Profile::initProfile()
     // connect the profiles
     connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
     connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
+    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged()));
+    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged()));
+    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+}
+
+void Profile::mirror(CubicBezier *source, CubicBezier *destination)
+{
+    destination->startPoint()->setRestrictedPos(source->startPoint()->x(), -source->startPoint()->y());
+    destination->endPoint()->setRestrictedPos(source->endPoint()->x(), -source->endPoint()->y());
+
+    destination->controlPoint1()->setRestrictedPos(source->controlPoint1()->x(), -source->controlPoint1()->y());
+    destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
 }
 
 void Profile::onProfileChange(Path* path)
@@ -131,4 +148,14 @@ void Profile::onProfileChange(Path* path)
             mirror(_bPart2.data(), _tPart2.data());
         }
     }
+}
+
+void Profile::onProfileChanged()
+{
+    emit profileChanged(this);
+}
+
+void Profile::onProfileReleased()
+{
+    emit profileReleased(this);
 }

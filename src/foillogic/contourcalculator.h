@@ -23,11 +23,11 @@
 #ifndef CONTOURCALCULATOR_H
 #define CONTOURCALCULATOR_H
 
+#include "foillogicfwd/foillogicfwd.h"
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QRunnable>
-#include "foil.h"
 
 namespace foillogic
 {
