@@ -67,7 +67,7 @@ void Profile::setSymmetry(Symmetry::e symmetry)
         }
     }
 
-    onProfileChange(_topProfile.data());
+    onProfileChanged(_topProfile.data());
 
     onProfileReleased();
 }
@@ -116,10 +116,8 @@ void Profile::initProfile()
     _botProfile->append(_bPart2);
 
     // connect the profiles
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChange(patheditor::Path*)));
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged()));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged()));
+    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
     connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
     connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
@@ -133,7 +131,7 @@ void Profile::mirror(CubicBezier *source, CubicBezier *destination)
     destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
 }
 
-void Profile::onProfileChange(Path* path)
+void Profile::onProfileChanged(Path* path)
 {
     if (_symmetry == Symmetry::Symmetric)
     {
@@ -148,10 +146,7 @@ void Profile::onProfileChange(Path* path)
             mirror(_bPart2.data(), _tPart2.data());
         }
     }
-}
 
-void Profile::onProfileChanged()
-{
     emit profileChanged(this);
 }
 

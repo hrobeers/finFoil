@@ -71,9 +71,7 @@ namespace foillogic
         void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
 
     private slots:
-        void onProfileChange(patheditor::Path *path);
-
-        void onProfileChanged();
+        void onProfileChanged(patheditor::Path *path);
         void onProfileReleased();
     };
 }
