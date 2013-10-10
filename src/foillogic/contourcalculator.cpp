@@ -65,15 +65,13 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
 void ContourCalculator::run()
 {
     //
-    // find dimensions of the profile TODO: move into a profileObejct
+    // find dimensions of the profile
     //
 
-    qreal t_topProfileTop = 0.3; // start value
-    qreal t_botProfileTop = 0.3; // start value
-    qreal topProfileTop = _foil->profile()->topProfile()->minY(&t_topProfileTop, _tTol);
-    qreal botProfileTop = _foil->profile()->botProfile()->maxY(&t_botProfileTop, _tTol);
-    qreal thicknessRatio = -topProfileTop / botProfileTop; // TODO also output a profile ratio e.g. 70/30
-    qreal profileThickness = botProfileTop - topProfileTop;
+    qreal t_topProfileTop, t_botProfileTop;
+    qreal topProfileTop = _foil->profile()->topProfileTop(&t_topProfileTop).y();
+    qreal botProfileTop = _foil->profile()->bottomProfileTop(&t_botProfileTop).y();
+    qreal profileThickness = _foil->profile()->thickness();
 
     Path* profile;
     qreal t_profileTop;

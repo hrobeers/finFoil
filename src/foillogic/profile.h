@@ -46,6 +46,11 @@ namespace foillogic
         Symmetry::e symmetry() const;
         void setSymmetry(Symmetry::e symmetry);
 
+        QPointF topProfileTop(qreal* t_top = 0) const;
+        QPointF bottomProfileTop(qreal* t_top = 0) const;
+        qreal thickness() const;
+        qreal thicknessRatio() const;
+
         virtual ~Profile();
 
     signals:
@@ -59,6 +64,11 @@ namespace foillogic
 
         QSharedPointer<patheditor::Path> _topProfile;
         QSharedPointer<patheditor::Path> _botProfile;
+
+        QPointF _topProfileTop, _botProfileTop;
+        qreal t_topProfileTop, t_botProfileTop;
+        qreal _thickness;
+        qreal _thicknessRatio;
 
         // parts of the profile for connecting when symmetric
         QSharedPointer<patheditor::CubicBezier> _tPart1;

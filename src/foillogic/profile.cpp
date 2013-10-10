@@ -26,6 +26,8 @@
 #include "linerestrictor.h"
 #include "cubicbezier.h"
 
+#define TTOL 0.00001
+
 using namespace foillogic;
 using namespace patheditor;
 
@@ -35,6 +37,10 @@ Profile::Profile(QObject *parent) :
     _symmetry = Symmetry::Symmetric;
 
     initProfile();
+
+    // start values
+    t_topProfileTop = 0.3;
+    t_botProfileTop = 0.3;
 }
 
 QSharedPointer<Path> Profile::topProfile()
@@ -70,6 +76,28 @@ void Profile::setSymmetry(Symmetry::e symmetry)
     onProfileChanged(_topProfile.data());
 
     onProfileReleased();
+}
+
+QPointF Profile::topProfileTop(qreal *t_top) const
+{
+    if (t_top) *t_top = t_topProfileTop;
+    return _topProfileTop;
+}
+
+QPointF Profile::bottomProfileTop(qreal *t_top) const
+{
+    if (t_top) *t_top = t_botProfileTop;
+    return _botProfileTop;
+}
+
+qreal Profile::thickness() const
+{
+    return _botProfileTop.y() - _topProfileTop.y();
+}
+
+qreal Profile::thicknessRatio() const
+{
+    return -_topProfileTop.y() / _botProfileTop.y();
 }
 
 Profile::~Profile()
@@ -146,6 +174,11 @@ void Profile::onProfileChanged(Path* path)
             mirror(_bPart2.data(), _tPart2.data());
         }
     }
+
+    _topProfile->minY(&t_topProfileTop, TTOL);
+    _botProfile->maxY(&t_botProfileTop, TTOL);
+    _topProfileTop = _topProfile->pointAtPercent(t_topProfileTop);
+    _botProfileTop = _botProfile->pointAtPercent(t_botProfileTop);
 
     emit profileChanged(this);
 }
