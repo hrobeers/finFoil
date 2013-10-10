@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
+#include <QTableWidget>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
@@ -37,7 +38,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
 {
     //
-    // PathEditor
+    // PathEditors
     //
     PathEditorWidget* pathEditor = new patheditor::PathEditorWidget();
     pathEditor->enableFeature(Features::HorizontalAxis);
@@ -48,6 +49,13 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
 
     pathEditor->addGraphicsItem(contours);
     pathEditor->addPath(new EditablePath(foil->outline()));
+
+
+    //
+    // TabWidget
+    //
+    QTabWidget* tabWidget = new QTabWidget();
+    tabWidget->addTab(pathEditor, tr("Top"));
 
 
     //
@@ -62,7 +70,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     //
     QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(pathEditor);
+    gbLayout->addWidget(tabWidget);
     gbLayout->addWidget(_outlineDataWidget);
     gb->setLayout(gbLayout);
 
