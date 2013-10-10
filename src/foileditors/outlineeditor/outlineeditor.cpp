@@ -39,22 +39,22 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     //
     // PathEditor
     //
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
+    PathEditorWidget* pathEditor = new patheditor::PathEditorWidget();
+    pathEditor->enableFeature(Features::HorizontalAxis);
 
     _finCalculator.reset(new FoilCalculator(foil));
 
     ThicknessContours *contours = new ThicknessContours(_finCalculator.data());
 
-    _pathEditor->addGraphicsItem(contours);
-    _pathEditor->addPath(new EditablePath(foil->outline()));
+    pathEditor->addGraphicsItem(contours);
+    pathEditor->addPath(new EditablePath(foil->outline()));
 
 
     //
     // OutlineDataWidget
     //
     _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), pathEditor, SLOT(setGridUnitSize(qreal)));
 
 
     //
@@ -62,18 +62,11 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     //
     QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
+    gbLayout->addWidget(pathEditor);
     gbLayout->addWidget(_outlineDataWidget);
     gb->setLayout(gbLayout);
 
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
-
-    connect(_finCalculator.data(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
-}
-
-void OutlineEditor::onFoilCalculated()
-{
-    _pathEditor->scene()->update();
 }
