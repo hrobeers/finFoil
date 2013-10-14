@@ -23,6 +23,7 @@
 #ifndef FOIL_H
 #define FOIL_H
 
+#include "foillogicfwd/foillogicfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
@@ -31,11 +32,6 @@
 
 namespace foillogic
 {
-    struct Symmetry
-    {
-        enum e { Symmetric, Asymmetric, Flat };
-    };
-
     class Foil : public QObject
     {
         Q_OBJECT
@@ -43,12 +39,8 @@ namespace foillogic
         explicit Foil(QObject *parent = 0);
 
         QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<patheditor::Path> topProfile();
-        QSharedPointer<patheditor::Path> botProfile();
+        QSharedPointer<foillogic::Profile> profile();
         QSharedPointer<patheditor::Path> thickness();
-
-        Symmetry::e symmetry() const;
-        void setSymmetry(Symmetry::e symmetry);
 
         virtual ~Foil();
 
@@ -59,30 +51,17 @@ namespace foillogic
     public slots:
 
     private:
-        Symmetry::e _symmetry;
-
         QSharedPointer<patheditor::Path> _outline;
-        QSharedPointer<patheditor::Path> _topProfile;
-        QSharedPointer<patheditor::Path> _botProfile;
+        QSharedPointer<foillogic::Profile> _profile;
         QSharedPointer<patheditor::Path> _thickness;
-
-        // parts of the profile for connecting when symmetric
-        QSharedPointer<patheditor::CubicBezier> _tPart1;
-        QSharedPointer<patheditor::CubicBezier> _tPart2;
-        QSharedPointer<patheditor::CubicBezier> _bPart1;
-        QSharedPointer<patheditor::CubicBezier> _bPart2;
 
         void initOutline();
         void initProfile();
         void initThickness();
 
-        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
-
     private slots:
         void onFoilChanged();
         void onFoilReleased();
-
-        void onProfileChange(patheditor::Path *path);
     };
 }
 

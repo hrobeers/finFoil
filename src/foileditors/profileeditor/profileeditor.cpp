@@ -28,6 +28,7 @@
 #include <QGraphicsScene>
 #include "editablepath.h"
 #include "foil.h"
+#include "profile.h"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -40,8 +41,8 @@ ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeature(Features::HorizontalAxis);
 
-    _topProfile = new EditablePath(_foil->topProfile());
-    _botProfile = new EditablePath(_foil->botProfile());
+    _topProfile = new EditablePath(_foil->profile()->topProfile());
+    _botProfile = new EditablePath(_foil->profile()->botProfile());
     symmetryChanged(0);
 
     _pathEditor->addPath(_botProfile);
@@ -73,16 +74,16 @@ void ProfileEditor::symmetryChanged(int sym)
     switch (sym)
     {
     case 0:
-        _foil->setSymmetry(Symmetry::Symmetric);
+        _foil->profile()->setSymmetry(Symmetry::Symmetric);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;
     case 1:
-        _foil->setSymmetry(Symmetry::Asymmetric);
+        _foil->profile()->setSymmetry(Symmetry::Asymmetric);
         _botProfile->setEditable(true);
         break;
     case 2:
-        _foil->setSymmetry(Symmetry::Flat);
+        _foil->profile()->setSymmetry(Symmetry::Flat);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;

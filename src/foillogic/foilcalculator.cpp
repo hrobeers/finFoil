@@ -24,6 +24,7 @@
 
 #include "qmath.h"
 #include "foil.h"
+#include "profile.h"
 #include "contourcalculator.h"
 
 using namespace foillogic;
@@ -68,9 +69,20 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours()
+QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours(Side::e side)
 {
-    return _contours;
+    switch (side) {
+    case Side::Top:
+        partitionContours();
+        return _topContours;
+
+    case Side::Bottom:
+        partitionContours();
+        return _botContours;
+
+    default:
+        return _contours;
+    }
 }
 
 void FoilCalculator::calculate(bool fastCalc)
@@ -125,6 +137,21 @@ qreal FoilCalculator::sweep() const
     return _sweep;
 }
 
+void FoilCalculator::partitionContours()
+{
+    _topContours.clear();
+    _botContours.clear();
+
+    for (int i=0; i<_contours.length(); i++)
+    {
+        qreal midPerc = _foil->profile()->bottomProfileTop().y() / _foil->profile()->thickness();
+        if (_contourThicknesses.at(i) >= midPerc)
+            _topContours.append(_contours.at(i));
+        if (_contourThicknesses.at(i) <= midPerc)
+            _botContours.prepend(_contours.at(i));
+    }
+}
+
 void FoilCalculator::foilChanged()
 {
     calculate(true);
@@ -165,9 +192,9 @@ void SweepCalculator::run()
 
     // find thickest point
     qreal t_thick = 0;
-    _foil->topProfile()->minY(&t_thick);
-    qreal thick = _foil->topProfile()->pointAtPercent(t_thick).x();
-    qreal pEdge = _foil->topProfile()->pointAtPercent(1).x();
+    _foil->profile()->topProfile()->minY(&t_thick);
+    qreal thick = _foil->profile()->topProfile()->pointAtPercent(t_thick).x();
+    qreal pEdge = _foil->profile()->topProfile()->pointAtPercent(1).x();
     qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
 
     // calculate the sweep angle in degrees

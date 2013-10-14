@@ -48,7 +48,7 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     // Layer section
     //
     _layerEdit = new QSpinBox();
-    _layerEdit->setValue(_foilCalculator->contourThicknesses().count() - 1);
+    _layerEdit->setValue(_foilCalculator->contourThicknesses().count());
     _formLayout->addRow(tr("#Layers:"), _layerEdit);
     connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
 
@@ -121,7 +121,7 @@ void OutlineDataWidget::onFoilCalculated()
 
 void OutlineDataWidget::onLayerChange(int layerCount)
 {
-    qreal increment = qreal(1) / qreal(layerCount+1);
+    qreal increment = qreal(1) / qreal(layerCount);
     qreal thickness = 0;
     QList<qreal> thicknesses;
     for (int i = 0; i < layerCount; i++)

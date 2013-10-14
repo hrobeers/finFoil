@@ -29,6 +29,7 @@
 
 namespace foillogic
 {
+    class Profile;
     class Foil;
     class FoilCalculator;
 }

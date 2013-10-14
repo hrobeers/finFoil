@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
+#include <QTableWidget>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
@@ -35,26 +36,43 @@ using namespace foillogic;
 
 OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
-{
-    //
-    // PathEditor
-    //
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-
+{    
     _finCalculator.reset(new FoilCalculator(foil));
 
-    ThicknessContours *contours = new ThicknessContours(_finCalculator.data());
 
-    _pathEditor->addGraphicsItem(contours);
-    _pathEditor->addPath(new EditablePath(foil->outline()));
+    //
+    // PathEditors
+    //
+    PathEditorWidget* topPathEditor = new patheditor::PathEditorWidget();
+    topPathEditor->enableFeature(Features::HorizontalAxis);
+    PathEditorWidget* botPathEditor = new patheditor::PathEditorWidget();
+    botPathEditor->enableFeature(Features::HorizontalAxis);
+
+    ThicknessContours *topContours = new ThicknessContours(_finCalculator.data(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_finCalculator.data(), Side::Bottom);
+
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline());
+    nonEditableOutline->setEditable(false);
+    topPathEditor->addGraphicsItem(topContours);
+    topPathEditor->addPath(new EditablePath(foil->outline()));
+    botPathEditor->addGraphicsItem(botContours);
+    botPathEditor->addPath(nonEditableOutline);
+
+
+    //
+    // TabWidget
+    //
+    QTabWidget* tabWidget = new QTabWidget();
+    tabWidget->addTab(topPathEditor, tr("Top"));
+    tabWidget->addTab(botPathEditor, tr("Bottom"));
 
 
     //
     // OutlineDataWidget
     //
     _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _pathEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), topPathEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), botPathEditor, SLOT(setGridUnitSize(qreal)));
 
 
     //
@@ -62,18 +80,11 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     //
     QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
+    gbLayout->addWidget(tabWidget);
     gbLayout->addWidget(_outlineDataWidget);
     gb->setLayout(gbLayout);
 
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
-
-    connect(_finCalculator.data(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
-}
-
-void OutlineEditor::onFoilCalculated()
-{
-    _pathEditor->scene()->update();
 }

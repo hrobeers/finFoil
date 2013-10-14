@@ -55,11 +55,7 @@ namespace foileditors
         QScopedPointer<foillogic::FoilCalculator> _finCalculator;
 
         QVBoxLayout* _mainLayout;
-        patheditor::PathEditorWidget* _pathEditor;
         OutlineDataWidget* _outlineDataWidget;
-
-    private slots:
-        void onFoilCalculated();
     };
 }
 

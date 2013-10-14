@@ -20,89 +20,70 @@
  
 ****************************************************************************/
 
-#ifndef FOILCALCULATOR_H
-#define FOILCALCULATOR_H
-
-#include "foillogicfwd/foillogicfwd.h"
+#ifndef PROFILE_H
+#define PROFILE_H
 
 #include <QObject>
-#include <QThreadPool>
 #include <QSharedPointer>
-#include <QPainterPath>
+#include "path.h"
 
 namespace foillogic
 {
-    struct Side
+    struct Symmetry
     {
-        enum e { Top, Bottom, All };
+        enum e { Symmetric, Asymmetric, Flat };
     };
 
-    class FoilCalculator : public QObject
+    class Profile : public QObject
     {
         Q_OBJECT
     public:
-        explicit FoilCalculator(Foil* foil);
+        explicit Profile(QObject *parent = 0);
 
-        Foil* foil();
+        QSharedPointer<patheditor::Path> topProfile();
+        QSharedPointer<patheditor::Path> botProfile();
 
-        QList<qreal> contourThicknesses() const;
-        void setContourThicknesses(QList<qreal> thicknesses);
-        QList<QSharedPointer<QPainterPath> > calculatedContours(Side::e side = Side::All);
+        Symmetry::e symmetry() const;
+        void setSymmetry(Symmetry::e symmetry);
 
-        void calculate(bool fastCalc);
-        bool calculated() const;
+        QPointF topProfileTop(qreal* t_top = 0) const;
+        QPointF bottomProfileTop(qreal* t_top = 0) const;
+        qreal thickness() const;
+        qreal thicknessRatio() const;
 
-        qreal area() const;
-        qreal sweep() const;
+        virtual ~Profile();
 
     signals:
-        void foilCalculated(FoilCalculator* sender);
+        void profileChanged(Profile* sender);
+        void profileReleased(Profile* sender);
 
     public slots:
 
     private:
-        bool _calculated;
-        QThreadPool _tPool;
+        Symmetry::e _symmetry;
 
-        Foil* _foil;
+        QSharedPointer<patheditor::Path> _topProfile;
+        QSharedPointer<patheditor::Path> _botProfile;
 
-        QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _contours;
-        QList<QSharedPointer<QPainterPath> > _topContours;
-        QList<QSharedPointer<QPainterPath> > _botContours;
-        qreal _area;
-        qreal _sweep;
+        QPointF _topProfileTop, _botProfileTop;
+        qreal t_topProfileTop, t_botProfileTop;
+        qreal _thickness;
+        qreal _thicknessRatio;
 
-        void partitionContours();
+        // parts of the profile for connecting when symmetric
+        QSharedPointer<patheditor::CubicBezier> _tPart1;
+        QSharedPointer<patheditor::CubicBezier> _tPart2;
+        QSharedPointer<patheditor::CubicBezier> _bPart1;
+        QSharedPointer<patheditor::CubicBezier> _bPart2;
+
+        void initProfile();
+
+        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
 
     private slots:
-        void foilChanged();
-        void foilReleased();
-    };
-
-    class AreaCalculator : public QRunnable
-    {
-    public:
-        explicit AreaCalculator(Foil* foil, qreal* area);
-
-        virtual void run();
-
-    private:
-        Foil* _foil;
-        qreal* _area;
-    };
-
-    class SweepCalculator : public QRunnable
-    {
-    public:
-        explicit SweepCalculator(Foil* foil, qreal* sweep);
-
-        virtual void run();
-
-    private:
-        Foil* _foil;
-        qreal* _sweep;
+        void onProfileChanged(patheditor::Path *path);
+        void onProfileReleased();
     };
 }
 
-#endif // FOILCALCULATOR_H
+#endif // PROFILE_H

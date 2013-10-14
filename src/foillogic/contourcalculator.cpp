@@ -27,6 +27,8 @@
 #include <qmath.h>
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
+#include "foil.h"
+#include "profile.h"
 
 #define INITCNT 256
 
@@ -36,7 +38,7 @@ using namespace patheditor;
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, bool fast)
 {
     _foil = foil;
-    _symmetric = foil->symmetry();
+    _symmetric = foil->profile()->symmetry();
     _outline = foil->outline().data();
     _thickness = foil->thickness().data();
 
@@ -66,12 +68,10 @@ void ContourCalculator::run()
     // find dimensions of the profile
     //
 
-    qreal t_topProfileTop = 0.3; // start value
-    qreal t_botProfileTop = 0.3; // start value
-    qreal topProfileTop = _foil->topProfile()->minY(&t_topProfileTop, _tTol);
-    qreal botProfileTop = _foil->botProfile()->maxY(&t_botProfileTop, _tTol);
-    qreal thicknessRatio = -topProfileTop / botProfileTop; // TODO also output a profile ratio e.g. 70/30
-    qreal profileThickness = botProfileTop - topProfileTop;
+    qreal t_topProfileTop, t_botProfileTop;
+    qreal topProfileTop = _foil->profile()->topProfileTop(&t_topProfileTop).y();
+    qreal botProfileTop = _foil->profile()->bottomProfileTop(&t_botProfileTop).y();
+    qreal profileThickness = _foil->profile()->thickness();
 
     Path* profile;
     qreal t_profileTop;
@@ -81,13 +81,13 @@ void ContourCalculator::run()
     bool useBotProfile = _percContourHeight < (botProfileTop / profileThickness);
     if (useBotProfile)
     {
-        profile = _foil->botProfile().data();
+        profile = _foil->profile()->botProfile().data();
         y_profileTop = botProfileTop;
         t_profileTop = t_botProfileTop;
     }
     else
     {
-        profile = _foil->topProfile().data();
+        profile = _foil->profile()->topProfile().data();
         y_profileTop = topProfileTop;
         t_profileTop = t_topProfileTop;
     }
