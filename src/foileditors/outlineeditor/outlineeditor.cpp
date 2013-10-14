@@ -36,33 +36,43 @@ using namespace foillogic;
 
 OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
-{
+{    
+    _finCalculator.reset(new FoilCalculator(foil));
+
+
     //
     // PathEditors
     //
-    PathEditorWidget* pathEditor = new patheditor::PathEditorWidget();
-    pathEditor->enableFeature(Features::HorizontalAxis);
+    PathEditorWidget* topPathEditor = new patheditor::PathEditorWidget();
+    topPathEditor->enableFeature(Features::HorizontalAxis);
+    PathEditorWidget* botPathEditor = new patheditor::PathEditorWidget();
+    botPathEditor->enableFeature(Features::HorizontalAxis);
 
-    _finCalculator.reset(new FoilCalculator(foil));
+    ThicknessContours *topContours = new ThicknessContours(_finCalculator.data(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_finCalculator.data(), Side::Bottom);
 
-    ThicknessContours *contours = new ThicknessContours(_finCalculator.data());
-
-    pathEditor->addGraphicsItem(contours);
-    pathEditor->addPath(new EditablePath(foil->outline()));
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline());
+    nonEditableOutline->setEditable(false);
+    topPathEditor->addGraphicsItem(topContours);
+    topPathEditor->addPath(new EditablePath(foil->outline()));
+    botPathEditor->addGraphicsItem(botContours);
+    botPathEditor->addPath(nonEditableOutline);
 
 
     //
     // TabWidget
     //
     QTabWidget* tabWidget = new QTabWidget();
-    tabWidget->addTab(pathEditor, tr("Top"));
+    tabWidget->addTab(topPathEditor, tr("Top"));
+    tabWidget->addTab(botPathEditor, tr("Bottom"));
 
 
     //
     // OutlineDataWidget
     //
     _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), pathEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), topPathEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), botPathEditor, SLOT(setGridUnitSize(qreal)));
 
 
     //

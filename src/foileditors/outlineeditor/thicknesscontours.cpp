@@ -29,13 +29,14 @@
 #include "foil.h"
 
 using namespace foileditors;
+using namespace foillogic;
 
-ThicknessContours::ThicknessContours(foillogic::FoilCalculator *calculator, QGraphicsItem *parent) :
+ThicknessContours::ThicknessContours(foillogic::FoilCalculator *calculator, Side::e side, QGraphicsItem *parent) :
     QGraphicsObject(parent)
 {
-    _calculator = calculator;
-
+    _side = side;
     _nextDetailed = false;
+    _calculator = calculator;
 }
 
 void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/)
@@ -49,7 +50,7 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
         painter->setBrush(QColor(min, 0, max, a));
 
-        QList<QSharedPointer<QPainterPath> > contours = _calculator->calculatedContours();
+        QList<QSharedPointer<QPainterPath> > contours = _calculator->calculatedContours(_side);
 
         int numberOfContours = contours.length();
         if (numberOfContours > 0)

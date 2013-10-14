@@ -69,9 +69,20 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours()
+QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours(Side::e side)
 {
-    return _contours;
+    switch (side) {
+    case Side::Top:
+        partitionContours();
+        return _topContours;
+
+    case Side::Bottom:
+        partitionContours();
+        return _botContours;
+
+    default:
+        return _contours;
+    }
 }
 
 void FoilCalculator::calculate(bool fastCalc)
@@ -124,6 +135,21 @@ qreal FoilCalculator::area() const
 qreal FoilCalculator::sweep() const
 {
     return _sweep;
+}
+
+void FoilCalculator::partitionContours()
+{
+    _topContours.clear();
+    _botContours.clear();
+
+    for (int i=0; i<_contours.length(); i++)
+    {
+        qreal midPerc = _foil->profile()->bottomProfileTop().y() / _foil->profile()->thickness();
+        if (_contourThicknesses.at(i) >= midPerc)
+            _topContours.append(_contours.at(i));
+        if (_contourThicknesses.at(i) <= midPerc)
+            _botContours.prepend(_contours.at(i));
+    }
 }
 
 void FoilCalculator::foilChanged()

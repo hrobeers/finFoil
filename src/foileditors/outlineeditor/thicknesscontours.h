@@ -23,10 +23,12 @@
 #ifndef THICKNESSCONTOURS_H
 #define THICKNESSCONTOURS_H
 
-#include <QGraphicsObject>
-#include <QThreadPool>
 #include "patheditorfwd/patheditorfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
+
+#include <QGraphicsObject>
+#include <QThreadPool>
+#include "foilcalculator.h"
 
 using namespace patheditor;
 
@@ -36,7 +38,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(foillogic::FoilCalculator* calculator, QGraphicsItem *parent = 0);
+        explicit ThicknessContours(foillogic::FoilCalculator* calculator, foillogic::Side::e side = foillogic::Side::All, QGraphicsItem *parent = 0);
 
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         virtual QRectF boundingRect() const;
@@ -48,9 +50,10 @@ namespace foileditors
     public slots:
 
     private:
-        foillogic::FoilCalculator* _calculator;
-
+        foillogic::Side::e _side;
         bool _nextDetailed;
+
+        foillogic::FoilCalculator* _calculator;
     };
 }
 
