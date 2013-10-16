@@ -145,9 +145,10 @@ void FoilCalculator::partitionContours()
     for (int i=0; i<_contours.length(); i++)
     {
         qreal midPerc = _foil->profile()->bottomProfileTop().y() / _foil->profile()->thickness();
-        if (_contourThicknesses.at(i) >= midPerc)
+        qreal percFromMid = _contourThicknesses.at(i) - midPerc;
+        if (percFromMid > -0.0001)
             _topContours.append(_contours.at(i));
-        if (_contourThicknesses.at(i) <= midPerc)
+        if (percFromMid < 0.0001)
             _botContours.prepend(_contours.at(i));
     }
 }
