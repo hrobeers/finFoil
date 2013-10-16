@@ -29,6 +29,7 @@
 #include "hrlib/math/spline.hpp"
 #include "foil.h"
 #include "profile.h"
+#include "thicknessprofile.h"
 
 #define INITCNT 256
 
@@ -40,7 +41,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
     _foil = foil;
     _symmetric = foil->profile()->symmetry();
     _outline = foil->outline().data();
-    _thickness = foil->thickness().data();
+    _thickness = foil->thickness()->topProfile().data();
 
 
     _percContourHeight = percContourHeight;

@@ -20,38 +20,39 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#ifndef THICKNESSPROFILE_H
+#define THICKNESSPROFILE_H
 
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include "editablepath.h"
-#include "foil.h"
-#include "thicknessprofile.h"
+#include "patheditorfwd/patheditorfwd.h"
 
-using namespace foileditors;
-using namespace foillogic;
+#include <QObject>
+#include <QSharedPointer>
 
-ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
-    QWidget(parent)
+namespace foillogic
 {
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
+    class ThicknessProfile : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit ThicknessProfile(QObject *parent = 0);
 
-    EditablePath* path = new EditablePath(foil->thickness()->topProfile());
+        QSharedPointer<patheditor::Path> topProfile();
 
-    _pathEditor->addPath(path);
+        virtual ~ThicknessProfile();
 
-    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
-    QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
-    gb->setLayout(gbLayout);
+    signals:
+        void profileChanged(ThicknessProfile* sender);
+        void profileReleased(ThicknessProfile* sender);
 
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(gb);
-    this->setLayout(_mainLayout);
+    public slots:
+
+    private:
+        QSharedPointer<patheditor::Path> _topProfile;
+
+    private slots:
+        void onProfileChanged(patheditor::Path *path);
+        void onProfileReleased();
+    };
 }
 
-ThicknessEditor::~ThicknessEditor()
-{
-}
+#endif // THICKNESSPROFILE_H

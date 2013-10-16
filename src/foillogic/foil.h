@@ -39,8 +39,8 @@ namespace foillogic
         explicit Foil(QObject *parent = 0);
 
         QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<foillogic::Profile> profile();
-        QSharedPointer<patheditor::Path> thickness();
+        QSharedPointer<Profile> profile();
+        QSharedPointer<ThicknessProfile> thickness();
 
         virtual ~Foil();
 
@@ -53,7 +53,7 @@ namespace foillogic
     private:
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<foillogic::Profile> _profile;
-        QSharedPointer<patheditor::Path> _thickness;
+        QSharedPointer<foillogic::ThicknessProfile> _thickness;
 
         void initOutline();
         void initProfile();
