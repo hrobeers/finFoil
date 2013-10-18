@@ -44,6 +44,8 @@ Foil::Foil(QObject *parent) :
     connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
     connect(_thickness.data(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
 
+    connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
+
     connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
     connect(_profile.data(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
     connect(_thickness.data(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
@@ -120,4 +122,9 @@ void Foil::onFoilChanged()
 void Foil::onFoilReleased()
 {
     emit foilReleased(this);
+}
+
+void Foil::onProfileChanged()
+{
+    _thickness->setThicknessRatio(_profile->thicknessRatio());
 }

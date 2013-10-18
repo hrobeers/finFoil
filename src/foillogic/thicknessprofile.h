@@ -37,6 +37,7 @@ namespace foillogic
         explicit ThicknessProfile(QObject *parent = 0);
 
         QSharedPointer<patheditor::Path> topProfile();
+        QSharedPointer<patheditor::Path> botProfile();
 
         virtual ~ThicknessProfile();
 
@@ -44,10 +45,21 @@ namespace foillogic
         void profileChanged(ThicknessProfile* sender);
         void profileReleased(ThicknessProfile* sender);
 
+        void mirrored();
+
     public slots:
+        void setThicknessRatio(qreal profileRatio);
 
     private:
+        qreal _thicknessRatio;
+
         QSharedPointer<patheditor::Path> _topProfile;
+        QSharedPointer<patheditor::Path> _botProfile;
+
+        QSharedPointer<patheditor::CubicBezier> _topBezier;
+        QSharedPointer<patheditor::CubicBezier> _botBezier;
+
+        void mirror();
 
     private slots:
         void onProfileChanged(patheditor::Path *path);

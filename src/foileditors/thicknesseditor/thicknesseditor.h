@@ -48,6 +48,8 @@ namespace foileditors
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
 
+    private slots:
+        void update();
     };
 }
 

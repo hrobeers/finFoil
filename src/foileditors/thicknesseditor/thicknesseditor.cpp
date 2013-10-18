@@ -24,6 +24,7 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QGraphicsScene>
 #include "editablepath.h"
 #include "foil.h"
 #include "thicknessprofile.h"
@@ -38,9 +39,13 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     _pathEditor->enableFeature(Features::HorizontalAxis);
     _pathEditor->enableFeature(Features::VerticalAxis);
 
-    EditablePath* path = new EditablePath(foil->thickness()->topProfile());
+    EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
+    botPath->setEditable(false);
+    connect(foil->thickness().data(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
 
-    _pathEditor->addPath(path);
+    _pathEditor->addPath(topPath);
+    _pathEditor->addPath(botPath);
 
     QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
@@ -54,4 +59,9 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
 
 ThicknessEditor::~ThicknessEditor()
 {
+}
+
+void ThicknessEditor::update()
+{
+    _pathEditor->scene()->update();
 }

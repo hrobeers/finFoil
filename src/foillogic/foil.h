@@ -62,6 +62,8 @@ namespace foillogic
     private slots:
         void onFoilChanged();
         void onFoilReleased();
+
+        void onProfileChanged();
     };
 }
 
