@@ -28,6 +28,7 @@
 #include "quadrantrestrictor.h"
 #include "cubicbezier.h"
 #include "profile.h"
+#include "thicknessprofile.h"
 
 using namespace foillogic;
 using namespace patheditor;
@@ -41,11 +42,13 @@ Foil::Foil(QObject *parent) :
 
     connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
     connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
-    connect(_thickness.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_thickness.data(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
+
+    connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
 
     connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
     connect(_profile.data(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
-    connect(_thickness.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_thickness.data(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
 QSharedPointer<Path> Foil::outline()
@@ -58,7 +61,7 @@ QSharedPointer<Profile> Foil::profile()
     return _profile;
 }
 
-QSharedPointer<Path> Foil::thickness()
+QSharedPointer<ThicknessProfile> Foil::thickness()
 {
     return _thickness;
 }
@@ -108,21 +111,7 @@ void Foil::initProfile()
 
 void Foil::initThickness()
 {
-    _thickness = QSharedPointer<Path>(new Path());
-
-    QSharedPointer<PathPoint> point0(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
-
-    QSharedPointer<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));
-
-    point1->setRestrictor(verticalAxisRestrictor);
-    point4->setRestrictor(horizontalAxisRestrictor);
-
-    _thickness->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    _thickness = QSharedPointer<ThicknessProfile>(new ThicknessProfile());
 }
 
 void Foil::onFoilChanged()
@@ -133,4 +122,9 @@ void Foil::onFoilChanged()
 void Foil::onFoilReleased()
 {
     emit foilReleased(this);
+}
+
+void Foil::onProfileChanged()
+{
+    _thickness->setThicknessRatio(_profile->thicknessRatio());
 }

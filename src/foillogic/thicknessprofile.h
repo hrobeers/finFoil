@@ -20,48 +20,51 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#ifndef THICKNESSPROFILE_H
+#define THICKNESSPROFILE_H
 
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include <QGraphicsScene>
-#include "editablepath.h"
-#include "foil.h"
-#include "thicknessprofile.h"
+#include "patheditorfwd/patheditorfwd.h"
 
-using namespace foileditors;
-using namespace foillogic;
+#include <QObject>
+#include <QSharedPointer>
 
-ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
-    QWidget(parent)
+namespace foillogic
 {
-    _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
+    class ThicknessProfile : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit ThicknessProfile(QObject *parent = 0);
 
-    EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
-    botPath->setEditable(false);
-    connect(foil->thickness().data(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
-    EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
+        QSharedPointer<patheditor::Path> topProfile();
+        QSharedPointer<patheditor::Path> botProfile();
 
-    _pathEditor->addPath(topPath);
-    _pathEditor->addPath(botPath);
+        virtual ~ThicknessProfile();
 
-    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
-    QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(_pathEditor);
-    gb->setLayout(gbLayout);
+    signals:
+        void profileChanged(ThicknessProfile* sender);
+        void profileReleased(ThicknessProfile* sender);
 
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(gb);
-    this->setLayout(_mainLayout);
+        void mirrored();
+
+    public slots:
+        void setThicknessRatio(qreal profileRatio);
+
+    private:
+        qreal _thicknessRatio;
+
+        QSharedPointer<patheditor::Path> _topProfile;
+        QSharedPointer<patheditor::Path> _botProfile;
+
+        QSharedPointer<patheditor::CubicBezier> _topBezier;
+        QSharedPointer<patheditor::CubicBezier> _botBezier;
+
+        void mirror();
+
+    private slots:
+        void onProfileChanged(patheditor::Path *path);
+        void onProfileReleased();
+    };
 }
 
-ThicknessEditor::~ThicknessEditor()
-{
-}
-
-void ThicknessEditor::update()
-{
-    _pathEditor->scene()->update();
-}
+#endif // THICKNESSPROFILE_H
