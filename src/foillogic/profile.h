@@ -68,7 +68,6 @@ namespace foillogic
         QPointF _topProfileTop, _botProfileTop;
         qreal t_topProfileTop, t_botProfileTop;
         qreal _thickness;
-        qreal _thicknessRatio;
 
         // parts of the profile for connecting when symmetric
         QSharedPointer<patheditor::CubicBezier> _tPart1;
