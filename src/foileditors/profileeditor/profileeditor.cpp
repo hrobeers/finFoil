@@ -33,7 +33,7 @@
 using namespace foileditors;
 using namespace foillogic;
 
-ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
+ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     QWidget(parent)
 {
     _foil = foil;

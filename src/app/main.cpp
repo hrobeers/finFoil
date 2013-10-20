@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         QSharedPointer<Foil> fin(new Foil());
 
         OutlineEditor* outlineEditor = new OutlineEditor(fin.data());
-        ProfileEditor* profileEditor = new ProfileEditor(fin);
+        ProfileEditor* profileEditor = new ProfileEditor(fin.data());
         ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
         FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
         QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
