@@ -48,12 +48,15 @@ int main(int argc, char *argv[])
         OutlineEditor* outlineEditor = new OutlineEditor(fin.data());
         ProfileEditor* profileEditor = new ProfileEditor(fin);
         ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
+        FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
+        QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
 
         QHBoxLayout* mainLayout = new QHBoxLayout();
         QVBoxLayout* ptLayout = new QVBoxLayout();
 
         ptLayout->addWidget(thicknessEditor);
         ptLayout->addWidget(profileEditor);
+        ptLayout->addWidget(foilDataWidget);
 
         mainLayout->addWidget(outlineEditor);
         mainLayout->addLayout(ptLayout);

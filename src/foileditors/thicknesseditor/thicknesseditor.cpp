@@ -47,7 +47,7 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     _pathEditor->addPath(topPath);
     _pathEditor->addPath(botPath);
 
-    QGroupBox* gb = new QGroupBox(tr("Thickness Editor"));
+    QGroupBox* gb = new QGroupBox(tr("Thickness"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
     gbLayout->addWidget(_pathEditor);
     gb->setLayout(gbLayout);

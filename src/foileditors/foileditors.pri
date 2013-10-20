@@ -4,11 +4,11 @@ HEADERS += \
     ../foileditors/foileditors.h \
     ../foileditors/outlineeditor/thicknesscontours.h \
     ../foileditors/outlineeditor/outlineeditor.h \
-    ../foileditors/outlineeditor/foildatawidget.h
+    ../foileditors/foildatawidget.h
 
 SOURCES += \
     ../foileditors/profileeditor/profileeditor.cpp \
     ../foileditors/thicknesseditor/thicknesseditor.cpp \
     ../foileditors/outlineeditor/thicknesscontours.cpp \
     ../foileditors/outlineeditor/outlineeditor.cpp \
-    ../foileditors/outlineeditor/foildatawidget.cpp
+    ../foileditors/foildatawidget.cpp

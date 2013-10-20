@@ -28,7 +28,6 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include "foildatawidget.h"
 #include "foilcalculator.h"
 
 using namespace patheditor;
@@ -45,17 +44,22 @@ namespace foileditors
     public:
         explicit OutlineEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
+        foillogic::FoilCalculator* foilCalculator();
+
         virtual ~OutlineEditor() {}
 
     signals:
 
     public slots:
+        void setGridUnitSize(qreal pxPerUnit);
 
     private:
-        QScopedPointer<foillogic::FoilCalculator> _finCalculator;
+        QScopedPointer<foillogic::FoilCalculator> _foilCalculator;
 
         QVBoxLayout* _mainLayout;
-        FoilDataWidget* _outlineDataWidget;
+
+        PathEditorWidget* _topPathEditor;
+        PathEditorWidget* _botPathEditor;
     };
 }
 
