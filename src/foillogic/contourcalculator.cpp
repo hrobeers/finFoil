@@ -31,7 +31,7 @@
 #include "profile.h"
 #include "thicknessprofile.h"
 
-#define INITCNT 25
+#define INITCNT 256
 
 using namespace foillogic;
 using namespace patheditor;
