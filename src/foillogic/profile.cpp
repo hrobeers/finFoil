@@ -100,7 +100,7 @@ qreal Profile::thicknessRatio() const
     if (_topProfileTop.y() == 0)
         return 0.0000001;
     if (_botProfileTop.y() == 0)
-        return 0.9999999;
+        return 9999999;
     return -_topProfileTop.y() / _botProfileTop.y();
 }
 

@@ -56,8 +56,10 @@ namespace foileditors
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
         QLineEdit* _sweepEdit;
+        QLineEdit* _thicknessRatioEdit;
 
         void AreaChanged(qreal area);
+        QString thicknessRatioString(qreal ratio);
 
     private slots:
         void onFoilCalculated();

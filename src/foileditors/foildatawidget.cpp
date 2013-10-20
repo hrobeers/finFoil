@@ -31,9 +31,11 @@
 
 #include "editablepath.h"
 #include "foilcalculator.h"
-#include "foil.h"
+#include "foillogic/foil.h"
+#include "foillogic/profile.h"
 
 using namespace foileditors;
+using namespace foillogic;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
@@ -80,6 +82,14 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _formLayout->addRow(tr("Sweep:"), _sweepEdit);
 
 
+    //
+    // Thickness ratio section
+    //
+    _thicknessRatioEdit = new QLineEdit(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
+    _thicknessRatioEdit->setReadOnly(true);
+    _formLayout->addRow(tr("Thickness ratio:"), _thicknessRatioEdit);
+
+
     QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
     gb->setLayout(_formLayout);
     QVBoxLayout* layout = new QVBoxLayout();
@@ -113,10 +123,18 @@ void FoilDataWidget::AreaChanged(qreal area)
     emit pxPerUnitChanged(_pxPerUnit);
 }
 
+QString FoilDataWidget::thicknessRatioString(qreal ratio)
+{
+    qreal bot = qRound(100 / (1 + ratio));
+    qreal top = 100 - bot;
+    return QString::number(top) + "/" + QString::number(bot);
+}
+
 void FoilDataWidget::onFoilCalculated()
 {
     AreaChanged(_foilCalculator->area());
     _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
+    _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
 void FoilDataWidget::onLayerChange(int layerCount)
