@@ -70,7 +70,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     //
     // OutlineDataWidget
     //
-    _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
+    _outlineDataWidget = new FoilDataWidget(_finCalculator.data());
     connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), topPathEditor, SLOT(setGridUnitSize(qreal)));
     connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), botPathEditor, SLOT(setGridUnitSize(qreal)));
 

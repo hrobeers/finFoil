@@ -28,7 +28,7 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include "outlinedatawidget.h"
+#include "foildatawidget.h"
 #include "foilcalculator.h"
 
 using namespace patheditor;
@@ -55,7 +55,7 @@ namespace foileditors
         QScopedPointer<foillogic::FoilCalculator> _finCalculator;
 
         QVBoxLayout* _mainLayout;
-        OutlineDataWidget* _outlineDataWidget;
+        FoilDataWidget* _outlineDataWidget;
     };
 }
 

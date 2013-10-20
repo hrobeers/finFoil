@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "outlinedatawidget.h"
+#include "foildatawidget.h"
 
 #include <qmath.h>
 #include <QFormLayout>
@@ -35,7 +35,7 @@
 
 using namespace foileditors;
 
-OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
+FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
 {
     _foilCalculator = foilCalculator;
@@ -89,7 +89,7 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
 }
 
 
-void OutlineDataWidget::onDepthChange(double depth)
+void FoilDataWidget::onDepthChange(double depth)
 {
     _depth = depth;
     emit depthChanged((qreal)depth);
@@ -97,7 +97,7 @@ void OutlineDataWidget::onDepthChange(double depth)
     AreaChanged(_foilCalculator->area());
 }
 
-void OutlineDataWidget::AreaChanged(qreal area)
+void FoilDataWidget::AreaChanged(qreal area)
 {
     if (_depth != 0)
     {
@@ -113,13 +113,13 @@ void OutlineDataWidget::AreaChanged(qreal area)
     emit pxPerUnitChanged(_pxPerUnit);
 }
 
-void OutlineDataWidget::onFoilCalculated()
+void FoilDataWidget::onFoilCalculated()
 {
     AreaChanged(_foilCalculator->area());
     _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
 }
 
-void OutlineDataWidget::onLayerChange(int layerCount)
+void FoilDataWidget::onLayerChange(int layerCount)
 {
     qreal increment = qreal(1) / qreal(layerCount);
     qreal thickness = 0;
