@@ -50,7 +50,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     // Layer section
     //
     _layerEdit = new QSpinBox();
-    _layerEdit->setValue(_foilCalculator->contourThicknesses().count());
+    _layerEdit->setValue(_foilCalculator->contourThicknesses().count() + 1);
     _formLayout->addRow(tr("#Layers:"), _layerEdit);
     connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
 
@@ -142,7 +142,7 @@ void FoilDataWidget::onLayerChange(int layerCount)
     qreal increment = qreal(1) / qreal(layerCount);
     qreal thickness = 0;
     QList<qreal> thicknesses;
-    for (int i = 0; i < layerCount; i++)
+    for (int i = 0; i < layerCount - 1; i++)
     {
         thickness += increment;
         thicknesses.append(thickness);
