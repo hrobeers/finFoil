@@ -199,7 +199,7 @@ void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thickne
     qreal increment = qreal(1) / _sectionCount;
     qreal t = 0;
     qreal height = _thickness->pointAtPercent(1).x();
-    qreal maxThickness = _thickness->minY();
+    qreal maxThickness = qMin(_thickness->minY(), _thickness->pointAtPercent(0).y());
     for (int i=0; i<_sectionCount; i++)
     {
         QPointF p = _thickness->pointAtPercent(t);
