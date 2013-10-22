@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "outlinedatawidget.h"
+#include "foildatawidget.h"
 
 #include <qmath.h>
 #include <QFormLayout>
@@ -31,11 +31,13 @@
 
 #include "editablepath.h"
 #include "foilcalculator.h"
-#include "foil.h"
+#include "foillogic/foil.h"
+#include "foillogic/profile.h"
 
 using namespace foileditors;
+using namespace foillogic;
 
-OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
+FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
 {
     _foilCalculator = foilCalculator;
@@ -48,7 +50,7 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     // Layer section
     //
     _layerEdit = new QSpinBox();
-    _layerEdit->setValue(_foilCalculator->contourThicknesses().count());
+    _layerEdit->setValue(_foilCalculator->contourThicknesses().count() + 1);
     _formLayout->addRow(tr("#Layers:"), _layerEdit);
     connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
 
@@ -80,6 +82,14 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
     _formLayout->addRow(tr("Sweep:"), _sweepEdit);
 
 
+    //
+    // Thickness ratio section
+    //
+    _thicknessRatioEdit = new QLineEdit(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
+    _thicknessRatioEdit->setReadOnly(true);
+    _formLayout->addRow(tr("Thickness ratio:"), _thicknessRatioEdit);
+
+
     QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
     gb->setLayout(_formLayout);
     QVBoxLayout* layout = new QVBoxLayout();
@@ -89,7 +99,7 @@ OutlineDataWidget::OutlineDataWidget(foillogic::FoilCalculator *foilCalculator, 
 }
 
 
-void OutlineDataWidget::onDepthChange(double depth)
+void FoilDataWidget::onDepthChange(double depth)
 {
     _depth = depth;
     emit depthChanged((qreal)depth);
@@ -97,7 +107,7 @@ void OutlineDataWidget::onDepthChange(double depth)
     AreaChanged(_foilCalculator->area());
 }
 
-void OutlineDataWidget::AreaChanged(qreal area)
+void FoilDataWidget::AreaChanged(qreal area)
 {
     if (_depth != 0)
     {
@@ -113,18 +123,26 @@ void OutlineDataWidget::AreaChanged(qreal area)
     emit pxPerUnitChanged(_pxPerUnit);
 }
 
-void OutlineDataWidget::onFoilCalculated()
+QString FoilDataWidget::thicknessRatioString(qreal ratio)
+{
+    qreal bot = qRound(100 / (1 + ratio));
+    qreal top = 100 - bot;
+    return QString::number(top) + "/" + QString::number(bot);
+}
+
+void FoilDataWidget::onFoilCalculated()
 {
     AreaChanged(_foilCalculator->area());
     _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
+    _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
-void OutlineDataWidget::onLayerChange(int layerCount)
+void FoilDataWidget::onLayerChange(int layerCount)
 {
     qreal increment = qreal(1) / qreal(layerCount);
     qreal thickness = 0;
     QList<qreal> thicknesses;
-    for (int i = 0; i < layerCount; i++)
+    for (int i = 0; i < layerCount - 1; i++)
     {
         thickness += increment;
         thicknesses.append(thickness);

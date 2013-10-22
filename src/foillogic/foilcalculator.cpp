@@ -35,12 +35,11 @@ FoilCalculator::FoilCalculator(Foil *foil) :
     _calculated = false;
     _foil = foil;
 
-    int numOfContours = 5;
-    qreal increment = qreal(1) / qreal(numOfContours+1);
+    int numOfContours = 6;
+    qreal increment = qreal(1) / qreal(numOfContours);
     qreal thickness = 0;
     QList<qreal> thicknesses;
-    thicknesses.append(0);
-    for (int i = 0; i < numOfContours; i++)
+    for (int i = 0; i < numOfContours - 1; i++)
     {
         thickness += increment;
         thicknesses.append(thickness);

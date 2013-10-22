@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEDATAWIDGET_H
-#define OUTLINEDATAWIDGET_H
+#ifndef FOILDATAWIDGET_H
+#define FOILDATAWIDGET_H
 
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
@@ -33,11 +33,11 @@ using namespace patheditor;
 
 namespace foileditors
 {
-    class OutlineDataWidget : public QWidget
+    class FoilDataWidget : public QWidget
     {
         Q_OBJECT
     public:
-        explicit OutlineDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
+        explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
         void depthChanged(qreal depth);
@@ -56,8 +56,10 @@ namespace foileditors
         QDoubleSpinBox* _depthEdit;
         QLineEdit* _areaEdit;
         QLineEdit* _sweepEdit;
+        QLineEdit* _thicknessRatioEdit;
 
         void AreaChanged(qreal area);
+        QString thicknessRatioString(qreal ratio);
 
     private slots:
         void onFoilCalculated();
@@ -65,4 +67,4 @@ namespace foileditors
     };
 }
 
-#endif // OUTLINEDATAWIDGET_H
+#endif // FOILDATAWIDGET_H

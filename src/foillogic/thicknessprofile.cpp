@@ -43,12 +43,12 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
     QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(200,-30));
-    QSharedPointer<PathPoint> point4(new PathPoint(200,0));
+    QSharedPointer<ControlPoint> point3(new ControlPoint(300,-30));
+    QSharedPointer<PathPoint> point4(new PathPoint(300,0));
 
     QSharedPointer<PathPoint> point5(new PathPoint(0,30));
     QSharedPointer<ControlPoint> point6(new ControlPoint(0,30));
-    QSharedPointer<ControlPoint> point7(new ControlPoint(200,30));
+    QSharedPointer<ControlPoint> point7(new ControlPoint(300,30));
 
     QSharedPointer<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
     QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));

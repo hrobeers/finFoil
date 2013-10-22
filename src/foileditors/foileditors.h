@@ -26,5 +26,6 @@
 #include "outlineeditor/outlineeditor.h"
 #include "profileeditor/profileeditor.h"
 #include "thicknesseditor/thicknesseditor.h"
+#include "foildatawidget.h"
 
 #endif // FINEDITORS_H

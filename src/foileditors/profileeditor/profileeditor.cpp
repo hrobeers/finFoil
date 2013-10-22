@@ -33,7 +33,7 @@
 using namespace foileditors;
 using namespace foillogic;
 
-ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
+ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     QWidget(parent)
 {
     _foil = foil;
@@ -54,7 +54,7 @@ ProfileEditor::ProfileEditor(QSharedPointer<Foil> foil, QWidget *parent) :
     symmetryCombo->addItem(tr("Flat"));
     connect(symmetryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(symmetryChanged(int)));
 
-    QGroupBox* gb = new QGroupBox(tr("Profile Editor"));
+    QGroupBox* gb = new QGroupBox(tr("Profile"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
     gbLayout->addWidget(symmetryCombo);
     gbLayout->addWidget(_pathEditor);

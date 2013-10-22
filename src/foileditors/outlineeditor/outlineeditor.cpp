@@ -25,7 +25,6 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
-#include <QTableWidget>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
@@ -37,54 +36,55 @@ using namespace foillogic;
 OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
 {    
-    _finCalculator.reset(new FoilCalculator(foil));
+    _foilCalculator.reset(new FoilCalculator(foil));
 
 
     //
     // PathEditors
     //
-    PathEditorWidget* topPathEditor = new patheditor::PathEditorWidget();
-    topPathEditor->enableFeature(Features::HorizontalAxis);
-    PathEditorWidget* botPathEditor = new patheditor::PathEditorWidget();
-    botPathEditor->enableFeature(Features::HorizontalAxis);
+    _topPathEditor = new patheditor::PathEditorWidget();
+    _topPathEditor->enableFeature(Features::HorizontalAxis);
+    _botPathEditor = new patheditor::PathEditorWidget();
+    _botPathEditor->enableFeature(Features::HorizontalAxis);
 
-    ThicknessContours *topContours = new ThicknessContours(_finCalculator.data(), Side::Top);
-    ThicknessContours *botContours = new ThicknessContours(_finCalculator.data(), Side::Bottom);
+    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.data(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.data(), Side::Bottom);
 
     EditablePath* nonEditableOutline = new EditablePath(foil->outline());
     nonEditableOutline->setEditable(false);
-    topPathEditor->addGraphicsItem(topContours);
-    topPathEditor->addPath(new EditablePath(foil->outline()));
-    botPathEditor->addGraphicsItem(botContours);
-    botPathEditor->addPath(nonEditableOutline);
-
-
-    //
-    // TabWidget
-    //
-    QTabWidget* tabWidget = new QTabWidget();
-    tabWidget->addTab(topPathEditor, tr("Top"));
-    tabWidget->addTab(botPathEditor, tr("Bottom"));
-
-
-    //
-    // OutlineDataWidget
-    //
-    _outlineDataWidget = new OutlineDataWidget(_finCalculator.data());
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), topPathEditor, SLOT(setGridUnitSize(qreal)));
-    connect(_outlineDataWidget, SIGNAL(pxPerUnitChanged(qreal)), botPathEditor, SLOT(setGridUnitSize(qreal)));
+    _topPathEditor->addGraphicsItem(topContours);
+    _topPathEditor->addPath(new EditablePath(foil->outline()));
+    _botPathEditor->addGraphicsItem(botContours);
+    _botPathEditor->addPath(nonEditableOutline);
 
 
     //
     // Layout
     //
-    QGroupBox* gb = new QGroupBox(tr("Outline Editor"));
-    QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(tabWidget);
-    gbLayout->addWidget(_outlineDataWidget);
-    gb->setLayout(gbLayout);
+    QGroupBox* topGb = new QGroupBox(tr("Outside"));
+    QVBoxLayout* topGbLayout = new QVBoxLayout();
+    QGroupBox* botGb = new QGroupBox(tr("Inside"));
+    QVBoxLayout* botGbLayout = new QVBoxLayout();
+
+    topGbLayout->addWidget(_topPathEditor);
+    topGb->setLayout(topGbLayout);
+
+    botGbLayout->addWidget(_botPathEditor);
+    botGb->setLayout(botGbLayout);
 
     _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(gb);
+    _mainLayout->addWidget(topGb);
+    _mainLayout->addWidget(botGb);
     this->setLayout(_mainLayout);
+}
+
+FoilCalculator *OutlineEditor::foilCalculator()
+{
+    return _foilCalculator.data();
+}
+
+void OutlineEditor::setGridUnitSize(qreal pxPerUnit)
+{
+    _topPathEditor->setGridUnitSize(pxPerUnit);
+    _botPathEditor->setGridUnitSize(pxPerUnit);
 }
