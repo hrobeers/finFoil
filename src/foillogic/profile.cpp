@@ -114,20 +114,20 @@ void Profile::initProfile()
     _botProfile = QSharedPointer<Path>(new Path());
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point3(new PathPoint(200,0));
+    QSharedPointer<PathPoint> point3(new PathPoint(300,0));
 
-    QSharedPointer<PathPoint> tPoint(new PathPoint(60,-24));
-    QSharedPointer<PathPoint> bPoint(new PathPoint(60,24));
+    QSharedPointer<PathPoint> tPoint(new PathPoint(90,-35));
+    QSharedPointer<PathPoint> bPoint(new PathPoint(90,35));
 
     QSharedPointer<ControlPoint> tcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-24));
-    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(90,-24));
-    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(200,0));
+    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-35));
+    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(135,-35));
+    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(300,0));
 
     QSharedPointer<ControlPoint> bcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,24));
-    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(90,24));
-    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(200,0));
+    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,35));
+    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(135,35));
+    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(300,0));
 
     QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
     QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
