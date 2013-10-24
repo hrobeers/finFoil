@@ -68,25 +68,19 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours(Side::e side)
+QList<QSharedPointer<QPainterPath> > FoilCalculator::topContours()
 {
-    switch (side) {
-    case Side::Top:
-        partitionContours();
-        return _topContours;
+    return _topContours;
+}
 
-    case Side::Bottom:
-        partitionContours();
-        return _botContours;
-
-    default:
-        return _contours;
-    }
+QList<QSharedPointer<QPainterPath> > FoilCalculator::bottomContours()
+{
+    return _botContours;
 }
 
 void FoilCalculator::calculate(bool fastCalc)
 {
-    _contours.clear();
+    _topContours.clear();
 #ifdef SERIAL
     foreach (qreal thickness, _contourThicknesses)
     {
@@ -106,9 +100,9 @@ void FoilCalculator::calculate(bool fastCalc)
     foreach (qreal thickness, _contourThicknesses)
     {
         QSharedPointer<QPainterPath> path(new QPainterPath());
-        _contours.append(path);
+        _topContours.append(path);
 
-        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), fastCalc));
+        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), Side::Top, fastCalc));
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
@@ -134,22 +128,6 @@ qreal FoilCalculator::area() const
 qreal FoilCalculator::sweep() const
 {
     return _sweep;
-}
-
-void FoilCalculator::partitionContours()
-{
-    _topContours.clear();
-    _botContours.clear();
-
-    for (int i=0; i<_contours.length(); i++)
-    {
-        qreal midPerc = _foil->profile()->bottomProfileTop().y() / _foil->profile()->thickness();
-        qreal percFromMid = _contourThicknesses.at(i) - midPerc;
-        if (percFromMid > -0.0001)
-            _topContours.append(_contours.at(i));
-        if (percFromMid < 0.0001)
-            _botContours.prepend(_contours.at(i));
-    }
 }
 
 void FoilCalculator::foilChanged()

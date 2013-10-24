@@ -31,10 +31,16 @@
 
 namespace foillogic
 {
+    struct Side
+    {
+        enum e { Top, Bottom, All };
+    };
+
     class ContourCalculator : public QRunnable
     {
     public:
-        explicit ContourCalculator(qreal percContourHeight, Foil* foil, QPainterPath* result, bool fast = false);
+        explicit ContourCalculator(qreal percContourHeight, Foil* foil, QPainterPath* result,
+                                   Side::e side = Side::Top, bool fast = false);
 
         virtual void run();
 
@@ -43,9 +49,10 @@ namespace foillogic
     private:
         enum SplineFunction { bSpline, overhauser };
 
+        Side::e _side;
         qreal _percContourHeight;
         bool _symmetric;
-        Foil* _foil;
+        patheditor::Path* _profile;
         patheditor::Path* _outline;
         patheditor::Path* _thickness;
         QPainterPath *_result;
