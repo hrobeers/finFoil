@@ -81,17 +81,24 @@ QList<QSharedPointer<QPainterPath> > FoilCalculator::bottomContours()
 void FoilCalculator::calculate(bool fastCalc)
 {
     _topContours.clear();
+    _botContours.clear();
 #ifdef SERIAL
     foreach (qreal thickness, _contourThicknesses)
     {
-        QSharedPointer<QPainterPath> path(new QPainterPath());
-        _contours.append(path);
+        QSharedPointer<QPainterPath> topPath(new QPainterPath());
+        _contours.append(topPath);
+        ContourCalculator tcCalc(thickness, _foil, topPath.data(), Side::Top, fastCalc);
 
-        ContourCalculator cCalc(thickness, _foil, path.data(), fastCalc);
+
+        QSharedPointer<QPainterPath> botPath(new QPainterPath());
+        _botContours.append(botPath);
+        ContourCalculator bcCalc(thickness, _foil, botPath.data(), Side::Bottom, fastCalc);
+
         AreaCalculator aCalc(_foil, &_area);
         SweepCalculator sCalc(_foil, &_sweep);
 
-        cCalc.run();
+        tcCalc.run();
+        bcCalc.run();
         aCalc.run();
         sCalc.run();
     }
@@ -99,10 +106,13 @@ void FoilCalculator::calculate(bool fastCalc)
 #ifndef SERIAL
     foreach (qreal thickness, _contourThicknesses)
     {
-        QSharedPointer<QPainterPath> path(new QPainterPath());
-        _topContours.append(path);
+        QSharedPointer<QPainterPath> topPath(new QPainterPath());
+        _topContours.append(topPath);
+        _tPool.start(new ContourCalculator(thickness, _foil, topPath.data(), Side::Top, fastCalc));
 
-        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), Side::Top, fastCalc));
+        QSharedPointer<QPainterPath> botPath(new QPainterPath());
+        _botContours.append(botPath);
+        _tPool.start(new ContourCalculator(thickness, _foil, botPath.data(), Side::Bottom, fastCalc));
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
