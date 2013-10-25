@@ -25,7 +25,6 @@
 #include "qmath.h"
 #include "foil.h"
 #include "profile.h"
-#include "contourcalculator.h"
 
 using namespace foillogic;
 
@@ -106,13 +105,20 @@ void FoilCalculator::calculate(bool fastCalc)
 #ifndef SERIAL
     foreach (qreal thickness, _contourThicknesses)
     {
-        QSharedPointer<QPainterPath> topPath(new QPainterPath());
-        _topContours.append(topPath);
-        _tPool.start(new ContourCalculator(thickness, _foil, topPath.data(), Side::Top, fastCalc));
+//        qreal specificPerc = (1-_foil->profile()->thicknessRatio()) * (1-thickness);
+        if (inProfileSide(thickness, Side::Top))
+        {
+            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            _topContours.append(topPath);
+            _tPool.start(new ContourCalculator(thickness, _foil, topPath.data(), Side::Top, fastCalc));
+        }
 
-        QSharedPointer<QPainterPath> botPath(new QPainterPath());
-        _botContours.append(botPath);
-        _tPool.start(new ContourCalculator(thickness, _foil, botPath.data(), Side::Bottom, fastCalc));
+        if (inProfileSide(thickness, Side::Bottom))
+        {
+            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            _botContours.append(botPath);
+            _tPool.start(new ContourCalculator(thickness, _foil, botPath.data(), Side::Bottom, fastCalc));
+        }
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
@@ -138,6 +144,22 @@ qreal FoilCalculator::area() const
 qreal FoilCalculator::sweep() const
 {
     return _sweep;
+}
+
+bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
+{
+    Profile* profile = _foil->profile().data();
+
+    switch (side) {
+    case Side::Bottom:
+        if (thicknessPercent <= (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->thickness())
+            return true;
+        return false;
+    default:
+        if (thicknessPercent >= (profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->thickness())
+            return true;
+        return false;
+    }
 }
 
 void FoilCalculator::foilChanged()

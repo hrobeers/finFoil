@@ -29,6 +29,7 @@
 #include <QThreadPool>
 #include <QSharedPointer>
 #include <QPainterPath>
+#include "contourcalculator.h"
 
 namespace foillogic
 {
@@ -67,6 +68,8 @@ namespace foillogic
         QList<QSharedPointer<QPainterPath> > _botContours;
         qreal _area;
         qreal _sweep;
+
+        bool inProfileSide(qreal thicknessPercent, foillogic::Side::e side);
 
     private slots:
         void foilChanged();
