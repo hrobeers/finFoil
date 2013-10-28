@@ -124,7 +124,8 @@ void ContourCalculator::run()
     for (int i=0; i<_sectionCount; i++)
     {
         qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
-        if (qAbs(thicknessOffsetPercent) > 1)
+        // if Offset > 1, no intersection exists
+        if (thicknessOffsetPercent > 1)
         {
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
@@ -137,6 +138,15 @@ void ContourCalculator::run()
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
+        // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
+        if (_percContourHeight < 0)
+        {
+            if (_side == Side::Bottom)
+                _profile->minY(&t_profileTop);
+            else
+                _profile->maxY(&t_profileTop);
+        }
+
         qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
@@ -148,6 +158,13 @@ void ContourCalculator::run()
         qreal xTE = outlineTrailingEdge.x();
         leadingEdgePnts[i] = new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
         trailingEdgePnts[i] = new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
+
+        // set points to 0 when closer than 1 manhattan pixel
+        if ((*(leadingEdgePnts.at(i)) - *(trailingEdgePnts.at(i))).manhattanLength() < 1)
+        {
+            leadingEdgePnts[i] = 0;
+            trailingEdgePnts[i] = 0;
+        }
     }
 
     int firstIndex = 0;

@@ -33,7 +33,7 @@ namespace foillogic
 {
     struct Side
     {
-        enum e { Top, Bottom, All };
+        enum e { Top, Bottom };
     };
 
     class ContourCalculator : public QRunnable
