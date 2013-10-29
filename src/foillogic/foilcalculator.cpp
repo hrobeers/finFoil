@@ -25,7 +25,6 @@
 #include "qmath.h"
 #include "foil.h"
 #include "profile.h"
-#include "contourcalculator.h"
 
 using namespace foillogic;
 
@@ -68,47 +67,67 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::calculatedContours(Side::e side)
+QList<QSharedPointer<QPainterPath> > FoilCalculator::topContours()
 {
-    switch (side) {
-    case Side::Top:
-        partitionContours();
-        return _topContours;
+    return _topContours;
+}
 
-    case Side::Bottom:
-        partitionContours();
-        return _botContours;
-
-    default:
-        return _contours;
-    }
+QList<QSharedPointer<QPainterPath> > FoilCalculator::bottomContours()
+{
+    return _botContours;
 }
 
 void FoilCalculator::calculate(bool fastCalc)
 {
-    _contours.clear();
+    _topContours.clear();
+    _botContours.clear();
 #ifdef SERIAL
     foreach (qreal thickness, _contourThicknesses)
     {
-        QSharedPointer<QPainterPath> path(new QPainterPath());
-        _contours.append(path);
+        if (inProfileSide(thickness, Side::Top))
+        {
+            qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
+            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            _contours.append(topPath);
+            ContourCalculator tcCalc(specificPerc, _foil, topPath.data(), Side::Top, fastCalc);
+            tcCalc.run();
+        }
 
-        ContourCalculator cCalc(thickness, _foil, path.data(), fastCalc);
+        if (inProfileSide(thickness, Side::Bottom))
+        {
+            qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
+            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            _botContours.append(botPath);
+            ContourCalculator bcCalc(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc);
+            bcCalc.run();
+        }
+
         AreaCalculator aCalc(_foil, &_area);
         SweepCalculator sCalc(_foil, &_sweep);
 
-        cCalc.run();
         aCalc.run();
         sCalc.run();
     }
 #endif
 #ifndef SERIAL
+    qreal thicknessRatio = _foil->profile()->thicknessRatio();
     foreach (qreal thickness, _contourThicknesses)
     {
-        QSharedPointer<QPainterPath> path(new QPainterPath());
-        _contours.append(path);
+        if (inProfileSide(thickness, Side::Top))
+        {
+            qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
+            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            _topContours.append(topPath);
+            _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.data(), Side::Top, fastCalc));
+        }
 
-        _tPool.start(new ContourCalculator(thickness, _foil, path.data(), fastCalc));
+        if (inProfileSide(thickness, Side::Bottom))
+        {
+            qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
+            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            _botContours.prepend(botPath);
+            _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc));
+        }
     }
 
     _tPool.start(new AreaCalculator(_foil, &_area));
@@ -136,19 +155,19 @@ qreal FoilCalculator::sweep() const
     return _sweep;
 }
 
-void FoilCalculator::partitionContours()
+bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
 {
-    _topContours.clear();
-    _botContours.clear();
+    Profile* profile = _foil->profile().data();
 
-    for (int i=0; i<_contours.length(); i++)
-    {
-        qreal midPerc = _foil->profile()->bottomProfileTop().y() / _foil->profile()->thickness();
-        qreal percFromMid = _contourThicknesses.at(i) - midPerc;
-        if (percFromMid > -0.0001)
-            _topContours.append(_contours.at(i));
-        if (percFromMid < 0.0001)
-            _botContours.prepend(_contours.at(i));
+    switch (side) {
+    case Side::Bottom:
+        if (thicknessPercent - (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->thickness() < 0.1)
+            return true;
+        return false;
+    default:
+        if ((profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->thickness() - thicknessPercent < 0.1)
+            return true;
+        return false;
     }
 }
 

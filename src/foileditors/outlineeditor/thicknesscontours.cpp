@@ -50,7 +50,7 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
         painter->setBrush(QColor(min, 0, max, a));
 
-        QList<QSharedPointer<QPainterPath> > contours = _calculator->calculatedContours(_side);
+        QList<QSharedPointer<QPainterPath> > contours = (_side == Side::Bottom)? _calculator->bottomContours() : _calculator->topContours();
 
         int numberOfContours = contours.length();
         if (numberOfContours > 0)

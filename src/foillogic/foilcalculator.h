@@ -29,14 +29,10 @@
 #include <QThreadPool>
 #include <QSharedPointer>
 #include <QPainterPath>
+#include "contourcalculator.h"
 
 namespace foillogic
 {
-    struct Side
-    {
-        enum e { Top, Bottom, All };
-    };
-
     class FoilCalculator : public QObject
     {
         Q_OBJECT
@@ -47,7 +43,8 @@ namespace foillogic
 
         QList<qreal> contourThicknesses() const;
         void setContourThicknesses(QList<qreal> thicknesses);
-        QList<QSharedPointer<QPainterPath> > calculatedContours(Side::e side = Side::All);
+        QList<QSharedPointer<QPainterPath> > topContours();
+        QList<QSharedPointer<QPainterPath> > bottomContours();
 
         void calculate(bool fastCalc);
         bool calculated() const;
@@ -67,13 +64,12 @@ namespace foillogic
         Foil* _foil;
 
         QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _contours;
         QList<QSharedPointer<QPainterPath> > _topContours;
         QList<QSharedPointer<QPainterPath> > _botContours;
         qreal _area;
         qreal _sweep;
 
-        void partitionContours();
+        bool inProfileSide(qreal thicknessPercent, foillogic::Side::e side);
 
     private slots:
         void foilChanged();

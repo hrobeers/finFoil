@@ -28,7 +28,7 @@
 
 #include <QGraphicsObject>
 #include <QThreadPool>
-#include "foilcalculator.h"
+#include "contourcalculator.h"
 
 using namespace patheditor;
 
@@ -38,7 +38,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit ThicknessContours(foillogic::FoilCalculator* calculator, foillogic::Side::e side = foillogic::Side::All, QGraphicsItem *parent = 0);
+        explicit ThicknessContours(foillogic::FoilCalculator* calculator, foillogic::Side::e side, QGraphicsItem *parent = 0);
 
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         virtual QRectF boundingRect() const;

@@ -36,12 +36,21 @@
 using namespace foillogic;
 using namespace patheditor;
 
-ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, bool fast)
+ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast)
 {
-    _foil = foil;
+    _side = side;
     _symmetric = foil->profile()->symmetry();
     _outline = foil->outline().data();
     _thickness = foil->thickness()->topProfile().data();
+
+    switch (_side) {
+    case Side::Bottom:
+        _profile = foil->profile()->botProfile().data();
+        break;
+    default:
+        _profile = foil->profile()->topProfile().data();
+        break;
+    }
 
 
     _percContourHeight = percContourHeight;
@@ -65,35 +74,19 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
 
 void ContourCalculator::run()
 {
-    //
-    // find dimensions of the profile
-    //
-
-    qreal t_topProfileTop, t_botProfileTop;
-    qreal topProfileTop = _foil->profile()->topProfileTop(&t_topProfileTop).y();
-    qreal botProfileTop = _foil->profile()->bottomProfileTop(&t_botProfileTop).y();
-    qreal profileThickness = _foil->profile()->thickness();
-
-    Path* profile;
     qreal t_profileTop;
     qreal y_profileTop;
 
-    // select the profile
-    bool useBotProfile = _percContourHeight < (botProfileTop / profileThickness);
-    if (useBotProfile)
-    {
-        profile = _foil->profile()->botProfile().data();
-        y_profileTop = botProfileTop;
-        t_profileTop = t_botProfileTop;
-    }
-    else
-    {
-        profile = _foil->profile()->topProfile().data();
-        y_profileTop = topProfileTop;
-        t_profileTop = t_topProfileTop;
+    switch (_side) {
+    case Side::Bottom:
+        y_profileTop = _profile->maxY(&t_profileTop);
+        break;
+    default:
+        y_profileTop = _profile->minY(&t_profileTop);
+        break;
     }
 
-    qreal profileLength = profile->pointAtPercent(1).x();
+    qreal profileLength = _profile->pointAtPercent(1).x();
 
 
     //
@@ -110,7 +103,7 @@ void ContourCalculator::run()
     //
 
     f_yValueAtPercentPath yOutline(_outline);
-    f_yValueAtPercentPath yProfile(profile);
+    f_yValueAtPercentPath yProfile(_profile);
 
 
     //
@@ -128,16 +121,11 @@ void ContourCalculator::run()
     QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts(_sectionCount);
     QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts(_sectionCount);
 
-    // Absolute offset from bottom profile
-    qreal absOffset = profileThickness * _percContourHeight;
-    // Real and percentual Y values for section
-    qreal realY = botProfileTop - absOffset;
-    qreal percY = realY / y_profileTop;
-
     for (int i=0; i<_sectionCount; i++)
     {
-        qreal thicknessOffsetPercent = percY / thicknessArray[i];
-        if (qAbs(thicknessOffsetPercent) > 1)
+        qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
+        // if Offset > 1, no intersection exists
+        if (thicknessOffsetPercent > 1)
         {
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
@@ -150,17 +138,33 @@ void ContourCalculator::run()
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
+        // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
+        if (_percContourHeight < 0)
+        {
+            if (_side == Side::Bottom)
+                _profile->minY(&t_profileTop);
+            else
+                _profile->maxY(&t_profileTop);
+        }
+
         qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
         qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
         qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
-        qreal leadingEdgePerc = profile->pointAtPercent(t_profileLE).x() / profileLength;
-        qreal trailingEdgePerc = profile->pointAtPercent(t_profileTE).x() / profileLength;
+        qreal leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
+        qreal trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
         leadingEdgePnts[i] = new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
         trailingEdgePnts[i] = new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
+
+        // set points to 0 when closer than 1 manhattan pixel
+        if ((*(leadingEdgePnts.at(i)) - *(trailingEdgePnts.at(i))).manhattanLength() < 1)
+        {
+            leadingEdgePnts[i] = 0;
+            trailingEdgePnts[i] = 0;
+        }
     }
 
     int firstIndex = 0;
