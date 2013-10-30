@@ -33,6 +33,7 @@ PathEditorView::PathEditorView(QGraphicsScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
     _pxPerUnit = 10;
+    _imageItem = 0;
 }
 
 void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
@@ -47,13 +48,19 @@ void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
 
 void PathEditorView::setImage(const QUrl &url)
 {
+    if (_imageItem != 0)
+    {
+        scene()->removeItem(_imageItem);
+        delete _imageItem;
+    }
+
     QPixmap image(url.path());
-    QGraphicsPixmapItem* imageItem = new QGraphicsPixmapItem(image);
-    imageItem->setFlag(QGraphicsItem::ItemIsMovable);
-    imageItem->setZValue(-1);
-    imageItem->setOpacity(0.5);
-    imageItem->moveBy(0, -imageItem->boundingRect().height());
-    scene()->addItem(imageItem);
+    _imageItem = new QGraphicsPixmapItem(image);
+    _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+    _imageItem->setZValue(-1);
+    _imageItem->setOpacity(0.5);
+    _imageItem->moveBy(0, -_imageItem->boundingRect().height());
+    scene()->addItem(_imageItem);
 }
 
 PathEditorView::~PathEditorView()

@@ -51,6 +51,8 @@ namespace patheditor
     private:
         qreal _pxPerUnit;
 
+        QGraphicsPixmapItem* _imageItem;
+
         void drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect);
     };
 }
