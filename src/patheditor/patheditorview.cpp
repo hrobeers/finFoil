@@ -52,15 +52,24 @@ void PathEditorView::setImage(const QUrl &url)
     {
         scene()->removeItem(_imageItem);
         delete _imageItem;
+        _imageItem = 0;
     }
 
     QPixmap image(url.path());
-    _imageItem = new QGraphicsPixmapItem(image);
-    _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
-    _imageItem->setZValue(-1);
-    _imageItem->setOpacity(0.5);
-    _imageItem->moveBy(0, -_imageItem->boundingRect().height());
-    scene()->addItem(_imageItem);
+    if (!image.isNull())
+    {
+        _imageItem = new QGraphicsPixmapItem(image);
+        _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+        _imageItem->setZValue(-1);
+        _imageItem->setOpacity(0.7);
+
+        // transform image
+        qreal scaleFactor = _viewRect.height() / _imageItem->boundingRect().height();
+        _imageItem->scale(scaleFactor, scaleFactor);
+        _imageItem->moveBy(0, -_imageItem->boundingRect().height() * scaleFactor);
+
+        scene()->addItem(_imageItem);
+    }
 }
 
 PathEditorView::~PathEditorView()
@@ -98,10 +107,12 @@ void PathEditorView::dropEvent(QDropEvent *event)
 
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
 {
+    _viewRect = rect;
+
     QVector<QPointF> pointPairs;
 
-    QPointF bottomLeft = rect.bottomLeft();
-    QPointF topRight = rect.topRight();
+    QPointF bottomLeft = _viewRect.bottomLeft();
+    QPointF topRight = _viewRect.topRight();
 
     for (qreal h = 0; h > topRight.y(); h -= px)
     {
