@@ -41,6 +41,8 @@ namespace patheditor
 
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
+        virtual void dragMoveEvent(QDragMoveEvent *event);
+        virtual void dropEvent(QDropEvent *event);
 
     private:
         qreal _pxPerUnit;

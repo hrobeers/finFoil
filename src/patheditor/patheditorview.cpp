@@ -21,6 +21,9 @@
 ****************************************************************************/
 
 #include "patheditorview.h"
+#include <QDragMoveEvent>
+#include <QUrl>
+#include <QGraphicsPixmapItem>
 
 #define MIN_UNIT_SIZE 5
 
@@ -54,6 +57,24 @@ void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->setPen(QPen(QColor(0, 0, 0, 100), 1, Qt::SolidLine));
     drawLinesWithInterval(unitSize*10, painter, rect);
+}
+
+void PathEditorView::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+        event->acceptProposedAction();
+}
+
+void PathEditorView::dropEvent(QDropEvent *event)
+{
+    // TODO filter for images (also in dragMoveEvent)
+    QUrl url = event->mimeData()->urls().first();
+    QPixmap image(url.path());
+    QGraphicsPixmapItem* imageItem = new QGraphicsPixmapItem(image);
+    imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+    imageItem->setZValue(-1);
+    imageItem->setOpacity(0.5);
+    scene()->addItem(imageItem);
 }
 
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
