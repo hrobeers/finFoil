@@ -35,6 +35,10 @@ namespace patheditor
 
         void setPixelsPerUnit(qreal pxPerUnit);
 
+        void setImage(const QUrl &url);
+
+        virtual ~PathEditorView();
+
     signals:
 
     public slots:

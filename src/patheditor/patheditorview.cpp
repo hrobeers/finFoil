@@ -45,6 +45,21 @@ void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
     scene()->update();
 }
 
+void PathEditorView::setImage(const QUrl &url)
+{
+    QPixmap image(url.path());
+    QGraphicsPixmapItem* imageItem = new QGraphicsPixmapItem(image);
+    imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+    imageItem->setZValue(-1);
+    imageItem->setOpacity(0.5);
+    imageItem->moveBy(0, -imageItem->boundingRect().height());
+    scene()->addItem(imageItem);
+}
+
+PathEditorView::~PathEditorView()
+{
+}
+
 void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
 {
     // Find a suitable unitSize
@@ -67,14 +82,11 @@ void PathEditorView::dragMoveEvent(QDragMoveEvent *event)
 
 void PathEditorView::dropEvent(QDropEvent *event)
 {
-    // TODO filter for images (also in dragMoveEvent)
-    QUrl url = event->mimeData()->urls().first();
-    QPixmap image(url.path());
-    QGraphicsPixmapItem* imageItem = new QGraphicsPixmapItem(image);
-    imageItem->setFlag(QGraphicsItem::ItemIsMovable);
-    imageItem->setZValue(-1);
-    imageItem->setOpacity(0.5);
-    scene()->addItem(imageItem);
+    if (event->mimeData()->hasUrls())
+    {
+        QUrl url = event->mimeData()->urls().first();
+        setImage(url);
+    }
 }
 
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
