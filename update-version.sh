@@ -1,6 +1,6 @@
 #!/bin/sh
 
-commitNum=$(git log --oneline | wc -l | tr -d ' ')
+commitNum=$(git rev-list HEAD --count)
 commitHash=$(git rev-parse --verify HEAD)
 
 echo "// This file is auto-generated" > src/version_autogen.h
