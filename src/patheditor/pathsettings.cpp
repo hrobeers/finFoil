@@ -47,6 +47,12 @@ PathSettings::PathSettings()
     QColor red(Qt::red);
     red.setAlpha(100);
     _controlPointBrush.setColor(red);
+
+    // scalePointBrush
+    _scalePointBrush.setStyle(Qt::SolidPattern);
+    QColor green(Qt::green);
+    green.setAlpha(100);
+    _scalePointBrush.setColor(green);
 }
 
 PathSettings PathSettings::Default()
@@ -77,4 +83,9 @@ QBrush &PathSettings::pointBrush()
 QBrush &PathSettings::controlPointBrush()
 {
     return _controlPointBrush;
+}
+
+QBrush &PathSettings::scalePointBrush()
+{
+    return _scalePointBrush;
 }

@@ -20,32 +20,34 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITORFWD_H
-#define PATHEDITORFWD_H
+#ifndef SCALABLEIMAGE_H
+#define SCALABLEIMAGE_H
 
-/*
-    Forward declarations for all patheditor classes.
- */
+#include <QGraphicsObject>
+#include "scalepoint.h"
 
 namespace patheditor
 {
-    class CubicBezier;
-    class Path;
-    class EditablePath;
-    class Line;
-    class LineRestrictor;
-    class PathEditorWidget;
-    class PathItem;
-    class PathPoint;
-    class ControlPoint;
-    class PathSettings;
-    class PointHandle;
-    class PointRestrictor;
-    class Restrictor;
-    class QuadrantRestrictor;
-    class PathEditorView;
-    class ScalePoint;
-    class ScalableImage;
+    class ScalableImage : public QGraphicsObject
+    {
+        Q_OBJECT
+    public:
+        explicit ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QGraphicsItem *parent = 0);
+
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual QRectF boundingRect() const;
+
+        virtual ~ScalableImage();
+
+    signals:
+
+    public slots:
+
+    private:
+        QPixmap _pixmap;
+        QRect _rect;
+        QScopedPointer<ScalePoint> _scalePoint;
+    };
 }
 
-#endif // PATHEDITORFWD_H
+#endif // SCALABLEIMAGE_H

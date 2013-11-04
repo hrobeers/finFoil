@@ -43,6 +43,7 @@ namespace patheditor
 
         QBrush& pointBrush();
         QBrush& controlPointBrush();
+        QBrush& scalePointBrush();
 
     private:
         int _lineWidth;
@@ -54,6 +55,7 @@ namespace patheditor
 
         QBrush _pointBrush;
         QBrush _controlPointBrush;
+        QBrush _scalePointBrush;
     };
 }
 

@@ -23,7 +23,7 @@
 #include "patheditorview.h"
 #include <QDragMoveEvent>
 #include <QUrl>
-#include <QGraphicsPixmapItem>
+#include "scalableimage.h"
 
 #define MIN_UNIT_SIZE 5
 
@@ -58,15 +58,13 @@ void PathEditorView::setImage(const QUrl &url)
     QPixmap image(url.path());
     if (!image.isNull())
     {
-        _imageItem = new QGraphicsPixmapItem(image);
+        QRect position = this->rect();
+        position.setHeight(position.height() * 0.9);
+        position.translate(0, -position.height());
+        _imageItem = new ScalableImage(image, position);
         _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
         _imageItem->setZValue(-1);
         _imageItem->setOpacity(0.7);
-
-        // transform image
-        qreal scaleFactor = _viewRect.height() / _imageItem->boundingRect().height();
-        _imageItem->scale(scaleFactor, scaleFactor);
-        _imageItem->moveBy(0, -_imageItem->boundingRect().height() * scaleFactor);
 
         scene()->addItem(_imageItem);
     }

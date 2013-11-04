@@ -23,6 +23,8 @@
 #ifndef PATHEDITORVIEW_H
 #define PATHEDITORVIEW_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QGraphicsView>
 
 namespace patheditor
@@ -50,7 +52,7 @@ namespace patheditor
 
     private:
         qreal _pxPerUnit;
-        QGraphicsPixmapItem* _imageItem;
+        ScalableImage* _imageItem;
         QRectF _viewRect;
 
         void drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect);

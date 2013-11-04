@@ -20,32 +20,22 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITORFWD_H
-#define PATHEDITORFWD_H
+#ifndef SCALEPOINT_H
+#define SCALEPOINT_H
 
-/*
-    Forward declarations for all patheditor classes.
- */
+#include "pathpoint.h"
 
 namespace patheditor
 {
-    class CubicBezier;
-    class Path;
-    class EditablePath;
-    class Line;
-    class LineRestrictor;
-    class PathEditorWidget;
-    class PathItem;
-    class PathPoint;
-    class ControlPoint;
-    class PathSettings;
-    class PointHandle;
-    class PointRestrictor;
-    class Restrictor;
-    class QuadrantRestrictor;
-    class PathEditorView;
-    class ScalePoint;
-    class ScalableImage;
+    class ScalePoint : public PathPoint
+    {
+    public:
+        explicit ScalePoint(qreal xpos, qreal ypos);
+
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
+
+        virtual ~ScalePoint() {}
+    };
 }
 
-#endif // PATHEDITORFWD_H
+#endif // SCALEPOINT_H

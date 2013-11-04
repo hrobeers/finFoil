@@ -20,32 +20,43 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITORFWD_H
-#define PATHEDITORFWD_H
+#include "scalableimage.h"
+#include "pathsettings.h"
+#include <QPainter>
+#include "qmath.h"
 
-/*
-    Forward declarations for all patheditor classes.
- */
+using namespace patheditor;
 
-namespace patheditor
+ScalableImage::ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QGraphicsItem *parent) :
+    QGraphicsObject(parent)
 {
-    class CubicBezier;
-    class Path;
-    class EditablePath;
-    class Line;
-    class LineRestrictor;
-    class PathEditorWidget;
-    class PathItem;
-    class PathPoint;
-    class ControlPoint;
-    class PathSettings;
-    class PointHandle;
-    class PointRestrictor;
-    class Restrictor;
-    class QuadrantRestrictor;
-    class PathEditorView;
-    class ScalePoint;
-    class ScalableImage;
+    _pixmap = pixmap;
+    _rect = initialRect;
+
+    qreal imageAR = (qreal)pixmap.height() / (qreal)pixmap.width();
+    qreal rectAR = (qreal)_rect.height() / (qreal)_rect.width();
+    if (imageAR > rectAR)
+        _rect.setWidth(_rect.height() / imageAR);
+    else
+        _rect.setHeight(_rect.width() * imageAR);
+
+
+    _scalePoint.reset(new ScalePoint(_rect.topRight().x(), _rect.topRight().y()));
+
+    PathSettings settings = PathSettings::Default();
+    _scalePoint->createPointHandle(settings, this);
 }
 
-#endif // PATHEDITORFWD_H
+void ScalableImage::paint(QPainter *painter, const QStyleOptionGraphicsItem */*unused*/, QWidget */*unused*/)
+{
+    painter->drawPixmap(_rect, _pixmap);
+}
+
+QRectF ScalableImage::boundingRect() const
+{
+    return QRectF(_rect);
+}
+
+ScalableImage::~ScalableImage()
+{
+}
