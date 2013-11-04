@@ -47,6 +47,9 @@ namespace patheditor
         QPixmap _pixmap;
         QRect _rect;
         QScopedPointer<ScalePoint> _scalePoint;
+
+    private slots:
+        void onScaleMove(PathPoint *point);
     };
 }
 

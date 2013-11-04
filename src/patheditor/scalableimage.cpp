@@ -21,9 +21,11 @@
 ****************************************************************************/
 
 #include "scalableimage.h"
-#include "pathsettings.h"
 #include <QPainter>
+#include <QGraphicsScene>
 #include "qmath.h"
+#include "pathsettings.h"
+#include "linerestrictor.h"
 
 using namespace patheditor;
 
@@ -45,6 +47,14 @@ ScalableImage::ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QG
 
     PathSettings settings = PathSettings::Default();
     _scalePoint->createPointHandle(settings, this);
+
+    connect(_scalePoint.data(), SIGNAL(pointDrag(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
+    connect(_scalePoint.data(), SIGNAL(pointRelease(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
+
+    QPointF botLeft(_rect.bottomLeft());
+    QPointF topRight(_rect.topRight());
+    QSharedPointer<LineRestrictor> restrictor(new LineRestrictor(botLeft, topRight));
+    _scalePoint->setRestrictor(restrictor);
 }
 
 void ScalableImage::paint(QPainter *painter, const QStyleOptionGraphicsItem */*unused*/, QWidget */*unused*/)
@@ -54,9 +64,23 @@ void ScalableImage::paint(QPainter *painter, const QStyleOptionGraphicsItem */*u
 
 QRectF ScalableImage::boundingRect() const
 {
-    return QRectF(_rect);
+    return QRectF(_rect) | _scalePoint.data()->handle()->boundingRect();
 }
 
 ScalableImage::~ScalableImage()
 {
+}
+
+void ScalableImage::onScaleMove(PathPoint *point)
+{
+    QRect oldRect = _rect;
+
+    QPointF relativePnt = *point - _rect.bottomLeft();
+
+    _rect.setHeight(-relativePnt.y());
+    _rect.setWidth(relativePnt.x());
+
+    _rect.moveBottomLeft(oldRect.bottomLeft());
+
+    this->scene()->update();
 }
