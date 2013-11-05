@@ -55,7 +55,10 @@ void PathEditorView::setImage(const QUrl &url)
         _imageItem = 0;
     }
 
+    QString imagePath = url.path();
     QPixmap image(url.path());
+    if (image.isNull()) image.load(imagePath.right(imagePath.size() - 1));
+
     if (!image.isNull())
     {
         QRect position = this->rect();
