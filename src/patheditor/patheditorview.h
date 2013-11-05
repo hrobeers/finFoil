@@ -23,6 +23,8 @@
 #ifndef PATHEDITORVIEW_H
 #define PATHEDITORVIEW_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QGraphicsView>
 
 namespace patheditor
@@ -35,15 +37,23 @@ namespace patheditor
 
         void setPixelsPerUnit(qreal pxPerUnit);
 
+        void setImage(const QUrl &url);
+
+        virtual ~PathEditorView();
+
     signals:
 
     public slots:
 
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
+        virtual void dragMoveEvent(QDragMoveEvent *event);
+        virtual void dropEvent(QDropEvent *event);
 
     private:
         qreal _pxPerUnit;
+        ScalableImage* _imageItem;
+        QRectF _viewRect;
 
         void drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect);
     };

@@ -21,6 +21,9 @@
 ****************************************************************************/
 
 #include "patheditorview.h"
+#include <QDragMoveEvent>
+#include <QUrl>
+#include "scalableimage.h"
 
 #define MIN_UNIT_SIZE 5
 
@@ -30,6 +33,7 @@ PathEditorView::PathEditorView(QGraphicsScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
     _pxPerUnit = 10;
+    _imageItem = 0;
 }
 
 void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
@@ -40,6 +44,37 @@ void PathEditorView::setPixelsPerUnit(qreal pxPerUnit)
         _pxPerUnit = pxPerUnit;
 
     scene()->update();
+}
+
+void PathEditorView::setImage(const QUrl &url)
+{
+    if (_imageItem != 0)
+    {
+        scene()->removeItem(_imageItem);
+        delete _imageItem;
+        _imageItem = 0;
+    }
+
+    QString imagePath = url.path();
+    QPixmap image(url.path());
+    if (image.isNull()) image.load(imagePath.right(imagePath.size() - 1));
+
+    if (!image.isNull())
+    {
+        QRect position = this->rect();
+        position.setHeight(position.height() * 0.9);
+        position.translate(0, -position.height());
+        _imageItem = new ScalableImage(image, position);
+        _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+        _imageItem->setZValue(-1);
+        _imageItem->setOpacity(0.7);
+
+        scene()->addItem(_imageItem);
+    }
+}
+
+PathEditorView::~PathEditorView()
+{
 }
 
 void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
@@ -56,12 +91,29 @@ void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
     drawLinesWithInterval(unitSize*10, painter, rect);
 }
 
+void PathEditorView::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+        event->acceptProposedAction();
+}
+
+void PathEditorView::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+    {
+        QUrl url = event->mimeData()->urls().first();
+        setImage(url);
+    }
+}
+
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
 {
+    _viewRect = rect;
+
     QVector<QPointF> pointPairs;
 
-    QPointF bottomLeft = rect.bottomLeft();
-    QPointF topRight = rect.topRight();
+    QPointF bottomLeft = _viewRect.bottomLeft();
+    QPointF topRight = _viewRect.topRight();
 
     for (qreal h = 0; h > topRight.y(); h -= px)
     {

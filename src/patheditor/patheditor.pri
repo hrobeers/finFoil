@@ -15,7 +15,9 @@ HEADERS += \
     ../patheditor/controlpoint.h \
     ../patheditor/patheditorview.h \
     ../patheditor/pathfunctors.h \
-    ../patheditor/path.h
+    ../patheditor/path.h \
+    ../patheditor/scalepoint.h \
+    ../patheditor/scalableimage.h
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
@@ -31,7 +33,9 @@ SOURCES += \
     ../patheditor/quadrantrestrictor.cpp \
     ../patheditor/controlpoint.cpp \
     ../patheditor/patheditorview.cpp \
-    ../patheditor/path.cpp
+    ../patheditor/path.cpp \
+    ../patheditor/scalepoint.cpp \
+    ../patheditor/scalableimage.cpp
 
 OTHER_FILES += \
     ../patheditor/patheditorfwd/README
