@@ -49,11 +49,11 @@ namespace patheditor
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
         virtual void dragMoveEvent(QDragMoveEvent *event);
         virtual void dropEvent(QDropEvent *event);
+        virtual void wheelEvent(QWheelEvent *event);
 
     private:
         qreal _pxPerUnit;
         ScalableImage* _imageItem;
-        QRectF _viewRect;
 
         void drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect);
     };

@@ -106,14 +106,31 @@ void PathEditorView::dropEvent(QDropEvent *event)
     }
 }
 
+void PathEditorView::wheelEvent(QWheelEvent *event)
+{
+    if (event->modifiers().testFlag(Qt::ControlModifier))
+    {
+        QPoint mousePosition = event->pos();
+        int pixelD = event->delta();
+        qreal scaleFactor = 1 + ((qreal)pixelD / (qreal)this->height()) / 2;
+        QGraphicsView::centerOn(mapToScene(mousePosition));
+        QGraphicsView::scale(scaleFactor, scaleFactor);
+    }
+    else
+    {
+        QGraphicsView::wheelEvent(event);
+    }
+}
+
 void PathEditorView::drawLinesWithInterval(qreal px, QPainter *painter, const QRectF &rect)
 {
-    _viewRect = rect;
+
+    QRectF viewRect = rect;
 
     QVector<QPointF> pointPairs;
 
-    QPointF bottomLeft = _viewRect.bottomLeft();
-    QPointF topRight = _viewRect.topRight();
+    QPointF bottomLeft = viewRect.bottomLeft();
+    QPointF topRight = viewRect.topRight();
 
     for (qreal h = 0; h > topRight.y(); h -= px)
     {
