@@ -52,9 +52,6 @@ namespace foillogic
         bool calculated() const;
         void recalculateArea();
 
-        boost::units::quantity<boost::units::si::area, qreal> area() const;
-        qreal sweep() const;
-
     signals:
         void foilCalculated(FoilCalculator* sender);
 
@@ -69,7 +66,6 @@ namespace foillogic
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _topContours;
         QList<QSharedPointer<QPainterPath> > _botContours;
-        qreal _sweep;
 
         bool inProfileSide(qreal thicknessPercent, foillogic::Side::e side);
 
@@ -92,13 +88,12 @@ namespace foillogic
     class SweepCalculator : public QRunnable
     {
     public:
-        explicit SweepCalculator(Foil* foil, qreal* sweep);
+        explicit SweepCalculator(Foil* foil);
 
         virtual void run();
 
     private:
         Foil* _foil;
-        qreal* _sweep;
     };
 }
 

@@ -104,7 +104,7 @@ void FoilCalculator::calculate(bool fastCalc)
         }
 
         AreaCalculator aCalc(_foil);
-        SweepCalculator sCalc(_foil, &_sweep);
+        SweepCalculator sCalc(_foil);
 
         aCalc.run();
         sCalc.run();
@@ -132,7 +132,7 @@ void FoilCalculator::calculate(bool fastCalc)
     }
 
     _tPool.start(new AreaCalculator(_foil));
-    _tPool.start(new SweepCalculator(_foil, &_sweep));
+    _tPool.start(new SweepCalculator(_foil));
 
     _tPool.waitForDone();
 #endif
@@ -150,16 +150,6 @@ void FoilCalculator::recalculateArea()
 {
     AreaCalculator aCalc(_foil);
     aCalc.run();
-}
-
-quantity<si::area, qreal> FoilCalculator::area() const
-{
-    return _foil->area();
-}
-
-qreal FoilCalculator::sweep() const
-{
-    return _sweep;
 }
 
 bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
@@ -204,10 +194,9 @@ void AreaCalculator::run()
 }
 
 
-SweepCalculator::SweepCalculator(Foil *foil, qreal *sweep)
+SweepCalculator::SweepCalculator(Foil *foil)
 {
     _foil = foil;
-    _sweep = sweep;
 }
 
 void SweepCalculator::run()
@@ -229,5 +218,6 @@ void SweepCalculator::run()
     // calculate the sweep angle in degrees
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
-    *_sweep = qAtan(os/ns) * 180 / M_PI;
+    quantity<degree::plane_angle, qreal> sweep(qAtan(os/ns) * 180 / M_PI * degree::degree);
+    _foil->setSweep(sweep);
 }

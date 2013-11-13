@@ -144,7 +144,7 @@ void FoilDataWidget::onFoilCalculated()
 {
     updatePxPerUnit();
     updateArea();
-    _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
+    _sweepEdit->setText(QString::number(_foilCalculator->foil()->sweep().value()));
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
