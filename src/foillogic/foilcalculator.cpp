@@ -27,6 +27,7 @@
 #include "profile.h"
 
 using namespace foillogic;
+using namespace boost::units;
 
 FoilCalculator::FoilCalculator(Foil *foil) :
     QObject()
@@ -130,7 +131,7 @@ void FoilCalculator::calculate(bool fastCalc)
         }
     }
 
-    _tPool.start(new AreaCalculator(_foil, &_area));
+    _tPool.start(new AreaCalculator(_foil));
     _tPool.start(new SweepCalculator(_foil, &_sweep));
 
     _tPool.waitForDone();
@@ -145,9 +146,9 @@ bool FoilCalculator::calculated() const
     return _calculated;
 }
 
-qreal FoilCalculator::area() const
+quantity<si::area, qreal> FoilCalculator::area() const
 {
-    return _area;
+    return _foil->area();
 }
 
 qreal FoilCalculator::sweep() const
@@ -182,15 +183,18 @@ void FoilCalculator::foilReleased()
 }
 
 
-AreaCalculator::AreaCalculator(Foil *foil, qreal *area)
+AreaCalculator::AreaCalculator(Foil *foil)
 {
     _foil = foil;
-    _area = area;
 }
 
 void AreaCalculator::run()
 {
-    *_area = _foil->outline()->area();
+    qreal outlineTop = _foil->outline()->minY();
+    qreal scalefactor = qPow(_foil->height().value() / qAbs(outlineTop), 2);
+    qreal smArea = _foil->outline()->area() * scalefactor;
+    quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
+    _foil->setArea(area);
 }
 
 

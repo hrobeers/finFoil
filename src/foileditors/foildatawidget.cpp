@@ -58,10 +58,10 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Depth section
     //
-    _depth = 3;
+    _depth = _foilCalculator->foil()->height();
     _depthEdit = new QDoubleSpinBox();
     _depthEdit->setMaximum(10000);
-    _depthEdit->setValue(_depth);
+    _depthEdit->setValue(_depth.value());
     _formLayout->addRow(tr("Depth:"), _depthEdit);
     connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
 
@@ -101,26 +101,35 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 
 void FoilDataWidget::onDepthChange(double depth)
 {
-    _depth = depth;
-    emit depthChanged((qreal)depth);
-
-    AreaChanged(_foilCalculator->area());
+    _depth = _depth.from_value(depth);
+    _foilCalculator->foil()->setHeight(_depth);
+    onFoilCalculated(); // TODO recalc area
 }
 
-void FoilDataWidget::AreaChanged(qreal area)
+void FoilDataWidget::updatePxPerUnit()
 {
-    if (_depth != 0)
+    if (_depth.value() != 0)
     {
-        _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depth;
-        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
+        _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depth.value();
     }
     else
     {
         _pxPerUnit = 0;
-        _areaEdit->setText("0");
     }
 
     emit pxPerUnitChanged(_pxPerUnit);
+}
+
+void FoilDataWidget::updateArea()
+{
+    if (_pxPerUnit != 0)
+    {
+        _areaEdit->setText(QString::number(_foilCalculator->foil()->area().value()));
+    }
+    else
+    {
+        _areaEdit->setText("0");
+    }
 }
 
 QString FoilDataWidget::thicknessRatioString(qreal ratio)
@@ -132,7 +141,8 @@ QString FoilDataWidget::thicknessRatioString(qreal ratio)
 
 void FoilDataWidget::onFoilCalculated()
 {
-    AreaChanged(_foilCalculator->area());
+    updatePxPerUnit();
+    updateArea();
     _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }

@@ -28,6 +28,8 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
+#include <boost/units/quantity.hpp>
+#include <boost/units/systems/si/length.hpp>
 
 using namespace patheditor;
 
@@ -40,14 +42,13 @@ namespace foileditors
         explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
-        void depthChanged(qreal depth);
         void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
         void onDepthChange(double depth);
 
     private:
-        qreal _depth;
+        boost::units::quantity<boost::units::si::length, qreal> _depth;
         qreal _pxPerUnit;
         foillogic::FoilCalculator* _foilCalculator;
 
@@ -58,7 +59,8 @@ namespace foileditors
         QLineEdit* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 
-        void AreaChanged(qreal area);
+        void updatePxPerUnit();
+        void updateArea();
         QString thicknessRatioString(qreal ratio);
 
     private slots:

@@ -30,6 +30,8 @@
 #include <QSharedPointer>
 #include <QPainterPath>
 #include "contourcalculator.h"
+#include <boost/units/quantity.hpp>
+#include <boost/units/systems/si/area.hpp>
 
 namespace foillogic
 {
@@ -49,7 +51,7 @@ namespace foillogic
         void calculate(bool fastCalc);
         bool calculated() const;
 
-        qreal area() const;
+        boost::units::quantity<boost::units::si::area, qreal> area() const;
         qreal sweep() const;
 
     signals:
@@ -66,7 +68,6 @@ namespace foillogic
         QList<qreal> _contourThicknesses;
         QList<QSharedPointer<QPainterPath> > _topContours;
         QList<QSharedPointer<QPainterPath> > _botContours;
-        qreal _area;
         qreal _sweep;
 
         bool inProfileSide(qreal thicknessPercent, foillogic::Side::e side);
@@ -79,13 +80,12 @@ namespace foillogic
     class AreaCalculator : public QRunnable
     {
     public:
-        explicit AreaCalculator(Foil* foil, qreal* area);
+        explicit AreaCalculator(Foil* foil);
 
         virtual void run();
 
     private:
         Foil* _foil;
-        qreal* _area;
     };
 
     class SweepCalculator : public QRunnable

@@ -29,6 +29,9 @@
 #include <QObject>
 #include <QSharedPointer>
 #include "path.h"
+#include "boost/units/quantity.hpp"
+#include "boost/units/systems/si/length.hpp"
+#include "boost/units/systems/si/area.hpp"
 
 namespace foillogic
 {
@@ -42,6 +45,12 @@ namespace foillogic
         QSharedPointer<Profile> profile();
         QSharedPointer<ThicknessProfile> thickness();
 
+        boost::units::quantity<boost::units::si::length, qreal> height();
+        boost::units::quantity<boost::units::si::area, qreal> area();
+
+        void setHeight(boost::units::quantity<boost::units::si::length, qreal> &height);
+        void setArea(boost::units::quantity<boost::units::si::area, qreal> &area);
+
         virtual ~Foil();
 
     signals:
@@ -51,6 +60,9 @@ namespace foillogic
     public slots:
 
     private:
+        boost::units::quantity<boost::units::si::length, qreal> _height;
+        boost::units::quantity<boost::units::si::area, qreal> _area;
+
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<foillogic::Profile> _profile;
         QSharedPointer<foillogic::ThicknessProfile> _thickness;
