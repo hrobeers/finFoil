@@ -50,6 +50,7 @@ namespace foillogic
 
         void calculate(bool fastCalc);
         bool calculated() const;
+        void recalculateArea();
 
         boost::units::quantity<boost::units::si::area, qreal> area() const;
         qreal sweep() const;

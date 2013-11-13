@@ -103,7 +103,8 @@ void FoilDataWidget::onDepthChange(double depth)
 {
     _depth = _depth.from_value(depth);
     _foilCalculator->foil()->setHeight(_depth);
-    onFoilCalculated(); // TODO recalc area
+    _foilCalculator->recalculateArea();
+    onFoilCalculated();
 }
 
 void FoilDataWidget::updatePxPerUnit()

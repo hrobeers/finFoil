@@ -103,7 +103,7 @@ void FoilCalculator::calculate(bool fastCalc)
             bcCalc.run();
         }
 
-        AreaCalculator aCalc(_foil, &_area);
+        AreaCalculator aCalc(_foil);
         SweepCalculator sCalc(_foil, &_sweep);
 
         aCalc.run();
@@ -144,6 +144,12 @@ void FoilCalculator::calculate(bool fastCalc)
 bool FoilCalculator::calculated() const
 {
     return _calculated;
+}
+
+void FoilCalculator::recalculateArea()
+{
+    AreaCalculator aCalc(_foil);
+    aCalc.run();
 }
 
 quantity<si::area, qreal> FoilCalculator::area() const
