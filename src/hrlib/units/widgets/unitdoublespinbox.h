@@ -20,50 +20,35 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITWIDGETBASE_H
-#define HRLIB_UNITWIDGETBASE_H
+#ifndef HRLIB_UNITDOUBLESPINBOX_H
+#define HRLIB_UNITDOUBLESPINBOX_H
 
-#include "hrlibfwd/qtfwd.h"
-
-#include <QWidget>
-#include "../iunit.h"
+#include "unitwidget.h"
 
 namespace hrlib {
 namespace units {
 
-    class IUnitWidget : public QWidget
+    class UnitDoubleSpinbox : public UnitWidget
     {
         Q_OBJECT
     public:
-        explicit IUnitWidget(QWidget *parent = 0);
-    };
+        explicit UnitDoubleSpinbox(QWidget *parent = 0);
 
-    class UnitWidget : public IUnitWidget
-    {
-        Q_OBJECT
-    public:
-        explicit UnitWidget(QWidget *parent = 0);
-
-        virtual void setReadOnly(bool readOnly) = 0;
+        virtual void setReadOnly(bool readOnly);
 
     signals:
-        void valueChanged(double value);
 
     public slots:
-        void setValue(IUnit &newValue);
 
     protected:
-        virtual QWidget* valueWidget() = 0;
-        virtual void onValueChange(IUnit &newValue) = 0;
-
-        virtual void showEvent(QShowEvent *);
+        virtual QWidget *valueWidget();
+        virtual void onValueChange(IUnit &newValue);
 
     private:
-        bool _initialized;
-        QLabel* _unitLabel;
+        QDoubleSpinBox *_spinBox;
     };
 
 } // namespace units
 } // namespace hrlib
 
-#endif // HRLIB_UNITWIDGETBASE_H
+#endif // HRLIB_UNITDOUBLESPINBOX_H

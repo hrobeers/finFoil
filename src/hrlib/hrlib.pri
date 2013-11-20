@@ -11,7 +11,8 @@ HEADERS += \
     ../hrlib/units/iunit.h \
     ../hrlib/units/widgets/unitwidget.h \
     ../hrlib/units/widgets/unitlineedit.h \
-    ../hrlib/units/area.h
+    ../hrlib/units/area.h \
+    ../hrlib/units/widgets/unitdoublespinbox.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \
@@ -22,4 +23,5 @@ SOURCES += \
     ../hrlib/units/length.cpp \
     ../hrlib/units/widgets/unitwidget.cpp \
     ../hrlib/units/widgets/unitlineedit.cpp \
-    ../hrlib/units/area.cpp
+    ../hrlib/units/area.cpp \
+    ../hrlib/units/widgets/unitdoublespinbox.cpp

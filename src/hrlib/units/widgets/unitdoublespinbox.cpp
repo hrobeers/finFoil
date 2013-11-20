@@ -20,50 +20,30 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITWIDGETBASE_H
-#define HRLIB_UNITWIDGETBASE_H
+#include "unitdoublespinbox.h"
 
-#include "hrlibfwd/qtfwd.h"
+#include <QDoubleSpinBox>
 
-#include <QWidget>
-#include "../iunit.h"
+using namespace hrlib::units;
 
-namespace hrlib {
-namespace units {
+UnitDoubleSpinbox::UnitDoubleSpinbox(QWidget *parent) :
+    UnitWidget(parent)
+{
+    _spinBox = new QDoubleSpinBox();
+    _spinBox->setReadOnly(true); // TODO remove when change signal implemented
+}
 
-    class IUnitWidget : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit IUnitWidget(QWidget *parent = 0);
-    };
+void UnitDoubleSpinbox::setReadOnly(bool readOnly)
+{
+    _spinBox->setReadOnly(readOnly);
+}
 
-    class UnitWidget : public IUnitWidget
-    {
-        Q_OBJECT
-    public:
-        explicit UnitWidget(QWidget *parent = 0);
+QWidget *UnitDoubleSpinbox::valueWidget()
+{
+    return _spinBox;
+}
 
-        virtual void setReadOnly(bool readOnly) = 0;
-
-    signals:
-        void valueChanged(double value);
-
-    public slots:
-        void setValue(IUnit &newValue);
-
-    protected:
-        virtual QWidget* valueWidget() = 0;
-        virtual void onValueChange(IUnit &newValue) = 0;
-
-        virtual void showEvent(QShowEvent *);
-
-    private:
-        bool _initialized;
-        QLabel* _unitLabel;
-    };
-
-} // namespace units
-} // namespace hrlib
-
-#endif // HRLIB_UNITWIDGETBASE_H
+void UnitDoubleSpinbox::onValueChange(IUnit &newValue)
+{
+    _spinBox->setValue(newValue.value());
+}

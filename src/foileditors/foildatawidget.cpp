@@ -62,11 +62,12 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     // Depth section
     //
     _depth = _foilCalculator->foil()->height();
-    _depthEdit = new QDoubleSpinBox();
-    _depthEdit->setMaximum(10000);
-    _depthEdit->setValue(_depth.value());
+    _depthEdit = new UnitDoubleSpinbox();
+//    _depthEdit->setMaximum(10000);
+    Length len(_depth, LengthUnit::cm);
+    _depthEdit->setValue(len);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
-    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
+//    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
 
 
     //
