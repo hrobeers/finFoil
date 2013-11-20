@@ -20,36 +20,71 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITLINEEDIT_H
-#define HRLIB_UNITLINEEDIT_H
+#include "area.h"
 
-#include <QLineEdit>
-#include "unitwidget.h"
+#include <QString>
+#include "boost/units/base_units/cgs/centimeter.hpp"
+#include "boost/units/systems/cgs/area.hpp"
+#include "boost/units/systems/cgs/length.hpp"
+#include "boost/units/systems/si/length.hpp"
 
-namespace hrlib {
-namespace units {
+using namespace hrlib::units;
+using namespace boost::units;
 
-    class UnitLineEdit : public UnitWidget
+Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, AreaUnit::e displayUnit)
+{
+    setInternalValue(internalValue);
+    _displayUnit = displayUnit;
+}
+
+qreal Area::value()
+{
+    if (_displayUnit == AreaUnit::m2)
     {
-        Q_OBJECT
-    public:
-        explicit UnitLineEdit(QWidget *parent = 0);
+        return _internalValue.value();
+    }
+    else if (_displayUnit == AreaUnit::cm2)
+    {
+        quantity<cgs::area, qreal> converted(_internalValue);
+        return converted.value();
+    }
 
-        virtual void setReadOnly(bool readOnly);
+    return qreal(0)/qreal(0);
+}
 
-    signals:
+void Area::setValue(qreal value)
+{
+    if (_displayUnit == AreaUnit::m2)
+    {
+        quantity<si::area, qreal> m(value * si::meter * si::meter);
+        _internalValue = m;
+    }
+    else if (_displayUnit == AreaUnit::cm2)
+    {
+        quantity<si::area, qreal> cm(value * cgs::centimeter * cgs::centimeter);
+        _internalValue = cm;
+    }
+}
 
-    public slots:
+QString Area::unitSymbol()
+{
+    switch (_displayUnit) {
+    case AreaUnit::m2:
+        return "m<sup>2</sup>";
 
-    protected:
-        virtual QWidget *valueWidget();
-        virtual void onValueChange(IUnit &newValue);
+    case AreaUnit::cm2:
+        return "cm<sup>2</sup>";
 
-    private:
-        QLineEdit *_lineEdit;
-    };
+    default:
+        return "";
+    }
+}
 
-} // namespace units
-} // namespace hrlib
+QString Area::unitName()
+{
+    return "";
+}
 
-#endif // HRLIB_UNITLINEEDIT_H
+Area::~Area()
+{
+}

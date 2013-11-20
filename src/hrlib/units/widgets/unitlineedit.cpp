@@ -32,6 +32,11 @@ UnitLineEdit::UnitLineEdit(QWidget *parent) :
     _lineEdit = new QLineEdit();
 }
 
+void UnitLineEdit::setReadOnly(bool readOnly)
+{
+    _lineEdit->setReadOnly(readOnly);
+}
+
 QWidget *UnitLineEdit::valueWidget()
 {
     return _lineEdit;

@@ -34,20 +34,27 @@ IUnitWidget::IUnitWidget(QWidget *parent) :
 UnitWidget::UnitWidget(QWidget *parent) :
     IUnitWidget(parent)
 {
-    // UnitLabel
+    _initialized = false;
     _unitLabel = new QLabel();
-
-    // Layout
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(valueWidget());
-    layout->addWidget(_unitLabel);
-
-    this->setLayout(layout);
 }
 
 void UnitWidget::setValue(IUnit &newValue)
 {
     _unitLabel->setText(newValue.unitSymbol());
     onValueChange(newValue);
+}
+
+void UnitWidget::showEvent(QShowEvent *)
+{
+    if (!_initialized)
+    {
+        // Layout
+        QHBoxLayout *layout = new QHBoxLayout();
+
+        layout->addWidget(valueWidget());
+        layout->addWidget(_unitLabel);
+
+        this->setLayout(layout);
+    }
 }
 

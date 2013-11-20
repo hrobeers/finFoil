@@ -20,36 +20,38 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITLINEEDIT_H
-#define HRLIB_UNITLINEEDIT_H
+#ifndef HRLIB_AREA_H
+#define HRLIB_AREA_H
 
-#include <QLineEdit>
-#include "unitwidget.h"
+#include "unitbase.h"
+#include "boost/units/systems/si/area.hpp"
 
 namespace hrlib {
 namespace units {
 
-    class UnitLineEdit : public UnitWidget
+    struct AreaUnit
     {
-        Q_OBJECT
+        enum e { m2, cm2, mm2, ft2, inch2 };
+    };
+
+    class Area : public UnitBase<boost::units::quantity<boost::units::si::area, qreal> >
+    {
     public:
-        explicit UnitLineEdit(QWidget *parent = 0);
+        Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,
+             AreaUnit::e displayUnit);
 
-        virtual void setReadOnly(bool readOnly);
+        virtual qreal value();
+        virtual void setValue(qreal value);
+        virtual QString unitSymbol();
+        virtual QString unitName();
 
-    signals:
-
-    public slots:
-
-    protected:
-        virtual QWidget *valueWidget();
-        virtual void onValueChange(IUnit &newValue);
+        virtual ~Area();
 
     private:
-        QLineEdit *_lineEdit;
+        AreaUnit::e _displayUnit;
     };
 
 } // namespace units
 } // namespace hrlib
 
-#endif // HRLIB_UNITLINEEDIT_H
+#endif // HRLIB_AREA_H

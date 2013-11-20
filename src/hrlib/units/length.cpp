@@ -21,10 +21,10 @@
 ****************************************************************************/
 
 #include "length.h"
-#include "boost/units/base_units/cgs/centimeter.hpp"
-#include "boost/units/systems/cgs/length.hpp"
 
 #include <QString>
+#include "boost/units/base_units/cgs/centimeter.hpp"
+#include "boost/units/systems/cgs/length.hpp"
 
 using namespace hrlib::units;
 using namespace boost::units;

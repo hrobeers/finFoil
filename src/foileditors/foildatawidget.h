@@ -30,6 +30,7 @@
 #include <QWidget>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
+#include "hrlib/units/widgets/unitlineedit.h" //TODO forward declare
 
 using namespace patheditor;
 
@@ -55,7 +56,7 @@ namespace foileditors
         QFormLayout* _formLayout;
         QSpinBox* _layerEdit;
         QDoubleSpinBox* _depthEdit;
-        QLineEdit* _areaEdit;
+        hrlib::units::UnitLineEdit* _areaEdit;
         QLineEdit* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 

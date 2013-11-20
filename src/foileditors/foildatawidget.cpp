@@ -34,8 +34,11 @@
 #include "foillogic/foil.h"
 #include "foillogic/profile.h"
 
+#include "hrlib/units/area.h"
+
 using namespace foileditors;
 using namespace foillogic;
+using namespace hrlib::units;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
@@ -69,7 +72,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Area section
     //
-    _areaEdit = new QLineEdit("0");
+    _areaEdit = new UnitLineEdit();
     _areaEdit->setReadOnly(true);
     _formLayout->addRow(tr("Area:"), _areaEdit);
 
@@ -125,11 +128,12 @@ void FoilDataWidget::updateArea()
 {
     if (_pxPerUnit != 0)
     {
-        _areaEdit->setText(QString::number(_foilCalculator->foil()->area().value()));
+        Area area(_foilCalculator->foil()->area(), AreaUnit::cm2);
+        _areaEdit->setValue(area);
     }
     else
     {
-        _areaEdit->setText("0");
+//        _areaEdit->setText("0");
     }
 }
 

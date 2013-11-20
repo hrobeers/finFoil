@@ -10,7 +10,8 @@ HEADERS += \
     ../hrlib/units/unitbase.h \
     ../hrlib/units/iunit.h \
     ../hrlib/units/widgets/unitwidget.h \
-    ../hrlib/units/widgets/unitlineedit.h
+    ../hrlib/units/widgets/unitlineedit.h \
+    ../hrlib/units/area.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \
@@ -20,4 +21,5 @@ SOURCES += \
     ../hrlib/math/spline.cpp \
     ../hrlib/units/length.cpp \
     ../hrlib/units/widgets/unitwidget.cpp \
-    ../hrlib/units/widgets/unitlineedit.cpp
+    ../hrlib/units/widgets/unitlineedit.cpp \
+    ../hrlib/units/area.cpp

@@ -44,6 +44,8 @@ namespace units {
     public:
         explicit UnitWidget(QWidget *parent = 0);
 
+        virtual void setReadOnly(bool readOnly) = 0;
+
     signals:
 
     public slots:
@@ -53,7 +55,10 @@ namespace units {
         virtual QWidget* valueWidget() = 0;
         virtual void onValueChange(IUnit &newValue) = 0;
 
+        virtual void showEvent(QShowEvent *);
+
     private:
+        bool _initialized;
         QLabel* _unitLabel;
     };
 
