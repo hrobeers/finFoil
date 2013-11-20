@@ -20,69 +20,44 @@
 
 ****************************************************************************/
 
-#include "length.h"
-#include "boost/units/base_units/cgs/centimeter.hpp"
-#include "boost/units/systems/cgs/length.hpp"
+#ifndef HRLIB_UNITWIDGETBASE_H
+#define HRLIB_UNITWIDGETBASE_H
 
-#include <QString>
+#include "hrlibfwd/qtfwd.h"
 
-using namespace hrlib::units;
-using namespace boost::units;
+#include <QWidget>
+#include "../iunit.h"
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit::e displayUnit)
-{
-    setInternalValue(internalValue);
-    _displayUnit = displayUnit;
-}
+namespace hrlib {
+namespace units {
 
-qreal Length::value()
-{
-    if (_displayUnit == LengthUnit::m)
+    class IUnitWidget : public QWidget
     {
-        return _internalValue.value();
-    }
-    else if (_displayUnit == LengthUnit::cm)
+        Q_OBJECT
+    public:
+        explicit IUnitWidget(QWidget *parent = 0);
+    };
+
+    class UnitWidget : public IUnitWidget
     {
-        quantity<cgs::length, qreal> converted(_internalValue);
-        return converted.value();
-    }
+        Q_OBJECT
+    public:
+        explicit UnitWidget(QWidget *parent = 0);
 
-    return qreal(0)/qreal(0);
-}
+    signals:
 
-void Length::setValue(qreal value)
-{
-    if (_displayUnit == LengthUnit::m)
-    {
-        quantity<si::length, qreal> m(value * si::meter);
-        _internalValue = m;
-    }
-    else if (_displayUnit == LengthUnit::cm)
-    {
-        quantity<si::length, qreal> cm(value * cgs::centimeter);
-        _internalValue = cm;
-    }
-}
+    public slots:
+        void setValue(IUnit &newValue);
 
-QString Length::unitSymbol()
-{
-    switch (_displayUnit) {
-    case LengthUnit::m:
-        return "m";
+    protected:
+        virtual QWidget* valueWidget() = 0;
+        virtual void onValueChange(IUnit &newValue) = 0;
 
-    case LengthUnit::cm:
-        return "cm";
+    private:
+        QLabel* _unitLabel;
+    };
 
-    default:
-        return "";
-    }
-}
+} // namespace units
+} // namespace hrlib
 
-QString Length::unitName()
-{
-    return "";
-}
-
-Length::~Length()
-{
-}
+#endif // HRLIB_UNITWIDGETBASE_H

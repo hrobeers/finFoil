@@ -20,69 +20,34 @@
 
 ****************************************************************************/
 
-#include "length.h"
-#include "boost/units/base_units/cgs/centimeter.hpp"
-#include "boost/units/systems/cgs/length.hpp"
-
-#include <QString>
+#include "unitwidget.h"
+#include <QHBoxLayout>
+#include <QLabel>
 
 using namespace hrlib::units;
-using namespace boost::units;
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit::e displayUnit)
-{
-    setInternalValue(internalValue);
-    _displayUnit = displayUnit;
-}
-
-qreal Length::value()
-{
-    if (_displayUnit == LengthUnit::m)
-    {
-        return _internalValue.value();
-    }
-    else if (_displayUnit == LengthUnit::cm)
-    {
-        quantity<cgs::length, qreal> converted(_internalValue);
-        return converted.value();
-    }
-
-    return qreal(0)/qreal(0);
-}
-
-void Length::setValue(qreal value)
-{
-    if (_displayUnit == LengthUnit::m)
-    {
-        quantity<si::length, qreal> m(value * si::meter);
-        _internalValue = m;
-    }
-    else if (_displayUnit == LengthUnit::cm)
-    {
-        quantity<si::length, qreal> cm(value * cgs::centimeter);
-        _internalValue = cm;
-    }
-}
-
-QString Length::unitSymbol()
-{
-    switch (_displayUnit) {
-    case LengthUnit::m:
-        return "m";
-
-    case LengthUnit::cm:
-        return "cm";
-
-    default:
-        return "";
-    }
-}
-
-QString Length::unitName()
-{
-    return "";
-}
-
-Length::~Length()
+IUnitWidget::IUnitWidget(QWidget *parent) :
+    QWidget(parent)
 {
 }
+
+UnitWidget::UnitWidget(QWidget *parent) :
+    IUnitWidget(parent)
+{
+    // UnitLabel
+    _unitLabel = new QLabel();
+
+    // Layout
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(valueWidget());
+    layout->addWidget(_unitLabel);
+
+    this->setLayout(layout);
+}
+
+void UnitWidget::setValue(IUnit &newValue)
+{
+    _unitLabel->setText(newValue.unitSymbol());
+    onValueChange(newValue);
+}
+

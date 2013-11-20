@@ -20,69 +20,24 @@
 
 ****************************************************************************/
 
-#include "length.h"
-#include "boost/units/base_units/cgs/centimeter.hpp"
-#include "boost/units/systems/cgs/length.hpp"
+#include "unitlineedit.h"
 
-#include <QString>
+#include <QLineEdit>
 
 using namespace hrlib::units;
-using namespace boost::units;
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit::e displayUnit)
+UnitLineEdit::UnitLineEdit(QWidget *parent) :
+    UnitWidget(parent)
 {
-    setInternalValue(internalValue);
-    _displayUnit = displayUnit;
+    _lineEdit = new QLineEdit();
 }
 
-qreal Length::value()
+QWidget *UnitLineEdit::valueWidget()
 {
-    if (_displayUnit == LengthUnit::m)
-    {
-        return _internalValue.value();
-    }
-    else if (_displayUnit == LengthUnit::cm)
-    {
-        quantity<cgs::length, qreal> converted(_internalValue);
-        return converted.value();
-    }
-
-    return qreal(0)/qreal(0);
+    return _lineEdit;
 }
 
-void Length::setValue(qreal value)
+void UnitLineEdit::onValueChange(IUnit &newValue)
 {
-    if (_displayUnit == LengthUnit::m)
-    {
-        quantity<si::length, qreal> m(value * si::meter);
-        _internalValue = m;
-    }
-    else if (_displayUnit == LengthUnit::cm)
-    {
-        quantity<si::length, qreal> cm(value * cgs::centimeter);
-        _internalValue = cm;
-    }
-}
-
-QString Length::unitSymbol()
-{
-    switch (_displayUnit) {
-    case LengthUnit::m:
-        return "m";
-
-    case LengthUnit::cm:
-        return "cm";
-
-    default:
-        return "";
-    }
-}
-
-QString Length::unitName()
-{
-    return "";
-}
-
-Length::~Length()
-{
+    _lineEdit->setText(QString::number(newValue.value()));
 }

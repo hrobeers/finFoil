@@ -41,6 +41,7 @@ class QPainterPath;
 class QSpinBox;
 class QDoubleSpinBox;
 class QLineEdit;
+class QLabel;
 
 QT_END_NAMESPACE
 

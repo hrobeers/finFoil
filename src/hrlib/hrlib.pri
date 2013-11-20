@@ -8,7 +8,9 @@ HEADERS += \
     ../hrlib/math/spline.hpp \
     ../hrlib/units/length.h \
     ../hrlib/units/unitbase.h \
-    ../hrlib/units/iunit.h
+    ../hrlib/units/iunit.h \
+    ../hrlib/units/widgets/unitwidget.h \
+    ../hrlib/units/widgets/unitlineedit.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \
@@ -16,4 +18,6 @@ SOURCES += \
     ../hrlib/math/brent.cpp \
     ../hrlib/qgraphics/pathutils.cpp \
     ../hrlib/math/spline.cpp \
-    ../hrlib/units/length.cpp
+    ../hrlib/units/length.cpp \
+    ../hrlib/units/widgets/unitwidget.cpp \
+    ../hrlib/units/widgets/unitlineedit.cpp
