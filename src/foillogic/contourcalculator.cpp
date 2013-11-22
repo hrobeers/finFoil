@@ -162,6 +162,8 @@ void ContourCalculator::run()
         // set points to 0 when closer than 1 manhattan pixel
         if ((*(leadingEdgePnts.at(i)) - *(trailingEdgePnts.at(i))).manhattanLength() < 1)
         {
+            delete leadingEdgePnts[i];
+            delete trailingEdgePnts[i];
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
         }
