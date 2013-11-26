@@ -105,7 +105,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 
 void FoilDataWidget::onDepthChange(IUnit *depth)
 {
-    Length *ldepth = dynamic_cast<Length*>(depth);
+    Length* ldepth = static_cast<Length*>(depth);
     _depth = ldepth->internalValue();
     _foilCalculator->foil()->setHeight(_depth);
     _foilCalculator->recalculateArea();
