@@ -87,6 +87,7 @@ namespace units {
                 layout->setContentsMargins(0, 0, 0, 0);
 
                 this->setLayout(layout);
+                _initialized = true;
             }
         }
 
