@@ -37,8 +37,6 @@ namespace units {
         InternalType _internalValue;
 
     public:
-//        explicit UnitBase(InternalType internalValue) { _internalValue = internalValue; }
-
         inline InternalType internalValue() { return _internalValue; }
         inline void setInternalValue(InternalType value) { _internalValue = value; }
 

@@ -62,18 +62,18 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     // Depth section
     //
     _depth = _foilCalculator->foil()->height();
-    _depthEdit = new UnitDoubleSpinbox();
+    _depthEdit = new UnitDoubleSpinbox<Length>();
 //    _depthEdit->setMaximum(10000);
-    Length len(_depth, LengthUnit::cm);
-    _depthEdit->setValue(len);
+    Length depth(_depth, LengthUnit::cm);
+    _depthEdit->setValue(depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
-//    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
+    connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IUnit*)), this, SLOT(onDepthChange(hrlib::units::IUnit*)));
 
 
     //
     // Area section
     //
-    _areaEdit = new UnitLineEdit();
+    _areaEdit = new UnitLineEdit<Area>();
     _areaEdit->setReadOnly(true);
     _formLayout->addRow(tr("Area:"), _areaEdit);
 
@@ -103,9 +103,10 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 }
 
 
-void FoilDataWidget::onDepthChange(double depth)
+void FoilDataWidget::onDepthChange(IUnit *depth)
 {
-    _depth = _depth.from_value(depth);
+    Length *ldepth = dynamic_cast<Length*>(depth);
+    _depth = ldepth->internalValue();
     _foilCalculator->foil()->setHeight(_depth);
     _foilCalculator->recalculateArea();
     onFoilCalculated();

@@ -81,3 +81,7 @@ NotImplementedException::NotImplementedException(QString &message, QObject *thro
 
 ImplementationException::ImplementationException(QString &message, QObject *thrower) throw()
     : Exception(message, thrower) { }
+
+
+InitializationException::InitializationException(QString &message, QObject *thrower) throw()
+    : Exception(message, thrower) { }

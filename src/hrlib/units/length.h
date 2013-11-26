@@ -37,6 +37,7 @@ namespace units {
     class Length : public UnitBase<boost::units::quantity<boost::units::si::length, qreal> >
     {
     public:
+        explicit Length();
         explicit Length(boost::units::quantity<boost::units::si::length, qreal> internalValue,
                         LengthUnit::e displayUnit);
 

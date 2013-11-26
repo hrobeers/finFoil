@@ -37,7 +37,8 @@ namespace units {
     class Area : public UnitBase<boost::units::quantity<boost::units::si::area, qreal> >
     {
     public:
-        Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,
+        explicit Area();
+        explicit Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,
              AreaUnit::e displayUnit);
 
         virtual qreal value();

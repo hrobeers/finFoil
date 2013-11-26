@@ -31,6 +31,12 @@
 using namespace hrlib::units;
 using namespace boost::units;
 
+Area::Area()
+{
+    setInternalValue(quantity<si::area>(0 * si::meter * si::meter));
+    _displayUnit = AreaUnit::m2;
+}
+
 Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, AreaUnit::e displayUnit)
 {
     setInternalValue(internalValue);

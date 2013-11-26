@@ -25,27 +25,41 @@
 
 #include "unitwidget.h"
 
+#include <QDoubleSpinBox>
+
 namespace hrlib {
 namespace units {
 
-    class UnitDoubleSpinbox : public UnitWidget
+    template<class UnitType>
+    class UnitDoubleSpinbox : public UnitWidget<UnitType>
     {
-        Q_OBJECT
-    public:
-        explicit UnitDoubleSpinbox(QWidget *parent = 0);
-
-        virtual void setReadOnly(bool readOnly);
-
-    signals:
-
-    public slots:
-
-    protected:
-        virtual QWidget *valueWidget();
-        virtual void onValueChange(IUnit &newValue);
-
     private:
         QDoubleSpinBox *_spinBox;
+
+    public:
+        explicit UnitDoubleSpinbox(QWidget *parent = 0) :
+            UnitWidget<UnitType>(parent)
+        {
+            _spinBox = new QDoubleSpinBox();
+
+            UnitWidgetBase::connectValueChanged(_spinBox);
+        }
+
+        virtual void setReadOnly(bool readOnly)
+        {
+            _spinBox->setReadOnly(readOnly);
+        }
+
+    protected:
+        virtual QWidget *valueWidget()
+        {
+            return _spinBox;
+        }
+
+        virtual void onValueChange(UnitType &newValue)
+        {
+            _spinBox->setValue(newValue.value());
+        }
     };
 
 } // namespace units

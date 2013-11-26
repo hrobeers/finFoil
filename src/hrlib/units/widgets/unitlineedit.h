@@ -29,24 +29,34 @@
 namespace hrlib {
 namespace units {
 
-    class UnitLineEdit : public UnitWidget
+    template<class UnitType>
+    class UnitLineEdit : public UnitWidget<UnitType>
     {
-        Q_OBJECT
-    public:
-        explicit UnitLineEdit(QWidget *parent = 0);
-
-        virtual void setReadOnly(bool readOnly);
-
-    signals:
-
-    public slots:
-
-    protected:
-        virtual QWidget *valueWidget();
-        virtual void onValueChange(IUnit &newValue);
-
     private:
         QLineEdit *_lineEdit;
+
+    public:
+        explicit UnitLineEdit(QWidget *parent = 0) :
+            UnitWidget<UnitType>(parent)
+        {
+            _lineEdit = new QLineEdit();
+        }
+
+        virtual void setReadOnly(bool readOnly)
+        {
+            _lineEdit->setReadOnly(readOnly);
+        }
+
+    protected:
+        virtual QWidget *valueWidget()
+        {
+            return _lineEdit;
+        }
+
+        virtual void onValueChange(UnitType &newValue)
+        {
+            _lineEdit->setText(QString::number(newValue.value()));
+        }
     };
 
 } // namespace units

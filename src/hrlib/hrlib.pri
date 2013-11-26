@@ -21,7 +21,4 @@ SOURCES += \
     ../hrlib/qgraphics/pathutils.cpp \
     ../hrlib/math/spline.cpp \
     ../hrlib/units/length.cpp \
-    ../hrlib/units/widgets/unitwidget.cpp \
-    ../hrlib/units/widgets/unitlineedit.cpp \
-    ../hrlib/units/area.cpp \
-    ../hrlib/units/widgets/unitdoublespinbox.cpp
+    ../hrlib/units/area.cpp

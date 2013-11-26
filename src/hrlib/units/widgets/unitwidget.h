@@ -26,41 +26,83 @@
 #include "hrlibfwd/qtfwd.h"
 
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QDoubleSpinBox>
 #include "../iunit.h"
 
 namespace hrlib {
 namespace units {
 
-    class IUnitWidget : public QWidget
+    class UnitWidgetBase : public QWidget
     {
         Q_OBJECT
     public:
-        explicit IUnitWidget(QWidget *parent = 0);
-    };
-
-    class UnitWidget : public IUnitWidget
-    {
-        Q_OBJECT
-    public:
-        explicit UnitWidget(QWidget *parent = 0);
-
-        virtual void setReadOnly(bool readOnly) = 0;
+        explicit UnitWidgetBase(QWidget *parent = 0) : QWidget(parent) {}
 
     signals:
-        void valueChanged(double value);
-
-    public slots:
-        void setValue(IUnit &newValue);
+        void valueChanged(hrlib::units::IUnit *value);
 
     protected:
-        virtual QWidget* valueWidget() = 0;
-        virtual void onValueChange(IUnit &newValue) = 0;
+        virtual void onEditImplementation(double displayValue) = 0;
+        void emitValueChanged(hrlib::units::IUnit *value) { emit valueChanged(value); }
 
-        virtual void showEvent(QShowEvent *);
+        void connectValueChanged(QDoubleSpinBox *widget)
+            { connect(widget, SIGNAL(valueChanged(double)), this, SLOT(onEdit(double))); }
 
+    public slots:
+        void onEdit(double displayValue) { onEditImplementation(displayValue); }
+    };
+
+    template<class UnitType>
+    class UnitWidget : public UnitWidgetBase
+    {
     private:
         bool _initialized;
         QLabel* _unitLabel;
+
+    protected:
+        UnitType _value;
+
+        virtual QWidget* valueWidget() = 0;
+        virtual void onValueChange(UnitType &newValue) = 0;
+
+        virtual void onEditImplementation(double displayValue)
+        {
+            _value.setValue(displayValue);
+            emitValueChanged(&_value);
+        }
+
+        virtual void showEvent(QShowEvent *)
+        {
+            if (!_initialized)
+            {
+                // Layout
+                QHBoxLayout *layout = new QHBoxLayout();
+
+                layout->addWidget(valueWidget());
+                layout->addWidget(_unitLabel);
+
+                this->setLayout(layout);
+            }
+        }
+
+    public:
+        explicit UnitWidget(QWidget *parent = 0) :
+            UnitWidgetBase(parent)
+        {
+            _initialized = false;
+            _unitLabel = new QLabel();
+        }
+
+        void setValue(UnitType &newValue)
+        {
+            _value = newValue;
+            _unitLabel->setText(_value.unitSymbol());
+            onValueChange(_value);
+        }
+
+        virtual void setReadOnly(bool readOnly) = 0;
     };
 
 } // namespace units

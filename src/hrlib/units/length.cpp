@@ -29,6 +29,12 @@
 using namespace hrlib::units;
 using namespace boost::units;
 
+Length::Length()
+{
+    setInternalValue(quantity<si::length, qreal>(0 * si::meter));
+    _displayUnit = LengthUnit::m;
+}
+
 Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit::e displayUnit)
 {
     setInternalValue(internalValue);

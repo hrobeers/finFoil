@@ -35,6 +35,7 @@
 #include "hrlib/units/widgets/unitlineedit.h"
 #include "hrlib/units/widgets/unitdoublespinbox.h"
 #include "hrlib/units/length.h"
+#include "hrlib/units/area.h"
 
 using namespace patheditor;
 
@@ -50,7 +51,7 @@ namespace foileditors
         void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
-        void onDepthChange(double depth);
+        void onDepthChange(hrlib::units::IUnit *depth);
 
     private:
         boost::units::quantity<boost::units::si::length, qreal> _depth;
@@ -59,8 +60,8 @@ namespace foileditors
 
         QFormLayout* _formLayout;
         QSpinBox* _layerEdit;
-        hrlib::units::UnitDoubleSpinbox* _depthEdit;
-        hrlib::units::UnitLineEdit* _areaEdit;
+        hrlib::units::UnitDoubleSpinbox<hrlib::units::Length>* _depthEdit;
+        hrlib::units::UnitLineEdit<hrlib::units::Area>* _areaEdit;
         QLineEdit* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 
