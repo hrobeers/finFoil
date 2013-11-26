@@ -29,17 +29,14 @@
 namespace hrlib {
 namespace units {
 
-    struct AreaUnit
-    {
-        enum e { m2, cm2, mm2, ft2, inch2 };
-    };
-
     class Area : public UnitBase<boost::units::quantity<boost::units::si::area, qreal> >
     {
     public:
+        struct Unit { enum e { m2, cm2, mm2, ft2, inch2 }; };
+
         explicit Area();
         explicit Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,
-             AreaUnit::e displayUnit);
+             Unit::e displayUnit);
 
         virtual qreal value();
         virtual void setValue(qreal value);
@@ -49,7 +46,7 @@ namespace units {
         virtual ~Area();
 
     private:
-        AreaUnit::e _displayUnit;
+        Unit::e _displayUnit;
     };
 
 } // namespace units

@@ -34,10 +34,10 @@ using namespace boost::units;
 Area::Area()
 {
     setInternalValue(quantity<si::area>(0 * si::meter * si::meter));
-    _displayUnit = AreaUnit::m2;
+    _displayUnit = Unit::m2;
 }
 
-Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, AreaUnit::e displayUnit)
+Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e displayUnit)
 {
     setInternalValue(internalValue);
     _displayUnit = displayUnit;
@@ -45,11 +45,11 @@ Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, 
 
 qreal Area::value()
 {
-    if (_displayUnit == AreaUnit::m2)
+    if (_displayUnit == Unit::m2)
     {
         return _internalValue.value();
     }
-    else if (_displayUnit == AreaUnit::cm2)
+    else if (_displayUnit == Unit::cm2)
     {
         quantity<cgs::area, qreal> converted(_internalValue);
         return converted.value();
@@ -60,12 +60,12 @@ qreal Area::value()
 
 void Area::setValue(qreal value)
 {
-    if (_displayUnit == AreaUnit::m2)
+    if (_displayUnit == Unit::m2)
     {
         quantity<si::area, qreal> m(value * si::meter * si::meter);
         _internalValue = m;
     }
-    else if (_displayUnit == AreaUnit::cm2)
+    else if (_displayUnit == Unit::cm2)
     {
         quantity<si::area, qreal> cm(value * cgs::centimeter * cgs::centimeter);
         _internalValue = cm;
@@ -75,10 +75,10 @@ void Area::setValue(qreal value)
 QString Area::unitSymbol()
 {
     switch (_displayUnit) {
-    case AreaUnit::m2:
+    case Unit::m2:
         return "m<sup>2</sup>";
 
-    case AreaUnit::cm2:
+    case Unit::cm2:
         return "cm<sup>2</sup>";
 
     default:

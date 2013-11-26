@@ -32,10 +32,10 @@ using namespace boost::units;
 Length::Length()
 {
     setInternalValue(quantity<si::length, qreal>(0 * si::meter));
-    _displayUnit = LengthUnit::m;
+    _displayUnit = Unit::m;
 }
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit::e displayUnit)
+Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e displayUnit)
 {
     setInternalValue(internalValue);
     _displayUnit = displayUnit;
@@ -43,11 +43,11 @@ Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUn
 
 qreal Length::value()
 {
-    if (_displayUnit == LengthUnit::m)
+    if (_displayUnit == Unit::m)
     {
         return _internalValue.value();
     }
-    else if (_displayUnit == LengthUnit::cm)
+    else if (_displayUnit == Unit::cm)
     {
         quantity<cgs::length, qreal> converted(_internalValue);
         return converted.value();
@@ -58,12 +58,12 @@ qreal Length::value()
 
 void Length::setValue(qreal value)
 {
-    if (_displayUnit == LengthUnit::m)
+    if (_displayUnit == Unit::m)
     {
         quantity<si::length, qreal> m(value * si::meter);
         _internalValue = m;
     }
-    else if (_displayUnit == LengthUnit::cm)
+    else if (_displayUnit == Unit::cm)
     {
         quantity<si::length, qreal> cm(value * cgs::centimeter);
         _internalValue = cm;
@@ -73,10 +73,10 @@ void Length::setValue(qreal value)
 QString Length::unitSymbol()
 {
     switch (_displayUnit) {
-    case LengthUnit::m:
+    case Unit::m:
         return "m";
 
-    case LengthUnit::cm:
+    case Unit::cm:
         return "cm";
 
     default:
