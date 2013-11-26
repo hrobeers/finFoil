@@ -12,7 +12,8 @@ HEADERS += \
     ../hrlib/units/widgets/unitwidget.h \
     ../hrlib/units/widgets/unitlineedit.h \
     ../hrlib/units/area.h \
-    ../hrlib/units/widgets/unitdoublespinbox.h
+    ../hrlib/units/widgets/unitdoublespinbox.h \
+    ../hrlib/units/angle.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \
@@ -21,4 +22,5 @@ SOURCES += \
     ../hrlib/qgraphics/pathutils.cpp \
     ../hrlib/math/spline.cpp \
     ../hrlib/units/length.cpp \
-    ../hrlib/units/area.cpp
+    ../hrlib/units/area.cpp \
+    ../hrlib/units/angle.cpp
