@@ -36,6 +36,7 @@
 #include "hrlib/units/widgets/unitdoublespinbox.h"
 #include "hrlib/units/length.h"
 #include "hrlib/units/area.h"
+#include "hrlib/units/angle.h"
 
 using namespace patheditor;
 
@@ -62,7 +63,7 @@ namespace foileditors
         QSpinBox* _layerEdit;
         hrlib::units::UnitDoubleSpinbox<hrlib::units::Length>* _depthEdit;
         hrlib::units::UnitLineEdit<hrlib::units::Area>* _areaEdit;
-        QLineEdit* _sweepEdit;
+        hrlib::units::UnitLineEdit<hrlib::units::Angle>* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 
         void updatePxPerUnit();

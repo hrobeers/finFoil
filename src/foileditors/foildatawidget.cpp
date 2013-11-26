@@ -81,7 +81,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Sweep section
     //
-    _sweepEdit = new QLineEdit("0");
+    _sweepEdit = new UnitLineEdit<Angle>();
     _sweepEdit->setReadOnly(true);
     _formLayout->addRow(tr("Sweep:"), _sweepEdit);
 
@@ -146,7 +146,8 @@ void FoilDataWidget::onFoilCalculated()
 {
     updatePxPerUnit();
     updateArea();
-    _sweepEdit->setText(QString::number(_foilCalculator->foil()->sweep().value()));
+    Angle angle(_foilCalculator->foil()->sweep(), Angle::Unit::degree);
+    _sweepEdit->setValue(angle);
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
