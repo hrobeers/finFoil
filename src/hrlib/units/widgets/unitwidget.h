@@ -83,6 +83,9 @@ namespace units {
                 layout->addWidget(valueWidget());
                 layout->addWidget(_unitLabel);
 
+                // Remove margins for blending in with standard edit widgets
+                layout->setContentsMargins(0, 0, 0, 0);
+
                 this->setLayout(layout);
             }
         }
