@@ -20,29 +20,17 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITBASE_H
-#define HRLIB_UNITBASE_H
+#ifndef UNITCONVERTORTEST_H
+#define UNITCONVERTORTEST_H
 
-#include "iunit.h"
-#include "boost/units/quantity.hpp"
+#include <QObject>
 
-namespace hrlib {
-namespace units {
+class UnitConvertorTest : public QObject
+{
+    Q_OBJECT
 
-    template<class InternalType>
-    class UnitBase : public IUnit
-    {
-    protected:
-        InternalType _internalValue;
+private slots:
+    void testLengthConversion();
+};
 
-    public:
-        inline InternalType internalValue() { return _internalValue; }
-        inline void setInternalValue(InternalType value) { _internalValue = value; }
-
-        virtual ~UnitBase() {}
-    };
-
-} // namespace units
-} // namespace hrlib
-
-#endif // HRLIB_UNITBASE_H
+#endif // UNITCONVERTORTEST_H

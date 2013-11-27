@@ -20,29 +20,27 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITBASE_H
-#define HRLIB_UNITBASE_H
+#include "unitconvertortest.h"
 
-#include "iunit.h"
-#include "boost/units/quantity.hpp"
+#include "hrtestlib/unittesting.h"
+#include "hrlib/units/unitconvertor.h"
+#include "boost/units/systems/si/length.hpp"
+#include "boost/units/systems/cgs/length.hpp"
 
-namespace hrlib {
-namespace units {
+using namespace hrlib::units;
+using namespace boost::units;
 
-    template<class InternalType>
-    class UnitBase : public IUnit
-    {
-    protected:
-        InternalType _internalValue;
+void UnitConvertorTest::testLengthConversion()
+{
+    // If this compiles, compilation works :)
+    UnitConvertor<cgs::length, si::length> cmConvertor;
 
-    public:
-        inline InternalType internalValue() { return _internalValue; }
-        inline void setInternalValue(InternalType value) { _internalValue = value; }
+    quantity<si::length, qreal> internalValue(1 * si::meter);
+    qreal cm = cmConvertor.fromInternalValue(internalValue);
+    QCOMPARE(cm, 100.0);
 
-        virtual ~UnitBase() {}
-    };
+    internalValue = cmConvertor.toInternalValue(1);
+    QCOMPARE(internalValue.value(), 0.01);
+}
 
-} // namespace units
-} // namespace hrlib
-
-#endif // HRLIB_UNITBASE_H
+HR_ADD_TEST(UnitConvertorTest)

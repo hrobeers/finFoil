@@ -13,7 +13,8 @@ HEADERS += \
     ../hrlib/units/widgets/unitlineedit.h \
     ../hrlib/units/area.h \
     ../hrlib/units/widgets/unitdoublespinbox.h \
-    ../hrlib/units/angle.h
+    ../hrlib/units/angle.h \
+    ../hrlib/units/unitconvertor.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \

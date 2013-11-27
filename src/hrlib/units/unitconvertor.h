@@ -20,29 +20,41 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITBASE_H
-#define HRLIB_UNITBASE_H
+#ifndef HRLIB_UNITTYPE_H
+#define HRLIB_UNITTYPE_H
 
-#include "iunit.h"
+#include <QString>
 #include "boost/units/quantity.hpp"
 
 namespace hrlib {
 namespace units {
 
-    template<class InternalType>
-    class UnitBase : public IUnit
+    template<class InternalDimension, typename NumericType = qreal>
+    class UnitConvertorBase
     {
-    protected:
-        InternalType _internalValue;
-
     public:
-        inline InternalType internalValue() { return _internalValue; }
-        inline void setInternalValue(InternalType value) { _internalValue = value; }
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalDimension, NumericType> internalValue) = 0;
+        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(qreal value) = 0;
+    };
 
-        virtual ~UnitBase() {}
+    template<class Dimension, class InternalDimension, typename NumericType = qreal>
+    class UnitConvertor : public UnitConvertorBase<InternalDimension>
+    {
+    public:
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalDimension, NumericType> internalValue)
+        {
+            boost::units::quantity<Dimension, NumericType> converted(internalValue);
+            return converted.value();
+        }
+
+        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(qreal value)
+        {
+            boost::units::quantity<InternalDimension, NumericType> internalValue(value * Dimension());
+            return internalValue;
+        }
     };
 
 } // namespace units
 } // namespace hrlib
 
-#endif // HRLIB_UNITBASE_H
+#endif // HRLIB_UNITTYPE_H
