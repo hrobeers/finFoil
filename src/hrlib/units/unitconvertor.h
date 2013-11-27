@@ -34,7 +34,7 @@ namespace units {
     {
     public:
         virtual NumericType fromInternalValue(boost::units::quantity<InternalDimension, NumericType> internalValue) = 0;
-        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(qreal value) = 0;
+        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(NumericType value) = 0;
     };
 
     template<class Dimension, class InternalDimension, typename NumericType = qreal>
@@ -47,7 +47,7 @@ namespace units {
             return converted.value();
         }
 
-        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(qreal value)
+        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(NumericType value)
         {
             boost::units::quantity<InternalDimension, NumericType> internalValue(value * Dimension());
             return internalValue;
