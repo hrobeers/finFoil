@@ -29,7 +29,7 @@
 namespace hrlib {
 namespace units {
 
-    class Angle : public UnitBase<boost::units::quantity<boost::units::degree::plane_angle, qreal> >
+    class Angle : public UnitBase<boost::units::degree::plane_angle>
     {
     public:
         struct Unit { enum e { degree }; };

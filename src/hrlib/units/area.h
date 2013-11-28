@@ -29,7 +29,7 @@
 namespace hrlib {
 namespace units {
 
-    class Area : public UnitBase<boost::units::quantity<boost::units::si::area, qreal> >
+    class Area : public UnitBase<boost::units::si::area>
     {
     public:
         struct Unit { enum e { m2, cm2, mm2, ft2, inch2 }; };

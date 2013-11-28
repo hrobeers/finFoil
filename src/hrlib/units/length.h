@@ -29,7 +29,7 @@
 namespace hrlib {
 namespace units {
 
-    class Length : public UnitBase<boost::units::quantity<boost::units::si::length, qreal> >
+    class Length : public UnitBase<boost::units::si::length>
     {
     public:
         struct Unit { enum e { m, cm, mm, ft, inch }; };

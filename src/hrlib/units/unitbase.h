@@ -29,15 +29,17 @@
 namespace hrlib {
 namespace units {
 
-    template<class InternalType>
+    template<class InternalDimension, typename NumericType = qreal>
     class UnitBase : public IUnit
     {
     protected:
-        InternalType _internalValue;
+        boost::units::quantity<InternalDimension, NumericType> _internalValue;
 
     public:
-        inline InternalType internalValue() { return _internalValue; }
-        inline void setInternalValue(InternalType value) { _internalValue = value; }
+        inline boost::units::quantity<InternalDimension, NumericType> internalValue()
+            { return _internalValue; }
+        inline void setInternalValue(boost::units::quantity<InternalDimension, NumericType> value)
+            { _internalValue = value; }
 
         virtual ~UnitBase() {}
     };
