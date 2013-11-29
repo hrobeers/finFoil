@@ -23,13 +23,13 @@
 #ifndef HRLIB_LENGTH_H
 #define HRLIB_LENGTH_H
 
-#include "unitbase.h"
+#include "quantitybase.h"
 #include "boost/units/systems/si/length.hpp"
 
 namespace hrlib {
 namespace units {
 
-    class Length : public UnitBase<boost::units::si::length>
+    class Length : public QuantityBase<boost::units::si::length>
     {
     public:
         struct Unit { enum e { m, cm, mm, ft, inch }; };
@@ -41,7 +41,6 @@ namespace units {
         virtual qreal value();
         virtual void setValue(qreal value);
         virtual QString unitSymbol();
-        virtual QString unitName();
 
         virtual ~Length();
     private:

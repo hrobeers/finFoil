@@ -20,31 +20,25 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_UNITBASE_H
-#define HRLIB_UNITBASE_H
+#ifndef HRLIB_IQUANTITY_H
+#define HRLIB_IQUANTITY_H
 
-#include "iunit.h"
-#include "boost/units/quantity.hpp"
+#include <QtGlobal>
 
 namespace hrlib {
 namespace units {
 
-    template<class InternalDimension, typename NumericType = qreal>
-    class UnitBase : public IUnit
+    class IQuantity
     {
-    protected:
-        boost::units::quantity<InternalDimension, NumericType> _internalValue;
-
     public:
-        inline boost::units::quantity<InternalDimension, NumericType> internalValue()
-            { return _internalValue; }
-        inline void setInternalValue(boost::units::quantity<InternalDimension, NumericType> value)
-            { _internalValue = value; }
+        virtual qreal value() = 0;
+        virtual void setValue(qreal value) = 0;
+        virtual QString unitSymbol() = 0;
 
-        virtual ~UnitBase() {}
+        virtual ~IQuantity() {}
     };
 
 } // namespace units
 } // namespace hrlib
 
-#endif // HRLIB_UNITBASE_H
+#endif // HRLIB_IQUANTITY_H

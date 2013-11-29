@@ -86,11 +86,6 @@ QString Area::unitSymbol()
     }
 }
 
-QString Area::unitName()
-{
-    return "";
-}
-
 Area::~Area()
 {
 }

@@ -23,13 +23,13 @@
 #ifndef HRLIB_AREA_H
 #define HRLIB_AREA_H
 
-#include "unitbase.h"
+#include "quantitybase.h"
 #include "boost/units/systems/si/area.hpp"
 
 namespace hrlib {
 namespace units {
 
-    class Area : public UnitBase<boost::units::si::area>
+    class Area : public QuantityBase<boost::units::si::area>
     {
     public:
         struct Unit { enum e { m2, cm2, mm2, ft2, inch2 }; };
@@ -41,7 +41,6 @@ namespace units {
         virtual qreal value();
         virtual void setValue(qreal value);
         virtual QString unitSymbol();
-        virtual QString unitName();
 
         virtual ~Area();
 

@@ -29,7 +29,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDoubleSpinBox>
-#include "../iunit.h"
+#include "../iquantity.h"
 
 namespace hrlib {
 namespace units {
@@ -41,11 +41,11 @@ namespace units {
         explicit UnitWidgetBase(QWidget *parent = 0) : QWidget(parent) {}
 
     signals:
-        void valueChanged(hrlib::units::IUnit *value);
+        void valueChanged(hrlib::units::IQuantity *value);
 
     protected:
         virtual void onEditImplementation(double displayValue) = 0;
-        void emitValueChanged(hrlib::units::IUnit *value) { emit valueChanged(value); }
+        void emitValueChanged(hrlib::units::IQuantity *value) { emit valueChanged(value); }
 
         void connectValueChanged(QDoubleSpinBox *widget)
             { connect(widget, SIGNAL(valueChanged(double)), this, SLOT(onEdit(double))); }

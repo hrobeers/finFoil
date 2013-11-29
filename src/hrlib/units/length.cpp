@@ -84,11 +84,6 @@ QString Length::unitSymbol()
     }
 }
 
-QString Length::unitName()
-{
-    return "";
-}
-
 Length::~Length()
 {
 }

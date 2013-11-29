@@ -64,11 +64,6 @@ QString Angle::unitSymbol()
     return "deg";
 }
 
-QString Angle::unitName()
-{
-    return "";
-}
-
 Angle::~Angle()
 {
 }

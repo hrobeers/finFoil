@@ -7,14 +7,14 @@ HEADERS += \
     ../hrlib/hrlibfwd/qtfwd.h \
     ../hrlib/math/spline.hpp \
     ../hrlib/units/length.h \
-    ../hrlib/units/unitbase.h \
-    ../hrlib/units/iunit.h \
     ../hrlib/units/widgets/unitwidget.h \
     ../hrlib/units/widgets/unitlineedit.h \
     ../hrlib/units/area.h \
     ../hrlib/units/widgets/unitdoublespinbox.h \
     ../hrlib/units/angle.h \
-    ../hrlib/units/unitconvertor.h
+    ../hrlib/units/unitconvertor.h \
+    ../hrlib/units/iquantity.h \
+    ../hrlib/units/quantitybase.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \

@@ -67,7 +67,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     Length depth(_depth, Length::Unit::cm);
     _depthEdit->setValue(depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
-    connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IUnit*)), this, SLOT(onDepthChange(hrlib::units::IUnit*)));
+    connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IQuantity*)), this, SLOT(onDepthChange(hrlib::units::IQuantity*)));
 
 
     //
@@ -103,7 +103,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 }
 
 
-void FoilDataWidget::onDepthChange(IUnit *depth)
+void FoilDataWidget::onDepthChange(IQuantity *depth)
 {
     Length* ldepth = static_cast<Length*>(depth);
     _depth = ldepth->internalValue();

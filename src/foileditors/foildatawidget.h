@@ -52,7 +52,7 @@ namespace foileditors
         void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
-        void onDepthChange(hrlib::units::IUnit *depth);
+        void onDepthChange(hrlib::units::IQuantity *depth);
 
     private:
         boost::units::quantity<boost::units::si::length, qreal> _depth;

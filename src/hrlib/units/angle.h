@@ -23,13 +23,13 @@
 #ifndef HRLIB_ANGLE_H
 #define HRLIB_ANGLE_H
 
-#include "unitbase.h"
+#include "quantitybase.h"
 #include "boost/units/systems/angle/degrees.hpp"
 
 namespace hrlib {
 namespace units {
 
-    class Angle : public UnitBase<boost::units::degree::plane_angle>
+    class Angle : public QuantityBase<boost::units::degree::plane_angle>
     {
     public:
         struct Unit { enum e { degree }; };
@@ -41,7 +41,6 @@ namespace units {
         virtual qreal value();
         virtual void setValue(qreal value);
         virtual QString unitSymbol();
-        virtual QString unitName();
 
         virtual ~Angle();
     private:

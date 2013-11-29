@@ -30,7 +30,7 @@ class UnitConvertorTest : public QObject
     Q_OBJECT
 
 private slots:
-    void testLengthConversion();
+    void testLengthConvertor();
 
     // TODO test for different NumericTypes
 };

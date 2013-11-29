@@ -30,29 +30,29 @@
 namespace hrlib {
 namespace units {
 
-    template<class InternalDimension, typename NumericType = qreal>
+    template<class InternalUnit, typename NumericType = qreal>
     class UnitConvertorBase
     {
     public:
-        virtual NumericType fromInternalValue(boost::units::quantity<InternalDimension, NumericType> internalValue) = 0;
-        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(NumericType value) = 0;
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue) = 0;
+        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value) = 0;
         virtual QString unitSymbol() = 0;
     };
 
-    template<class Dimension, class InternalDimension,
+    template<class Unit, class InternalUnit,
              typename UnitSymbol, typename NumericType = qreal>
-    class UnitConvertor : public UnitConvertorBase<InternalDimension>
+    class UnitConvertor : public UnitConvertorBase<InternalUnit>
     {
     public:
-        virtual NumericType fromInternalValue(boost::units::quantity<InternalDimension, NumericType> internalValue)
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue)
         {
-            boost::units::quantity<Dimension, NumericType> converted(internalValue);
+            boost::units::quantity<Unit, NumericType> converted(internalValue);
             return converted.value();
         }
 
-        virtual boost::units::quantity<InternalDimension, NumericType> toInternalValue(NumericType value)
+        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value)
         {
-            boost::units::quantity<InternalDimension, NumericType> internalValue(value * Dimension());
+            boost::units::quantity<InternalUnit, NumericType> internalValue(value * Unit());
             return internalValue;
         }
 

@@ -32,7 +32,7 @@ using namespace hrlib::units;
 using namespace boost::units;
 using namespace boost::mpl;
 
-void UnitConvertorTest::testLengthConversion()
+void UnitConvertorTest::testLengthConvertor()
 {
     // If this compiles, compilation works :)
     UnitConvertor<cgs::length, si::length, string<'c','m'> > cmConvertor;
