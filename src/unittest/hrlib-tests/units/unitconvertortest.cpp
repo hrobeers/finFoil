@@ -26,14 +26,16 @@
 #include "hrlib/units/unitconvertor.h"
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/cgs/length.hpp"
+#include "boost/mpl/string.hpp"
 
 using namespace hrlib::units;
 using namespace boost::units;
+using namespace boost::mpl;
 
 void UnitConvertorTest::testLengthConversion()
 {
     // If this compiles, compilation works :)
-    UnitConvertor<cgs::length, si::length> cmConvertor;
+    UnitConvertor<cgs::length, si::length, string<'c','m'> > cmConvertor;
 
     quantity<si::length, qreal> internalValue(1 * si::meter);
     qreal cm = cmConvertor.fromInternalValue(internalValue);
@@ -41,6 +43,8 @@ void UnitConvertorTest::testLengthConversion()
 
     internalValue = cmConvertor.toInternalValue(1);
     QCOMPARE(internalValue.value(), 0.01);
+
+    QCOMPARE(cmConvertor.unitSymbol(), QString("cm"));
 }
 
 HR_ADD_TEST(UnitConvertorTest)
