@@ -38,14 +38,7 @@ namespace units {
         explicit Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,
              Unit::e displayUnit);
 
-        virtual qreal value();
-        virtual void setValue(qreal value);
-        virtual QString unitSymbol();
-
-        virtual ~Area();
-
-    private:
-        Unit::e _displayUnit;
+        virtual ~Area() {}
     };
 
 } // namespace units

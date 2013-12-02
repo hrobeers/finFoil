@@ -38,13 +38,7 @@ namespace units {
         explicit Length(boost::units::quantity<boost::units::si::length, qreal> internalValue,
                         Unit::e displayUnit);
 
-        virtual qreal value();
-        virtual void setValue(qreal value);
-        virtual QString unitSymbol();
-
-        virtual ~Length();
-    private:
-        Unit::e _displayUnit;
+        virtual ~Length() {}
     };
 
 } // namespace units

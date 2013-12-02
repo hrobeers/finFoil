@@ -22,48 +22,23 @@
 
 #include "angle.h"
 
-#include <QString>
+#include "boost/mpl/string.hpp"
 
 using namespace hrlib::units;
 using namespace boost::units;
 using namespace boost::units::degree;
+using namespace boost::mpl;
+
+static const UnitConvertor<plane_angle, plane_angle, string<'deg'> > CONVERTOR_DEG;
 
 Angle::Angle()
 {
     setInternalValue(quantity<plane_angle, qreal>(0 * degrees));
-    _displayUnit = Unit::degree;
+    setConvertor(&CONVERTOR_DEG);
 }
 
-Angle::Angle(boost::units::quantity<degree::plane_angle, qreal> internalValue, Angle::Unit::e displayUnit)
+Angle::Angle(boost::units::quantity<degree::plane_angle, qreal> internalValue, Angle::Unit::e /*unused*/)
 {
     setInternalValue(internalValue);
-    _displayUnit = displayUnit;
-}
-
-qreal Angle::value()
-{
-    if (_displayUnit == Unit::degree)
-    {
-        return _internalValue.value();
-    }
-
-    return qreal(0)/qreal(0);
-}
-
-void Angle::setValue(qreal value)
-{
-    if (_displayUnit == Unit::degree)
-    {
-        quantity<plane_angle, qreal> angle(value * degrees);
-        _internalValue = angle;
-    }
-}
-
-QString Angle::unitSymbol()
-{
-    return "deg";
-}
-
-Angle::~Angle()
-{
+    setConvertor(&CONVERTOR_DEG);
 }

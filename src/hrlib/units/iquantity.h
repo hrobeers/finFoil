@@ -31,9 +31,9 @@ namespace units {
     class IQuantity
     {
     public:
-        virtual qreal value() = 0;
+        virtual qreal value() const = 0;
         virtual void setValue(qreal value) = 0;
-        virtual QString unitSymbol() = 0;
+        virtual QString unitSymbol() const = 0;
 
         virtual ~IQuantity() {}
     };

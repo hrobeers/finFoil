@@ -22,68 +22,24 @@
 
 #include "length.h"
 
-#include <QString>
 #include "boost/units/base_units/cgs/centimeter.hpp"
 #include "boost/units/systems/cgs/length.hpp"
+#include "boost/mpl/string.hpp"
 
 using namespace hrlib::units;
 using namespace boost::units;
+using namespace boost::mpl;
+
+static const UnitConvertor<cgs::length, si::length, string<'cm'> > CONVERTOR_CM;
 
 Length::Length()
 {
     setInternalValue(quantity<si::length, qreal>(0 * si::meter));
-    _displayUnit = Unit::m;
+    setConvertor(&CONVERTOR_CM);
 }
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e displayUnit)
+Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/)
 {
     setInternalValue(internalValue);
-    _displayUnit = displayUnit;
-}
-
-qreal Length::value()
-{
-    if (_displayUnit == Unit::m)
-    {
-        return _internalValue.value();
-    }
-    else if (_displayUnit == Unit::cm)
-    {
-        quantity<cgs::length, qreal> converted(_internalValue);
-        return converted.value();
-    }
-
-    return qreal(0)/qreal(0);
-}
-
-void Length::setValue(qreal value)
-{
-    if (_displayUnit == Unit::m)
-    {
-        quantity<si::length, qreal> m(value * si::meter);
-        _internalValue = m;
-    }
-    else if (_displayUnit == Unit::cm)
-    {
-        quantity<si::length, qreal> cm(value * cgs::centimeter);
-        _internalValue = cm;
-    }
-}
-
-QString Length::unitSymbol()
-{
-    switch (_displayUnit) {
-    case Unit::m:
-        return "m";
-
-    case Unit::cm:
-        return "cm";
-
-    default:
-        return "";
-    }
-}
-
-Length::~Length()
-{
+    setConvertor(&CONVERTOR_CM);
 }

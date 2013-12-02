@@ -34,9 +34,11 @@ namespace units {
     class UnitConvertorBase
     {
     public:
-        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue) = 0;
-        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value) = 0;
-        virtual QString unitSymbol() = 0;
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue) const = 0;
+        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value) const = 0;
+        virtual QString unitSymbol() const = 0;
+
+        virtual ~UnitConvertorBase() {}
     };
 
     template<class Unit, class InternalUnit,
@@ -44,22 +46,24 @@ namespace units {
     class UnitConvertor : public UnitConvertorBase<InternalUnit>
     {
     public:
-        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue)
+        virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue) const
         {
             boost::units::quantity<Unit, NumericType> converted(internalValue);
             return converted.value();
         }
 
-        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value)
+        virtual boost::units::quantity<InternalUnit, NumericType> toInternalValue(NumericType value) const
         {
             boost::units::quantity<InternalUnit, NumericType> internalValue(value * Unit());
             return internalValue;
         }
 
-        virtual QString unitSymbol()
+        virtual QString unitSymbol() const
         {
             return QString(boost::mpl::c_str<UnitSymbol>::value);
         }
+
+        virtual ~UnitConvertor() {}
     };
 
 } // namespace units

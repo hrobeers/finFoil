@@ -38,13 +38,7 @@ namespace units {
         explicit Angle(boost::units::quantity<boost::units::degree::plane_angle, qreal> internalValue,
                        Unit::e displayUnit);
 
-        virtual qreal value();
-        virtual void setValue(qreal value);
-        virtual QString unitSymbol();
-
-        virtual ~Angle();
-    private:
-        Unit::e _displayUnit;
+        virtual ~Angle() {}
     };
 
 } // namespace units

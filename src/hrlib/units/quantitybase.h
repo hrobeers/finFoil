@@ -25,6 +25,7 @@
 
 #include "iquantity.h"
 #include "boost/units/quantity.hpp"
+#include "hrlib/units/unitconvertor.h"
 
 namespace hrlib {
 namespace units {
@@ -32,11 +33,34 @@ namespace units {
     template<class InternalUnit, typename NumericType = qreal>
     class QuantityBase : public IQuantity
     {
+    private:
+        const UnitConvertorBase<InternalUnit, NumericType>* _convertor;
+
     protected:
         boost::units::quantity<InternalUnit, NumericType> _internalValue;
 
+        void setConvertor(const UnitConvertorBase<InternalUnit, NumericType>* convertor)
+        {
+            _convertor = convertor;
+        }
+
     public:
-        inline boost::units::quantity<InternalUnit, NumericType> internalValue()
+        virtual qreal value() const
+        {
+            return _convertor->fromInternalValue(_internalValue);
+        }
+
+        virtual void setValue(qreal value)
+        {
+            _internalValue = _convertor->toInternalValue(value);
+        }
+
+        virtual QString unitSymbol() const
+        {
+            return _convertor->unitSymbol();
+        }
+
+        inline boost::units::quantity<InternalUnit, NumericType> internalValue() const
             { return _internalValue; }
         inline void setInternalValue(boost::units::quantity<InternalUnit, NumericType> value)
             { _internalValue = value; }

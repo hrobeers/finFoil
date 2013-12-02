@@ -22,70 +22,26 @@
 
 #include "area.h"
 
-#include <QString>
 #include "boost/units/base_units/cgs/centimeter.hpp"
 #include "boost/units/systems/cgs/area.hpp"
 #include "boost/units/systems/cgs/length.hpp"
 #include "boost/units/systems/si/length.hpp"
+#include "boost/mpl/string.hpp"
 
 using namespace hrlib::units;
 using namespace boost::units;
+using namespace boost::mpl;
+
+static const UnitConvertor<cgs::area, si::area, string<'cm<s','up>2','</su','p>'> > CONVERTOR_CM2;
 
 Area::Area()
 {
     setInternalValue(quantity<si::area>(0 * si::meter * si::meter));
-    _displayUnit = Unit::m2;
+    setConvertor(&CONVERTOR_CM2);
 }
 
-Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e displayUnit)
+Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/)
 {
     setInternalValue(internalValue);
-    _displayUnit = displayUnit;
-}
-
-qreal Area::value()
-{
-    if (_displayUnit == Unit::m2)
-    {
-        return _internalValue.value();
-    }
-    else if (_displayUnit == Unit::cm2)
-    {
-        quantity<cgs::area, qreal> converted(_internalValue);
-        return converted.value();
-    }
-
-    return qreal(0)/qreal(0);
-}
-
-void Area::setValue(qreal value)
-{
-    if (_displayUnit == Unit::m2)
-    {
-        quantity<si::area, qreal> m(value * si::meter * si::meter);
-        _internalValue = m;
-    }
-    else if (_displayUnit == Unit::cm2)
-    {
-        quantity<si::area, qreal> cm(value * cgs::centimeter * cgs::centimeter);
-        _internalValue = cm;
-    }
-}
-
-QString Area::unitSymbol()
-{
-    switch (_displayUnit) {
-    case Unit::m2:
-        return "m<sup>2</sup>";
-
-    case Unit::cm2:
-        return "cm<sup>2</sup>";
-
-    default:
-        return "";
-    }
-}
-
-Area::~Area()
-{
+    setConvertor(&CONVERTOR_CM2);
 }
