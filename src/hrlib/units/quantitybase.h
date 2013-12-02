@@ -34,17 +34,22 @@ namespace units {
     class QuantityBase : public IQuantity
     {
     private:
+        boost::units::quantity<InternalUnit, NumericType> _internalValue;
         const UnitConvertorBase<InternalUnit, NumericType>* _convertor;
 
     protected:
-        boost::units::quantity<InternalUnit, NumericType> _internalValue;
-
         void setConvertor(const UnitConvertorBase<InternalUnit, NumericType>* convertor)
         {
             _convertor = convertor;
         }
 
     public:
+        explicit QuantityBase(boost::units::quantity<InternalUnit, NumericType> internalValue,
+                              const UnitConvertorBase<InternalUnit, NumericType>* convertor) :
+            _internalValue(internalValue), _convertor(convertor)
+        {
+        }
+
         virtual qreal value() const
         {
             return _convertor->fromInternalValue(_internalValue);

@@ -32,14 +32,12 @@ using namespace boost::mpl;
 
 static const UnitConvertor<cgs::length, si::length, string<'cm'> > CONVERTOR_CM;
 
-Length::Length()
+Length::Length() :
+    QuantityBase(quantity<si::length, qreal>(0 * si::meter), &CONVERTOR_CM)
 {
-    setInternalValue(quantity<si::length, qreal>(0 * si::meter));
-    setConvertor(&CONVERTOR_CM);
 }
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/)
+Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/) :
+    QuantityBase(internalValue, &CONVERTOR_CM)
 {
-    setInternalValue(internalValue);
-    setConvertor(&CONVERTOR_CM);
 }

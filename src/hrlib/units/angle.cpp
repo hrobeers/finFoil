@@ -31,14 +31,12 @@ using namespace boost::mpl;
 
 static const UnitConvertor<plane_angle, plane_angle, string<'deg'> > CONVERTOR_DEG;
 
-Angle::Angle()
+Angle::Angle() :
+    QuantityBase(quantity<plane_angle, qreal>(0 * degrees), &CONVERTOR_DEG)
 {
-    setInternalValue(quantity<plane_angle, qreal>(0 * degrees));
-    setConvertor(&CONVERTOR_DEG);
 }
 
-Angle::Angle(boost::units::quantity<degree::plane_angle, qreal> internalValue, Angle::Unit::e /*unused*/)
+Angle::Angle(boost::units::quantity<degree::plane_angle, qreal> internalValue, Angle::Unit::e /*unused*/) :
+    QuantityBase(internalValue, &CONVERTOR_DEG)
 {
-    setInternalValue(internalValue);
-    setConvertor(&CONVERTOR_DEG);
 }

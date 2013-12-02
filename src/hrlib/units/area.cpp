@@ -34,14 +34,12 @@ using namespace boost::mpl;
 
 static const UnitConvertor<cgs::area, si::area, string<'cm<s','up>2','</su','p>'> > CONVERTOR_CM2;
 
-Area::Area()
+Area::Area() :
+    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), &CONVERTOR_CM2)
 {
-    setInternalValue(quantity<si::area>(0 * si::meter * si::meter));
-    setConvertor(&CONVERTOR_CM2);
 }
 
-Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/)
+Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/) :
+    QuantityBase(internalValue, &CONVERTOR_CM2)
 {
-    setInternalValue(internalValue);
-    setConvertor(&CONVERTOR_CM2);
 }
