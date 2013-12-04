@@ -14,7 +14,8 @@ HEADERS += \
     ../hrlib/units/angle.h \
     ../hrlib/units/unitconvertor.h \
     ../hrlib/units/iquantity.h \
-    ../hrlib/units/quantitybase.h
+    ../hrlib/units/quantitybase.h \
+    ../hrlib/units/systems.h
 
 SOURCES += \
     ../hrlib/exceptions.cpp \

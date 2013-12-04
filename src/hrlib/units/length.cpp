@@ -22,22 +22,26 @@
 
 #include "length.h"
 
-#include "boost/units/base_units/cgs/centimeter.hpp"
 #include "boost/units/systems/cgs/length.hpp"
 #include "boost/mpl/string.hpp"
+#include "hrlib/units/systems.h"
 
 using namespace hrlib::units;
 using namespace boost::units;
 using namespace boost::mpl;
 
+#define CONVERTOR_DEFAULT CONVERTOR_CM
+static const UnitConvertor<si::length, si::length, string<'m'> > CONVERTOR_M;
 static const UnitConvertor<cgs::length, si::length, string<'cm'> > CONVERTOR_CM;
+static const UnitConvertor<ft::length, si::length, string<'ft'> > CONVERTOR_FT;
+static const UnitConvertor<inch::length, si::length, string<'in'> > CONVERTOR_IN;
 
 Length::Length() :
-    QuantityBase(quantity<si::length, qreal>(0 * si::meter), &CONVERTOR_CM)
+    QuantityBase(quantity<si::length, qreal>(0 * si::meter), &CONVERTOR_DEFAULT)
 {
 }
 
 Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, &CONVERTOR_CM)
+    QuantityBase(internalValue, &CONVERTOR_DEFAULT)
 {
 }

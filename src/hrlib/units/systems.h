@@ -20,31 +20,36 @@
 
 ****************************************************************************/
 
-#include "area.h"
+#ifndef HRLIB_SYSTEMS_H
+#define HRLIB_SYSTEMS_H
 
-#include "boost/units/base_units/cgs/centimeter.hpp"
-#include "boost/units/systems/cgs/area.hpp"
-#include "boost/units/systems/cgs/length.hpp"
-#include "boost/units/systems/si/length.hpp"
-#include "boost/mpl/string.hpp"
-#include "hrlib/units/systems.h"
+#include "boost/units/make_system.hpp"
+#include "boost/units/base_units/imperial/foot.hpp"
+#include "boost/units/base_units/imperial/inch.hpp"
+#include "boost/units/physical_dimensions/area.hpp"
 
-using namespace hrlib::units;
-using namespace boost::units;
-using namespace boost::mpl;
+namespace hrlib {
+namespace units {
 
-#define CONVERTOR_DEFAULT CONVERTOR_CM2
-static const UnitConvertor<si::area, si::area, string<'m<s','up>2','</su','p>'> > CONVERTOR_M2;
-static const UnitConvertor<cgs::area, si::area, string<'cm<s','up>2','</su','p>'> > CONVERTOR_CM2;
-static const UnitConvertor<ft::area, si::area, string<'ft<s','up>2','</su','p>'> > CONVERTOR_FT2;
-static const UnitConvertor<inch::area, si::area, string<'in<s','up>2','</su','p>'> > CONVERTOR_IN2;
+    namespace ft {
+        typedef boost::units::make_system<
+            boost::units::imperial::foot_base_unit
+            >::type ft_system;
 
-Area::Area() :
-    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), &CONVERTOR_DEFAULT)
-{
-}
+        typedef boost::units::unit<boost::units::length_dimension, ft_system> length;
+        typedef boost::units::unit<boost::units::area_dimension, ft_system> area;
+    }
+    namespace inch {
+        typedef boost::units::make_system<
+            boost::units::imperial::inch_base_unit
+            >::type in_system;
 
-Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, &CONVERTOR_DEFAULT)
-{
-}
+    typedef boost::units::unit<boost::units::length_dimension, in_system> length;
+    typedef boost::units::unit<boost::units::area_dimension, in_system> area;
+    }
+
+
+} // namespace units
+} // namespace hrlib
+
+#endif // HRLIB_SYSTEMS_H
