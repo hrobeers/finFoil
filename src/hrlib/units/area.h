@@ -32,7 +32,7 @@ namespace units {
     class Area : public QuantityBase<boost::units::si::area>
     {
     public:
-        struct Unit { enum e { m2, cm2, mm2, ft2, inch2 }; };
+        struct Unit { enum e { m2, cm2, ft2, inch2 }; };
 
         explicit Area();
         explicit Area(boost::units::quantity<boost::units::si::area, qreal> internalValue,

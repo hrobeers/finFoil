@@ -33,18 +33,22 @@ using namespace hrlib::units;
 using namespace boost::units;
 using namespace boost::mpl;
 
-#define CONVERTOR_DEFAULT CONVERTOR_CM2
 static const UnitConvertor<si::area, si::area, string<'m<s','up>2','</su','p>'> > CONVERTOR_M2;
 static const UnitConvertor<cgs::area, si::area, string<'cm<s','up>2','</su','p>'> > CONVERTOR_CM2;
 static const UnitConvertor<ft::area, si::area, string<'ft<s','up>2','</su','p>'> > CONVERTOR_FT2;
 static const UnitConvertor<inch::area, si::area, string<'in<s','up>2','</su','p>'> > CONVERTOR_IN2;
 
+static const Area::insertConvertor m2(Area::Unit::m2, &CONVERTOR_M2);
+static const Area::insertConvertor cm2(Area::Unit::cm2, &CONVERTOR_CM2);
+static const Area::insertConvertor ft2(Area::Unit::ft2, &CONVERTOR_FT2);
+static const Area::insertConvertor in2(Area::Unit::inch2, &CONVERTOR_IN2);
+
 Area::Area() :
-    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), &CONVERTOR_DEFAULT)
+    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), Unit::cm2)
 {
 }
 
 Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, &CONVERTOR_DEFAULT)
+    QuantityBase(internalValue, Unit::cm2)
 {
 }

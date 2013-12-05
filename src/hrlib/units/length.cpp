@@ -21,7 +21,6 @@
 ****************************************************************************/
 
 #include "length.h"
-
 #include "boost/units/systems/cgs/length.hpp"
 #include "boost/mpl/string.hpp"
 #include "hrlib/units/systems.h"
@@ -30,18 +29,22 @@ using namespace hrlib::units;
 using namespace boost::units;
 using namespace boost::mpl;
 
-#define CONVERTOR_DEFAULT CONVERTOR_CM
 static const UnitConvertor<si::length, si::length, string<'m'> > CONVERTOR_M;
 static const UnitConvertor<cgs::length, si::length, string<'cm'> > CONVERTOR_CM;
 static const UnitConvertor<ft::length, si::length, string<'ft'> > CONVERTOR_FT;
 static const UnitConvertor<inch::length, si::length, string<'in'> > CONVERTOR_IN;
 
+static const Length::insertConvertor m(Length::Unit::m, &CONVERTOR_M);
+static const Length::insertConvertor cm(Length::Unit::cm, &CONVERTOR_CM);
+static const Length::insertConvertor ft(Length::Unit::ft, &CONVERTOR_FT);
+static const Length::insertConvertor in(Length::Unit::m, &CONVERTOR_IN);
+
 Length::Length() :
-    QuantityBase(quantity<si::length, qreal>(0 * si::meter), &CONVERTOR_DEFAULT)
+    QuantityBase(quantity<si::length, qreal>(0 * si::meter), Unit::cm)
 {
 }
 
 Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, &CONVERTOR_DEFAULT)
+    QuantityBase(internalValue, Unit::cm)
 {
 }

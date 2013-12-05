@@ -26,6 +26,7 @@
 #include "iquantity.h"
 #include "boost/units/quantity.hpp"
 #include "hrlib/units/unitconvertor.h"
+#include <map>
 
 namespace hrlib {
 namespace units {
@@ -34,35 +35,40 @@ namespace units {
     class QuantityBase : public IQuantity
     {
     private:
+        int _unit;
         boost::units::quantity<InternalUnit, NumericType> _internalValue;
-        const UnitConvertorBase<InternalUnit, NumericType>* _convertor;
 
-    protected:
-        void setConvertor(const UnitConvertorBase<InternalUnit, NumericType>* convertor)
+        static std::map<int, const UnitConvertorBase<InternalUnit, NumericType>*>& convertorMap()
         {
-            _convertor = convertor;
+            static std::map<int, const UnitConvertorBase<InternalUnit, NumericType>*> convertorMap;
+            return convertorMap;
         }
 
     public:
+        static const UnitConvertorBase<InternalUnit, NumericType>* convertor(int unit)
+        {
+            return convertorMap().at(unit);
+        }
+
         explicit QuantityBase(boost::units::quantity<InternalUnit, NumericType> internalValue,
-                              const UnitConvertorBase<InternalUnit, NumericType>* convertor) :
-            _internalValue(internalValue), _convertor(convertor)
+                              int unit) :
+            _internalValue(internalValue), _unit(unit)
         {
         }
 
         virtual qreal value() const
         {
-            return _convertor->fromInternalValue(_internalValue);
+            return convertor(_unit)->fromInternalValue(_internalValue);
         }
 
         virtual void setValue(qreal value)
         {
-            _internalValue = _convertor->toInternalValue(value);
+            _internalValue = convertor(_unit)->toInternalValue(value);
         }
 
         virtual QString unitSymbol() const
         {
-            return _convertor->unitSymbol();
+            return convertor(_unit)->unitSymbol();
         }
 
         inline boost::units::quantity<InternalUnit, NumericType> internalValue() const
@@ -71,6 +77,15 @@ namespace units {
             { _internalValue = value; }
 
         virtual ~QuantityBase() {}
+
+        class insertConvertor
+        {
+        public:
+            explicit insertConvertor(int convEnum, const UnitConvertorBase<InternalUnit, NumericType>* convertor)
+            {
+                convertorMap()[convEnum] = convertor;
+            }
+        };
     };
 
 } // namespace units
