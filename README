@@ -5,13 +5,15 @@ Compilation from source
 ========================
 Make sure that the dependencies are installed (see below).
 Execute the follwing commands in a terminal in the finfoil directory:
+
 $ qmake-qt4 finfoil.pro
 $ make
 
 Dependencies
 ============
-Qt4.8 (Qt5 not supported yet)
-Boost
+g++ >= 4.7
+Qt >= 4.8
+Boost >= 1.54
 
 LICENSE
 =======
