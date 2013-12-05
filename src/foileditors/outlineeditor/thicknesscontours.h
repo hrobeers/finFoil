@@ -36,7 +36,6 @@ namespace foileditors
 {
     class ThicknessContours : public QGraphicsObject
     {
-        Q_OBJECT
     public:
         explicit ThicknessContours(foillogic::FoilCalculator* calculator, foillogic::Side::e side, QGraphicsItem *parent = 0);
 
@@ -44,10 +43,6 @@ namespace foileditors
         virtual QRectF boundingRect() const;
 
         virtual ~ThicknessContours() {}
-
-    signals:
-
-    public slots:
 
     private:
         foillogic::Side::e _side;

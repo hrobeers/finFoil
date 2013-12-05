@@ -31,7 +31,6 @@ namespace patheditor
 {
     class PathEditorView : public QGraphicsView
     {
-        Q_OBJECT
     public:
         explicit PathEditorView(QGraphicsScene *scene, QWidget *parent = 0);
 
@@ -40,10 +39,6 @@ namespace patheditor
         void setImage(const QUrl &url);
 
         virtual ~PathEditorView();
-
-    signals:
-
-    public slots:
 
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
