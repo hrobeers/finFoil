@@ -36,8 +36,8 @@ using namespace foillogic;
 int main(int argc, char *argv[])
 {
     hrlib::Version version = finfoil::version();
-    qDebug() << "Starting finFoil" << version.toString().toStdString().c_str()
-             << "git-hash" << version.commit().toStdString().c_str();
+    qDebug() << "Starting finFoil" << version.toString()
+             << "git-hash" << version.commit();
 
     try
     {
