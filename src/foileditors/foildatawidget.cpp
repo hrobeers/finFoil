@@ -114,14 +114,7 @@ void FoilDataWidget::onDepthChange(IQuantity *depth)
 
 void FoilDataWidget::updatePxPerUnit()
 {
-    if (_depth.value() != 0)
-    {
-        _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depth.value();
-    }
-    else
-    {
-        _pxPerUnit = 0;
-    }
+    _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depthEdit->value()->value();
 
     emit pxPerUnitChanged(_pxPerUnit);
 }

@@ -99,6 +99,11 @@ namespace units {
             _unitLabel = new QLabel();
         }
 
+        const UnitType* value() const
+        {
+            return &_value;
+        }
+
         void setValue(UnitType &newValue)
         {
             _value = newValue;

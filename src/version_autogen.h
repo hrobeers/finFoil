@@ -5,7 +5,7 @@
 #ifndef VERSION_AUTOGEN_H
 #define VERSION_AUTOGEN_H
 
-#define BUILD_NUMBER 262
-#define COMMIT_HASH "c1d1dc94eaddcc377fcd221cbbf2891d3bdc79c7"
+#define BUILD_NUMBER 263
+#define COMMIT_HASH "83f903093734703fe356f09c97d8ff7ca1b1ace5"
 
 #endif // VERSION_AUTOGEN_H
