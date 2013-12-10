@@ -64,7 +64,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _depth = _foilCalculator->foil()->height();
     _depthEdit = new UnitDoubleSpinbox<Length>();
 //    _depthEdit->setMaximum(10000);
-    Length depth(_depth, Length::Unit::cm);
+    Length depth(_depth, LengthUnit::cm);
     _depthEdit->setValue(depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
     connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IQuantity*)), this, SLOT(onDepthChange(hrlib::units::IQuantity*)));
@@ -123,7 +123,7 @@ void FoilDataWidget::updateArea()
 {
     if (_pxPerUnit != 0)
     {
-        Area area(_foilCalculator->foil()->area(), Area::Unit::cm2);
+        Area area(_foilCalculator->foil()->area(), AreaUnit::cm2);
         _areaEdit->setValue(area);
     }
 }
@@ -139,7 +139,7 @@ void FoilDataWidget::onFoilCalculated()
 {
     updatePxPerUnit();
     updateArea();
-    Angle angle(_foilCalculator->foil()->sweep(), Angle::Unit::degree);
+    Angle angle(_foilCalculator->foil()->sweep(), AngleUnit::degree);
     _sweepEdit->setValue(angle);
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }

@@ -29,14 +29,14 @@
 namespace hrlib {
 namespace units {
 
-    class Length : public QuantityBase<boost::units::si::length>
+    enum class LengthUnit { m, cm, mm, ft, inch };
+
+    class Length : public QuantityBase<LengthUnit, boost::units::si::length>
     {
     public:
-        struct Unit { enum e { m, cm, mm, ft, inch }; };
-
         explicit Length();
         explicit Length(boost::units::quantity<boost::units::si::length, qreal> internalValue,
-                        Unit::e displayUnit);
+                        LengthUnit displayUnit);
 
         virtual ~Length() {}
     };

@@ -31,27 +31,27 @@
 namespace hrlib {
 namespace units {
 
-    template<class InternalUnit, typename NumericType = qreal>
+    template<typename UnitEnum, class InternalUnit, typename NumericType = qreal>
     class QuantityBase : public IQuantity
     {
     private:
-        int _unit;
+        UnitEnum _unit;
         boost::units::quantity<InternalUnit, NumericType> _internalValue;
 
-        static std::map<int, const UnitConvertorBase<InternalUnit, NumericType>*>& convertorMap()
+        static std::map<UnitEnum, const UnitConvertorBase<InternalUnit, NumericType>*>& convertorMap()
         {
-            static std::map<int, const UnitConvertorBase<InternalUnit, NumericType>*> convertorMap;
+            static std::map<UnitEnum, const UnitConvertorBase<InternalUnit, NumericType>*> convertorMap;
             return convertorMap;
         }
 
     public:
-        static const UnitConvertorBase<InternalUnit, NumericType>* convertor(int unit)
+        static const UnitConvertorBase<InternalUnit, NumericType>* convertor(UnitEnum unit)
         {
             return convertorMap().at(unit);
         }
 
         explicit QuantityBase(boost::units::quantity<InternalUnit, NumericType> internalValue,
-                              int unit) :
+                              UnitEnum unit) :
             _internalValue(internalValue), _unit(unit)
         {
         }
@@ -81,7 +81,7 @@ namespace units {
         class insertConvertor
         {
         public:
-            explicit insertConvertor(int convEnum, const UnitConvertorBase<InternalUnit, NumericType>* convertor)
+            explicit insertConvertor(UnitEnum convEnum, const UnitConvertorBase<InternalUnit, NumericType>* convertor)
             {
                 convertorMap()[convEnum] = convertor;
             }

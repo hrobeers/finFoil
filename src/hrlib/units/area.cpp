@@ -38,17 +38,17 @@ static const UnitConvertor<cgs::area, si::area, string<'cm<s','up>2','</su','p>'
 static const UnitConvertor<ft::area, si::area, string<'ft<s','up>2','</su','p>'> > CONVERTOR_FT2;
 static const UnitConvertor<inch::area, si::area, string<'in<s','up>2','</su','p>'> > CONVERTOR_IN2;
 
-static const Area::insertConvertor m2(Area::Unit::m2, &CONVERTOR_M2);
-static const Area::insertConvertor cm2(Area::Unit::cm2, &CONVERTOR_CM2);
-static const Area::insertConvertor ft2(Area::Unit::ft2, &CONVERTOR_FT2);
-static const Area::insertConvertor in2(Area::Unit::inch2, &CONVERTOR_IN2);
+static const Area::insertConvertor m2(AreaUnit::m2, &CONVERTOR_M2);
+static const Area::insertConvertor cm2(AreaUnit::cm2, &CONVERTOR_CM2);
+static const Area::insertConvertor ft2(AreaUnit::ft2, &CONVERTOR_FT2);
+static const Area::insertConvertor in2(AreaUnit::inch2, &CONVERTOR_IN2);
 
 Area::Area() :
-    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), Unit::cm2)
+    QuantityBase(quantity<si::area>(0 * si::meter * si::meter), AreaUnit::cm2)
 {
 }
 
-Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, Unit::cm2)
+Area::Area(boost::units::quantity<boost::units::si::area, qreal> internalValue, AreaUnit displayUnit) :
+    QuantityBase(internalValue, displayUnit)
 {
 }

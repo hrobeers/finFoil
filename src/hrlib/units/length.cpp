@@ -34,17 +34,17 @@ static const UnitConvertor<cgs::length, si::length, string<'cm'> > CONVERTOR_CM;
 static const UnitConvertor<ft::length, si::length, string<'ft'> > CONVERTOR_FT;
 static const UnitConvertor<inch::length, si::length, string<'in'> > CONVERTOR_IN;
 
-static const Length::insertConvertor m(Length::Unit::m, &CONVERTOR_M);
-static const Length::insertConvertor cm(Length::Unit::cm, &CONVERTOR_CM);
-static const Length::insertConvertor ft(Length::Unit::ft, &CONVERTOR_FT);
-static const Length::insertConvertor in(Length::Unit::m, &CONVERTOR_IN);
+static const Length::insertConvertor m(LengthUnit::m, &CONVERTOR_M);
+static const Length::insertConvertor cm(LengthUnit::cm, &CONVERTOR_CM);
+static const Length::insertConvertor ft(LengthUnit::ft, &CONVERTOR_FT);
+static const Length::insertConvertor in(LengthUnit::m, &CONVERTOR_IN);
 
 Length::Length() :
-    QuantityBase(quantity<si::length, qreal>(0 * si::meter), Unit::cm)
+    QuantityBase(quantity<si::length, qreal>(0 * si::meter), LengthUnit::cm)
 {
 }
 
-Length::Length(boost::units::quantity<si::length, qreal> internalValue, Unit::e /*unused*/) :
-    QuantityBase(internalValue, Unit::cm)
+Length::Length(boost::units::quantity<si::length, qreal> internalValue, LengthUnit displayUnit) :
+    QuantityBase(internalValue, displayUnit)
 {
 }

@@ -29,14 +29,14 @@
 namespace hrlib {
 namespace units {
 
-    class Angle : public QuantityBase<boost::units::degree::plane_angle>
+    enum class AngleUnit { degree };
+
+    class Angle : public QuantityBase<AngleUnit, boost::units::degree::plane_angle>
     {
     public:
-        struct Unit { enum e { degree }; };
-
         explicit Angle();
         explicit Angle(boost::units::quantity<boost::units::degree::plane_angle, qreal> internalValue,
-                       Unit::e displayUnit);
+                       AngleUnit displayUnit);
 
         virtual ~Angle() {}
     };
