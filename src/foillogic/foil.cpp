@@ -32,6 +32,7 @@
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace boost::units;
 
 Foil::Foil(QObject *parent) :
     QObject(parent)
@@ -39,6 +40,9 @@ Foil::Foil(QObject *parent) :
     initOutline();
     initProfile();
     initThickness();
+
+    _height = quantity<si::length, qreal>(0.1 * si::meter); // 10cm
+    _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
 
     connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
     connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
@@ -64,6 +68,36 @@ QSharedPointer<Profile> Foil::profile()
 QSharedPointer<ThicknessProfile> Foil::thickness()
 {
     return _thickness;
+}
+
+quantity<si::length, qreal> Foil::height()
+{
+    return _height;
+}
+
+quantity<si::area, qreal> Foil::area()
+{
+    return _area;
+}
+
+boost::units::quantity<degree::plane_angle, qreal> Foil::sweep()
+{
+    return _sweep;
+}
+
+void Foil::setHeight(quantity<si::length, qreal> &height)
+{
+    _height = height;
+}
+
+void Foil::setArea(quantity<si::area, qreal> &area)
+{
+    _area = area;
+}
+
+void Foil::setSweep(boost::units::quantity<degree::plane_angle, qreal> &sweep)
+{
+    _sweep = sweep;
 }
 
 Foil::~Foil()

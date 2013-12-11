@@ -30,3 +30,4 @@ include(../hrtestlib/hrtestlib.pri)
 include(../patheditor/patheditor.pri)
 
 include(patheditor-tests/patheditor-tests.pri)
+include(hrlib-tests/hrlib-tests.pri)

@@ -32,15 +32,10 @@ using namespace foillogic;
 using namespace patheditor;
 
 Profile::Profile(QObject *parent) :
-    QObject(parent)
+    QObject(parent), _symmetry(Symmetry::Symmetric),
+    t_topProfileTop(0.3), t_botProfileTop(0.3)
 {
-    _symmetry = Symmetry::Symmetric;
-
     initProfile();
-
-    // start values
-    t_topProfileTop = 0.3;
-    t_botProfileTop = 0.3;
 }
 
 QSharedPointer<Path> Profile::topProfile()

@@ -34,16 +34,32 @@
 #include "foillogic/foil.h"
 #include "foillogic/profile.h"
 
+#include "hrlib/units/area.h"
+
 using namespace foileditors;
 using namespace foillogic;
+using namespace hrlib::units;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent), _lengthUnit(LengthUnit::m), _areaUnit(AreaUnit::m2)
 {
     _foilCalculator = foilCalculator;
     _formLayout = new QFormLayout();
 
     connect(_foilCalculator, SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
+
+
+    //
+    // Unit selection section
+    //
+    _unitSelector = new QComboBox();
+    _unitSelector->addItem("m");
+    _unitSelector->addItem("cm");
+    _unitSelector->addItem("ft");
+    _unitSelector->addItem("inch");
+    _unitSelector->setCurrentIndex(1);
+    _formLayout->addRow(tr("Unit system"), _unitSelector);
+    connect(_unitSelector, SIGNAL(currentIndexChanged(QString)), this, SLOT(onUnitSystemChange(QString)));
 
 
     //
@@ -58,18 +74,19 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Depth section
     //
-    _depth = 3;
-    _depthEdit = new QDoubleSpinBox();
-    _depthEdit->setMaximum(10000);
-    _depthEdit->setValue(_depth);
+    _depth = _foilCalculator->foil()->height();
+    _depthEdit = new UnitDoubleSpinbox<Length>();
+//    _depthEdit->setMaximum(10000);
+    Length depth(_depth, _lengthUnit);
+    _depthEdit->setValue(depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
-    connect(_depthEdit, SIGNAL(valueChanged(double)), this, SLOT(onDepthChange(double)));
+    connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IQuantity*)), this, SLOT(onDepthChange(hrlib::units::IQuantity*)));
 
 
     //
     // Area section
     //
-    _areaEdit = new QLineEdit("0");
+    _areaEdit = new UnitLineEdit<Area>();
     _areaEdit->setReadOnly(true);
     _formLayout->addRow(tr("Area:"), _areaEdit);
 
@@ -77,7 +94,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Sweep section
     //
-    _sweepEdit = new QLineEdit("0");
+    _sweepEdit = new UnitLineEdit<Angle>();
     _sweepEdit->setReadOnly(true);
     _formLayout->addRow(tr("Sweep:"), _sweepEdit);
 
@@ -99,28 +116,34 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 }
 
 
-void FoilDataWidget::onDepthChange(double depth)
+void FoilDataWidget::onDepthChange(IQuantity *depth)
 {
-    _depth = depth;
-    emit depthChanged((qreal)depth);
-
-    AreaChanged(_foilCalculator->area());
+    Length* ldepth = static_cast<Length*>(depth);
+    _depth = ldepth->internalValue();
+    _foilCalculator->foil()->setHeight(_depth);
+    _foilCalculator->recalculateArea();
+    onFoilCalculated();
 }
 
-void FoilDataWidget::AreaChanged(qreal area)
+void FoilDataWidget::showEvent(QShowEvent *)
 {
-    if (_depth != 0)
-    {
-        _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depth;
-        _areaEdit->setText(QString::number(area / (_pxPerUnit * _pxPerUnit)));
-    }
-    else
-    {
-        _pxPerUnit = 0;
-        _areaEdit->setText("0");
-    }
+    onUnitSystemChange(_unitSelector->currentText());
+}
+
+void FoilDataWidget::updatePxPerUnit()
+{
+    _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depthEdit->value()->value();
 
     emit pxPerUnitChanged(_pxPerUnit);
+}
+
+void FoilDataWidget::updateArea()
+{
+    if (_pxPerUnit != 0)
+    {
+        Area area(_foilCalculator->foil()->area(), _areaUnit);
+        _areaEdit->setValue(area);
+    }
 }
 
 QString FoilDataWidget::thicknessRatioString(qreal ratio)
@@ -132,8 +155,10 @@ QString FoilDataWidget::thicknessRatioString(qreal ratio)
 
 void FoilDataWidget::onFoilCalculated()
 {
-    AreaChanged(_foilCalculator->area());
-    _sweepEdit->setText(QString::number(_foilCalculator->sweep()));
+    updatePxPerUnit();
+    updateArea();
+    Angle angle(_foilCalculator->foil()->sweep(), AngleUnit::degree);
+    _sweepEdit->setValue(angle);
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
@@ -150,4 +175,33 @@ void FoilDataWidget::onLayerChange(int layerCount)
 
     qSort(thicknesses);
     _foilCalculator->setContourThicknesses(thicknesses);
+}
+
+void FoilDataWidget::onUnitSystemChange(const QString &system)
+{
+    if (system == "m")
+    {
+        _lengthUnit = LengthUnit::m;
+        _areaUnit = AreaUnit::m2;
+    }
+    else if (system == "cm")
+    {
+        _lengthUnit = LengthUnit::cm;
+        _areaUnit = AreaUnit::cm2;
+    }
+    else if (system == "ft")
+    {
+        _lengthUnit = LengthUnit::ft;
+        _areaUnit = AreaUnit::ft2;
+    }
+    else if (system == "inch")
+    {
+        _lengthUnit = LengthUnit::inch;
+        _areaUnit = AreaUnit::inch2;
+    }
+
+    updateArea();
+    Length depth = *(_depthEdit->value());
+    depth.setUnit(_lengthUnit);
+    _depthEdit->setValue(depth);
 }

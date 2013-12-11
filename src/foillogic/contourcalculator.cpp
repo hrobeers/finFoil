@@ -36,13 +36,11 @@
 using namespace foillogic;
 using namespace patheditor;
 
-ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast)
+ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
+    _side(side), _symmetric(foil->profile()->symmetry()), _outline(foil->outline().data()),
+    _thickness(foil->thickness()->topProfile().data()), _percContourHeight(percContourHeight),
+    _result(result), _sectionCount(INITCNT / 2), _resolution(500), _tTol(0.0001), _fTol(0.001)
 {
-    _side = side;
-    _symmetric = foil->profile()->symmetry();
-    _outline = foil->outline().data();
-    _thickness = foil->thickness()->topProfile().data();
-
     switch (_side) {
     case Side::Bottom:
         _profile = foil->profile()->botProfile().data();
@@ -52,18 +50,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
         break;
     }
 
-
-    _percContourHeight = percContourHeight;
-    _result = result;
-
-    if (fast)
-    {
-        _sectionCount = INITCNT / 2;
-        _resolution = 500;
-        _tTol = 0.0001;
-        _fTol = 0.001;
-    }
-    else
+    if (!fast)
     {
         _sectionCount = INITCNT * 2;
         _resolution = 2000;
@@ -162,6 +149,8 @@ void ContourCalculator::run()
         // set points to 0 when closer than 1 manhattan pixel
         if ((*(leadingEdgePnts.at(i)) - *(trailingEdgePnts.at(i))).manhattanLength() < 1)
         {
+            delete leadingEdgePnts[i];
+            delete trailingEdgePnts[i];
             leadingEdgePnts[i] = 0;
             trailingEdgePnts[i] = 0;
         }

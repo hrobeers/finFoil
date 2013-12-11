@@ -1,6 +1,8 @@
 General TODO's
 ==============
 
+* Remove Q_OBJECT macro where no signals/slots are used
+* Qt smart pointers -> STL smart pointers
 * Cleanup unused includes
 * Forward declaration of classes (instead of includes in header files) to speedup compilation
 * Add documentation comments

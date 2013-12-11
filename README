@@ -1,19 +1,19 @@
 This is the finFoil repository for the Qt/C++ remake (versions > 1.0).
 
 
-NOTE FOR GITORIOUS USERS
+Compilation from source
 ========================
-The Gitorious repository is a mirror from the GitHub repository.
-The Gitorious repository is updated daily from the GitHub repository.
+Make sure that the dependencies are installed (see below).
+Execute the follwing commands in a terminal in the finfoil directory:
 
-
-NOTE FOR SOURCEFORGE USERS
-==========================
-The sourceforge repository is a daily synchonised mirror.
+$ qmake-qt4 finfoil.pro
+$ make
 
 Dependencies
 ============
-Qt4.8 (Qt5 unsupported)
+g++ >= 4.7
+Qt >= 4.8
+Boost >= 1.54
 
 LICENSE
 =======

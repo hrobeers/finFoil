@@ -1,55 +1,50 @@
 /****************************************************************************
-  
+
  Copyright (c) 2013, Hans Robeers
  All rights reserved.
- 
+
  BSD 2-Clause License
- 
+
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
+
    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-   
+
    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-   
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
  COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
 ****************************************************************************/
 
-#ifndef THICKNESSCONTOURS_H
-#define THICKNESSCONTOURS_H
+#include "unitconvertortest.h"
 
-#include "patheditorfwd/patheditorfwd.h"
-#include "foillogicfwd/foillogicfwd.h"
+#include "hrtestlib/unittesting.h"
+#include "hrlib/units/unitconvertor.h"
+#include "boost/units/systems/si/length.hpp"
+#include "boost/units/systems/cgs/length.hpp"
+#include "boost/mpl/string.hpp"
 
-#include <QGraphicsObject>
-#include <QThreadPool>
-#include "contourcalculator.h"
+using namespace hrlib::units;
+using namespace boost::units;
+using namespace boost::mpl;
 
-using namespace patheditor;
-
-namespace foileditors
+void UnitConvertorTest::testLengthConvertor()
 {
-    class ThicknessContours : public QGraphicsObject
-    {
-    public:
-        explicit ThicknessContours(foillogic::FoilCalculator* calculator, foillogic::Side::e side, QGraphicsItem *parent = 0);
+    // If this compiles, compilation works :)
+    UnitConvertor<cgs::length, si::length, string<'c','m'> > cmConvertor;
 
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        virtual QRectF boundingRect() const;
+    quantity<si::length, qreal> internalValue(1 * si::meter);
+    qreal cm = cmConvertor.fromInternalValue(internalValue);
+    QCOMPARE(cm, 100.0);
 
-        virtual ~ThicknessContours() {}
+    internalValue = cmConvertor.toInternalValue(1);
+    QCOMPARE(internalValue.value(), 0.01);
 
-    private:
-        foillogic::Side::e _side;
-        bool _nextDetailed;
-
-        foillogic::FoilCalculator* _calculator;
-    };
+    QCOMPARE(cmConvertor.unitSymbol(), QString("cm"));
 }
 
-#endif // THICKNESSCONTOURS_H
+HR_ADD_TEST(UnitConvertorTest)

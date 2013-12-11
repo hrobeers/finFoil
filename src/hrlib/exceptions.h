@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef HR_EXCEPTIONS_H
-#define HR_EXCEPTIONS_H
+#ifndef HRLIB_EXCEPTIONS_H
+#define HRLIB_EXCEPTIONS_H
 
 #include <QObject>
 #include <QString>
@@ -72,6 +72,14 @@ namespace hrlib
 
         virtual ~ImplementationException() throw() {}
     };
+
+    class InitializationException : public Exception
+    {
+    public:
+        explicit InitializationException(QString &message, QObject *thrower = 0) throw();
+
+        virtual ~InitializationException() throw() {}
+    };
 }
 
-#endif // HR_EXCEPTIONS_H
+#endif // HRLIB_EXCEPTIONS_H

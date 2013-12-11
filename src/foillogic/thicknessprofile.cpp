@@ -32,13 +32,10 @@ using namespace foillogic;
 using namespace patheditor;
 
 ThicknessProfile::ThicknessProfile(QObject *parent) :
-    QObject(parent)
+    QObject(parent), _thicknessRatio(1),
+    _topProfile(QSharedPointer<Path>(new Path())),
+    _botProfile(QSharedPointer<Path>(new Path()))
 {
-    _thicknessRatio = 1;
-
-    _topProfile = QSharedPointer<Path>(new Path());
-    _botProfile = QSharedPointer<Path>(new Path());
-
     QSharedPointer<PathPoint> point0(new PathPoint(0,0));
 
     QSharedPointer<PathPoint> point1(new PathPoint(0,-30));

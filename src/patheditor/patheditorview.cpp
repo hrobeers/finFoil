@@ -23,6 +23,7 @@
 #include "patheditorview.h"
 #include <QDragMoveEvent>
 #include <QUrl>
+#include <QMimeData>
 #include "scalableimage.h"
 
 #define MIN_UNIT_SIZE 5

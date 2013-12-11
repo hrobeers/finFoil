@@ -27,13 +27,11 @@
 #include "profile.h"
 
 using namespace foillogic;
+using namespace boost::units;
 
 FoilCalculator::FoilCalculator(Foil *foil) :
-    QObject()
+    QObject(), _calculated(false), _foil(foil)
 {
-    _calculated = false;
-    _foil = foil;
-
     int numOfContours = 6;
     qreal increment = qreal(1) / qreal(numOfContours);
     qreal thickness = 0;
@@ -102,8 +100,8 @@ void FoilCalculator::calculate(bool fastCalc)
             bcCalc.run();
         }
 
-        AreaCalculator aCalc(_foil, &_area);
-        SweepCalculator sCalc(_foil, &_sweep);
+        AreaCalculator aCalc(_foil);
+        SweepCalculator sCalc(_foil);
 
         aCalc.run();
         sCalc.run();
@@ -130,8 +128,8 @@ void FoilCalculator::calculate(bool fastCalc)
         }
     }
 
-    _tPool.start(new AreaCalculator(_foil, &_area));
-    _tPool.start(new SweepCalculator(_foil, &_sweep));
+    _tPool.start(new AreaCalculator(_foil));
+    _tPool.start(new SweepCalculator(_foil));
 
     _tPool.waitForDone();
 #endif
@@ -145,14 +143,10 @@ bool FoilCalculator::calculated() const
     return _calculated;
 }
 
-qreal FoilCalculator::area() const
+void FoilCalculator::recalculateArea()
 {
-    return _area;
-}
-
-qreal FoilCalculator::sweep() const
-{
-    return _sweep;
+    AreaCalculator aCalc(_foil);
+    aCalc.run();
 }
 
 bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
@@ -182,22 +176,24 @@ void FoilCalculator::foilReleased()
 }
 
 
-AreaCalculator::AreaCalculator(Foil *foil, qreal *area)
+AreaCalculator::AreaCalculator(Foil *foil)
 {
     _foil = foil;
-    _area = area;
 }
 
 void AreaCalculator::run()
 {
-    *_area = _foil->outline()->area();
+    qreal outlineTop = _foil->outline()->minY();
+    qreal scalefactor = qPow(_foil->height().value() / qAbs(outlineTop), 2);
+    qreal smArea = _foil->outline()->area() * scalefactor;
+    quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
+    _foil->setArea(area);
 }
 
 
-SweepCalculator::SweepCalculator(Foil *foil, qreal *sweep)
+SweepCalculator::SweepCalculator(Foil *foil)
 {
     _foil = foil;
-    _sweep = sweep;
 }
 
 void SweepCalculator::run()
@@ -219,5 +215,6 @@ void SweepCalculator::run()
     // calculate the sweep angle in degrees
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
-    *_sweep = qAtan(os/ns) * 180 / M_PI;
+    quantity<degree::plane_angle, qreal> sweep(qAtan(os/ns) * 180 / M_PI * degree::degree);
+    _foil->setSweep(sweep);
 }
