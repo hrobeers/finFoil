@@ -56,6 +56,11 @@ namespace units {
         {
         }
 
+        void setUnit(UnitEnum unitEnum)
+        {
+            _unit = unitEnum;
+        }
+
         virtual qreal value() const
         {
             return convertor(_unit)->fromInternalValue(_internalValue);

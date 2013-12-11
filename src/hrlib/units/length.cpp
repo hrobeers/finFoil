@@ -37,7 +37,7 @@ static const UnitConvertor<inch::length, si::length, string<'in'> > CONVERTOR_IN
 static const Length::insertConvertor m(LengthUnit::m, &CONVERTOR_M);
 static const Length::insertConvertor cm(LengthUnit::cm, &CONVERTOR_CM);
 static const Length::insertConvertor ft(LengthUnit::ft, &CONVERTOR_FT);
-static const Length::insertConvertor in(LengthUnit::m, &CONVERTOR_IN);
+static const Length::insertConvertor inch(LengthUnit::inch, &CONVERTOR_IN);
 
 Length::Length() :
     QuantityBase(quantity<si::length, qreal>(0 * si::meter), LengthUnit::cm)

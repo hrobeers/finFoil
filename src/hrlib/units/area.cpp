@@ -41,7 +41,7 @@ static const UnitConvertor<inch::area, si::area, string<'in<s','up>2','</su','p>
 static const Area::insertConvertor m2(AreaUnit::m2, &CONVERTOR_M2);
 static const Area::insertConvertor cm2(AreaUnit::cm2, &CONVERTOR_CM2);
 static const Area::insertConvertor ft2(AreaUnit::ft2, &CONVERTOR_FT2);
-static const Area::insertConvertor in2(AreaUnit::inch2, &CONVERTOR_IN2);
+static const Area::insertConvertor inch2(AreaUnit::inch2, &CONVERTOR_IN2);
 
 Area::Area() :
     QuantityBase(quantity<si::area>(0 * si::meter * si::meter), AreaUnit::cm2)

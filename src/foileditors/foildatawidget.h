@@ -28,6 +28,7 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
+#include <QComboBox>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
 
@@ -54,12 +55,19 @@ namespace foileditors
     public slots:
         void onDepthChange(hrlib::units::IQuantity *depth);
 
+    protected:
+        virtual void showEvent(QShowEvent *);
+
     private:
         boost::units::quantity<boost::units::si::length, qreal> _depth;
         qreal _pxPerUnit;
         foillogic::FoilCalculator* _foilCalculator;
 
+        hrlib::units::LengthUnit _lengthUnit;
+        hrlib::units::AreaUnit _areaUnit;
+
         QFormLayout* _formLayout;
+        QComboBox* _unitSelector;
         QSpinBox* _layerEdit;
         hrlib::units::UnitDoubleSpinbox<hrlib::units::Length>* _depthEdit;
         hrlib::units::UnitLineEdit<hrlib::units::Area>* _areaEdit;
@@ -73,6 +81,7 @@ namespace foileditors
     private slots:
         void onFoilCalculated();
         void onLayerChange(int layerCount);
+        void onUnitSystemChange(const QString &system);
     };
 }
 

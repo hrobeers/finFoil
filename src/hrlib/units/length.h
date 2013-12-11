@@ -29,7 +29,7 @@
 namespace hrlib {
 namespace units {
 
-    enum class LengthUnit { m, cm, mm, ft, inch };
+    enum class LengthUnit { m, cm, ft, inch };
 
     class Length : public QuantityBase<LengthUnit, boost::units::si::length>
     {
