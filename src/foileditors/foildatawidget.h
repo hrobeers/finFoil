@@ -59,12 +59,12 @@ namespace foileditors
         virtual void showEvent(QShowEvent *);
 
     private:
-        boost::units::quantity<boost::units::si::length, qreal> _depth;
+        hrlib::units::Length _depth;
+        hrlib::units::Area _area;
+        hrlib::units::Angle _sweep;
+
         qreal _pxPerUnit;
         foillogic::FoilCalculator* _foilCalculator;
-
-        hrlib::units::LengthUnit _lengthUnit;
-        hrlib::units::AreaUnit _areaUnit;
 
         QFormLayout* _formLayout;
         QComboBox* _unitSelector;

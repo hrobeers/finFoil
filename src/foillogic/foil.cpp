@@ -85,17 +85,17 @@ boost::units::quantity<degree::plane_angle, qreal> Foil::sweep()
     return _sweep;
 }
 
-void Foil::setHeight(quantity<si::length, qreal> &height)
+void Foil::setHeight(quantity<si::length, qreal> height)
 {
     _height = height;
 }
 
-void Foil::setArea(quantity<si::area, qreal> &area)
+void Foil::setArea(quantity<si::area, qreal> area)
 {
     _area = area;
 }
 
-void Foil::setSweep(boost::units::quantity<degree::plane_angle, qreal> &sweep)
+void Foil::setSweep(boost::units::quantity<degree::plane_angle, qreal> sweep)
 {
     _sweep = sweep;
 }

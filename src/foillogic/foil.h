@@ -50,9 +50,9 @@ namespace foillogic
         boost::units::quantity<boost::units::si::area, qreal> area();
         boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep();
 
-        void setHeight(boost::units::quantity<boost::units::si::length, qreal> &height);
-        void setArea(boost::units::quantity<boost::units::si::area, qreal> &area);
-        void setSweep(boost::units::quantity<boost::units::degree::plane_angle, qreal> &sweep);
+        void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
+        void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
+        void setSweep(boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep);
 
         virtual ~Foil();
 
