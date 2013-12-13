@@ -10,6 +10,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = finFoil
 TEMPLATE = app
 
+QMAKE_CXXFLAGS +=   -std=c++11 \
+                    -Wno-multichar \
+                    -Wno-reorder
+
 SOURCES += main.cpp\
         mainwindow.cpp
 

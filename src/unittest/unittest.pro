@@ -21,6 +21,10 @@ INCLUDEPATH += ../ \
 
 DEPENDPATH += ../
 
+QMAKE_CXXFLAGS +=   -std=c++11 \
+                    -Wno-multichar \
+                    -Wno-reorder
+
 SOURCES += main.cpp
 
 HEADERS +=
