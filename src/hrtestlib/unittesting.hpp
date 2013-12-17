@@ -24,6 +24,8 @@
 #define UNITTESTING_H
 
 #include <QTest>
+#include <QDir>
+#include <QDebug>
 
 namespace hrlib
 {
@@ -44,8 +46,52 @@ namespace hrlib
             return tests;
         }
 
-        static void addTest(TestFactoryBase* test, const char* testName);
-        static int runTests(QCoreApplication& app);
+        static void addTest(TestFactoryBase* test, const char* testName)
+        {
+            UnitTests::getTests().insert(QString(testName), test);
+        }
+
+        static int runTests(QCoreApplication& app)
+        {
+            bool runAllTests = true;
+            Q_FOREACH(const QString& arg, app.arguments()) {
+                if (arg.startsWith("-dir=")) {
+                    // Run in this directory
+                    QDir::setCurrent(arg.mid(5));
+                } else if (arg.startsWith("-test=")) {
+                    // Run this test
+                    QString testName(arg.mid(6));
+
+                    if (!UnitTests::getTests().contains(testName)) {
+                        qDebug() << "Test" << testName << "not registered";
+                        return -1;
+                    }
+
+                    QObject* test = UnitTests::getTests().value(testName)->createTest();
+                    const int ret = QTest::qExec(test);
+                    delete test;
+                    if (ret != 0)
+                        return ret;
+
+                    // We have run a test manually, so don't run them all
+                    runAllTests = false;
+                }
+            }
+
+            if (runAllTests) {
+                QHash<QString, TestFactoryBase*>& tests(UnitTests::getTests());
+                for (QHash<QString, TestFactoryBase*>::const_iterator i = tests.constBegin(); i != tests.constEnd(); ++i) {
+                    QObject* test = i.value()->createTest();
+                    const int ret = QTest::qExec(test);
+                    delete test;
+                    if (ret != 0) {
+                        return ret;
+                    }
+                }
+            }
+
+            return 0;
+        }
     };
 
     template <typename T> class TestFactory : public TestFactoryBase

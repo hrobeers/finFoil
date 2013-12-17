@@ -22,7 +22,7 @@
 
 #include "quadrantrestrictortest.h"
 #include "patheditor/quadrantrestrictor.h"
-#include "hrtestlib/unittesting.h"
+#include "hrtestlib/unittesting.hpp"
 
 
 void QuadrantRestrictorTest::testException()

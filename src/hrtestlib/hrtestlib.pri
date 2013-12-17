@@ -1,7 +1,6 @@
 QT += testlib
 
 HEADERS += \
-    ../hrtestlib/unittesting.h
+    ../hrtestlib/unittesting.hpp
 
-SOURCES += \
-    ../hrtestlib/unittesting.cpp 
+SOURCES +=

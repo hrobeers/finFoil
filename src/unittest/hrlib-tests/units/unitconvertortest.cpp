@@ -22,7 +22,7 @@
 
 #include "unitconvertortest.h"
 
-#include "hrtestlib/unittesting.h"
+#include "hrtestlib/unittesting.hpp"
 #include "hrlib/units/unitconvertor.h"
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/cgs/length.hpp"
