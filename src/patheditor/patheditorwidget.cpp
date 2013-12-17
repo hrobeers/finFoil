@@ -125,7 +125,7 @@ void PathEditorWidget::setGridUnitSize(qreal pxPerUnit)
 void PathEditorWidget::onSceneRectChanged(const QRectF &rect)
 {
     if (featureEnabled(Features::HorizontalAxis))
-        _horizontalAxis->setLine(rect.left(), 0, rect.right(), 0);
+        _horizontalAxis->setLine(rect.left() + 1, 0, rect.right() - 1, 0);
     if (featureEnabled(Features::VerticalAxis))
-        _verticalAxis->setLine(0, rect.bottom(), 0, rect.top());
+        _verticalAxis->setLine(0, rect.bottom() - 1, 0, rect.top() + 1);
 }
