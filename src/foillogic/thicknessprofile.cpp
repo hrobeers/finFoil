@@ -81,8 +81,6 @@ ThicknessProfile::~ThicknessProfile()
 void ThicknessProfile::setThicknessRatio(qreal profileRatio)
 {
     _thicknessRatio = profileRatio;
-    if (_thicknessRatio < 0.001)
-        _thicknessRatio = 0.001;
     mirror();
 }
 
