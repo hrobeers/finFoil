@@ -22,7 +22,7 @@
 
 #include "unitconvertortest.h"
 
-#include "hrtestlib/unittesting.hpp"
+#include "submodules/qtestrunner/qtestrunner.hpp"
 #include "hrlib/units/unitconvertor.h"
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/cgs/length.hpp"
@@ -47,4 +47,4 @@ void UnitConvertorTest::testLengthConvertor()
     QCOMPARE(cmConvertor.unitSymbol(), QString("cm"));
 }
 
-HR_ADD_TEST(UnitConvertorTest)
+QTR_ADD_TEST(UnitConvertorTest)

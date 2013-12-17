@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui testlib
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = unittest
@@ -13,11 +13,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../ \
+INCLUDEPATH +=  ../ \
+                ../../ \
                 ../patheditor/ \
                 ../fineditors/ \
-                ../hrlib/ \
-                ../hrtestlib \
+                ../hrlib/
 
 DEPENDPATH += ../
 
@@ -30,7 +30,6 @@ SOURCES += main.cpp
 HEADERS +=
 
 include(../hrlib/hrlib.pri)
-include(../hrtestlib/hrtestlib.pri)
 include(../patheditor/patheditor.pri)
 
 include(patheditor-tests/patheditor-tests.pri)

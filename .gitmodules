@@ -1,0 +1,3 @@
+[submodule "submodules/qtestrunner"]
+	path = submodules/qtestrunner
+	url = git@github.com:hrobeers/qtestrunner.hpp.git
