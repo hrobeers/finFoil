@@ -34,11 +34,11 @@
 #include "foillogic/foil.h"
 #include "foillogic/profile.h"
 
-#include "hrlib/units/area.h"
+#include <QtUnits>
 
 using namespace foileditors;
 using namespace foillogic;
-using namespace hrlib::units;
+using namespace qt::units;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
     QWidget(parent)
@@ -79,7 +79,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 //    _depthEdit->setMaximum(10000);
     _depthEdit->setValue(_depth);
     _formLayout->addRow(tr("Depth:"), _depthEdit);
-    connect(_depthEdit, SIGNAL(valueChanged(hrlib::units::IQuantity*)), this, SLOT(onDepthChange(hrlib::units::IQuantity*)));
+    connect(_depthEdit, SIGNAL(valueChanged(qt::units::IQuantity*)), this, SLOT(onDepthChange(qt::units::IQuantity*)));
 
 
     //

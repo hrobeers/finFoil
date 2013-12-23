@@ -31,13 +31,7 @@
 #include <QComboBox>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
-
-//TODO forward declare & refactor
-#include "hrlib/units/widgets/unitlineedit.h"
-#include "hrlib/units/widgets/unitdoublespinbox.h"
-#include "hrlib/units/length.h"
-#include "hrlib/units/area.h"
-#include "hrlib/units/angle.h"
+#include <QtUnits>
 
 using namespace patheditor;
 
@@ -53,15 +47,15 @@ namespace foileditors
         void pxPerUnitChanged(qreal pxPerUnit);
 
     public slots:
-        void onDepthChange(hrlib::units::IQuantity *depth);
+        void onDepthChange(qt::units::IQuantity *depth);
 
     protected:
         virtual void showEvent(QShowEvent *);
 
     private:
-        hrlib::units::Length _depth;
-        hrlib::units::Area _area;
-        hrlib::units::Angle _sweep;
+        qt::units::Length _depth;
+        qt::units::Area _area;
+        qt::units::Angle _sweep;
 
         qreal _pxPerUnit;
         foillogic::FoilCalculator* _foilCalculator;
@@ -69,9 +63,9 @@ namespace foileditors
         QFormLayout* _formLayout;
         QComboBox* _unitSelector;
         QSpinBox* _layerEdit;
-        hrlib::units::UnitDoubleSpinbox<hrlib::units::Length>* _depthEdit;
-        hrlib::units::UnitLineEdit<hrlib::units::Area>* _areaEdit;
-        hrlib::units::UnitLineEdit<hrlib::units::Angle>* _sweepEdit;
+        qt::units::UnitDoubleSpinbox<qt::units::Length>* _depthEdit;
+        qt::units::UnitLineEdit<qt::units::Area>* _areaEdit;
+        qt::units::UnitLineEdit<qt::units::Angle>* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 
         void updatePxPerUnit();

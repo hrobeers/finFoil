@@ -1,5 +1,3 @@
-HEADERS += \
-    hrlib-tests/units/unitconvertortest.h
+HEADERS +=
 
-SOURCES += \
-    hrlib-tests/units/unitconvertortest.cpp
+SOURCES +=

@@ -27,7 +27,7 @@ INCLUDEPATH +=  ../ \
                 ../patheditor/ \
                 ../foileditors/ \
                 ../hrlib/ \
-		../foillogic/
+                ../foillogic/
 
 DEPENDPATH += ..
 
@@ -40,3 +40,14 @@ OTHER_FILES +=  ../../LICENSE.BSD \
                 ../../LICENSE.LGPLv2 \
                 ../../README \
                 ../../TODO
+
+#
+# QtUnits lib include
+#
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/release/ -lQtUnits
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/debug/ -lQtUnits
+else:unix: LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/ -lQtUnits
+
+INCLUDEPATH += $$PWD/../../../QtUnits/src/QtUnits
+DEPENDPATH += $$PWD/../../../QtUnits/src/QtUnits
