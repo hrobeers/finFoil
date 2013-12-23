@@ -13,6 +13,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+CONFIG += c++11
+
+QMAKE_CXXFLAGS +=   -Wno-multichar \
+                    -Wno-reorder
+
 INCLUDEPATH += ../ \
                 ../patheditor/ \
                 ../fineditors/ \
@@ -20,10 +25,6 @@ INCLUDEPATH += ../ \
                 ../hrtestlib \
 
 DEPENDPATH += ../
-
-QMAKE_CXXFLAGS +=   -std=c++11 \
-                    -Wno-multichar \
-                    -Wno-reorder
 
 SOURCES += main.cpp
 
