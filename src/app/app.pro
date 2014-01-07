@@ -45,9 +45,7 @@ OTHER_FILES +=  ../../LICENSE.BSD \
 # QtUnits lib include
 #
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/release/ -lQtUnits
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/debug/ -lQtUnits
-else:unix: LIBS += -L$$PWD/../../../QtUnits/src/QtUnits/ -lQtUnits
+unix|win32: LIBS += -L$${_PRO_FILE_PWD_}/../../../QtUnits/bin/ -lQtUnits
 
-INCLUDEPATH += $$PWD/../../../QtUnits/src/QtUnits
-DEPENDPATH += $$PWD/../../../QtUnits/src/QtUnits
+INCLUDEPATH += $${_PRO_FILE_PWD_}/../../../QtUnits/src/QtUnits
+DEPENDPATH += $${_PRO_FILE_PWD_}/../../../QtUnits/src/QtUnits
