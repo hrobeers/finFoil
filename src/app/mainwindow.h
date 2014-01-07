@@ -39,6 +39,20 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    QMenu *fileMenu;
+//    QMenu *helpMenu;
+
+    QAction *newAct;
+    QAction *openAct;
+    QAction *saveAct;
+    QAction *saveAsAct;
+    QAction *quitAct;
+
+//    QAction *aboutAct;
+
+    void createActions();
+    void createMenus();
 };
 
 #endif // MAINWINDOW_H

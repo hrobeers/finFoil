@@ -28,9 +28,55 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    createActions();
+    createMenus();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::createActions()
+{
+    newAct = new QAction(QIcon(), tr("&New"), this);
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(tr("Create a new fin"));
+    //connect
+
+//    QAction *openAct;
+    openAct = new QAction(QIcon(), tr("&Open"), this);
+    openAct->setShortcuts(QKeySequence::Open);
+    openAct->setStatusTip(tr("Open a fin from file"));
+    //connect
+
+//    QAction *saveAct;
+    saveAct = new QAction(QIcon(), tr("&Save"), this);
+    saveAct->setShortcuts(QKeySequence::Save);
+    saveAct->setStatusTip(tr("Save the fin to current file"));
+    //connect
+
+//    QAction *saveAsAct;
+    saveAsAct = new QAction(QIcon(), tr("Save &As ..."), this);
+    saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    saveAsAct->setStatusTip(tr("Save the fin to a different file"));
+    //connect
+
+
+    quitAct = new QAction(QIcon(), tr("&Quit"), this);
+    quitAct->setShortcuts(QKeySequence::Quit);
+    quitAct->setStatusTip(tr("Quit finFoil"));
+    connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(newAct);
+    fileMenu->addAction(openAct);
+    fileMenu->addAction(saveAct);
+    fileMenu->addAction(saveAsAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(quitAct);
 }
