@@ -7,6 +7,10 @@
 QT       += core gui testlib
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+# C++11 compiler flags depending on Qt version
+greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
+equals(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
+
 TARGET = unittest
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -20,10 +24,6 @@ INCLUDEPATH +=  ../ \
                 ../hrlib/
 
 DEPENDPATH += ../
-
-QMAKE_CXXFLAGS +=   -std=c++11 \
-                    -Wno-multichar \
-                    -Wno-reorder
 
 SOURCES += main.cpp
 

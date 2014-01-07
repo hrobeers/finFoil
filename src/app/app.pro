@@ -7,11 +7,14 @@
 QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+# C++11 compiler flags depending on Qt version
+greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
+equals(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
+
 TARGET = finFoil
 TEMPLATE = app
 
-QMAKE_CXXFLAGS +=   -std=c++11 \
-                    -Wno-multichar \
+QMAKE_CXXFLAGS +=   -Wno-multichar \
                     -Wno-reorder
 
 SOURCES += main.cpp\
