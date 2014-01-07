@@ -32,7 +32,7 @@
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/si/area.hpp"
-#include "boost/units/systems/angle/degrees.hpp"
+#include "boost/units/systems/si/plane_angle.hpp"
 
 namespace foillogic
 {
@@ -48,11 +48,11 @@ namespace foillogic
 
         boost::units::quantity<boost::units::si::length, qreal> height();
         boost::units::quantity<boost::units::si::area, qreal> area();
-        boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep();
+        boost::units::quantity<boost::units::si::plane_angle, qreal> sweep();
 
         void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
         void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
-        void setSweep(boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep);
+        void setSweep(boost::units::quantity<boost::units::si::plane_angle, qreal> sweep);
 
         virtual ~Foil();
 
@@ -65,7 +65,7 @@ namespace foillogic
     private:
         boost::units::quantity<boost::units::si::length, qreal> _height;
         boost::units::quantity<boost::units::si::area, qreal> _area;
-        boost::units::quantity<boost::units::degree::plane_angle, qreal> _sweep;
+        boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
 
         QSharedPointer<patheditor::Path> _outline;
         QSharedPointer<foillogic::Profile> _profile;

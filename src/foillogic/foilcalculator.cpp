@@ -215,6 +215,6 @@ void SweepCalculator::run()
     // calculate the sweep angle in degrees
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
-    quantity<degree::plane_angle, qreal> sweep(qAtan(os/ns) * 180 / M_PI * degree::degree);
+    quantity<si::plane_angle, qreal> sweep(qAtan(os/ns) * si::radian);
     _foil->setSweep(sweep);
 }
