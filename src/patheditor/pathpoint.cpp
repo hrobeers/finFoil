@@ -23,6 +23,7 @@
 #include "pathpoint.h"
 
 #include <QGraphicsScene>
+#include <QJsonArray>
 #include "pathsettings.h"
 #include "exceptions.h"
 
@@ -125,6 +126,16 @@ bool PathPoint::selected() const
 PointHandle *PathPoint::handle()
 {
     return _pointHandle;
+}
+
+QJsonObject PathPoint::serialize()
+{
+    QJsonObject point;
+    QJsonArray parr;
+    parr.append(this->x());
+    parr.append(this->y());
+    point.insert("pp", parr);
+    return point;
 }
 
 void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)

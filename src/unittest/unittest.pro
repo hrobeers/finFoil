@@ -23,10 +23,12 @@ INCLUDEPATH +=  ../ \
 DEPENDPATH += ../
 
 SOURCES += main.cpp \
-    patheditor-tests/quadrantrestrictortest.cpp
+    patheditor-tests/quadrantrestrictortest.cpp \
+    patheditor-tests/serializationtests.cpp
 
 HEADERS += \
-    patheditor-tests/quadrantrestrictortest.h
+    patheditor-tests/quadrantrestrictortest.h \
+    patheditor-tests/serializationtests.h
 
 include(../hrlib/hrlib.pri)
 include(../patheditor/patheditor.pri)
