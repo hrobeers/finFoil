@@ -24,13 +24,35 @@
 #define SERIALIZABLE_HPP
 
 #include <QJsonObject>
+#include "exceptions.h"
 
 namespace hrlib
 {
+    //
+    // Curiously recurring template pattern
+    // To fake static virtual methods
+    //
+
+    template <typename Derived>
     class Serializable
     {
     public:
-        virtual QJsonObject serialize() = 0;
+        static QJsonObject serialize(Serializable* obj)
+        {
+            // serializeImpl should be implemented in Derived class
+            return Derived::serializeImpl(static_cast<Derived*>(obj));
+        }
+
+        static Derived deserialize(QJsonObject* obj)
+        {
+            // deserializeImpl should be implemented in Derived class
+            return Derived::deserializeImpl(obj);
+        }
+
+        QJsonObject serialize()
+        {
+            return serialize(this);
+        }
     };
 }
 

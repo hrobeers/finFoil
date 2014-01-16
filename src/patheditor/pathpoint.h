@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef RESTRICTABLEPOINT_H
-#define RESTRICTABLEPOINT_H
+#ifndef PATHPOINT_H
+#define PATHPOINT_H
 
 #include "patheditorfwd/patheditorfwd.h"
 
@@ -34,10 +34,14 @@
 
 namespace patheditor
 {
-    class PathPoint : public QObject, public QPointF, public hrlib::Serializable
+    class PathPoint : public QObject, public QPointF, public hrlib::Serializable<PathPoint>
     {
         Q_OBJECT
     public:
+        static QJsonObject serializeImpl(PathPoint* obj);
+        static PathPoint deserializeImpl(QJsonObject* obj);
+
+        explicit PathPoint();
         explicit PathPoint(qreal xpos, qreal ypos);
 
         virtual void setParent(QObject *object);
@@ -67,8 +71,6 @@ namespace patheditor
         bool selected() const;
 
         PointHandle *handle();
-
-        virtual QJsonObject serialize();
 
         virtual ~PathPoint() {}
 
@@ -103,4 +105,4 @@ namespace patheditor
     };
 }
 
-#endif // RESTRICTABLEPOINT_H
+#endif // PATHPOINT_H

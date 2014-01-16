@@ -42,4 +42,10 @@ void SerializationTests::serializePathPoint()
     QCOMPARE(array[1].toDouble(), 2.0);
 }
 
+void SerializationTests::deserializePathPoint()
+{
+    PathPoint p(3, 4);
+//    QCOMPARE(hrlib::deserialize<int>(p), 3);
+}
+
 QTR_ADD_TEST(SerializationTests)

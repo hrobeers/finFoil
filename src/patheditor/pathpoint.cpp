@@ -31,12 +31,30 @@ using namespace patheditor;
 
 static QHash<QGraphicsScene*, PathPoint*> s_prevSelected;
 
-PathPoint::PathPoint(qreal xpos, qreal ypos)
-    : QPointF(xpos, ypos)
+QJsonObject PathPoint::serializeImpl(PathPoint *obj)
 {
-    _selected = false;
-    _pointHandle = 0;
-    _toFollowPoint = 0;
+    QJsonObject point;
+    QJsonArray parr;
+    parr.append(obj->x());
+    parr.append(obj->y());
+    point.insert("pp", parr);
+    return point;
+}
+
+PathPoint PathPoint::deserializeImpl(QJsonObject *obj)
+{
+    QString msg = "PathPoint::deserializeImpl";
+    throw hrlib::NotImplementedException(msg);
+}
+
+PathPoint::PathPoint()
+    : _selected(false), _pointHandle(0), _toFollowPoint(0)
+{
+}
+
+PathPoint::PathPoint(qreal xpos, qreal ypos)
+    : QPointF(xpos, ypos), _selected(false), _pointHandle(0), _toFollowPoint(0)
+{
 }
 
 void PathPoint::setParent(QObject* /*unused*/)
@@ -126,16 +144,6 @@ bool PathPoint::selected() const
 PointHandle *PathPoint::handle()
 {
     return _pointHandle;
-}
-
-QJsonObject PathPoint::serialize()
-{
-    QJsonObject point;
-    QJsonArray parr;
-    parr.append(this->x());
-    parr.append(this->y());
-    point.insert("pp", parr);
-    return point;
 }
 
 void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
