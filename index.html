@@ -1,2 +1,116 @@
-<h1>finFoil homepage</h1>
-Coming soon!
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Official homepage of the finFoil project">
+
+    <title>finFoil project page</title>
+
+
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<link rel="stylesheet" href="http://purecss.io/combo/1.8.2?/css/layouts/blog.css">
+
+</head>
+
+
+<body>
+
+<div class="pure-g-r" id="layout">
+    <div class="sidebar pure-u">
+        <header class="header">
+            <hgroup>
+                <h1 class="brand-title">finFoil Project</h1>
+                <h2 class="brand-tagline">building fins the right way</h2>
+            </hgroup>
+
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="pure-button" href="https://sourceforge.net/projects/finfoil/files/PreReleases/MacOSX/">MacOSX</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="pure-button" href="https://sourceforge.net/projects/finfoil/files/PreReleases/Windows/">Windows</a>
+                    </li>
+					<li class="nav-item">
+                        <a class="pure-button" href="https://github.com/hrobeers/finFoil">Source</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+
+    <div class="pure-u-1">
+        <div class="content">
+            <!-- A wrapper for all the blog posts -->
+            <div class="posts">
+                <h1 class="content-subhead">Pinned Post</h1>
+
+                <!-- A single blog post -->
+                <section class="post">
+                    <header class="post-header">
+                        <img class="post-avatar" height="48" width="48" src="http://www.gravatar.com/avatar/054346680d0d3d1f21f7a83e143ecb7a.jpg?s=48">
+
+                        <h2 class="post-title">Introducing finFoil</h2>
+
+                        <p class="post-meta">
+                            By <a href="#" class="post-author">hrobeers</a>
+                        </p>
+                    </header>
+
+                    <div class="post-description">
+                        <p>
+                            <!-- text -->
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="posts">
+                <h1 class="content-subhead">Recent Posts</h1>
+
+                <section class="post">
+                    <header class="post-header">
+                        <img class="post-avatar" height="48" width="48" src="http://www.gravatar.com/avatar/054346680d0d3d1f21f7a83e143ecb7a.jpg?s=48">
+
+                        <h2 class="post-title">Development preview released</h2>
+
+                        <p class="post-meta">
+                            By <a class="post-author" href="#">hrobeers</a> under <a class="post-category post-category-pure" href="#">Releases</a>
+                        </p>
+                    </header>
+
+                    <div class="post-description">
+                        <p>
+                            <!-- text -->
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="footer">
+                <div class="pure-menu pure-menu-horizontal pure-menu-open">
+                    <ul>
+                        <!-- <li><a href="http://purecss.io/">About</a></li>-->
+                        <li><a href="https://github.com/hrobeers/finFoil">Github</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
+<script>
+YUI().use('node-base', 'node-event-delegate', function (Y) {
+    // This just makes sure that the href="#" attached to the <a> elements
+    // don't scroll you back up the page.
+    Y.one('body').delegate('click', function (e) {
+        e.preventDefault();
+    }, 'a[href="#"]');
+});
+</script>
+
+
+</body>
+</html>
