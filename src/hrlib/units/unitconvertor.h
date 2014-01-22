@@ -44,7 +44,7 @@ namespace units {
     class UnitConvertor : public UnitConvertorBase<InternalUnit>
     {
     public:
-        UnitSymbol() { }
+        UnitConvertor() { }
 
         virtual NumericType fromInternalValue(boost::units::quantity<InternalUnit, NumericType> internalValue) const
         {
