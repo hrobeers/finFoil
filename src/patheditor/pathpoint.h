@@ -39,7 +39,7 @@ namespace patheditor
         Q_OBJECT
     public:
         static QJsonObject serializeImpl(PathPoint* obj);
-        static PathPoint deserializeImpl(QJsonObject* obj);
+        static PathPoint* deserializeImpl(QJsonObject obj);
 
         explicit PathPoint();
         explicit PathPoint(qreal xpos, qreal ypos);

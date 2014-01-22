@@ -24,6 +24,8 @@
 #define SERIALIZABLE_HPP
 
 #include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include "exceptions.h"
 
 namespace hrlib
@@ -43,7 +45,7 @@ namespace hrlib
             return Derived::serializeImpl(static_cast<Derived*>(obj));
         }
 
-        static Derived deserialize(QJsonObject* obj)
+        static Derived* deserialize(QJsonObject obj)
         {
             // deserializeImpl should be implemented in Derived class
             return Derived::deserializeImpl(obj);
@@ -53,6 +55,15 @@ namespace hrlib
         {
             return serialize(this);
         }
+    };
+
+    class SerializationException : public Exception
+    {
+    public:
+        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
+
+        virtual ~SerializationException() throw() {}
     };
 }
 

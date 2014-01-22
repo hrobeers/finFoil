@@ -26,6 +26,8 @@
 #include "patheditor/pathpoint.h"
 #include <QJsonArray>
 
+#include <memory>
+
 using namespace patheditor;
 
 void SerializationTests::serializePathPoint()
@@ -44,8 +46,13 @@ void SerializationTests::serializePathPoint()
 
 void SerializationTests::deserializePathPoint()
 {
-    PathPoint p(3, 4);
-//    QCOMPARE(hrlib::deserialize<int>(p), 3);
+    PathPoint p(3, 4.5);
+    auto json = p.serialize();
+
+    std::unique_ptr<PathPoint> newPP(PathPoint::deserialize(json));
+
+    QCOMPARE(newPP->x(), 3.0);
+    QCOMPARE(newPP->y(), 4.5);
 }
 
 QTR_ADD_TEST(SerializationTests)

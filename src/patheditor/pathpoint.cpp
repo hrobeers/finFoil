@@ -23,7 +23,6 @@
 #include "pathpoint.h"
 
 #include <QGraphicsScene>
-#include <QJsonArray>
 #include "pathsettings.h"
 #include "exceptions.h"
 
@@ -41,10 +40,20 @@ QJsonObject PathPoint::serializeImpl(PathPoint *obj)
     return point;
 }
 
-PathPoint PathPoint::deserializeImpl(QJsonObject *obj)
+PathPoint *PathPoint::deserializeImpl(QJsonObject obj)
 {
-    QString msg = "PathPoint::deserializeImpl";
-    throw hrlib::NotImplementedException(msg);
+    QJsonValue value = obj.value("pp");
+    QJsonArray array = value.toArray();
+
+    if (!array[0].isDouble() || !array[1].isDouble())
+    {
+        // TODO logic to exeption
+        QJsonDocument doc(obj);
+        QString msg = "Failed to deserialize " + doc.toJson() + " to PathPoint";
+        throw hrlib::SerializationException(msg);
+    }
+
+    return new PathPoint(array[0].toDouble(), array[1].toDouble());
 }
 
 PathPoint::PathPoint()
