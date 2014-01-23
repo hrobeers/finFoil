@@ -44,4 +44,4 @@ OTHER_FILES +=  ../../LICENSE.BSD \
 
 unix|win32: LIBS += -L$${_PRO_FILE_PWD_}/../../submodules/qtunits/bin/ -lQtUnits
 
-INCLUDEPATH += $${_PRO_FILE_PWD_}/../../submodules/qtunits/src/QtUnits
+INCLUDEPATH += $${_PRO_FILE_PWD_}/../../submodules/qtunits/src/
