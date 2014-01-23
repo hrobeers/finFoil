@@ -9,15 +9,25 @@
 
 
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
-<link rel="stylesheet" href="http://purecss.io/combo/1.8.2?/css/layouts/blog.css">
+
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://purecss.io/combo/1.9.5?/css/main-grid-old-ie.css&/css/layouts/blog-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="http://purecss.io/combo/1.9.5?/css/main-grid.css&/css/layouts/blog.css">
+    <!--<![endif]-->
+    
+<!--[if lt IE 9]>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+<![endif]-->
 
 </head>
 
 
 <body>
 
-<div class="pure-g-r" id="layout">
-    <div class="sidebar pure-u">
+<div class="pure-g" id="layout">
+    <div class="sidebar pure-u-1 pure-u-med-1-4">
         <header class="header">
             <hgroup>
                 <h1 class="brand-title">finFoil Project</h1>
@@ -32,7 +42,7 @@
                     <li class="nav-item">
                         <a class="pure-button" href="https://sourceforge.net/projects/finfoil/files/PreReleases/Windows/">Windows</a>
                     </li>
-					<li class="nav-item">
+		    <li class="nav-item">
                         <a class="pure-button" href="https://github.com/hrobeers/finFoil">Source</a>
                     </li>
                 </ul>
@@ -40,8 +50,9 @@
         </header>
     </div>
 
-    <div class="pure-u-1">
-        <div class="content">
+    <div class="content pure-u-1 pure-u-med-3-4">
+        <div>
+            <a href="https://github.com/hrobeers/finFoil"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
             <!-- A wrapper for all the blog posts -->
             <div class="posts">
                 <h1 class="content-subhead">Pinned Post</h1>
@@ -63,10 +74,11 @@ finFoil originally started as an application to help amateur surfboard fin maker
                     </p>
 
                     <div class="post-description">
-                        <div class="post-images pure-g-r">
-                            <div class="pure-u-1-2">
+                        <div class="post-images pure-g">
+                            <div class="pure-u-1 pure-u-med-1-2">
                                 <a href="http://hrobeers.be/images/shape/fins/finFoil/prerelease/1.0.0.272_2.png">
                                     <img alt="v1.0.0.272 on Windows"
+                                         class="pure-img-responsive"
                                          src="http://hrobeers.be/images/shape/fins/finFoil/prerelease/1.0.0.272_2.png">
                                 </a>
 
@@ -75,10 +87,11 @@ finFoil originally started as an application to help amateur surfboard fin maker
                                 </div>
                             </div>
 
-                            <div class="pure-u-1-2">
+                            <div class="pure-u-1 pure-u-med-1-2">
                                 <a href="http://hrobeers.be/images/shape/fins/finFoil/prerelease/1.0.0.274_mac.png">
                                     <img alt="v1.0.0.274 on MacOSX"
-                                        src="http://hrobeers.be/images/shape/fins/finFoil/prerelease/1.0.0.274_mac.png">
+                                         class="pure-img-responsive"
+                                         src="http://hrobeers.be/images/shape/fins/finFoil/prerelease/1.0.0.274_mac.png">
                                 </a>
 
                                 <div class="post-image-meta">
@@ -124,7 +137,7 @@ finFoil originally started as an application to help amateur surfboard fin maker
     </div>
 </div>
 
-<script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
+<script src="http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js"></script>
 <script>
 YUI().use('node-base', 'node-event-delegate', function (Y) {
     // This just makes sure that the href="#" attached to the <a> elements
