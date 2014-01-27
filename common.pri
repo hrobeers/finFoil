@@ -12,6 +12,3 @@ equals(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
 
 # Disable reorder warning
 QMAKE_CXXFLAGS += -Wno-reorder
-
-# RTTI for deserialization
-CONFIG += rtti
