@@ -28,33 +28,7 @@
 
 using namespace patheditor;
 
-static QHash<QGraphicsScene*, PathPoint*> s_prevSelected;
-
-QJsonObject PathPoint::serializeImpl(PathPoint *obj)
-{
-    QJsonObject point;
-    QJsonArray parr;
-    parr.append(obj->x());
-    parr.append(obj->y());
-    point.insert("pp", parr);
-    return point;
-}
-
-PathPoint *PathPoint::deserializeImpl(QJsonObject obj)
-{
-    QJsonValue value = obj.value("pp");
-    QJsonArray array = value.toArray();
-
-    if (!array[0].isDouble() || !array[1].isDouble())
-    {
-        // TODO logic to exeption
-        QJsonDocument doc(obj);
-        QString msg = "Failed to deserialize " + doc.toJson() + " to PathPoint";
-        throw hrlib::SerializationException(msg);
-    }
-
-    return new PathPoint(array[0].toDouble(), array[1].toDouble());
-}
+static QMap<QGraphicsScene*, PathPoint*> s_prevSelected;
 
 PathPoint::PathPoint()
     : _selected(false), _pointHandle(0), _toFollowPoint(0)

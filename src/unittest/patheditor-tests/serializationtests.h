@@ -24,14 +24,44 @@
 #define SERIALIZATIONTESTS_H
 
 #include <QObject>
+#include "serialization/serialization.h"
 
 class SerializationTests : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void serializePathPoint();
-    void deserializePathPoint();
+//    void serializePathPoint();
+//    void deserializePathPoint();
+
+    void propertySerialization();
+};
+
+class Testobject : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(qreal x READ x WRITE setX)
+    Q_PROPERTY(qreal y READ y WRITE setY)
+    Q_PROPERTY(QString str READ str WRITE setStr RESET initStr)
+
+private:
+    qreal _x, _y;
+    QString _optionalStr;
+
+public:
+    Q_INVOKABLE Testobject() : _x(0), _y(0), _optionalStr("") {}
+    Testobject(qreal x, qreal y) : _x(x), _y(y), _optionalStr("") {}
+
+    qreal x() { return _x; }
+    qreal y() { return _y; }
+    QString str() { return _optionalStr; }
+
+    void setX(qreal x) { _x = x; }
+    void setY(qreal y) { _y = y; }
+    void setStr(QString &str) { _optionalStr = str; }
+
+    void initStr() { _optionalStr = "initialized"; }
 };
 
 #endif // SERIALIZATIONTESTS_H

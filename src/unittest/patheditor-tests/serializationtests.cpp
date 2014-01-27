@@ -30,29 +30,43 @@
 
 using namespace patheditor;
 
-void SerializationTests::serializePathPoint()
+//void SerializationTests::serializePathPoint()
+//{
+//    PathPoint p(1, 2);
+//    auto json = p.serialize();
+//    auto value = json.value("pp");
+//    auto array = value.toArray();
+
+//    QCOMPARE(array[0].isDouble(), true);
+//    QCOMPARE(array[0].toDouble(), 1.0);
+
+//    QCOMPARE(array[1].isDouble(), true);
+//    QCOMPARE(array[1].toDouble(), 2.0);
+//}
+
+//void SerializationTests::deserializePathPoint()
+//{
+//    PathPoint p(3, 4.5);
+//    auto json = p.serialize();
+
+//    std::unique_ptr<PathPoint> newPP(PathPoint::deserialize(json));
+
+//    QCOMPARE(newPP->x(), 3.0);
+//    QCOMPARE(newPP->y(), 4.5);
+//}
+
+static const hrlib::serialization::registerForDeserialization<Testobject> _reg;
+void SerializationTests::propertySerialization()
 {
-    PathPoint p(1, 2);
-    auto json = p.serialize();
-    auto value = json.value("pp");
-    auto array = value.toArray();
+    Testobject p(2, 3);
 
-    QCOMPARE(array[0].isDouble(), true);
-    QCOMPARE(array[0].toDouble(), 1.0);
+    QJsonObject obj = hrlib::serialization::serialize(&p);
 
-    QCOMPARE(array[1].isDouble(), true);
-    QCOMPARE(array[1].toDouble(), 2.0);
-}
+    qDebug() << obj; // TODO QCOMPARE
 
-void SerializationTests::deserializePathPoint()
-{
-    PathPoint p(3, 4.5);
-    auto json = p.serialize();
+    QObject *o = hrlib::serialization::deserialize(&obj);
 
-    std::unique_ptr<PathPoint> newPP(PathPoint::deserialize(json));
-
-    QCOMPARE(newPP->x(), 3.0);
-    QCOMPARE(newPP->y(), 4.5);
+    QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
 }
 
 QTR_ADD_TEST(SerializationTests)

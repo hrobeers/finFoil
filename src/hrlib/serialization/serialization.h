@@ -20,51 +20,39 @@
 
 ****************************************************************************/
 
-#ifndef SERIALIZABLE_HPP
-#define SERIALIZABLE_HPP
+#ifndef HRLIB_SERIALIZATION_H
+#define HRLIB_SERIALIZATION_H
 
+#include <QObject>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include "exceptions.h"
+#include <QMetaProperty>
 
 namespace hrlib
 {
-    //
-    // Curiously recurring template pattern
-    // To fake static virtual methods
-    //
-
-    template <typename Derived>
-    class Serializable
+    class serialization
     {
+    private:
+        static QMap<QString, const QObject*>& typeMap()
+        {
+            static QMap<QString, const QObject*> tMap;
+            return tMap;
+        }
+
     public:
-        static QJsonObject serialize(Serializable* obj)
+        static QJsonObject serialize(const QObject *qObj);
+        static QObject* deserialize(const QJsonObject *jsonObj);
+
+        template <typename T>
+        class registerForDeserialization
         {
-            // serializeImpl should be implemented in Derived class
-            return Derived::serializeImpl(static_cast<Derived*>(obj));
-        }
-
-        static Derived* deserialize(QJsonObject obj)
-        {
-            // deserializeImpl should be implemented in Derived class
-            return Derived::deserializeImpl(obj);
-        }
-
-        QJsonObject serialize()
-        {
-            return serialize(this);
-        }
-    };
-
-    class SerializationException : public Exception
-    {
-    public:
-        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
-            : Exception(message, thrower) { }
-
-        virtual ~SerializationException() throw() {}
+        public:
+            registerForDeserialization()
+            {
+                static const T t;
+                typeMap()[t.metaObject()->className()] = &t;
+            }
+        };
     };
 }
 
-#endif // SERIALIZABLE_HPP
+#endif // HRLIB_SERIALIZATION_H

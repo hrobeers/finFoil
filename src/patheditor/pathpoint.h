@@ -27,20 +27,15 @@
 
 #include <QSharedPointer>
 #include <QPen>
-#include <QJsonObject>
 #include "restrictor.h"
 #include "pointhandle.h"
-#include "serialization/serializable.hpp"
 
 namespace patheditor
 {
-    class PathPoint : public QObject, public QPointF, public hrlib::Serializable<PathPoint>
+    class PathPoint : public QObject, public QPointF
     {
         Q_OBJECT
     public:
-        static QJsonObject serializeImpl(PathPoint* obj);
-        static PathPoint* deserializeImpl(QJsonObject obj);
-
         explicit PathPoint();
         explicit PathPoint(qreal xpos, qreal ypos);
 
