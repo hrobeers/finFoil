@@ -52,7 +52,8 @@ namespace hrlib
     class ArgumentException : public Exception
     {
     public:
-        explicit ArgumentException(QString &message, QObject *thrower = 0) throw();
+        explicit ArgumentException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
 
         virtual ~ArgumentException() throw() {}
     };
@@ -60,7 +61,8 @@ namespace hrlib
     class NotImplementedException : public Exception
     {
     public:
-        explicit NotImplementedException(QString &message, QObject *thrower = 0) throw();
+        explicit NotImplementedException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
 
         virtual ~NotImplementedException() throw() {}
     };
@@ -68,7 +70,8 @@ namespace hrlib
     class ImplementationException : public Exception
     {
     public:
-        explicit ImplementationException(QString &message, QObject *thrower = 0) throw();
+        explicit ImplementationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
 
         virtual ~ImplementationException() throw() {}
     };
@@ -76,7 +79,8 @@ namespace hrlib
     class InitializationException : public Exception
     {
     public:
-        explicit InitializationException(QString &message, QObject *thrower = 0) throw();
+        explicit InitializationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
 
         virtual ~InitializationException() throw() {}
     };

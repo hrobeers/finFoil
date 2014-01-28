@@ -34,7 +34,8 @@ private slots:
 //    void serializePathPoint();
 //    void deserializePathPoint();
 
-    void propertySerialization();
+    void testSerialization();
+    void testSerializationFailures();
 };
 
 class Testobject : public QObject

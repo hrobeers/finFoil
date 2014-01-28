@@ -55,8 +55,8 @@ using namespace patheditor;
 //    QCOMPARE(newPP->y(), 4.5);
 //}
 
-static const hrlib::serialization::registerForDeserialization<Testobject> _reg;
-void SerializationTests::propertySerialization()
+static const hrlib::serialization::registerForDeserialization<Testobject> REG_TESTOBJECT;
+void SerializationTests::testSerialization()
 {
     Testobject p(2, 3);
 
@@ -67,6 +67,35 @@ void SerializationTests::propertySerialization()
     QObject *o = hrlib::serialization::deserialize(&obj);
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
+}
+
+void SerializationTests::testSerializationFailures()
+{
+    //
+    // Test deserialization failure and error message for empty JSON object
+    //
+    QJsonObject json;
+    QString errorMsg;
+
+    QVERIFY(errorMsg.isEmpty());
+
+    QObject* qObj = hrlib::serialization::deserialize(&json, &errorMsg);
+
+    QVERIFY(qObj == 0);
+    QVERIFY(!errorMsg.isEmpty());
+
+    //
+    // Test deserialization failure and error message for unkown JSON object
+    //
+    QString errorMsg2;
+    QString className("NotRegisteredClass");
+    json.insert(className, QJsonValue());
+
+    qObj = hrlib::serialization::deserialize(&json, &errorMsg2);
+
+    QVERIFY(qObj == 0);
+    QVERIFY(errorMsg != errorMsg2);
+    QVERIFY(errorMsg2.contains(className));
 }
 
 QTR_ADD_TEST(SerializationTests)

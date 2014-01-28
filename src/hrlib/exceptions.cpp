@@ -70,18 +70,3 @@ const std::exception &Exception::innerException() const
 {
     return *_innerException;
 }
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-
-NotImplementedException::NotImplementedException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-ImplementationException::ImplementationException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-
-InitializationException::InitializationException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }

@@ -84,27 +84,41 @@ QJsonObject serialization::serialize(const QObject *qObj)
     return jsonObj;
 }
 
-QObject *serialization::deserialize(const QJsonObject *jsonObj)
+bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)
 {
-    if (jsonObj->keys().count() > 0)
+    if (jsonObj->keys().count() <= 0)
     {
-        QString className = jsonObj->keys().first();
-
-        if (typeMap().contains(className))
-        {
-            const QObject *obj = typeMap()[className];
-            QObject *retVal = obj->metaObject()->newInstance();
-            if (!retVal)
-            {
-                // TODO throw default ctor not invokable
-            }
-            return retVal;
-        }
-
-        // TODO throw exception
+        if (errorMsg)
+            *errorMsg = QStringLiteral("Empty json object");
+        return false;
     }
 
-    // TODO throw exception
+    *className = jsonObj->keys().first();
 
-    return new QObject();
+    if (!typeMap().contains(*className))
+    {
+        if (errorMsg)
+            *errorMsg = "Class \"" + *className + "\" is not registered for deserialization";
+        return false;
+    }
+
+    return true;
+}
+
+QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMsg)
+{
+    QString className;
+
+    if (!findClass(jsonObj, &className, errorMsg))
+        return 0;
+
+    const QObject *obj = typeMap()[className];
+    QObject *retVal = obj->metaObject()->newInstance();
+    if (!retVal)
+    {
+        QString msg = "serialization::deserialize failed for " + className +
+                ": the default ctor is not invokable. Add the Q_INVOKABLE macro.";
+        throw ImplementationException(msg);
+    }
+    return retVal;
 }
