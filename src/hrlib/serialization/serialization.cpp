@@ -22,7 +22,6 @@
 
 #include "serialization.h"
 
-#include <QJsonArray>
 #include <QStringList>
 #include "exceptions.h"
 
@@ -32,7 +31,7 @@ using namespace hrlib;
 QJsonObject serialization::serialize(const QObject *qObj)
 {
     QJsonObject jsonObj; // return value
-    QJsonArray propArr; // array of QProperties
+    QJsonObject propObj; // QProperties container
 
     // The first propetry objectName is skipped
     for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
@@ -77,11 +76,10 @@ QJsonObject serialization::serialize(const QObject *qObj)
         if (!ok)
             continue;
 
-        prop.insert(mp.name(), v);
-        propArr.append(prop);
+        propObj.insert(mp.name(), v);
     }
 
-    jsonObj.insert(qObj->metaObject()->className(), propArr);
+    jsonObj.insert(qObj->metaObject()->className(), propObj);
 
     return jsonObj;
 }
