@@ -59,6 +59,7 @@ static const hrlib::serialization::registerForDeserialization<Testobject> REG_TE
 void SerializationTests::testSerialization()
 {
     Testobject p(2, 3);
+    p.setStr("This is a Testobject");
 
     QJsonObject obj = hrlib::serialization::serialize(&p);
 
@@ -67,6 +68,11 @@ void SerializationTests::testSerialization()
     QObject *o = hrlib::serialization::deserialize(&obj);
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
+
+    Testobject *to = (Testobject*)o;
+    QCOMPARE(to->x(), p.x());
+    QCOMPARE(to->y(), p.y());
+    QCOMPARE(to->str(), p.str());
 }
 
 void SerializationTests::testSerializationFailures()

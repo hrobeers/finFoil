@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QMetaProperty>
+#include "exceptions.h"
 
 namespace hrlib
 {
@@ -54,6 +55,15 @@ namespace hrlib
                 typeMap()[t.metaObject()->className()] = &t;
             }
         };
+    };
+
+    class SerializationException : public Exception
+    {
+    public:
+        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
+
+        virtual ~SerializationException() throw() {}
     };
 }
 

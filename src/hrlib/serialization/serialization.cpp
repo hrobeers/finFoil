@@ -23,7 +23,6 @@
 #include "serialization.h"
 
 #include <QStringList>
-#include "exceptions.h"
 
 using namespace hrlib;
 
@@ -120,5 +119,32 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
                 ": the default ctor is not invokable. Add the Q_INVOKABLE macro.";
         throw ImplementationException(msg);
     }
+
+    // Extract the object containing the properties
+    QJsonObject propertiesObject = jsonObj->value(className).toObject();
+
+    // Loop over and write class properties
+    // The first propetry objectName is skipped
+    for (int i = 1; i < retVal->metaObject()->propertyCount(); i++)
+    {
+        QMetaProperty mp = retVal->metaObject()->property(i);
+        QString propName = mp.name();
+
+        switch (mp.type())
+        {
+        // TODO UserType
+
+        default:
+            if (!mp.write(retVal, propertiesObject.value(propName).toVariant()))
+            {
+                QString msg = "Deserialization failed on VariantType: ";
+                msg.append(mp.typeName());
+                throw SerializationException(msg);
+            }
+            break;
+        }
+
+    }
+
     return retVal;
 }

@@ -58,9 +58,9 @@ public:
     qreal y() { return _y; }
     QString str() { return _optionalStr; }
 
-    void setX(qreal x) { _x = x; }
-    void setY(qreal y) { _y = y; }
-    void setStr(QString &str) { _optionalStr = str; }
+    void setX(const qreal x) { _x = x; }
+    void setY(const qreal y) { _y = y; }
+    void setStr(const QString &str) { _optionalStr = str; }
 
     void initStr() { _optionalStr = "initialized"; }
 };
