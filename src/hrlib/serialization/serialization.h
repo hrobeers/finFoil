@@ -23,6 +23,9 @@
 #ifndef HRLIB_SERIALIZATION_H
 #define HRLIB_SERIALIZATION_H
 
+#define DESERIALIZABLE(CLASS, UNIQUE_NAME) Q_DECLARE_METATYPE(CLASS *) \
+    static const hrlib::serialization::registerForDeserialization<CLASS> UNIQUE_NAME;
+
 #include <QObject>
 #include <QJsonObject>
 #include <QMetaProperty>

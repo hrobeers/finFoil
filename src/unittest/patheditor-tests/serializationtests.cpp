@@ -26,8 +26,6 @@
 #include "patheditor/pathpoint.h"
 #include <QJsonArray>
 
-#include <memory>
-
 using namespace patheditor;
 
 //void SerializationTests::serializePathPoint()
@@ -55,7 +53,6 @@ using namespace patheditor;
 //    QCOMPARE(newPP->y(), 4.5);
 //}
 
-static const hrlib::serialization::registerForDeserialization<Testobject> REG_TESTOBJECT;
 void SerializationTests::testSerialization()
 {
     Testobject p(2, 3);

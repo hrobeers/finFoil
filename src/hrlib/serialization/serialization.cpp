@@ -43,33 +43,39 @@ QJsonObject serialization::serialize(const QObject *qObj)
 
         bool ok = false;
 
+        QObject *nestedObj = nullptr;
+        QJsonObject nestedJSON;
         switch (var.type())
         {
-        case QVariant::Bool:
-            v = var.toBool();
-            break;
-
-        case QVariant::Int:
-            v = var.toInt(&ok);
-            break;
-
-        case QVariant::Double:
-            v = var.toDouble(&ok);
-            break;
-
-        case QVariant::String:
-            v = var.toString();
-            ok = true;
-            break;
-
         case QVariant::Invalid:
             ok = false;
             break;
 
+        case QVariant::UserType:
+            nestedObj = qvariant_cast<QObject*>(var);
+            if (nestedObj)
+            {
+                ok = true;
+                nestedJSON = serialize(nestedObj);
+                v = nestedJSON;
+            }
+            break;
+
         default:
-            QString msg("Serialization::serialize not implemented for ");
-            msg.append(var.typeName());
-            throw NotImplementedException(msg);
+            v = v.fromVariant(var);
+
+            if (!v.isNull())
+            {
+                ok = true;
+            }
+            else
+            {
+                QString msg("Serialization::serialize not implemented for ");
+                msg.append(var.typeName());
+                throw NotImplementedException(msg);
+            }
+
+            break;
         }
 
         if (!ok)

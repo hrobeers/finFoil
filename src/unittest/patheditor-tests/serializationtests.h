@@ -38,6 +38,29 @@ private slots:
     void testSerializationFailures();
 };
 
+class Nestedobject : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString someString READ someString WRITE setSomeKey)
+    Q_PROPERTY(int random READ random)
+
+private:
+    QString _key;
+    int _random;
+
+public:
+    Q_INVOKABLE Nestedobject() { _random = (int)this; }
+
+    virtual ~Nestedobject() {}
+
+    QString someString() const { return _key; }
+    int random() const { return _random; }
+
+    void setSomeKey(const QString &key) { _key = key; }
+};
+DESERIALIZABLE(Nestedobject, REG_NESTEDOBJECT)
+
 class Testobject : public QObject
 {
     Q_OBJECT
@@ -45,24 +68,38 @@ class Testobject : public QObject
     Q_PROPERTY(qreal x READ x WRITE setX)
     Q_PROPERTY(qreal y READ y WRITE setY)
     Q_PROPERTY(QString str READ str WRITE setStr RESET initStr)
+    Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
 
 private:
     qreal _x, _y;
     QString _optionalStr;
+    Nestedobject *_nestedObj;
+
+    void init()
+    {
+        _nestedObj = new Nestedobject();
+        _nestedObj->setParent(this);
+    }
 
 public:
-    Q_INVOKABLE Testobject() : _x(0), _y(0), _optionalStr("") {}
-    Testobject(qreal x, qreal y) : _x(x), _y(y), _optionalStr("") {}
+    Q_INVOKABLE Testobject() : _x(0), _y(0), _optionalStr("") { init(); }
+    Testobject(qreal x, qreal y) : _x(x), _y(y), _optionalStr("") { init(); }
 
-    qreal x() { return _x; }
-    qreal y() { return _y; }
-    QString str() { return _optionalStr; }
+    // Q_PROPERTY getters
+    qreal x() const { return _x; }
+    qreal y() const { return _y; }
+    QString str() const { return _optionalStr; }
+    Nestedobject* nestedObj() const { return _nestedObj; }
 
+    // Q_PROPERTY setters
     void setX(const qreal x) { _x = x; }
     void setY(const qreal y) { _y = y; }
     void setStr(const QString &str) { _optionalStr = str; }
+    void setNestedObj(Nestedobject *nObj) { _nestedObj = nObj; }
 
+    // Q_PROPERTY resetters
     void initStr() { _optionalStr = "initialized"; }
 };
+DESERIALIZABLE(Testobject, REG_TESTOBJECT)
 
 #endif // SERIALIZATIONTESTS_H
