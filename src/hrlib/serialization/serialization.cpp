@@ -22,6 +22,7 @@
 
 #include "serialization.h"
 
+#include <memory>
 #include <QStringList>
 #include "exceptions.h"
 
@@ -43,7 +44,7 @@ QJsonObject serialization::serialize(const QObject *qObj)
 
         bool ok = false;
 
-        QObject *nestedObj = 0;
+        QObject *nestedObj = nullptr;
         QJsonObject nestedJSON;
         switch (var.type())
         {
@@ -120,7 +121,7 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
     QString className;
 
     if (!findClass(jsonObj, &className, errorMsg))
-        return 0;
+        return nullptr;
 
     // Extract the object containing the properties
     QJsonObject propertiesObject = jsonObj->value(className).toObject();
@@ -133,10 +134,10 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
     className = className.replace('*', ""); // Properties are pointer types
 
     if (!isRegistered(&className, errorMsg))
-        return 0;
+        return nullptr;
 
     const QObject *obj = typeMap()[className];
-    QObject *retVal = obj->metaObject()->newInstance();
+    std::unique_ptr<QObject> retVal(obj->metaObject()->newInstance());
     if (!retVal)
     {
         QString msg = "serialization::deserialize failed for " + className +
@@ -153,7 +154,7 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 
         if (mp.isWritable())
         {
-            QObject *nestedObj = 0;
+            QObject *nestedObj = nullptr;
             QJsonObject nestedJSON;
             QVariant var;
             bool writeSucceeded = false;
@@ -162,12 +163,13 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
             case QVariant::UserType:
                 nestedJSON = jsonObj->value(propName).toObject();
                 nestedObj = deserializeClass(&nestedJSON, mp.typeName(), errorMsg);
+                nestedObj->setParent(retVal.get());
                 var.setValue(nestedObj);
-                writeSucceeded = mp.write(retVal, var);
+                writeSucceeded = mp.write(retVal.get(), var);
                 break;
 
             default:
-                writeSucceeded = mp.write(retVal, jsonObj->value(propName).toVariant());
+                writeSucceeded = mp.write(retVal.get(), jsonObj->value(propName).toVariant());
                 break;
             }
 
@@ -175,7 +177,7 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
             {
                 if (mp.isResettable())
                 {
-                    mp.reset(retVal);
+                    mp.reset(retVal.get());
                 }
                 else
                 {
@@ -186,12 +188,12 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
                         errorMsg->append("::");
                         errorMsg->append(mp.name());
                     }
-                    return 0;
+                    return nullptr;
                 }
             }
         }
 
     }
 
-    return retVal;
+    return retVal.release();
 }

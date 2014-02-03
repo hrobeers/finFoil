@@ -25,6 +25,7 @@
 
 #include "patheditor/pathpoint.h"
 #include <QJsonArray>
+#include <memory>
 
 using namespace patheditor;
 
@@ -70,11 +71,11 @@ void SerializationTests::testSerialization()
     //
     // Test deserialization
     //
-    QObject *o = hrlib::serialization::deserialize(&obj);
+    std::unique_ptr<QObject> o(hrlib::serialization::deserialize(&obj));
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
 
-    Testobject *to = (Testobject*)o;
+    Testobject *to = (Testobject*)o.get();
     QCOMPARE(to->x(), p.x());
     QCOMPARE(to->y(), p.y());
     QCOMPARE(to->optionalStr(), p.optionalStr());
@@ -91,7 +92,7 @@ void SerializationTests::testSerialization()
     pObj.remove("optionalStr");
     obj[p.metaObject()->className()] = pObj;
 
-    Testobject *optionalObj = (Testobject*)hrlib::serialization::deserialize(&obj);
+    std::unique_ptr<Testobject> optionalObj((Testobject*)hrlib::serialization::deserialize(&obj));
     QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
 }
 
@@ -105,7 +106,7 @@ void SerializationTests::testSerializationFailures()
 
     QVERIFY(errorMsg.isEmpty());
 
-    QObject* qObj = hrlib::serialization::deserialize(&json, &errorMsg);
+    std::unique_ptr<QObject> qObj(hrlib::serialization::deserialize(&json, &errorMsg));
 
     QVERIFY(qObj == 0);
     QVERIFY(!errorMsg.isEmpty());
@@ -118,7 +119,7 @@ void SerializationTests::testSerializationFailures()
     QString className("NotRegisteredClass");
     json.insert(className, QJsonValue());
 
-    qObj = hrlib::serialization::deserialize(&json, &errorMsg2);
+    qObj.reset(hrlib::serialization::deserialize(&json, &errorMsg2));
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg != errorMsg2);
@@ -135,7 +136,7 @@ void SerializationTests::testSerializationFailures()
     pObj.remove("x");
     obj[p.metaObject()->className()] = pObj;
 
-    qObj = hrlib::serialization::deserialize(&obj, &errorMsg3);
+    qObj.reset(hrlib::serialization::deserialize(&obj, &errorMsg3));
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg2 != errorMsg3);

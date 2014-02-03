@@ -47,7 +47,7 @@ namespace hrlib
     public:
         static QJsonObject serialize(const QObject *qObj);
         static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg = 0);
-        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
+        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg = 0);
 
         template <typename T>
         class registerForDeserialization
