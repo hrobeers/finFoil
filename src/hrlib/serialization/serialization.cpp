@@ -23,6 +23,7 @@
 #include "serialization.h"
 
 #include <QStringList>
+#include "exceptions.h"
 
 using namespace hrlib;
 
@@ -36,14 +37,13 @@ QJsonObject serialization::serialize(const QObject *qObj)
     for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
     {
         QMetaProperty mp = qObj->metaObject()->property(i);
-        QJsonObject prop;
         QJsonValue v;
 
         QVariant var = mp.read(qObj);
 
         bool ok = false;
 
-        QObject *nestedObj = nullptr;
+        QObject *nestedObj = 0;
         QJsonObject nestedJSON;
         switch (var.type())
         {
@@ -100,6 +100,11 @@ bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QS
 
     *className = jsonObj->keys().first();
 
+    return true;
+}
+
+bool serialization::isRegistered(QString *className, QString *errorMsg)
+{
     if (!typeMap().contains(*className))
     {
         if (errorMsg)
@@ -127,6 +132,9 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 {
     className = className.replace('*', ""); // Properties are pointer types
 
+    if (!isRegistered(&className, errorMsg))
+        return 0;
+
     const QObject *obj = typeMap()[className];
     QObject *retVal = obj->metaObject()->newInstance();
     if (!retVal)
@@ -145,7 +153,7 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 
         if (mp.isWritable())
         {
-            QObject *nestedObj = nullptr;
+            QObject *nestedObj = 0;
             QJsonObject nestedJSON;
             QVariant var;
             bool writeSucceeded = false;
@@ -165,9 +173,21 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 
             if (!writeSucceeded)
             {
-                QString msg = "Deserialization failed on VariantType: ";
-                msg.append(mp.typeName());
-                throw SerializationException(msg);
+                if (mp.isResettable())
+                {
+                    mp.reset(retVal);
+                }
+                else
+                {
+                    if (errorMsg)
+                    {
+                        *errorMsg = QStringLiteral("Failed to deserialize ");
+                        errorMsg->append(className);
+                        errorMsg->append("::");
+                        errorMsg->append(mp.name());
+                    }
+                    return 0;
+                }
             }
         }
 

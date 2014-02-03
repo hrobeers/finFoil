@@ -67,7 +67,7 @@ class Testobject : public QObject
 
     Q_PROPERTY(qreal x READ x WRITE setX)
     Q_PROPERTY(qreal y READ y WRITE setY)
-    Q_PROPERTY(QString str READ str WRITE setStr RESET initStr)
+    Q_PROPERTY(QString optionalStr READ optionalStr WRITE setOptionalStr RESET initOptionalStr)
     Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
 
 private:
@@ -88,17 +88,17 @@ public:
     // Q_PROPERTY getters
     qreal x() const { return _x; }
     qreal y() const { return _y; }
-    QString str() const { return _optionalStr; }
+    QString optionalStr() const { return _optionalStr; }
     Nestedobject* nestedObj() const { return _nestedObj; }
 
     // Q_PROPERTY setters
     void setX(const qreal x) { _x = x; }
     void setY(const qreal y) { _y = y; }
-    void setStr(const QString &str) { _optionalStr = str; }
+    void setOptionalStr(const QString &str) { _optionalStr = str; }
     void setNestedObj(Nestedobject *nObj) { _nestedObj = nObj; }
 
     // Q_PROPERTY resetters
-    void initStr() { _optionalStr = "initialized"; }
+    void initOptionalStr() { _optionalStr = "initialized"; }
 };
 DESERIALIZABLE(Testobject, REG_TESTOBJECT)
 

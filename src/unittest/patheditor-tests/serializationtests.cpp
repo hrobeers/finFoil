@@ -55,14 +55,21 @@ using namespace patheditor;
 
 void SerializationTests::testSerialization()
 {
+    //
+    // Test serialization
+    //
     Testobject p(2, 3);
-    p.setStr("This is a Testobject");
+    p.setOptionalStr("This is a Testobject");
     p.nestedObj()->setSomeString("This is a nested object");
 
     QJsonObject obj = hrlib::serialization::serialize(&p);
 
     qDebug() << obj; // TODO QCOMPARE
 
+
+    //
+    // Test deserialization
+    //
     QObject *o = hrlib::serialization::deserialize(&obj);
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
@@ -70,11 +77,22 @@ void SerializationTests::testSerialization()
     Testobject *to = (Testobject*)o;
     QCOMPARE(to->x(), p.x());
     QCOMPARE(to->y(), p.y());
-    QCOMPARE(to->str(), p.str());
+    QCOMPARE(to->optionalStr(), p.optionalStr());
 
     Nestedobject *no = to->nestedObj();
     QVERIFY(no != nullptr);
     QCOMPARE(no->someString(), p.nestedObj()->someString());
+
+
+    //
+    // Test optional property deserialization
+    //
+    QJsonObject pObj = obj[p.metaObject()->className()].toObject();
+    pObj.remove("optionalStr");
+    obj[p.metaObject()->className()] = pObj;
+
+    Testobject *optionalObj = (Testobject*)hrlib::serialization::deserialize(&obj);
+    QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
 }
 
 void SerializationTests::testSerializationFailures()
@@ -92,6 +110,7 @@ void SerializationTests::testSerializationFailures()
     QVERIFY(qObj == 0);
     QVERIFY(!errorMsg.isEmpty());
 
+
     //
     // Test deserialization failure and error message for unkown JSON object
     //
@@ -104,6 +123,24 @@ void SerializationTests::testSerializationFailures()
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg != errorMsg2);
     QVERIFY(errorMsg2.contains(className));
+
+
+    //
+    // Test deserialization failure on non-resetable missing field
+    //
+    QString errorMsg3;
+    Testobject p(0.2, -5.3);
+    QJsonObject obj = hrlib::serialization::serialize(&p);
+    QJsonObject pObj = obj[p.metaObject()->className()].toObject();
+    pObj.remove("x");
+    obj[p.metaObject()->className()] = pObj;
+
+    qObj = hrlib::serialization::deserialize(&obj, &errorMsg3);
+
+    QVERIFY(qObj == 0);
+    QVERIFY(errorMsg2 != errorMsg3);
+    QVERIFY(errorMsg3.contains(p.metaObject()->className()));
+    QVERIFY(errorMsg3.contains("x"));
 }
 
 QTR_ADD_TEST(SerializationTests)
