@@ -42,11 +42,11 @@ class Nestedobject : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString someString READ someString WRITE setSomeKey)
+    Q_PROPERTY(QString someString READ someString WRITE setSomeString)
     Q_PROPERTY(int random READ random)
 
 private:
-    QString _key;
+    QString _someString;
     int _random;
 
 public:
@@ -54,10 +54,10 @@ public:
 
     virtual ~Nestedobject() {}
 
-    QString someString() const { return _key; }
+    QString someString() const { return _someString; }
     int random() const { return _random; }
 
-    void setSomeKey(const QString &key) { _key = key; }
+    void setSomeString(const QString &someString) { _someString = someString; }
 };
 DESERIALIZABLE(Nestedobject, REG_NESTEDOBJECT)
 

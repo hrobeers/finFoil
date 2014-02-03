@@ -136,18 +136,32 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
         QMetaProperty mp = retVal->metaObject()->property(i);
         QString propName = mp.name();
 
-        switch (mp.type())
+        if (mp.isWritable())
         {
-        // TODO UserType
+            QObject *nestedObj = nullptr;
+            QJsonObject nestedJSON;
+            QVariant var;
+            bool writeSucceeded = false;
+            switch (mp.type())
+            {
+            case QVariant::UserType:
+                nestedJSON = propertiesObject.value(propName).toObject();
+                nestedObj = deserialize(&nestedJSON, errorMsg);
+                var.setValue(nestedObj);
+                writeSucceeded = mp.write(retVal, var);
+                break;
 
-        default:
-            if (!mp.write(retVal, propertiesObject.value(propName).toVariant()))
+            default:
+                writeSucceeded = mp.write(retVal, propertiesObject.value(propName).toVariant());
+                break;
+            }
+
+            if (!writeSucceeded)
             {
                 QString msg = "Deserialization failed on VariantType: ";
                 msg.append(mp.typeName());
                 throw SerializationException(msg);
             }
-            break;
         }
 
     }

@@ -57,6 +57,7 @@ void SerializationTests::testSerialization()
 {
     Testobject p(2, 3);
     p.setStr("This is a Testobject");
+    p.nestedObj()->setSomeString("This is a nested object");
 
     QJsonObject obj = hrlib::serialization::serialize(&p);
 
@@ -70,6 +71,10 @@ void SerializationTests::testSerialization()
     QCOMPARE(to->x(), p.x());
     QCOMPARE(to->y(), p.y());
     QCOMPARE(to->str(), p.str());
+
+    Nestedobject *no = to->nestedObj();
+    QVERIFY(no != nullptr);
+    QCOMPARE(no->someString(), p.nestedObj()->someString());
 }
 
 void SerializationTests::testSerializationFailures()
