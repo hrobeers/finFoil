@@ -43,10 +43,11 @@ namespace hrlib
         }
 
         static bool findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg);
+        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
 
     public:
         static QJsonObject serialize(const QObject *qObj);
-        static QObject* deserialize(const QJsonObject *jsonObj, QString *errorMsg = 0);
+        static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg = 0);
 
         template <typename T>
         class registerForDeserialization

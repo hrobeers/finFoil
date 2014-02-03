@@ -57,7 +57,7 @@ QJsonObject serialization::serialize(const QObject *qObj)
             {
                 ok = true;
                 nestedJSON = serialize(nestedObj);
-                v = nestedJSON;
+                v = nestedJSON.value(nestedJSON.keys().first());
             }
             break;
 
@@ -117,6 +117,16 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
     if (!findClass(jsonObj, &className, errorMsg))
         return 0;
 
+    // Extract the object containing the properties
+    QJsonObject propertiesObject = jsonObj->value(className).toObject();
+
+    return deserializeClass(&propertiesObject, className, errorMsg);
+}
+
+QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg)
+{
+    className = className.replace('*', ""); // Properties are pointer types
+
     const QObject *obj = typeMap()[className];
     QObject *retVal = obj->metaObject()->newInstance();
     if (!retVal)
@@ -125,9 +135,6 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
                 ": the default ctor is not invokable. Add the Q_INVOKABLE macro.";
         throw ImplementationException(msg);
     }
-
-    // Extract the object containing the properties
-    QJsonObject propertiesObject = jsonObj->value(className).toObject();
 
     // Loop over and write class properties
     // The first propetry objectName is skipped
@@ -145,14 +152,14 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
             switch (mp.type())
             {
             case QVariant::UserType:
-                nestedJSON = propertiesObject.value(propName).toObject();
-                nestedObj = deserialize(&nestedJSON, errorMsg);
+                nestedJSON = jsonObj->value(propName).toObject();
+                nestedObj = deserializeClass(&nestedJSON, mp.typeName(), errorMsg);
                 var.setValue(nestedObj);
                 writeSucceeded = mp.write(retVal, var);
                 break;
 
             default:
-                writeSucceeded = mp.write(retVal, propertiesObject.value(propName).toVariant());
+                writeSucceeded = mp.write(retVal, jsonObj->value(propName).toVariant());
                 break;
             }
 
