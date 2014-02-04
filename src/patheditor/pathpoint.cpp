@@ -58,7 +58,7 @@ void PathPoint::setRestrictedY(qreal ypos)
 
 void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 {
-    if (!_restrictor.isNull())
+    if (_restrictor)
         _restrictor->restrictCoordinate(&xpos, &ypos);
 
     qreal dx = xpos - this->rx();
@@ -66,11 +66,11 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
 
     setPos(xpos, ypos);
 
-    foreach(QWeakPointer<PathPoint> linkedPoint, _followingPoints)
+    foreach(std::weak_ptr<PathPoint> linkedPoint, _followingPoints)
     {
-        if (!linkedPoint.isNull())
+        std::shared_ptr<PathPoint> strongPnt = linkedPoint.lock();
+        if (strongPnt)
         {
-            QSharedPointer<PathPoint> strongPnt = linkedPoint.toStrongRef();
             qreal rx(strongPnt->rx() + dx);
             qreal ry(strongPnt->ry() + dy);
             strongPnt->setPos(rx, ry);
@@ -78,7 +78,7 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
     }
 }
 
-void PathPoint::setRestrictor(QSharedPointer<Restrictor> restrictor)
+void PathPoint::setRestrictor(std::shared_ptr<Restrictor> restrictor)
 {
     _restrictor = restrictor;
     setRestrictedPos(this->rx(), this->ry());
@@ -91,10 +91,10 @@ void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent)
     replaceCurrentPointHandle(newPointHandle);
 }
 
-void PathPoint::addFollowingPoint(QSharedPointer<PathPoint> point)
+void PathPoint::addFollowingPoint(std::shared_ptr<PathPoint> point)
 {
     point->_toFollowPoint = this;
-    _followingPoints.append(point.toWeakRef());
+    _followingPoints.append(point);
 }
 
 bool PathPoint::visible()

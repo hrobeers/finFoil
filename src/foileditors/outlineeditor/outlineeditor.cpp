@@ -47,8 +47,8 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _botPathEditor = new patheditor::PathEditorWidget();
     _botPathEditor->enableFeature(Features::HorizontalAxis);
 
-    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.data(), Side::Top);
-    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.data(), Side::Bottom);
+    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
 
     EditablePath* nonEditableOutline = new EditablePath(foil->outline());
     nonEditableOutline->setEditable(false);
@@ -80,7 +80,7 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
 
 FoilCalculator *OutlineEditor::foilCalculator()
 {
-    return _foilCalculator.data();
+    return _foilCalculator.get();
 }
 
 void OutlineEditor::setGridUnitSize(qreal pxPerUnit)

@@ -27,6 +27,7 @@
 #include "hrlibfwd/qtfwd.h"
 
 #include <QWidget>
+#include <memory>
 #include "restrictor.h"
 
 namespace patheditor
@@ -71,15 +72,15 @@ namespace patheditor
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the origin
          */
-        QSharedPointer<Restrictor> originRestrictor();
+        std::shared_ptr<Restrictor> originRestrictor();
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the horizontal axis
          */
-        QSharedPointer<Restrictor> horizontalAxisRestrictor();
+        std::shared_ptr<Restrictor> horizontalAxisRestrictor();
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the vertical axis
          */
-        QSharedPointer<Restrictor> verticalAxisRestrictor();
+        std::shared_ptr<Restrictor> verticalAxisRestrictor();
 
         virtual ~PathEditorWidget() {}
 
@@ -102,9 +103,9 @@ namespace patheditor
         QGraphicsLineItem* _verticalAxis;
 
         // Restrictors
-        QSharedPointer<Restrictor> _originRestrictor;
-        QSharedPointer<Restrictor> _horizontalAxisRestrictor;
-        QSharedPointer<Restrictor> _verticalAxisRestrictor;
+        std::shared_ptr<Restrictor> _originRestrictor;
+        std::shared_ptr<Restrictor> _horizontalAxisRestrictor;
+        std::shared_ptr<Restrictor> _verticalAxisRestrictor;
     };
 }
 

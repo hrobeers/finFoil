@@ -25,7 +25,7 @@
 
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QSharedPointer>
+#include <memory>
 #include <QPen>
 #include "restrictor.h"
 #include "pointhandle.h"
@@ -45,7 +45,7 @@ namespace patheditor
         void setRestrictedY(qreal ypos);
         void setRestrictedPos(qreal xpos, qreal ypos);
 
-        void setRestrictor(QSharedPointer<Restrictor> restrictor);
+        void setRestrictor(std::shared_ptr<Restrictor> restrictor);
 
         /**
          * Creates a PointHandle and adds it to the passed scene.
@@ -57,7 +57,7 @@ namespace patheditor
          */
         virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
 
-        void addFollowingPoint(QSharedPointer<PathPoint> point);
+        void addFollowingPoint(std::shared_ptr<PathPoint> point);
 
         bool visible();
 
@@ -91,9 +91,9 @@ namespace patheditor
         bool _selected;
         static void select(PathPoint *point, QGraphicsScene *scene);
 
-        QSharedPointer<Restrictor> _restrictor;
+        std::shared_ptr<Restrictor> _restrictor;
         PathPoint* _toFollowPoint;
-        QList<QWeakPointer<PathPoint> > _followingPoints;
+        QList<std::weak_ptr<PathPoint> > _followingPoints;
 
         PointHandle *_pointHandle;
 

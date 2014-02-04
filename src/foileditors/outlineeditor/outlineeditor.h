@@ -54,7 +54,7 @@ namespace foileditors
         void setGridUnitSize(qreal pxPerUnit);
 
     private:
-        QScopedPointer<foillogic::FoilCalculator> _foilCalculator;
+        std::unique_ptr<foillogic::FoilCalculator> _foilCalculator;
 
         QVBoxLayout* _mainLayout;
 

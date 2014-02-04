@@ -65,12 +65,12 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::topContours()
+QList<std::shared_ptr<QPainterPath> > FoilCalculator::topContours()
 {
     return _topContours;
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::bottomContours()
+QList<std::shared_ptr<QPainterPath> > FoilCalculator::bottomContours()
 {
     return _botContours;
 }
@@ -85,18 +85,18 @@ void FoilCalculator::calculate(bool fastCalc)
         if (inProfileSide(thickness, Side::Top))
         {
             qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
-            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> topPath(new QPainterPath());
             _contours.append(topPath);
-            ContourCalculator tcCalc(specificPerc, _foil, topPath.data(), Side::Top, fastCalc);
+            ContourCalculator tcCalc(specificPerc, _foil, topPath.get(), Side::Top, fastCalc);
             tcCalc.run();
         }
 
         if (inProfileSide(thickness, Side::Bottom))
         {
             qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
-            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> botPath(new QPainterPath());
             _botContours.append(botPath);
-            ContourCalculator bcCalc(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc);
+            ContourCalculator bcCalc(specificPerc, _foil, botPath.get(), Side::Bottom, fastCalc);
             bcCalc.run();
         }
 
@@ -114,17 +114,17 @@ void FoilCalculator::calculate(bool fastCalc)
         if (inProfileSide(thickness, Side::Top))
         {
             qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
-            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> topPath(new QPainterPath());
             _topContours.append(topPath);
-            _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.data(), Side::Top, fastCalc));
+            _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.get(), Side::Top, fastCalc));
         }
 
         if (inProfileSide(thickness, Side::Bottom))
         {
             qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
-            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> botPath(new QPainterPath());
             _botContours.prepend(botPath);
-            _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc));
+            _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.get(), Side::Bottom, fastCalc));
         }
     }
 
@@ -151,7 +151,7 @@ void FoilCalculator::recalculateArea()
 
 bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
 {
-    Profile* profile = _foil->profile().data();
+    Profile* profile = _foil->profile().get();
 
     switch (side) {
     case Side::Bottom:

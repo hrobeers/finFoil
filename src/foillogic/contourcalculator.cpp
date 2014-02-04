@@ -37,16 +37,16 @@ using namespace foillogic;
 using namespace patheditor;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
-    _side(side), _symmetric(foil->profile()->symmetry()), _outline(foil->outline().data()),
-    _thickness(foil->thickness()->topProfile().data()), _percContourHeight(percContourHeight),
+    _side(side), _symmetric(foil->profile()->symmetry()), _outline(foil->outline().get()),
+    _thickness(foil->thickness()->topProfile().get()), _percContourHeight(percContourHeight),
     _result(result), _sectionCount(INITCNT / 2), _resolution(500), _tTol(0.0001), _fTol(0.001)
 {
     switch (_side) {
     case Side::Bottom:
-        _profile = foil->profile()->botProfile().data();
+        _profile = foil->profile()->botProfile().get();
         break;
     default:
-        _profile = foil->profile()->topProfile().data();
+        _profile = foil->profile()->topProfile().get();
         break;
     }
 

@@ -26,6 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QGraphicsEllipseItem>
+#include <memory>
 
 namespace patheditor
 {
@@ -46,7 +47,7 @@ namespace patheditor
         virtual ~PointHandle() {}
 
     private:
-        QSharedPointer<QPen> _pen;
+        std::shared_ptr<QPen> _pen;
 
         PathPoint *_point;
         QPointF _originToCenter;

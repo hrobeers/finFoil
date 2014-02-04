@@ -38,12 +38,12 @@ Profile::Profile(QObject *parent) :
     initProfile();
 }
 
-QSharedPointer<Path> Profile::topProfile()
+std::shared_ptr<Path> Profile::topProfile()
 {
     return _topProfile;
 }
 
-QSharedPointer<Path> Profile::botProfile()
+std::shared_ptr<Path> Profile::botProfile()
 {
     return _botProfile;
 }
@@ -59,16 +59,16 @@ void Profile::setSymmetry(Symmetry::e symmetry)
 
     if (_symmetry == Symmetry::Flat)
     {
-        foreach (QSharedPointer<PathItem> item, _botProfile->pathItems())
+        foreach (std::shared_ptr<PathItem> item, _botProfile->pathItems())
         {
             item->startPoint()->setRestrictedY(0);
             item->endPoint()->setRestrictedY(0);
-            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
+            foreach (std::shared_ptr<ControlPoint> pnt, item->controlPoints())
                 pnt->setRestrictedY(0);
         }
     }
 
-    onProfileChanged(_topProfile.data());
+    onProfileChanged(_topProfile.get());
 
     onProfileReleased();
 }
@@ -105,36 +105,36 @@ Profile::~Profile()
 
 void Profile::initProfile()
 {
-    _topProfile = QSharedPointer<Path>(new Path());
-    _botProfile = QSharedPointer<Path>(new Path());
+    _topProfile = std::shared_ptr<Path>(new Path());
+    _botProfile = std::shared_ptr<Path>(new Path());
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point3(new PathPoint(300,0));
+    std::shared_ptr<PathPoint> point1(new PathPoint(0,0));
+    std::shared_ptr<PathPoint> point3(new PathPoint(300,0));
 
-    QSharedPointer<PathPoint> tPoint(new PathPoint(90,-35));
-    QSharedPointer<PathPoint> bPoint(new PathPoint(90,35));
+    std::shared_ptr<PathPoint> tPoint(new PathPoint(90,-35));
+    std::shared_ptr<PathPoint> bPoint(new PathPoint(90,35));
 
-    QSharedPointer<ControlPoint> tcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-35));
-    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(135,-35));
-    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(300,0));
+    std::shared_ptr<ControlPoint> tcPoint1(new ControlPoint(0,0));
+    std::shared_ptr<ControlPoint> tcPoint2(new ControlPoint(0,-35));
+    std::shared_ptr<ControlPoint> tcPoint3(new ControlPoint(135,-35));
+    std::shared_ptr<ControlPoint> tcPoint4(new ControlPoint(300,0));
 
-    QSharedPointer<ControlPoint> bcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,35));
-    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(135,35));
-    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(300,0));
+    std::shared_ptr<ControlPoint> bcPoint1(new ControlPoint(0,0));
+    std::shared_ptr<ControlPoint> bcPoint2(new ControlPoint(0,35));
+    std::shared_ptr<ControlPoint> bcPoint3(new ControlPoint(135,35));
+    std::shared_ptr<ControlPoint> bcPoint4(new ControlPoint(300,0));
 
-    QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
+    std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
+    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
 
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    _tPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    _tPart2 = QSharedPointer<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
+    _tPart1 = std::shared_ptr<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
+    _tPart2 = std::shared_ptr<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
 
-    _bPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    _bPart2 = QSharedPointer<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
+    _bPart1 = std::shared_ptr<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
+    _bPart2 = std::shared_ptr<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
 
     _topProfile->append(_tPart1);
     _topProfile->append(_tPart2);
@@ -143,10 +143,10 @@ void Profile::initProfile()
     _botProfile->append(_bPart2);
 
     // connect the profiles
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
-    connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    connect(_topProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(_botProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(_topProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    connect(_botProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
 
 void Profile::mirror(CubicBezier *source, CubicBezier *destination)
@@ -162,15 +162,15 @@ void Profile::onProfileChanged(Path* path)
 {
     if (_symmetry == Symmetry::Symmetric)
     {
-        if (path == _topProfile.data())
+        if (path == _topProfile.get())
         {
-            mirror(_tPart1.data(), _bPart1.data());
-            mirror(_tPart2.data(), _bPart2.data());
+            mirror(_tPart1.get(), _bPart1.get());
+            mirror(_tPart2.get(), _bPart2.get());
         }
         else
         {
-            mirror(_bPart1.data(), _tPart1.data());
-            mirror(_bPart2.data(), _tPart2.data());
+            mirror(_bPart1.get(), _tPart1.get());
+            mirror(_bPart2.get(), _tPart2.get());
         }
     }
 

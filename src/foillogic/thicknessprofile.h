@@ -26,7 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
 
 namespace foillogic
 {
@@ -36,8 +36,8 @@ namespace foillogic
     public:
         explicit ThicknessProfile(QObject *parent = 0);
 
-        QSharedPointer<patheditor::Path> topProfile();
-        QSharedPointer<patheditor::Path> botProfile();
+        std::shared_ptr<patheditor::Path> topProfile();
+        std::shared_ptr<patheditor::Path> botProfile();
 
         virtual ~ThicknessProfile();
 
@@ -53,11 +53,11 @@ namespace foillogic
     private:
         qreal _thicknessRatio;
 
-        QSharedPointer<patheditor::Path> _topProfile;
-        QSharedPointer<patheditor::Path> _botProfile;
+        std::shared_ptr<patheditor::Path> _topProfile;
+        std::shared_ptr<patheditor::Path> _botProfile;
 
-        QSharedPointer<patheditor::CubicBezier> _topBezier;
-        QSharedPointer<patheditor::CubicBezier> _botBezier;
+        std::shared_ptr<patheditor::CubicBezier> _topBezier;
+        std::shared_ptr<patheditor::CubicBezier> _botBezier;
 
         void mirror();
 

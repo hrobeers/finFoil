@@ -28,13 +28,13 @@
 
 using namespace patheditor;
 
-CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
+CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
     : PathItem(startPoint, endPoint)
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
-    _cPoint1 = QSharedPointer<ControlPoint>(new ControlPoint(0,0));
-    _cPoint2 = QSharedPointer<ControlPoint>(new ControlPoint(0,0));
+    _cPoint1 = std::shared_ptr<ControlPoint>(new ControlPoint(0,0));
+    _cPoint2 = std::shared_ptr<ControlPoint>(new ControlPoint(0,0));
     *_cPoint1 += *startPoint + increment;
     *_cPoint2 += *_cPoint1 + increment;
 
@@ -42,8 +42,8 @@ CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<Pa
     _controlPoints.append(_cPoint2);
 }
 
-CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<ControlPoint> controlPoint1,
-                         QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint)
+CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
+                         std::shared_ptr<ControlPoint> controlPoint2, std::shared_ptr<PathPoint> endPoint)
     : PathItem(startPoint, endPoint)
 {
     _cPoint1 = controlPoint1;
@@ -53,17 +53,17 @@ CubicBezier::CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<Co
     _controlPoints.append(_cPoint2);
 }
 
-QSharedPointer<ControlPoint> CubicBezier::controlPoint1()
+std::shared_ptr<ControlPoint> CubicBezier::controlPoint1()
 {
     return _cPoint1;
 }
 
-QSharedPointer<ControlPoint> CubicBezier::controlPoint2()
+std::shared_ptr<ControlPoint> CubicBezier::controlPoint2()
 {
     return _cPoint2;
 }
 
-QList<QSharedPointer<ControlPoint> > CubicBezier::controlPoints()
+QList<std::shared_ptr<ControlPoint> > CubicBezier::controlPoints()
 {
     return _controlPoints;
 }

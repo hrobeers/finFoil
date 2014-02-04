@@ -24,7 +24,6 @@
 #define PROFILE_H
 
 #include <QObject>
-#include <QSharedPointer>
 #include "path.h"
 
 namespace foillogic
@@ -40,8 +39,8 @@ namespace foillogic
     public:
         explicit Profile(QObject *parent = 0);
 
-        QSharedPointer<patheditor::Path> topProfile();
-        QSharedPointer<patheditor::Path> botProfile();
+        std::shared_ptr<patheditor::Path> topProfile();
+        std::shared_ptr<patheditor::Path> botProfile();
 
         Symmetry::e symmetry() const;
         void setSymmetry(Symmetry::e symmetry);
@@ -62,18 +61,18 @@ namespace foillogic
     private:
         Symmetry::e _symmetry;
 
-        QSharedPointer<patheditor::Path> _topProfile;
-        QSharedPointer<patheditor::Path> _botProfile;
+        std::shared_ptr<patheditor::Path> _topProfile;
+        std::shared_ptr<patheditor::Path> _botProfile;
 
         QPointF _topProfileTop, _botProfileTop;
         qreal t_topProfileTop, t_botProfileTop;
         qreal _thickness;
 
         // parts of the profile for connecting when symmetric
-        QSharedPointer<patheditor::CubicBezier> _tPart1;
-        QSharedPointer<patheditor::CubicBezier> _tPart2;
-        QSharedPointer<patheditor::CubicBezier> _bPart1;
-        QSharedPointer<patheditor::CubicBezier> _bPart2;
+        std::shared_ptr<patheditor::CubicBezier> _tPart1;
+        std::shared_ptr<patheditor::CubicBezier> _tPart2;
+        std::shared_ptr<patheditor::CubicBezier> _bPart1;
+        std::shared_ptr<patheditor::CubicBezier> _bPart2;
 
         void initProfile();
 

@@ -32,12 +32,12 @@ Path::Path(QObject *parent) :
 {
 }
 
-void Path::append(QSharedPointer<PathItem> pathItem)
+void Path::append(std::shared_ptr<PathItem> pathItem)
 {
     // Set pathItem next and prev
     if (!_pathItemList.isEmpty())
     {
-        QSharedPointer<PathItem> last = _pathItemList.last();
+        std::shared_ptr<PathItem> last = _pathItemList.last();
         last->setNextPathItem(pathItem);
         pathItem->setPrevPathItem(last);
     }
@@ -55,11 +55,11 @@ void Path::append(QSharedPointer<PathItem> pathItem)
     }
 
 //    connectPoints(pathItem.data());
-    emit onAppend(pathItem.data());
+    emit onAppend(pathItem.get());
     _pathItemList.append(pathItem);
 }
 
-QList<QSharedPointer<PathItem> > Path::pathItems()
+QList<std::shared_ptr<PathItem> > Path::pathItems()
 {
     return _pathItemList;
 }
@@ -70,7 +70,7 @@ QRectF Path::controlPointRect() const
         return QRectF(0,0,0,0);
 
     QRectF retVal = _pathItemList.first()->controlPointRect();
-    foreach(QSharedPointer<PathItem> item, _pathItemList)
+    foreach(std::shared_ptr<PathItem> item, _pathItemList)
     {
         retVal |= item->controlPointRect();
     }
@@ -152,7 +152,7 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
 {
     qreal multiplier = 1;
 
-    QScopedPointer<hrlib::func_mult_offset_base> target;
+    std::unique_ptr<hrlib::func_mult_offset_base> target;
 
     switch (dimension)
     {
@@ -175,8 +175,8 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
     if (t_ext == 0)
     {
         qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), t) * multiplier;
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), t) * multiplier;
     }
     else
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), *t_ext) * multiplier;
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), *t_ext) * multiplier;
 }

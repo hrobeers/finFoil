@@ -27,7 +27,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
 #include "path.h"
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
@@ -42,9 +42,9 @@ namespace foillogic
     public:
         explicit Foil(QObject *parent = 0);
 
-        QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<Profile> profile();
-        QSharedPointer<ThicknessProfile> thickness();
+        std::shared_ptr<patheditor::Path> outline();
+        std::shared_ptr<Profile> profile();
+        std::shared_ptr<ThicknessProfile> thickness();
 
         boost::units::quantity<boost::units::si::length, qreal> height();
         boost::units::quantity<boost::units::si::area, qreal> area();
@@ -67,9 +67,9 @@ namespace foillogic
         boost::units::quantity<boost::units::si::area, qreal> _area;
         boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
 
-        QSharedPointer<patheditor::Path> _outline;
-        QSharedPointer<foillogic::Profile> _profile;
-        QSharedPointer<foillogic::ThicknessProfile> _thickness;
+        std::shared_ptr<patheditor::Path> _outline;
+        std::shared_ptr<foillogic::Profile> _profile;
+        std::shared_ptr<foillogic::ThicknessProfile> _thickness;
 
         void initOutline();
         void initProfile();

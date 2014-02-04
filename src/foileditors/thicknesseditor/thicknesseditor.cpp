@@ -41,7 +41,7 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
 
     EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
     botPath->setEditable(false);
-    connect(foil->thickness().data(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    connect(foil->thickness().get(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
     EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
 
     _pathEditor->addPath(topPath);

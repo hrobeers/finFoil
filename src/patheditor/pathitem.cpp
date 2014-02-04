@@ -27,50 +27,50 @@
 
 using namespace patheditor;
 
-PathItem::PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
+PathItem::PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
 {
     setStartPoint(startPoint);
     setEndPoint(endPoint);
 }
 
-QSharedPointer<PathPoint> PathItem::startPoint()
+std::shared_ptr<PathPoint> PathItem::startPoint()
 {
     return _startPoint;
 }
 
-QSharedPointer<PathPoint> PathItem::endPoint()
+std::shared_ptr<PathPoint> PathItem::endPoint()
 {
     return _endPoint;
 }
 
-void PathItem::setStartPoint(QSharedPointer<PathPoint> startPoint)
+void PathItem::setStartPoint(std::shared_ptr<PathPoint> startPoint)
 {
     _startPoint = startPoint;
 }
 
-void PathItem::setEndPoint(QSharedPointer<PathPoint> endPoint)
+void PathItem::setEndPoint(std::shared_ptr<PathPoint> endPoint)
 {
     _endPoint = endPoint;
 }
 
-QWeakPointer<PathItem> PathItem::nextPathItem()
+std::weak_ptr<PathItem> PathItem::nextPathItem()
 {
     return _nextPathItem;
 }
 
-QWeakPointer<PathItem> PathItem::prevPathItem()
+std::weak_ptr<PathItem> PathItem::prevPathItem()
 {
     return _prevPathItem;
 }
 
-void PathItem::setNextPathItem(QSharedPointer<PathItem> nextPathItem)
+void PathItem::setNextPathItem(std::shared_ptr<PathItem> nextPathItem)
 {
-    _nextPathItem = nextPathItem.toWeakRef();
+    _nextPathItem = nextPathItem;
 }
 
-void PathItem::setPrevPathItem(QSharedPointer<PathItem> prevPathItem)
+void PathItem::setPrevPathItem(std::shared_ptr<PathItem> prevPathItem)
 {
-    _prevPathItem = prevPathItem.toWeakRef();
+    _prevPathItem = prevPathItem;
 }
 
 void PathItem::paintControlPoints(PathSettings *settings, QPainter *painter)

@@ -35,10 +35,10 @@ namespace patheditor
     class Line : public PathItem
     {
     public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
+        QList<std::shared_ptr<ControlPoint> > controlPoints();
         virtual QPointF pointAtPercent(qreal t);
         QRectF controlPointRect() const;
 
@@ -48,7 +48,7 @@ namespace patheditor
         virtual ~Line() {}
 
     private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
+        QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
 

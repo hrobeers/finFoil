@@ -33,43 +33,43 @@ using namespace patheditor;
 
 ThicknessProfile::ThicknessProfile(QObject *parent) :
     QObject(parent), _thicknessRatio(1),
-    _topProfile(QSharedPointer<Path>(new Path())),
-    _botProfile(QSharedPointer<Path>(new Path()))
+    _topProfile(std::shared_ptr<Path>(new Path())),
+    _botProfile(std::shared_ptr<Path>(new Path()))
 {
-    QSharedPointer<PathPoint> point0(new PathPoint(0,0));
+    std::shared_ptr<PathPoint> point0(new PathPoint(0,0));
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,-30));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(0,-30));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(300,-30));
-    QSharedPointer<PathPoint> point4(new PathPoint(300,0));
+    std::shared_ptr<PathPoint> point1(new PathPoint(0,-30));
+    std::shared_ptr<ControlPoint> point2(new ControlPoint(0,-30));
+    std::shared_ptr<ControlPoint> point3(new ControlPoint(300,-30));
+    std::shared_ptr<PathPoint> point4(new PathPoint(300,0));
 
-    QSharedPointer<PathPoint> point5(new PathPoint(0,30));
-    QSharedPointer<ControlPoint> point6(new ControlPoint(0,30));
-    QSharedPointer<ControlPoint> point7(new ControlPoint(300,30));
+    std::shared_ptr<PathPoint> point5(new PathPoint(0,30));
+    std::shared_ptr<ControlPoint> point6(new ControlPoint(0,30));
+    std::shared_ptr<ControlPoint> point7(new ControlPoint(300,30));
 
-    QSharedPointer<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));
+    std::shared_ptr<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
+    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));
 
     point1->setRestrictor(verticalAxisRestrictor);
     point4->setRestrictor(horizontalAxisRestrictor);
 
-    _topBezier = QSharedPointer<patheditor::CubicBezier>(new CubicBezier(point1, point2, point3, point4));
-    _botBezier = QSharedPointer<patheditor::CubicBezier>(new CubicBezier(point5, point6, point7, point4));
+    _topBezier = std::shared_ptr<patheditor::CubicBezier>(new CubicBezier(point1, point2, point3, point4));
+    _botBezier = std::shared_ptr<patheditor::CubicBezier>(new CubicBezier(point5, point6, point7, point4));
 
     _topProfile->append(_topBezier);
     _botProfile->append(_botBezier);
 
     // connect the profile
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    connect(_topProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(_topProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
 
-QSharedPointer<Path> ThicknessProfile::topProfile()
+std::shared_ptr<Path> ThicknessProfile::topProfile()
 {
     return _topProfile;
 }
 
-QSharedPointer<Path> ThicknessProfile::botProfile()
+std::shared_ptr<Path> ThicknessProfile::botProfile()
 {
     return _botProfile;
 }

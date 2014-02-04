@@ -41,7 +41,7 @@ using namespace foillogic;
 using namespace qt::units;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent), _pxPerUnit(0)
 {
     _foilCalculator = foilCalculator;
     _formLayout = new QFormLayout();

@@ -27,7 +27,7 @@
 
 #include <QObject>
 #include <QThreadPool>
-#include <QSharedPointer>
+#include <memory>
 #include <QPainterPath>
 #include "contourcalculator.h"
 #include <boost/units/quantity.hpp>
@@ -45,8 +45,8 @@ namespace foillogic
 
         QList<qreal> contourThicknesses() const;
         void setContourThicknesses(QList<qreal> thicknesses);
-        QList<QSharedPointer<QPainterPath> > topContours();
-        QList<QSharedPointer<QPainterPath> > bottomContours();
+        QList<std::shared_ptr<QPainterPath> > topContours();
+        QList<std::shared_ptr<QPainterPath> > bottomContours();
 
         void calculate(bool fastCalc);
         bool calculated() const;
@@ -64,8 +64,8 @@ namespace foillogic
         Foil* _foil;
 
         QList<qreal> _contourThicknesses;
-        QList<QSharedPointer<QPainterPath> > _topContours;
-        QList<QSharedPointer<QPainterPath> > _botContours;
+        QList<std::shared_ptr<QPainterPath> > _topContours;
+        QList<std::shared_ptr<QPainterPath> > _botContours;
 
         bool inProfileSide(qreal thicknessPercent, foillogic::Side::e side);
 
