@@ -36,8 +36,10 @@ namespace hrlib
         explicit Exception(QString &message, QObject *thrower = 0) throw();
         explicit Exception(QString &message, std::exception &innerException, QObject *thrower = 0) throw();
 
-        virtual const QString& message() const;
-        virtual const std::exception& innerException() const;
+        virtual const char* what() const throw() override;
+
+        virtual const QString& message() const throw();
+        virtual const std::exception& innerException() const throw();
 
         virtual ~Exception() throw() { }
 
