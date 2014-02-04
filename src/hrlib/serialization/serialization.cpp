@@ -24,14 +24,13 @@
 
 #include <memory>
 #include <QStringList>
-#include "exceptions.h"
 
 using namespace hrlib;
 
 
 QJsonObject serialization::serialize(const QObject *qObj)
 {
-    QJsonObject jsonObj; // return value
+    QJsonObject retVal; // return value
     QJsonObject propObj; // QProperties container
 
     // The first propetry objectName is skipped
@@ -85,9 +84,31 @@ QJsonObject serialization::serialize(const QObject *qObj)
         propObj.insert(mp.name(), v);
     }
 
-    jsonObj.insert(qObj->metaObject()->className(), propObj);
+    retVal.insert(qObj->metaObject()->className(), propObj);
 
-    return jsonObj;
+    return retVal;
+}
+
+QObject *serialization::deserialize(const QJsonObject *jsonObj)
+{
+    QString errorMsg;
+    std::unique_ptr<QObject> retVal(deserialize(jsonObj, &errorMsg));
+
+    if (!retVal)
+        throw SerializationException(errorMsg);
+
+    return retVal.release();
+}
+
+QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString className)
+{
+    QString errorMsg;
+    std::unique_ptr<QObject> retVal(deserializeClass(jsonObj, className, &errorMsg));
+
+    if (!retVal)
+        throw SerializationException(errorMsg);
+
+    return retVal.release();
 }
 
 bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)

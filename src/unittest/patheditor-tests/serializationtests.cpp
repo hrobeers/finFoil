@@ -111,6 +111,9 @@ void SerializationTests::testSerializationFailures()
     QVERIFY(qObj == 0);
     QVERIFY(!errorMsg.isEmpty());
 
+    // Test exception version
+    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json), hrlib::SerializationException)
+
 
     //
     // Test deserialization failure and error message for unkown JSON object
@@ -125,23 +128,29 @@ void SerializationTests::testSerializationFailures()
     QVERIFY(errorMsg != errorMsg2);
     QVERIFY(errorMsg2.contains(className));
 
+    // Test exception version
+    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json), hrlib::SerializationException)
+
 
     //
     // Test deserialization failure on non-resetable missing field
     //
     QString errorMsg3;
     Testobject p(0.2, -5.3);
-    QJsonObject obj = hrlib::serialization::serialize(&p);
-    QJsonObject pObj = obj[p.metaObject()->className()].toObject();
+    QJsonObject json2 = hrlib::serialization::serialize(&p);
+    QJsonObject pObj = json2[p.metaObject()->className()].toObject();
     pObj.remove("x");
-    obj[p.metaObject()->className()] = pObj;
+    json2[p.metaObject()->className()] = pObj;
 
-    qObj.reset(hrlib::serialization::deserialize(&obj, &errorMsg3));
+    qObj.reset(hrlib::serialization::deserialize(&json2, &errorMsg3));
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg2 != errorMsg3);
     QVERIFY(errorMsg3.contains(p.metaObject()->className()));
     QVERIFY(errorMsg3.contains("x"));
+
+    // Test exception version
+    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json2), hrlib::SerializationException)
 }
 
 QTR_ADD_TEST(SerializationTests)

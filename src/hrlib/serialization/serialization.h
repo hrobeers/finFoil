@@ -29,6 +29,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QMetaProperty>
+#include "exceptions.h"
 
 namespace hrlib
 {
@@ -46,8 +47,11 @@ namespace hrlib
 
     public:
         static QJsonObject serialize(const QObject *qObj);
-        static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg = 0);
-        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg = 0);
+        static QObject *deserialize(const QJsonObject *jsonObj);
+        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className);
+
+        static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg);
+        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
 
         template <typename T>
         class registerForDeserialization
@@ -59,6 +63,15 @@ namespace hrlib
                 typeMap()[t.metaObject()->className()] = &t;
             }
         };
+    };
+
+    class SerializationException : public Exception
+    {
+    public:
+        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
+
+        virtual ~SerializationException() throw() {}
     };
 }
 
