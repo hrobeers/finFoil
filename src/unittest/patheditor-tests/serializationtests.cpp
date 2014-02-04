@@ -65,8 +65,6 @@ void SerializationTests::testSerialization()
 
     QJsonObject obj = hrlib::serialization::serialize(&p);
 
-    qDebug() << obj; // TODO QCOMPARE
-
 
     //
     // Test deserialization
