@@ -23,36 +23,12 @@
 #include "serializationtests.h"
 #include "submodules/qtestrunner/qtestrunner.hpp"
 
-#include "patheditor/pathpoint.h"
 #include <QJsonArray>
 #include <memory>
+#include "patheditor/pathpoint.h"
+#include "patheditor/controlpoint.h"
 
 using namespace patheditor;
-
-//void SerializationTests::serializePathPoint()
-//{
-//    PathPoint p(1, 2);
-//    auto json = p.serialize();
-//    auto value = json.value("pp");
-//    auto array = value.toArray();
-
-//    QCOMPARE(array[0].isDouble(), true);
-//    QCOMPARE(array[0].toDouble(), 1.0);
-
-//    QCOMPARE(array[1].isDouble(), true);
-//    QCOMPARE(array[1].toDouble(), 2.0);
-//}
-
-//void SerializationTests::deserializePathPoint()
-//{
-//    PathPoint p(3, 4.5);
-//    auto json = p.serialize();
-
-//    std::unique_ptr<PathPoint> newPP(PathPoint::deserialize(json));
-
-//    QCOMPARE(newPP->x(), 3.0);
-//    QCOMPARE(newPP->y(), 4.5);
-//}
 
 void SerializationTests::testSerialization()
 {
@@ -149,6 +125,37 @@ void SerializationTests::testSerializationFailures()
 
     // Test exception version
     QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json2), hrlib::SerializationException)
+}
+
+void SerializationTests::testPathPointSerialization()
+{
+    PathPoint p(1, 2.34);
+    QJsonObject json = hrlib::serialization::serialize(&p);
+    QJsonObject value = json.value(p.metaObject()->className()).toObject();
+
+    QCOMPARE(value.value("x").toDouble(), 1.0);
+    QCOMPARE(value.value("y").toDouble(), 2.34);
+
+    std::unique_ptr<PathPoint> newPP((PathPoint*)hrlib::serialization::deserialize(&json));
+
+    QCOMPARE(newPP->x(), 1.0);
+    QCOMPARE(newPP->y(), 2.34);
+}
+
+void SerializationTests::testControlPointSerialization()
+{
+    ControlPoint p(1.23, 4);
+    QJsonObject json = hrlib::serialization::serialize(&p);
+    QJsonObject value = json.value(p.metaObject()->className()).toObject();
+
+    QCOMPARE(value.value("x").toDouble(), 1.23);
+    QCOMPARE(value.value("y").toDouble(), 4.0);
+
+    std::unique_ptr<ControlPoint> newPP((ControlPoint*)hrlib::serialization::deserialize(&json));
+
+    QCOMPARE(newPP->x(), 1.23);
+    QCOMPARE(newPP->y(), 4.0);
+    QCOMPARE(newPP->metaObject()->className(), "patheditor::ControlPoint");
 }
 
 QTR_ADD_TEST(SerializationTests)

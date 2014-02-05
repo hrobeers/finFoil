@@ -27,6 +27,11 @@
 
 using namespace patheditor;
 
+ControlPoint::ControlPoint()
+    : PathPoint()
+{
+}
+
 ControlPoint::ControlPoint(qreal xpos, qreal ypos)
     : PathPoint(xpos, ypos)
 {

@@ -29,14 +29,19 @@
 #include <QPen>
 #include "restrictor.h"
 #include "pointhandle.h"
+#include "serialization/serialization.h"
 
 namespace patheditor
 {
     class PathPoint : public QObject, public QPointF
     {
         Q_OBJECT
+
+        Q_PROPERTY(qreal x READ x WRITE setRestrictedX)
+        Q_PROPERTY(qreal y READ y WRITE setRestrictedY)
+
     public:
-        explicit PathPoint();
+        Q_INVOKABLE PathPoint();
         explicit PathPoint(qreal xpos, qreal ypos);
 
         virtual void setParent(QObject *object);
@@ -99,5 +104,6 @@ namespace patheditor
 
     };
 }
+DESERIALIZABLE(patheditor::PathPoint, REG_PATHPOINT)
 
 #endif // PATHPOINT_H

@@ -31,11 +31,11 @@ class SerializationTests : public QObject
     Q_OBJECT
 
 private slots:
-//    void serializePathPoint();
-//    void deserializePathPoint();
-
     void testSerialization();
     void testSerializationFailures();
+
+    void testPathPointSerialization();
+    void testControlPointSerialization();
 };
 
 class Nestedobject : public QObject
