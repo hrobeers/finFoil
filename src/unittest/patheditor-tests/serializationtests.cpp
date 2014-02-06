@@ -41,7 +41,6 @@ void SerializationTests::testSerialization()
 
     QJsonObject obj = hrlib::serialization::serialize(&p);
 
-
     //
     // Test deserialization
     //
@@ -53,6 +52,7 @@ void SerializationTests::testSerialization()
     QCOMPARE(to->x(), p.x());
     QCOMPARE(to->y(), p.y());
     QCOMPARE(to->optionalStr(), p.optionalStr());
+    QCOMPARE(to->singleProp()->someUuid(), p.singleProp()->someUuid());
 
     Nestedobject *no = to->nestedObj();
     QVERIFY(no != nullptr);

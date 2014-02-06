@@ -113,16 +113,25 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 
 bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)
 {
-    if (jsonObj->keys().count() <= 0)
+    int keyCount = jsonObj->keys().count();
+    if (keyCount == 1)
     {
-        if (errorMsg)
-            *errorMsg = QStringLiteral("Empty json object");
-        return false;
+        *className = jsonObj->keys().first();
+
+        if (isRegistered(className, errorMsg))
+            return true;
+
+        className->clear();
+    }
+    else if (errorMsg)
+    {
+        if (keyCount < 1)
+            errorMsg->append("\n Empty json object");
+        else
+            errorMsg->append("\n JsonObj contains multiple keys");
     }
 
-    *className = jsonObj->keys().first();
-
-    return true;
+    return false;
 }
 
 bool serialization::isRegistered(QString *className, QString *errorMsg)
@@ -130,7 +139,7 @@ bool serialization::isRegistered(QString *className, QString *errorMsg)
     if (!typeMap().contains(*className))
     {
         if (errorMsg)
-            *errorMsg = "Class \"" + *className + "\" is not registered for deserialization";
+            errorMsg->append("\n Class \"" + *className + "\" is not registered for deserialization");
         return false;
     }
 
@@ -183,10 +192,18 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
             {
             case QVariant::UserType:
                 nestedJSON = jsonObj->value(propName).toObject();
-                nestedObj = deserializeClass(&nestedJSON, mp.typeName(), errorMsg);
-                nestedObj->setParent(retVal.get());
-                var.setValue(nestedObj);
-                writeSucceeded = mp.write(retVal.get(), var);
+
+                if (findClass(&nestedJSON, &className, nullptr))
+                    nestedObj = deserializeClass(&nestedJSON, className, errorMsg);
+                else
+                    nestedObj = deserializeClass(&nestedJSON, mp.typeName(), errorMsg);
+
+                if (nestedObj)
+                {
+                    nestedObj->setParent(retVal.get());
+                    var.setValue(nestedObj);
+                    writeSucceeded = mp.write(retVal.get(), var);
+                }
                 break;
 
             default:
@@ -204,10 +221,11 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
                 {
                     if (errorMsg)
                     {
-                        *errorMsg = QStringLiteral("Failed to deserialize ");
-                        errorMsg->append(className);
-                        errorMsg->append("::");
+                        errorMsg->append("\n Failed to deserialize ");
+                        if (!className.isEmpty()) errorMsg->append(className + "::");
                         errorMsg->append(mp.name());
+                        errorMsg->append(" of type: ");
+                        errorMsg->append(mp.typeName());
                     }
                     return nullptr;
                 }

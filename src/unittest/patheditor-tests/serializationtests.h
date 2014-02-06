@@ -24,6 +24,7 @@
 #define SERIALIZATIONTESTS_H
 
 #include <QObject>
+#include <QUuid>
 #include "serialization/serialization.h"
 
 class SerializationTests : public QObject
@@ -59,7 +60,27 @@ public:
 
     void setSomeString(const QString &someString) { _someString = someString; }
 };
-DESERIALIZABLE(Nestedobject, REG_NESTEDOBJECT)
+DESERIALIZABLE(Nestedobject, REG_NESTEDOBJECT);
+
+class SingleProperty : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QUuid someUuid READ someUuid WRITE setSomeUuid)
+
+private:
+    QUuid _someUuid;
+
+public:
+    Q_INVOKABLE SingleProperty() { _someUuid = QUuid::createUuid(); }
+
+    virtual ~SingleProperty() {}
+
+    QUuid someUuid() const { return _someUuid; }
+
+    void setSomeUuid(const QUuid &someUuid) { _someUuid = someUuid; }
+};
+DESERIALIZABLE(SingleProperty, REG_SINGLEPROPERTY);
 
 class Testobject : public QObject
 {
@@ -69,16 +90,21 @@ class Testobject : public QObject
     Q_PROPERTY(qreal y READ y WRITE setY)
     Q_PROPERTY(QString optionalStr READ optionalStr WRITE setOptionalStr RESET initOptionalStr)
     Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
+    Q_PROPERTY(SingleProperty* singleProp READ singleProp WRITE setSingleProp)
 
 private:
     qreal _x, _y;
     QString _optionalStr;
     Nestedobject *_nestedObj;
+    SingleProperty *_sProp;
 
     void init()
     {
         _nestedObj = new Nestedobject();
         _nestedObj->setParent(this);
+
+        _sProp = new SingleProperty();
+        _sProp->setParent(this);
     }
 
 public:
@@ -90,16 +116,18 @@ public:
     qreal y() const { return _y; }
     QString optionalStr() const { return _optionalStr; }
     Nestedobject* nestedObj() const { return _nestedObj; }
+    SingleProperty* singleProp() const { return _sProp; }
 
     // Q_PROPERTY setters
     void setX(const qreal x) { _x = x; }
     void setY(const qreal y) { _y = y; }
     void setOptionalStr(const QString &str) { _optionalStr = str; }
     void setNestedObj(Nestedobject *nObj) { _nestedObj = nObj; }
+    void setSingleProp(SingleProperty *sProp) { _sProp = sProp; }
 
     // Q_PROPERTY resetters
     void initOptionalStr() { _optionalStr = "initialized"; }
 };
-DESERIALIZABLE(Testobject, REG_TESTOBJECT)
+DESERIALIZABLE(Testobject, REG_TESTOBJECT);
 
 #endif // SERIALIZATIONTESTS_H
