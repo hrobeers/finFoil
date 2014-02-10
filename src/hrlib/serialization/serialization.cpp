@@ -28,6 +28,38 @@
 using namespace hrlib;
 
 
+//
+// Private methods declared here to keep header file clean
+//
+
+static bool findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)
+{
+    int keyCount = jsonObj->keys().count();
+    if (keyCount == 1)
+    {
+        *className = serialization::toClassName(jsonObj->keys().first());
+
+        if (serialization::isRegistered(className, errorMsg))
+            return true;
+
+        className->clear();
+    }
+    else if (errorMsg)
+    {
+        if (keyCount < 1)
+            errorMsg->append("\n Empty json object");
+        else
+            errorMsg->append("\n JsonObj contains multiple keys");
+    }
+
+    return false;
+}
+
+
+//
+// serialization static class
+//
+
 QJsonObject serialization::serialize(const QObject *qObj)
 {
     QJsonObject retVal; // return value
@@ -109,41 +141,6 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
         throw SerializationException(errorMsg);
 
     return retVal;
-}
-
-bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)
-{
-    int keyCount = jsonObj->keys().count();
-    if (keyCount == 1)
-    {
-        *className = toClassName(jsonObj->keys().first());
-
-        if (isRegistered(className, errorMsg))
-            return true;
-
-        className->clear();
-    }
-    else if (errorMsg)
-    {
-        if (keyCount < 1)
-            errorMsg->append("\n Empty json object");
-        else
-            errorMsg->append("\n JsonObj contains multiple keys");
-    }
-
-    return false;
-}
-
-bool serialization::isRegistered(QString *className, QString *errorMsg)
-{
-    if (!typeMap().contains(*className))
-    {
-        if (errorMsg)
-            errorMsg->append("\n Class \"" + *className + "\" is not registered for deserialization");
-        return false;
-    }
-
-    return true;
 }
 
 std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj, QString *errorMsg)
@@ -238,4 +235,16 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
     }
 
     return retVal;
+}
+
+bool serialization::isRegistered(QString *className, QString *errorMsg)
+{
+    if (!typeMap().contains(*className))
+    {
+        if (errorMsg)
+            errorMsg->append("\n Class \"" + *className + "\" is not registered for deserialization");
+        return false;
+    }
+
+    return true;
 }

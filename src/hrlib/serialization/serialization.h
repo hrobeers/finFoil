@@ -42,28 +42,33 @@ namespace hrlib
     class serialization
     {
     private:
-        static QMap<QString, const QObject*>& typeMap()
+        static QMap<QString, const QObject*>& typeMapPriv()
         {
             static QMap<QString, const QObject*> tMap;
             return tMap;
         }
-        static nm_type& nameMap()
+        static nm_type& nameMapPriv()
         {
             static nm_type  nMap;
             return nMap;
         }
 
-        static bool findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg);
-        static bool isRegistered(QString *className, QString *errorMsg);
-
     public:
+        // Exception throwing methods
         static QJsonObject serialize(const QObject *qObj);
         static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj);
         static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className);
 
+        // ErrorMsg methods
         static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj, QString *errorMsg);
         static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
 
+        // Public map getters
+        static const QMap<QString, const QObject*>& typeMap() { return typeMapPriv(); }
+        static const nm_type& nameMap() { return nameMapPriv(); }
+
+        // Auxilliary methods
+        static bool isRegistered(QString *className, QString *errorMsg = 0);
         static QString toSerialName(const QString &className)
         {
             if (nameMap().left.find(className) == nameMap().left.end())
@@ -77,6 +82,7 @@ namespace hrlib
             return nameMap().right.at(serialName);
         }
 
+        // Registration class (Use DESERIALIZABLE macro)
         template <typename T>
         class registerForDeserialization
         {
@@ -84,8 +90,8 @@ namespace hrlib
             registerForDeserialization(QString serialName)
             {
                 static const T t;
-                typeMap()[t.metaObject()->className()] = &t;
-                nameMap().insert(nm_type::value_type(t.metaObject()->className(), serialName));
+                typeMapPriv()[t.metaObject()->className()] = &t;
+                nameMapPriv().insert(nm_type::value_type(t.metaObject()->className(), serialName));
             }
         };
     };
