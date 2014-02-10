@@ -58,11 +58,11 @@ namespace hrlib
 
     public:
         static QJsonObject serialize(const QObject *qObj);
-        static QObject *deserialize(const QJsonObject *jsonObj);
-        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className);
+        static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj);
+        static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className);
 
-        static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg);
-        static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
+        static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj, QString *errorMsg);
+        static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
 
         static QString toSerialName(const QString &className)
         {

@@ -89,26 +89,26 @@ QJsonObject serialization::serialize(const QObject *qObj)
     return retVal;
 }
 
-QObject *serialization::deserialize(const QJsonObject *jsonObj)
+std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj)
 {
     QString errorMsg;
-    std::unique_ptr<QObject> retVal(deserialize(jsonObj, &errorMsg));
+    std::unique_ptr<QObject> retVal = deserialize(jsonObj, &errorMsg);
 
     if (!retVal)
         throw SerializationException(errorMsg);
 
-    return retVal.release();
+    return retVal;
 }
 
-QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString className)
+std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *jsonObj, QString className)
 {
     QString errorMsg;
-    std::unique_ptr<QObject> retVal(deserializeClass(jsonObj, className, &errorMsg));
+    std::unique_ptr<QObject> retVal = deserializeClass(jsonObj, className, &errorMsg);
 
     if (!retVal)
         throw SerializationException(errorMsg);
 
-    return retVal.release();
+    return retVal;
 }
 
 bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg)
@@ -146,7 +146,7 @@ bool serialization::isRegistered(QString *className, QString *errorMsg)
     return true;
 }
 
-QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMsg)
+std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj, QString *errorMsg)
 {
     QString className;
 
@@ -159,7 +159,7 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
     return deserializeClass(&propertiesObject, className, errorMsg);
 }
 
-QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg)
+std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg)
 {
     className = className.replace('*', ""); // Properties are pointer types
 
@@ -194,11 +194,11 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
                 nestedJSON = jsonObj->value(propName).toObject();
 
                 if (findClass(&nestedJSON, &className, nullptr))
-                    nestedObj = deserializeClass(&nestedJSON, className, errorMsg);
+                    nestedObj = deserializeClass(&nestedJSON, className, errorMsg).release();
                 else
                 {
                     QString tn = mp.typeName();
-                    nestedObj = deserializeClass(&nestedJSON, tn, errorMsg);
+                    nestedObj = deserializeClass(&nestedJSON, tn, errorMsg).release();
                 }
 
                 if (nestedObj)
@@ -237,5 +237,5 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
 
     }
 
-    return retVal.release();
+    return retVal;
 }

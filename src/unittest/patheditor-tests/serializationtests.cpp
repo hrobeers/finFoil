@@ -44,7 +44,7 @@ void SerializationTests::testSerialization()
     //
     // Test deserialization
     //
-    std::unique_ptr<QObject> o(hrlib::serialization::deserialize(&obj));
+    std::unique_ptr<QObject> o = hrlib::serialization::deserialize(&obj);
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
 
@@ -66,7 +66,7 @@ void SerializationTests::testSerialization()
     pObj.remove("optionalStr");
     obj[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
-    std::unique_ptr<Testobject> optionalObj((Testobject*)hrlib::serialization::deserialize(&obj));
+    std::unique_ptr<Testobject> optionalObj((Testobject*)hrlib::serialization::deserialize(&obj).release());
     QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
 }
 
@@ -80,7 +80,7 @@ void SerializationTests::testSerializationFailures()
 
     QVERIFY(errorMsg.isEmpty());
 
-    std::unique_ptr<QObject> qObj(hrlib::serialization::deserialize(&json, &errorMsg));
+    std::unique_ptr<QObject> qObj = hrlib::serialization::deserialize(&json, &errorMsg);
 
     QVERIFY(qObj == 0);
     QVERIFY(!errorMsg.isEmpty());
@@ -96,7 +96,7 @@ void SerializationTests::testSerializationFailures()
     QString className("NotRegisteredClass");
     json.insert(className, QJsonValue());
 
-    qObj.reset(hrlib::serialization::deserialize(&json, &errorMsg2));
+    qObj = hrlib::serialization::deserialize(&json, &errorMsg2);
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg != errorMsg2);
@@ -116,7 +116,7 @@ void SerializationTests::testSerializationFailures()
     pObj.remove("x");
     json2[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
-    qObj.reset(hrlib::serialization::deserialize(&json2, &errorMsg3));
+    qObj = hrlib::serialization::deserialize(&json2, &errorMsg3);
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg2 != errorMsg3);
@@ -135,7 +135,7 @@ void SerializationTests::testPathPointSerialization()
     QCOMPARE(value.value("x").toDouble(), 1.0);
     QCOMPARE(value.value("y").toDouble(), 2.34);
 
-    std::unique_ptr<PathPoint> newPP((PathPoint*)hrlib::serialization::deserialize(&json));
+    std::unique_ptr<PathPoint> newPP((PathPoint*)hrlib::serialization::deserialize(&json).release());
 
     QCOMPARE(newPP->x(), 1.0);
     QCOMPARE(newPP->y(), 2.34);
@@ -150,7 +150,7 @@ void SerializationTests::testControlPointSerialization()
     QCOMPARE(value.value("x").toDouble(), 1.23);
     QCOMPARE(value.value("y").toDouble(), 4.0);
 
-    std::unique_ptr<ControlPoint> newPP((ControlPoint*)hrlib::serialization::deserialize(&json));
+    std::unique_ptr<ControlPoint> newPP((ControlPoint*)hrlib::serialization::deserialize(&json).release());
 
     QCOMPARE(newPP->x(), 1.23);
     QCOMPARE(newPP->y(), 4.0);
