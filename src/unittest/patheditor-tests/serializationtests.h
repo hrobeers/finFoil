@@ -60,7 +60,7 @@ public:
 
     void setSomeString(const QString &someString) { _someString = someString; }
 };
-DESERIALIZABLE(Nestedobject, REG_NESTEDOBJECT);
+DESERIALIZABLE(Nestedobject, nObj)
 
 class SingleProperty : public QObject
 {
@@ -80,7 +80,7 @@ public:
 
     void setSomeUuid(const QUuid &someUuid) { _someUuid = someUuid; }
 };
-DESERIALIZABLE(SingleProperty, REG_SINGLEPROPERTY);
+DESERIALIZABLE(SingleProperty, sProp)
 
 class Testobject : public QObject
 {
@@ -128,6 +128,6 @@ public:
     // Q_PROPERTY resetters
     void initOptionalStr() { _optionalStr = "initialized"; }
 };
-DESERIALIZABLE(Testobject, REG_TESTOBJECT);
+DESERIALIZABLE(Testobject, tObj)
 
 #endif // SERIALIZATIONTESTS_H

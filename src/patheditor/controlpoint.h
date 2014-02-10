@@ -40,6 +40,6 @@ namespace patheditor
         virtual ~ControlPoint() {}
     };
 }
-DESERIALIZABLE(patheditor::ControlPoint, REG_CONTROLPOINT);
+DESERIALIZABLE(patheditor::ControlPoint, cp)
 
 #endif // CONTROLPOINT_H

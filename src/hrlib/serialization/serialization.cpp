@@ -84,7 +84,7 @@ QJsonObject serialization::serialize(const QObject *qObj)
         propObj.insert(mp.name(), v);
     }
 
-    retVal.insert(qObj->metaObject()->className(), propObj);
+    retVal.insert(toSerialName(qObj->metaObject()->className()), propObj);
 
     return retVal;
 }
@@ -116,7 +116,7 @@ bool serialization::findClass(const QJsonObject *jsonObj, QString *className, QS
     int keyCount = jsonObj->keys().count();
     if (keyCount == 1)
     {
-        *className = jsonObj->keys().first();
+        *className = toClassName(jsonObj->keys().first());
 
         if (isRegistered(className, errorMsg))
             return true;
@@ -154,7 +154,7 @@ QObject *serialization::deserialize(const QJsonObject *jsonObj, QString *errorMs
         return nullptr;
 
     // Extract the object containing the properties
-    QJsonObject propertiesObject = jsonObj->value(className).toObject();
+    QJsonObject propertiesObject = jsonObj->value(toSerialName(className)).toObject();
 
     return deserializeClass(&propertiesObject, className, errorMsg);
 }
@@ -196,7 +196,10 @@ QObject *serialization::deserializeClass(const QJsonObject *jsonObj, QString cla
                 if (findClass(&nestedJSON, &className, nullptr))
                     nestedObj = deserializeClass(&nestedJSON, className, errorMsg);
                 else
-                    nestedObj = deserializeClass(&nestedJSON, mp.typeName(), errorMsg);
+                {
+                    QString tn = mp.typeName();
+                    nestedObj = deserializeClass(&nestedJSON, tn, errorMsg);
+                }
 
                 if (nestedObj)
                 {

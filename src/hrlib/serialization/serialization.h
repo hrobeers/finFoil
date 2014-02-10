@@ -24,15 +24,21 @@
 #define HRLIB_SERIALIZATION_H
 
 #define DESERIALIZABLE(CLASS, UNIQUE_NAME) Q_DECLARE_METATYPE(CLASS *) \
-    static const hrlib::serialization::registerForDeserialization<CLASS> UNIQUE_NAME
+    namespace serialization_register { /*Avoid name clashes with global variables*/\
+        static hrlib::serialization::registerForDeserialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME);\
+    }
+
 
 #include <QObject>
 #include <QJsonObject>
 #include <QMetaProperty>
+#include "boost/bimap.hpp"
 #include "exceptions.h"
 
 namespace hrlib
 {
+    typedef boost::bimap<QString, QString> nm_type;
+
     class serialization
     {
     private:
@@ -40,6 +46,11 @@ namespace hrlib
         {
             static QMap<QString, const QObject*> tMap;
             return tMap;
+        }
+        static nm_type& nameMap()
+        {
+            static nm_type  nMap;
+            return nMap;
         }
 
         static bool findClass(const QJsonObject *jsonObj, QString *className, QString *errorMsg);
@@ -53,14 +64,28 @@ namespace hrlib
         static QObject *deserialize(const QJsonObject *jsonObj, QString *errorMsg);
         static QObject *deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
 
+        static QString toSerialName(const QString &className)
+        {
+            if (nameMap().left.find(className) == nameMap().left.end())
+                return className;
+            return nameMap().left.at(className);
+        }
+        static QString toClassName(const QString &serialName)
+        {
+            if (nameMap().right.find(serialName) == nameMap().right.end())
+                return serialName;
+            return nameMap().right.at(serialName);
+        }
+
         template <typename T>
         class registerForDeserialization
         {
         public:
-            registerForDeserialization()
+            registerForDeserialization(QString serialName)
             {
                 static const T t;
                 typeMap()[t.metaObject()->className()] = &t;
+                nameMap().insert(nm_type::value_type(t.metaObject()->className(), serialName));
             }
         };
     };

@@ -62,9 +62,9 @@ void SerializationTests::testSerialization()
     //
     // Test optional property deserialization
     //
-    QJsonObject pObj = obj[p.metaObject()->className()].toObject();
+    QJsonObject pObj = obj[hrlib::serialization::toSerialName(p.metaObject()->className())].toObject();
     pObj.remove("optionalStr");
-    obj[p.metaObject()->className()] = pObj;
+    obj[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
     std::unique_ptr<Testobject> optionalObj((Testobject*)hrlib::serialization::deserialize(&obj));
     QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
@@ -112,15 +112,14 @@ void SerializationTests::testSerializationFailures()
     QString errorMsg3;
     Testobject p(0.2, -5.3);
     QJsonObject json2 = hrlib::serialization::serialize(&p);
-    QJsonObject pObj = json2[p.metaObject()->className()].toObject();
+    QJsonObject pObj = json2[hrlib::serialization::toSerialName(p.metaObject()->className())].toObject();
     pObj.remove("x");
-    json2[p.metaObject()->className()] = pObj;
+    json2[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
     qObj.reset(hrlib::serialization::deserialize(&json2, &errorMsg3));
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg2 != errorMsg3);
-    QVERIFY(errorMsg3.contains(p.metaObject()->className()));
     QVERIFY(errorMsg3.contains("x"));
 
     // Test exception version
@@ -131,7 +130,7 @@ void SerializationTests::testPathPointSerialization()
 {
     PathPoint p(1, 2.34);
     QJsonObject json = hrlib::serialization::serialize(&p);
-    QJsonObject value = json.value(p.metaObject()->className()).toObject();
+    QJsonObject value = json.value(hrlib::serialization::toSerialName(p.metaObject()->className())).toObject();
 
     QCOMPARE(value.value("x").toDouble(), 1.0);
     QCOMPARE(value.value("y").toDouble(), 2.34);
@@ -146,7 +145,7 @@ void SerializationTests::testControlPointSerialization()
 {
     ControlPoint p(1.23, 4);
     QJsonObject json = hrlib::serialization::serialize(&p);
-    QJsonObject value = json.value(p.metaObject()->className()).toObject();
+    QJsonObject value = json.value(hrlib::serialization::toSerialName(p.metaObject()->className())).toObject();
 
     QCOMPARE(value.value("x").toDouble(), 1.23);
     QCOMPARE(value.value("y").toDouble(), 4.0);
