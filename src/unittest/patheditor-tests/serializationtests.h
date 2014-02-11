@@ -91,12 +91,14 @@ class Testobject : public QObject
     Q_PROPERTY(QString optionalStr READ optionalStr WRITE setOptionalStr RESET initOptionalStr)
     Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
     Q_PROPERTY(SingleProperty* singleProp READ singleProp WRITE setSingleProp)
+    Q_PROPERTY(QList<QVariant> list READ list)
 
 private:
     qreal _x, _y;
     QString _optionalStr;
     Nestedobject *_nestedObj;
     SingleProperty *_sProp;
+    QList<std::shared_ptr<SingleProperty>> _list;
 
     void init()
     {
@@ -105,6 +107,10 @@ private:
 
         _sProp = new SingleProperty();
         _sProp->setParent(this);
+
+        _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
+        _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
+        _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
     }
 
 public:
@@ -115,8 +121,18 @@ public:
     qreal x() const { return _x; }
     qreal y() const { return _y; }
     QString optionalStr() const { return _optionalStr; }
-    Nestedobject* nestedObj() const { return _nestedObj; }
-    SingleProperty* singleProp() const { return _sProp; }
+    Nestedobject* nestedObj() { return _nestedObj; }
+    SingleProperty* singleProp() { return _sProp; }
+    QList<QVariant> list()
+    {
+        QList<QVariant> retVal;
+        foreach (const std::shared_ptr<SingleProperty> &item, _list)
+        {
+            QVariant var = QVariant::fromValue(item.get());
+            retVal.append(var);
+        }
+        return retVal;
+    }
 
     // Q_PROPERTY setters
     void setX(const qreal x) { _x = x; }

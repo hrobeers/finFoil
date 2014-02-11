@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <QStringList>
+#include <QJsonArray>
 
 using namespace hrlib;
 
@@ -55,9 +56,65 @@ static bool findClass(const QJsonObject *jsonObj, QString *className, QString *e
     return false;
 }
 
+static QJsonValue serialize(const QVariant var, bool *ok)
+{
+    QJsonValue v;
+    QObject *nestedObj = nullptr;
+    QJsonObject nestedJSON;
+    QList<QVariant> varList;
+    QJsonArray jsArray;
+
+    switch (var.type())
+    {
+    case QVariant::Invalid:
+        *ok = false;
+        break;
+
+    case QVariant::UserType:
+        nestedObj = qvariant_cast<QObject*>(var);
+        if (nestedObj)
+        {
+            *ok = true;
+            nestedJSON = serialization::serialize(nestedObj);
+            v = nestedJSON.value(nestedJSON.keys().first());
+        }
+        break;
+
+    case QVariant::List:
+        varList = var.toList();
+        foreach (QVariant lvar, varList)
+        {
+            jsArray.append(serialize(lvar, ok));
+
+            if (!*ok)
+                break;
+        }
+        v = jsArray;
+        *ok = !v.isNull();
+        break;
+
+    default:
+        v = QJsonValue::fromVariant(var);
+
+        if (!v.isNull())
+        {
+            *ok = true;
+        }
+        else
+        {
+            QString msg("Serialization::serialize not implemented for ");
+            msg.append(var.typeName());
+            throw NotImplementedException(msg);
+        }
+
+        break;
+    }
+    return v;
+}
+
 
 //
-// serialization static class
+// serialization static class methods
 //
 
 QJsonObject serialization::serialize(const QObject *qObj)
@@ -69,46 +126,12 @@ QJsonObject serialization::serialize(const QObject *qObj)
     for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
     {
         QMetaProperty mp = qObj->metaObject()->property(i);
-        QJsonValue v;
 
         QVariant var = mp.read(qObj);
 
         bool ok = false;
 
-        QObject *nestedObj = nullptr;
-        QJsonObject nestedJSON;
-        switch (var.type())
-        {
-        case QVariant::Invalid:
-            ok = false;
-            break;
-
-        case QVariant::UserType:
-            nestedObj = qvariant_cast<QObject*>(var);
-            if (nestedObj)
-            {
-                ok = true;
-                nestedJSON = serialize(nestedObj);
-                v = nestedJSON.value(nestedJSON.keys().first());
-            }
-            break;
-
-        default:
-            v = v.fromVariant(var);
-
-            if (!v.isNull())
-            {
-                ok = true;
-            }
-            else
-            {
-                QString msg("Serialization::serialize not implemented for ");
-                msg.append(var.typeName());
-                throw NotImplementedException(msg);
-            }
-
-            break;
-        }
+        QJsonValue v = ::serialize(var, &ok);
 
         if (!ok)
             continue;
