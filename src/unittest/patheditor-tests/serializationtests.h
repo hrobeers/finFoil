@@ -82,6 +82,15 @@ public:
 };
 DESERIALIZABLE(SingleProperty, sProp)
 
+class DerivedSingleProperty : public SingleProperty
+{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE DerivedSingleProperty() : SingleProperty() {}
+};
+DESERIALIZABLE(DerivedSingleProperty, dProp)
+
 class Testobject : public QObject
 {
     Q_OBJECT
@@ -109,7 +118,7 @@ private:
         _sProp->setParent(this);
 
         _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
-        _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
+        _list.append(std::shared_ptr<SingleProperty>(new DerivedSingleProperty()));
         _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
     }
 

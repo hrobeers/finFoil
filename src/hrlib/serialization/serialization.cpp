@@ -84,7 +84,15 @@ static QJsonValue serialize(const QVariant var, bool *ok)
         varList = var.toList();
         foreach (QVariant lvar, varList)
         {
-            jsArray.append(serialize(lvar, ok));
+            QJsonObject listItem;
+
+            QObject *qObj = qvariant_cast<QObject*>(lvar);
+            if (qObj)
+                listItem.insert(serialization::toSerialName(qObj->metaObject()->className()), serialize(lvar, ok));
+            else
+                listItem.insert(serialization::toSerialName(lvar.typeName()), serialize(lvar, ok));
+
+            jsArray.append(listItem);
 
             if (!*ok)
                 break;
@@ -181,7 +189,7 @@ std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj, 
 
 std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg)
 {
-    className = className.replace('*', ""); // Properties are pointer types
+    className = className.replace('*', ""); // Properties can be pointer types
 
     if (!isRegistered(&className, errorMsg))
         return nullptr;
@@ -206,6 +214,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
         {
             QObject *nestedObj = nullptr;
             QJsonObject nestedJSON;
+            QJsonArray jsonArray;
             QVariant var;
             bool writeSucceeded = false;
             switch (mp.type())
@@ -227,6 +236,11 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
                     var.setValue(nestedObj);
                     writeSucceeded = mp.write(retVal.get(), var);
                 }
+                break;
+
+            case QVariant::List:
+                jsonArray = jsonObj->value(propName).toArray();
+                //TODO
                 break;
 
             default:
@@ -270,4 +284,20 @@ bool serialization::isRegistered(QString *className, QString *errorMsg)
     }
 
     return true;
+}
+
+QString serialization::toSerialName(QString className)
+{
+    className = className.replace('*', "");
+    if (nameMap().left.find(className) == nameMap().left.end())
+        return className;
+    return nameMap().left.at(className);
+}
+
+QString serialization::toClassName(QString serialName)
+{
+    serialName = serialName.replace('*', "");
+    if (nameMap().right.find(serialName) == nameMap().right.end())
+        return serialName;
+    return nameMap().right.at(serialName);
 }

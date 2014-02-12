@@ -69,18 +69,8 @@ namespace hrlib
 
         // Auxilliary methods
         static bool isRegistered(QString *className, QString *errorMsg = 0);
-        static QString toSerialName(const QString &className)
-        {
-            if (nameMap().left.find(className) == nameMap().left.end())
-                return className;
-            return nameMap().left.at(className);
-        }
-        static QString toClassName(const QString &serialName)
-        {
-            if (nameMap().right.find(serialName) == nameMap().right.end())
-                return serialName;
-            return nameMap().right.at(serialName);
-        }
+        static QString toSerialName(QString className);
+        static QString toClassName(QString serialName);
 
         // Registration class (Use DESERIALIZABLE macro)
         template <typename T>
@@ -92,6 +82,7 @@ namespace hrlib
                 static const T t;
                 typeMapPriv()[t.metaObject()->className()] = &t;
                 nameMapPriv().insert(nm_type::value_type(t.metaObject()->className(), serialName));
+                qRegisterMetaType<T*>();
             }
         };
     };
