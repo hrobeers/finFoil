@@ -49,11 +49,23 @@ void SerializationTests::testSerialization()
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
 
     Testobject *to = (Testobject*)o.get();
+
+    // test members
     QCOMPARE(to->x(), p.x());
     QCOMPARE(to->y(), p.y());
     QCOMPARE(to->optionalStr(), p.optionalStr());
+
+    // test single property nested object
     QCOMPARE(to->singleProp()->someUuid(), p.singleProp()->someUuid());
 
+    // test Lists
+    QCOMPARE(to->internalList()->first()->someUuid(), p.internalList()->first()->someUuid());
+    QVERIFY(to->internalList()->at(0)->metaObject()->className() != to->internalList()->at(1)->metaObject()->className());
+    QVERIFY(to->internalList()->at(0)->metaObject()->className() == to->internalList()->at(2)->metaObject()->className());
+    QCOMPARE(to->intList().last(), p.intList().last());
+
+
+    // test nested object
     Nestedobject *no = to->nestedObj();
     QVERIFY(no != nullptr);
     QCOMPARE(no->someString(), p.nestedObj()->someString());

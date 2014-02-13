@@ -39,6 +39,11 @@ private slots:
     void testControlPointSerialization();
 };
 
+
+//
+// Classes for testing
+//
+
 class Nestedobject : public QObject
 {
     Q_OBJECT
@@ -100,7 +105,8 @@ class Testobject : public QObject
     Q_PROPERTY(QString optionalStr READ optionalStr WRITE setOptionalStr RESET initOptionalStr)
     Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
     Q_PROPERTY(SingleProperty* singleProp READ singleProp WRITE setSingleProp)
-    Q_PROPERTY(QList<QVariant> list READ list)
+    Q_PROPERTY(QList<QVariant> list READ list WRITE setList)
+    Q_PROPERTY(QList<QVariant> intList READ intList WRITE setIntList)
 
 private:
     qreal _x, _y;
@@ -108,6 +114,7 @@ private:
     Nestedobject *_nestedObj;
     SingleProperty *_sProp;
     QList<std::shared_ptr<SingleProperty>> _list;
+    QList<int> _intList;
 
     void init()
     {
@@ -120,11 +127,16 @@ private:
         _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
         _list.append(std::shared_ptr<SingleProperty>(new DerivedSingleProperty()));
         _list.append(std::shared_ptr<SingleProperty>(new SingleProperty()));
+
+        _intList.append((int)this);
+        _intList.append((int)&_intList);
     }
 
 public:
     Q_INVOKABLE Testobject() : _x(0), _y(0), _optionalStr("") { init(); }
     Testobject(qreal x, qreal y) : _x(x), _y(y), _optionalStr("") { init(); }
+
+    QList<std::shared_ptr<SingleProperty>> *internalList() { return &_list; }
 
     // Q_PROPERTY getters
     qreal x() const { return _x; }
@@ -142,6 +154,12 @@ public:
         }
         return retVal;
     }
+    QList<QVariant> intList()
+    {
+        QList<QVariant> retVal;
+        foreach (int item, _intList) { retVal.append(item); }
+        return retVal;
+    }
 
     // Q_PROPERTY setters
     void setX(const qreal x) { _x = x; }
@@ -149,6 +167,20 @@ public:
     void setOptionalStr(const QString &str) { _optionalStr = str; }
     void setNestedObj(Nestedobject *nObj) { _nestedObj = nObj; }
     void setSingleProp(SingleProperty *sProp) { _sProp = sProp; }
+    void setList(QList<QVariant> list)
+    {
+        _list.clear();
+        foreach (const QVariant &item, list)
+        {
+            SingleProperty *obj = qvariant_cast<SingleProperty*>(item);
+            _list.append(std::shared_ptr<SingleProperty>(obj));
+        }
+    }
+    void setIntList(QList<QVariant> list)
+    {
+        _intList.clear();
+        foreach (const QVariant &item, list) { _intList.append(item.toInt()); }
+    }
 
     // Q_PROPERTY resetters
     void initOptionalStr() { _optionalStr = "initialized"; }

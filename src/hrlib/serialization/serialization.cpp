@@ -216,6 +216,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
             QJsonObject nestedJSON;
             QJsonArray jsonArray;
             QVariant var;
+            QList<QVariant> varList;
             bool writeSucceeded = false;
             switch (mp.type())
             {
@@ -240,7 +241,29 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
 
             case QVariant::List:
                 jsonArray = jsonObj->value(propName).toArray();
-                //TODO
+                foreach (QJsonValue item, jsonArray)
+                {
+                    QVariant vObj;
+                    nestedJSON = item.toObject();
+
+                    // deserialize QVariant supported type
+                    QString firstKey = nestedJSON.keys().first();
+                    int typeId = QVariant::nameToType(firstKey.toStdString().c_str());
+                    if (typeId != QVariant::Invalid && typeId != QVariant::UserType)
+                    {
+                        QJsonValue val = nestedJSON.value(firstKey);
+                        if (!val.isNull())
+                        {
+                            varList.append(val.toVariant());
+                            continue;
+                        }
+                    }
+
+                    // deserialize custom type
+                    vObj.setValue(deserialize(&nestedJSON).release());
+                    varList.append(vObj);
+                }
+                writeSucceeded = mp.write(retVal.get(), varList);
                 break;
 
             default:
