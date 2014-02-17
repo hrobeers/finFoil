@@ -64,6 +64,8 @@ int main(int argc, char *argv[])
         QWidget* centralWidget = new QWidget();
         centralWidget->setLayout(mainLayout);
 
+        qDebug() << hrlib::serialization::serialize(fin.get());
+
         MainWindow w;
         w.setCentralWidget(centralWidget);
         w.setWindowTitle("finFoil v" + version.toString());

@@ -34,7 +34,11 @@ namespace patheditor
      */
     class CubicBezier : public PathItem
     {
+        Q_OBJECT
+
     public:
+        Q_INVOKABLE CubicBezier() {}
+
         explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
@@ -60,5 +64,6 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
+DESERIALIZABLE(patheditor::CubicBezier, cubic)
 
 #endif // CUBICBEZIER_H

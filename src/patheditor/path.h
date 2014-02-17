@@ -37,6 +37,9 @@ namespace patheditor
     class Path : public QObject
     {
         Q_OBJECT
+
+        Q_PROPERTY(QVariantList pathItems READ pPathItems)
+
     public:
         explicit Path(QObject *parent = 0);
 
@@ -61,6 +64,14 @@ namespace patheditor
 
         qreal area(int resolution = PATH_AREARES) const;
 
+        // Q_PROPERTY getters
+        QVariantList pPathItems()
+        {
+            QVariantList retVal;
+            foreach (std::shared_ptr<PathItem> item, pathItems()) { retVal.append(QVariant::fromValue(item.get())); }
+            return retVal;
+        }
+
     signals:
         void onAppend(patheditor::PathItem *pathItem);
         void pathChanged(patheditor::Path *sender);
@@ -79,5 +90,6 @@ namespace patheditor
         qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
 }
+DESERIALIZABLE(patheditor::Path, path)
 
 #endif // PATH_H

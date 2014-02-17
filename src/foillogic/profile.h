@@ -36,8 +36,12 @@ namespace foillogic
     class Profile : public QObject
     {
         Q_OBJECT
+
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile)
+        Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile)
+
     public:
-        explicit Profile(QObject *parent = 0);
+        Q_INVOKABLE explicit Profile(QObject *parent = 0);
 
         std::shared_ptr<patheditor::Path> topProfile();
         std::shared_ptr<patheditor::Path> botProfile();
@@ -49,6 +53,10 @@ namespace foillogic
         QPointF bottomProfileTop(qreal* t_top = 0) const;
         qreal thickness() const;
         qreal thicknessRatio() const;
+
+        // Q_PROPERTY getters
+        patheditor::Path* pTopProfile() { return topProfile().get(); }
+        patheditor::Path* pBotProfile() { return botProfile().get(); }
 
         virtual ~Profile();
 
@@ -83,5 +91,6 @@ namespace foillogic
         void onProfileReleased();
     };
 }
+DESERIALIZABLE(foillogic::Profile, profile)
 
 #endif // PROFILE_H

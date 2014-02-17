@@ -105,8 +105,8 @@ class Testobject : public QObject
     Q_PROPERTY(QString optionalStr READ optionalStr WRITE setOptionalStr RESET initOptionalStr)
     Q_PROPERTY(Nestedobject* nestedObj READ nestedObj WRITE setNestedObj)
     Q_PROPERTY(SingleProperty* singleProp READ singleProp WRITE setSingleProp)
-    Q_PROPERTY(QList<QVariant> list READ list WRITE setList)
-    Q_PROPERTY(QList<QVariant> intList READ intList WRITE setIntList)
+    Q_PROPERTY(QVariantList list READ list WRITE setList)
+    Q_PROPERTY(QVariantList intList READ intList WRITE setIntList)
 
 private:
     qreal _x, _y;
@@ -144,9 +144,9 @@ public:
     QString optionalStr() const { return _optionalStr; }
     Nestedobject* nestedObj() { return _nestedObj; }
     SingleProperty* singleProp() { return _sProp; }
-    QList<QVariant> list()
+    QVariantList list()
     {
-        QList<QVariant> retVal;
+        QVariantList retVal;
         foreach (const std::shared_ptr<SingleProperty> &item, _list)
         {
             QVariant var = QVariant::fromValue(item.get());
@@ -154,9 +154,9 @@ public:
         }
         return retVal;
     }
-    QList<QVariant> intList()
+    QVariantList intList()
     {
-        QList<QVariant> retVal;
+        QVariantList retVal;
         foreach (int item, _intList) { retVal.append(item); }
         return retVal;
     }
@@ -167,7 +167,7 @@ public:
     void setOptionalStr(const QString &str) { _optionalStr = str; }
     void setNestedObj(Nestedobject *nObj) { _nestedObj = nObj; }
     void setSingleProp(SingleProperty *sProp) { _sProp = sProp; }
-    void setList(QList<QVariant> list)
+    void setList(QVariantList list)
     {
         _list.clear();
         foreach (const QVariant &item, list)
@@ -176,7 +176,7 @@ public:
             _list.append(std::shared_ptr<SingleProperty>(obj));
         }
     }
-    void setIntList(QList<QVariant> list)
+    void setIntList(QVariantList list)
     {
         _intList.clear();
         foreach (const QVariant &item, list) { _intList.append(item.toInt()); }

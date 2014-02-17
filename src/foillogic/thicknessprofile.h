@@ -28,16 +28,24 @@
 #include <QObject>
 #include <memory>
 
+#include "serialization/serialization.h"
+
 namespace foillogic
 {
     class ThicknessProfile : public QObject
     {
         Q_OBJECT
+
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile)
+
     public:
         explicit ThicknessProfile(QObject *parent = 0);
 
         std::shared_ptr<patheditor::Path> topProfile();
         std::shared_ptr<patheditor::Path> botProfile();
+
+        // Q_PROPERTY getters
+        patheditor::Path* pTopProfile() { return topProfile().get(); }
 
         virtual ~ThicknessProfile();
 
@@ -66,5 +74,6 @@ namespace foillogic
         void onProfileReleased();
     };
 }
+DESERIALIZABLE(foillogic::ThicknessProfile, tProfile)
 
 #endif // THICKNESSPROFILE_H

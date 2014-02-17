@@ -34,7 +34,11 @@ namespace patheditor
      */
     class Line : public PathItem
     {
+        Q_OBJECT
+
     public:
+        Q_INVOKABLE Line() {}
+
         explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         // implementing PathItem
@@ -51,5 +55,6 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
+DESERIALIZABLE(patheditor::Line, line)
 
 #endif // LINE_H

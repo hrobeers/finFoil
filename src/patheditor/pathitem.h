@@ -30,10 +30,15 @@
 
 namespace patheditor
 {
-    class PathItem
+    class PathItem : public QObject
     {
+        Q_OBJECT
+
+        Q_PROPERTY(QVariantList pnts READ pnts)
+
     public:
-        explicit PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
+        PathItem();
+        PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
 
         //
@@ -64,6 +69,10 @@ namespace patheditor
         // Custom path calculation (preferably faster than using QPainterPath)
         //
         virtual QPointF pointAtPercent(qreal t) = 0;
+
+
+        // Q_PROPERTY getters
+        QVariantList pnts();
 
         virtual ~PathItem() {}
 

@@ -39,6 +39,17 @@ namespace foillogic
     class Foil : public QObject
     {
         Q_OBJECT
+
+        // read-only properties
+        Q_PROPERTY(qreal height READ pHeight)
+        Q_PROPERTY(qreal area READ pArea)
+        Q_PROPERTY(qreal sweep READ pSweep)
+
+        // read-write properties
+        Q_PROPERTY(patheditor::Path* outline READ pOutline)
+        Q_PROPERTY(foillogic::Profile* profile READ pProfile)
+        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness)
+
     public:
         explicit Foil(QObject *parent = 0);
 
@@ -53,6 +64,14 @@ namespace foillogic
         void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
         void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
         void setSweep(boost::units::quantity<boost::units::si::plane_angle, qreal> sweep);
+
+        // Q_PROPERTY getters
+        qreal pHeight() { return height().value(); }
+        qreal pArea() { return area().value(); }
+        qreal pSweep() { return sweep().value(); }
+        patheditor::Path* pOutline() { return outline().get(); }
+        Profile* pProfile() { return profile().get(); }
+        ThicknessProfile* pThickness() { return thickness().get(); }
 
         virtual ~Foil();
 
@@ -82,5 +101,6 @@ namespace foillogic
         void onProfileChanged();
     };
 }
+DESERIALIZABLE(foillogic::Foil, foil)
 
 #endif // FOIL_H
