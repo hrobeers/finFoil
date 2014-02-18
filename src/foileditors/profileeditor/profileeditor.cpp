@@ -74,16 +74,16 @@ void ProfileEditor::symmetryChanged(int sym)
     switch (sym)
     {
     case 0:
-        _foil->profile()->setSymmetry(Symmetry::Symmetric);
+        _foil->profile()->setSymmetry(Profile::Symmetric);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;
     case 1:
-        _foil->profile()->setSymmetry(Symmetry::Asymmetric);
+        _foil->profile()->setSymmetry(Profile::Asymmetric);
         _botProfile->setEditable(true);
         break;
     case 2:
-        _foil->profile()->setSymmetry(Symmetry::Flat);
+        _foil->profile()->setSymmetry(Profile::Flat);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;

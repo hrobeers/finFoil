@@ -43,7 +43,7 @@ namespace foillogic
         std::shared_ptr<patheditor::Path> path();
 
         // Q_PROPERTY getters
-        patheditor::Path* pPath() { return path().get(); }
+        patheditor::Path* pPath();
 
     signals:
         void outlineChanged(Outline* sender);

@@ -49,12 +49,12 @@ std::shared_ptr<Path> Profile::botProfile()
     return _botProfile;
 }
 
-Symmetry::e Profile::symmetry() const
+Profile::Symmetry Profile::symmetry() const
 {
     return _symmetry;
 }
 
-void Profile::setSymmetry(Symmetry::e symmetry)
+void Profile::setSymmetry(Symmetry symmetry)
 {
     _symmetry = symmetry;
 
@@ -98,6 +98,25 @@ qreal Profile::thicknessRatio() const
     if (_botProfileTop.y() == 0)
         return 9999999;
     return -_topProfileTop.y() / _botProfileTop.y();
+}
+
+QString Profile::symmetryStr()
+{
+    QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
+    return QString(symmetryEnum.valueToKey((int)_symmetry));
+}
+
+Path *Profile::pTopProfile()
+{
+    return topProfile().get();
+}
+
+Path *Profile::pBotProfile()
+{
+    if (symmetry() == Symmetry::Asymmetric)
+        return botProfile().get();
+    else
+        return nullptr;
 }
 
 Profile::~Profile()

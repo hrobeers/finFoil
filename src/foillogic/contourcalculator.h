@@ -51,7 +51,6 @@ namespace foillogic
 
         Side::e _side;
         qreal _percContourHeight;
-        bool _symmetric;
         patheditor::Path* _profile;
         patheditor::Path* _outline;
         patheditor::Path* _thickness;

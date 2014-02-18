@@ -41,6 +41,11 @@ std::shared_ptr<Path> Outline::path()
     return _outline;
 }
 
+Path *Outline::pPath()
+{
+    return path().get();
+}
+
 void Outline::initOutline()
 {
     _outline.reset(new Path());

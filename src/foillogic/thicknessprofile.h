@@ -44,7 +44,7 @@ namespace foillogic
         std::shared_ptr<patheditor::Path> botProfile();
 
         // Q_PROPERTY getters
-        patheditor::Path* pTopProfile() { return topProfile().get(); }
+        patheditor::Path* pTopProfile();
 
         virtual ~ThicknessProfile();
 

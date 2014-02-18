@@ -74,6 +74,11 @@ std::shared_ptr<Path> ThicknessProfile::botProfile()
     return _botProfile;
 }
 
+Path *ThicknessProfile::pTopProfile()
+{
+    return topProfile().get();
+}
+
 ThicknessProfile::~ThicknessProfile()
 {
 }

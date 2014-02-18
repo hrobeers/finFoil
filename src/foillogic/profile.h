@@ -31,26 +31,30 @@
 
 namespace foillogic
 {
-    struct Symmetry
-    {
-        enum e { Symmetric, Asymmetric, Flat };
-    };
-
     class Profile : public QObject
     {
         Q_OBJECT
 
+        // read-only properties
+        Q_PROPERTY(qreal thicknessRatio READ thicknessRatio)
+
+        // read-write properties
+        Q_PROPERTY(QString symmetry READ symmetryStr)
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile)
         Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile)
 
+        Q_ENUMS(Symmetry)
+
     public:
+        enum Symmetry { Symmetric, Asymmetric, Flat };
+
         Q_INVOKABLE explicit Profile(QObject *parent = 0);
 
         std::shared_ptr<patheditor::Path> topProfile();
         std::shared_ptr<patheditor::Path> botProfile();
 
-        Symmetry::e symmetry() const;
-        void setSymmetry(Symmetry::e symmetry);
+        Symmetry symmetry() const;
+        void setSymmetry(Symmetry symmetry);
 
         QPointF topProfileTop(qreal* t_top = 0) const;
         QPointF bottomProfileTop(qreal* t_top = 0) const;
@@ -58,8 +62,9 @@ namespace foillogic
         qreal thicknessRatio() const;
 
         // Q_PROPERTY getters
-        patheditor::Path* pTopProfile() { return topProfile().get(); }
-        patheditor::Path* pBotProfile() { return botProfile().get(); }
+        QString symmetryStr();
+        patheditor::Path* pTopProfile();
+        patheditor::Path* pBotProfile();
 
         virtual ~Profile();
 
@@ -70,7 +75,7 @@ namespace foillogic
     public slots:
 
     private:
-        Symmetry::e _symmetry;
+        Symmetry _symmetry;
 
         std::shared_ptr<patheditor::Path> _topProfile;
         std::shared_ptr<patheditor::Path> _botProfile;
