@@ -46,14 +46,14 @@ namespace foillogic
         Q_PROPERTY(qreal sweep READ pSweep)
 
         // read-write properties
-        Q_PROPERTY(patheditor::Path* outline READ pOutline)
+        Q_PROPERTY(foillogic::Outline* outline READ pOutline)
         Q_PROPERTY(foillogic::Profile* profile READ pProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness)
 
     public:
         explicit Foil(QObject *parent = 0);
 
-        std::shared_ptr<patheditor::Path> outline();
+        std::shared_ptr<Outline> outline();
         std::shared_ptr<Profile> profile();
         std::shared_ptr<ThicknessProfile> thickness();
 
@@ -69,7 +69,7 @@ namespace foillogic
         qreal pHeight() { return height().value(); }
         qreal pArea() { return area().value(); }
         qreal pSweep() { return sweep().value(); }
-        patheditor::Path* pOutline() { return outline().get(); }
+        Outline* pOutline() { return outline().get(); }
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
 
@@ -86,7 +86,7 @@ namespace foillogic
         boost::units::quantity<boost::units::si::area, qreal> _area;
         boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
 
-        std::shared_ptr<patheditor::Path> _outline;
+        std::shared_ptr<foillogic::Outline> _outline;
         std::shared_ptr<foillogic::Profile> _profile;
         std::shared_ptr<foillogic::ThicknessProfile> _thickness;
 

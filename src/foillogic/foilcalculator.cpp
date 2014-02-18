@@ -25,6 +25,7 @@
 #include "qmath.h"
 #include "foil.h"
 #include "profile.h"
+#include "outline.h"
 
 using namespace foillogic;
 using namespace boost::units;
@@ -183,9 +184,9 @@ AreaCalculator::AreaCalculator(Foil *foil)
 
 void AreaCalculator::run()
 {
-    qreal outlineTop = _foil->outline()->minY();
+    qreal outlineTop = _foil->outline()->path()->minY();
     qreal scalefactor = qPow(_foil->height().value() / qAbs(outlineTop), 2);
-    qreal smArea = _foil->outline()->area() * scalefactor;
+    qreal smArea = _foil->outline()->path()->area() * scalefactor;
     quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
     _foil->setArea(area);
 }
@@ -200,10 +201,10 @@ void SweepCalculator::run()
 {
     // find top and outline edges
     qreal t_top = 0;
-    _foil->outline()->minY(&t_top);
-    QPointF top = _foil->outline()->pointAtPercent(t_top);
-    qreal oLEdge = _foil->outline()->pointAtPercent(0).x();
-    qreal oTEdge = _foil->outline()->pointAtPercent(1).x();
+    _foil->outline()->path()->minY(&t_top);
+    QPointF top = _foil->outline()->path()->pointAtPercent(t_top);
+    qreal oLEdge = _foil->outline()->path()->pointAtPercent(0).x();
+    qreal oTEdge = _foil->outline()->path()->pointAtPercent(1).x();
 
     // find thickest point
     qreal t_thick = 0;

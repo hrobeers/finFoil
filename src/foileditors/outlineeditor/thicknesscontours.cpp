@@ -27,6 +27,7 @@
 #include <QGraphicsScene>
 #include "foilcalculator.h"
 #include "foil.h"
+#include "outline.h"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -76,5 +77,5 @@ QRectF ThicknessContours::boundingRect() const
         return retVal;
     }
 
-    return _calculator->foil()->outline()->controlPointRect();
+    return _calculator->foil()->outline()->path()->controlPointRect();
 }

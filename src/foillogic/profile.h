@@ -23,8 +23,11 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QObject>
-#include "path.h"
+#include <QPointF>
+#include "serialization/serialization.h"
 
 namespace foillogic
 {

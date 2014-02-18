@@ -29,6 +29,7 @@
 #include "foil.h"
 #include "editablepath.h"
 #include "thicknesscontours.h"
+#include "outline.h"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -50,10 +51,10 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
     ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
 
-    EditablePath* nonEditableOutline = new EditablePath(foil->outline());
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path());
     nonEditableOutline->setEditable(false);
     _topPathEditor->addGraphicsItem(topContours);
-    _topPathEditor->addPath(new EditablePath(foil->outline()));
+    _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
     _botPathEditor->addGraphicsItem(botContours);
     _botPathEditor->addPath(nonEditableOutline);
 

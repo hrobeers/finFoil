@@ -27,7 +27,6 @@
 
 #include <QObject>
 #include <memory>
-
 #include "serialization/serialization.h"
 
 namespace foillogic

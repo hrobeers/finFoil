@@ -22,6 +22,7 @@
 
 #include "foillogic/profile.h"
 
+#include "path.h"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "cubicbezier.h"

@@ -27,6 +27,7 @@
 #include "linerestrictor.h"
 #include "quadrantrestrictor.h"
 #include "cubicbezier.h"
+#include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
 
@@ -44,18 +45,18 @@ Foil::Foil(QObject *parent) :
     _height = quantity<si::length, qreal>(0.1 * si::meter); // 10cm
     _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
 
-    connect(_outline.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
+    connect(_outline.get(), SIGNAL(outlineChanged(Outline*)), this, SLOT(onFoilChanged()));
     connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
     connect(_thickness.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
 
     connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
 
-    connect(_outline.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
+    connect(_outline.get(), SIGNAL(outlineReleased(Outline*)), this, SLOT(onFoilReleased()));
     connect(_profile.get(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
     connect(_thickness.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
-std::shared_ptr<Path> Foil::outline()
+std::shared_ptr<Outline> Foil::outline()
 {
     return _outline;
 }
@@ -106,36 +107,7 @@ Foil::~Foil()
 
 void Foil::initOutline()
 {
-    _outline = std::shared_ptr<Path>(new Path());
-
-    qreal m = 2;
-    std::shared_ptr<PathPoint> point1(new PathPoint(m*0, m*0));
-    std::shared_ptr<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
-    std::shared_ptr<ControlPoint> point3(new ControlPoint(m*70.39944295, m*-113.577872));
-    std::shared_ptr<PathPoint> point4(new PathPoint(m*134.750359, m*-114.484482));
-    std::shared_ptr<ControlPoint> point5(new ControlPoint(m*148.079229, m*-114.672267));
-    std::shared_ptr<ControlPoint> point6(new ControlPoint(m*168.493739, m*-110.447322));
-    std::shared_ptr<PathPoint> point7(new PathPoint(m*170.304549, m*-97.240702));
-    std::shared_ptr<ControlPoint> point8(new ControlPoint(m*171.482419, m*-88.650189));
-    std::shared_ptr<ControlPoint> point9(new ControlPoint(m*134.604629, m*-78.11541));
-    std::shared_ptr<PathPoint> point10(new PathPoint(m*123.550789, m*-62.04205));
-    std::shared_ptr<ControlPoint> point11(new ControlPoint(m*99.87859895, m*-27.6204));
-    std::shared_ptr<ControlPoint> point12(new ControlPoint(m*116.439959, m*0));
-    std::shared_ptr<PathPoint> point13(new PathPoint(m*116.439959, m*0));
-
-    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
-    std::shared_ptr<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
-
-    point1->setRestrictor(horizontalAxisRestrictor);
-    point4->setRestrictor(aboveHorizontalRestrictor);
-    point7->setRestrictor(aboveHorizontalRestrictor);
-    point10->setRestrictor(aboveHorizontalRestrictor);
-    point13->setRestrictor(horizontalAxisRestrictor);
-
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point4, point5, point6, point7)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
+    _outline = std::shared_ptr<Outline>(new Outline());
 }
 
 void Foil::initProfile()

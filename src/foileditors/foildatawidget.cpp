@@ -33,6 +33,7 @@
 #include "foilcalculator.h"
 #include "foillogic/foil.h"
 #include "foillogic/profile.h"
+#include "foillogic/outline.h"
 
 #include <QtUnits>
 
@@ -132,7 +133,7 @@ void FoilDataWidget::showEvent(QShowEvent *)
 
 void FoilDataWidget::updatePxPerUnit()
 {
-    _pxPerUnit = -_foilCalculator->foil()->outline()->minY() / _depthEdit->value()->value();
+    _pxPerUnit = -_foilCalculator->foil()->outline()->path()->minY() / _depthEdit->value()->value();
 
     emit pxPerUnitChanged(_pxPerUnit);
 }

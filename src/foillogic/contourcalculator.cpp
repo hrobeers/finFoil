@@ -30,6 +30,7 @@
 #include "foil.h"
 #include "profile.h"
 #include "thicknessprofile.h"
+#include "outline.h"
 
 #define INITCNT 256
 
@@ -37,7 +38,7 @@ using namespace foillogic;
 using namespace patheditor;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
-    _side(side), _symmetric(foil->profile()->symmetry()), _outline(foil->outline().get()),
+    _side(side), _symmetric(foil->profile()->symmetry()), _outline(foil->outline()->path().get()),
     _thickness(foil->thickness()->topProfile().get()), _percContourHeight(percContourHeight),
     _result(result), _sectionCount(INITCNT / 2), _resolution(500), _tTol(0.0001), _fTol(0.001)
 {
