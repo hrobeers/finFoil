@@ -61,6 +61,6 @@ namespace foillogic
         void onOutlineReleased();
     };
 }
-DESERIALIZABLE(foillogic::Outline, outline)
+SERIALIZABLE(foillogic::Outline, outline)
 
 #endif // OUTLINE_H

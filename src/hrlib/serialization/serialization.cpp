@@ -130,21 +130,28 @@ QJsonObject serialization::serialize(const QObject *qObj)
     QJsonObject retVal; // return value
     QJsonObject propObj; // QProperties container
 
-    // The first propetry objectName is skipped
-    for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
+    if (serializerMap().contains(qObj->metaObject()->className()))
     {
-        QMetaProperty mp = qObj->metaObject()->property(i);
+        propObj = serializerMap()[qObj->metaObject()->className()]->serialize(qObj);
+    }
+    else
+    {
+        // The first propetry objectName is skipped
+        for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
+        {
+            QMetaProperty mp = qObj->metaObject()->property(i);
 
-        QVariant var = mp.read(qObj);
+            QVariant var = mp.read(qObj);
 
-        bool ok = false;
+            bool ok = false;
 
-        QJsonValue v = ::serialize(var, &ok);
+            QJsonValue v = ::serialize(var, &ok);
 
-        if (!ok)
-            continue;
+            if (!ok)
+                continue;
 
-        propObj.insert(mp.name(), v);
+            propObj.insert(mp.name(), v);
+        }
     }
 
     retVal.insert(toSerialName(qObj->metaObject()->className()), propObj);
@@ -193,6 +200,10 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
 
     if (!isRegistered(&className, errorMsg))
         return nullptr;
+
+    // Use custom deserializer if available
+    if (serializerMap().contains(className))
+        return std::unique_ptr<QObject>(serializerMap()[className]->deserialize(jsonObj));
 
     const QObject *obj = typeMap()[className];
     std::unique_ptr<QObject> retVal(obj->metaObject()->newInstance());

@@ -99,6 +99,6 @@ namespace foillogic
         void onProfileReleased();
     };
 }
-DESERIALIZABLE(foillogic::Profile, profile)
+SERIALIZABLE(foillogic::Profile, profile)
 
 #endif // PROFILE_H

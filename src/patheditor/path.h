@@ -90,6 +90,6 @@ namespace patheditor
         qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
 }
-DESERIALIZABLE(patheditor::Path, path)
+SERIALIZABLE(patheditor::Path, path)
 
 #endif // PATH_H

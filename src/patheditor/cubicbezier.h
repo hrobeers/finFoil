@@ -64,6 +64,6 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
-DESERIALIZABLE(patheditor::CubicBezier, cubic)
+SERIALIZABLE(patheditor::CubicBezier, cubic)
 
 #endif // CUBICBEZIER_H

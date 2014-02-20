@@ -101,6 +101,6 @@ namespace foillogic
         void onProfileChanged();
     };
 }
-DESERIALIZABLE(foillogic::Foil, foil)
+SERIALIZABLE(foillogic::Foil, foil)
 
 #endif // FOIL_H

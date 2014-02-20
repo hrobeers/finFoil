@@ -33,6 +33,7 @@ class SerializationTests : public QObject
 
 private slots:
     void testSerialization();
+    void testCustomSerialization();
     void testSerializationFailures();
 
     void testPathPointSerialization();
@@ -43,6 +44,36 @@ private slots:
 //
 // Classes for testing
 //
+
+class CustomSerializable : public QObject
+{
+    Q_OBJECT
+
+public:
+    qreal x;
+
+    CustomSerializable() : x(5) {}
+};
+
+class CustomSerializableSerializer : public hrlib::serialization::CustomSerializer<CustomSerializable>
+{
+public:
+    virtual QJsonObject serializeImpl(const CustomSerializable *object) const override
+    {
+        QJsonObject retVal;
+        QJsonValue val(object->x / 2);
+        retVal.insert("custom", val);
+        return retVal;
+    }
+    virtual std::unique_ptr<CustomSerializable> deserializeImpl(const QJsonObject *jsonObject) const override
+    {
+        std::unique_ptr<CustomSerializable> retVal(new CustomSerializable());
+        qreal x = jsonObject->value("custom").toDouble() + 5;
+        retVal->x = x;
+        return retVal;
+    }
+};
+CUSTOMSERIALIZABLE(CustomSerializable, cserial, CustomSerializableSerializer)
 
 class Nestedobject : public QObject
 {
@@ -65,7 +96,7 @@ public:
 
     void setSomeString(const QString &someString) { _someString = someString; }
 };
-DESERIALIZABLE(Nestedobject, nObj)
+SERIALIZABLE(Nestedobject, nObj)
 
 class SingleProperty : public QObject
 {
@@ -85,7 +116,7 @@ public:
 
     void setSomeUuid(const QUuid &someUuid) { _someUuid = someUuid; }
 };
-DESERIALIZABLE(SingleProperty, sProp)
+SERIALIZABLE(SingleProperty, sProp)
 
 class DerivedSingleProperty : public SingleProperty
 {
@@ -94,7 +125,7 @@ class DerivedSingleProperty : public SingleProperty
 public:
     Q_INVOKABLE DerivedSingleProperty() : SingleProperty() {}
 };
-DESERIALIZABLE(DerivedSingleProperty, dProp)
+SERIALIZABLE(DerivedSingleProperty, dProp)
 
 class Testobject : public QObject
 {
@@ -185,6 +216,6 @@ public:
     // Q_PROPERTY resetters
     void initOptionalStr() { _optionalStr = "initialized"; }
 };
-DESERIALIZABLE(Testobject, tObj)
+SERIALIZABLE(Testobject, tObj)
 
 #endif // SERIALIZATIONTESTS_H

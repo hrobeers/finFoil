@@ -73,6 +73,6 @@ namespace foillogic
         void onProfileReleased();
     };
 }
-DESERIALIZABLE(foillogic::ThicknessProfile, tProfile)
+SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
 
 #endif // THICKNESSPROFILE_H

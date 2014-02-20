@@ -104,6 +104,6 @@ namespace patheditor
 
     };
 }
-DESERIALIZABLE(patheditor::PathPoint, pp)
+SERIALIZABLE(patheditor::PathPoint, pp)
 
 #endif // PATHPOINT_H

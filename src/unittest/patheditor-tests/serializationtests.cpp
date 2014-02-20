@@ -82,6 +82,14 @@ void SerializationTests::testSerialization()
     QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
 }
 
+void SerializationTests::testCustomSerialization()
+{
+    CustomSerializable custom;
+    QJsonObject jObj = hrlib::serialization::serialize(&custom);
+    std::unique_ptr<CustomSerializable> deserialized((CustomSerializable*)hrlib::serialization::deserialize(&jObj).release());
+    QCOMPARE(deserialized->x, (custom.x / 2) + 5);
+}
+
 void SerializationTests::testSerializationFailures()
 {
     //

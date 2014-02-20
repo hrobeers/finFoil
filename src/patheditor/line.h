@@ -55,6 +55,6 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
-DESERIALIZABLE(patheditor::Line, line)
+SERIALIZABLE(patheditor::Line, line)
 
 #endif // LINE_H

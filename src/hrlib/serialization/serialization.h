@@ -23,9 +23,15 @@
 #ifndef HRLIB_SERIALIZATION_H
 #define HRLIB_SERIALIZATION_H
 
-#define DESERIALIZABLE(CLASS, UNIQUE_NAME) Q_DECLARE_METATYPE(CLASS *) \
+#define SERIALIZABLE(CLASS, UNIQUE_NAME) Q_DECLARE_METATYPE(CLASS *) \
     namespace serialization_register { /*Avoid name clashes with global variables*/\
-        static hrlib::serialization::registerForDeserialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME);\
+        static hrlib::serialization::registerForSerialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME);\
+    }
+
+#define CUSTOMSERIALIZABLE(CLASS, UNIQUE_NAME, CUSTOM_SERIALIZER_CLASS) Q_DECLARE_METATYPE(CLASS *) \
+    namespace serialization_register { /*Avoid name clashes with global variables*/\
+        static const CUSTOM_SERIALIZER_CLASS CUSTOM_SERIALIZER_CLASS;\
+        static hrlib::serialization::registerForSerialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME, &CUSTOM_SERIALIZER_CLASS);\
     }
 
 
@@ -41,11 +47,45 @@ namespace hrlib
 
     class serialization
     {
+    public:
+        //
+        // Classes for custom serialization
+        //
+
+        class ICustomSerializer
+        {
+        public:
+            virtual QJsonObject serialize(const QObject *object) const = 0;
+            virtual std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObject) const = 0;
+
+            virtual ~ICustomSerializer() {}
+        };
+
+        template <typename T>
+        class CustomSerializer : public ICustomSerializer
+        {
+        public:
+            virtual QJsonObject serializeImpl(const T *object) const = 0;
+            virtual std::unique_ptr<T> deserializeImpl(const QJsonObject *jsonObject) const = 0;
+
+            virtual QJsonObject serialize(const QObject *object) const override final
+                { return serializeImpl(qobject_cast<const T*>(object)); }
+            virtual std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObject) const override final
+                { return deserializeImpl(jsonObject); }
+
+            virtual ~CustomSerializer() {}
+        };
+
     private:
         static QMap<QString, const QObject*>& typeMapPriv()
         {
             static QMap<QString, const QObject*> tMap;
             return tMap;
+        }
+        static QMap<QString, const ICustomSerializer*>& serializerMapPriv()
+        {
+            static QMap<QString, const ICustomSerializer*> sMap;
+            return sMap;
         }
         static nm_type& nameMapPriv()
         {
@@ -65,6 +105,7 @@ namespace hrlib
 
         // Public map getters
         static const QMap<QString, const QObject*>& typeMap() { return typeMapPriv(); }
+        static const QMap<QString, const ICustomSerializer*>& serializerMap() { return serializerMapPriv(); }
         static const nm_type& nameMap() { return nameMapPriv(); }
 
         // Auxilliary methods
@@ -72,16 +113,17 @@ namespace hrlib
         static QString toSerialName(QString className);
         static QString toClassName(QString serialName);
 
-        // Registration class (Use DESERIALIZABLE macro)
+        // Registration class (Use SERIALIZABLE macro)
         template <typename T>
-        class registerForDeserialization
+        class registerForSerialization
         {
         public:
-            registerForDeserialization(QString serialName)
+            registerForSerialization(QString serialName, const ICustomSerializer* serializer = nullptr)
             {
                 static const T t;
                 typeMapPriv()[t.metaObject()->className()] = &t;
                 nameMapPriv().insert(nm_type::value_type(t.metaObject()->className(), serialName));
+                if (serializer) serializerMapPriv()[t.metaObject()->className()] = serializer;
                 qRegisterMetaType<T*>();
             }
         };
