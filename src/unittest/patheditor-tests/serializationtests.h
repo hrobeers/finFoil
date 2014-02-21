@@ -57,7 +57,7 @@ public:
 
 class CustomSerializableSerializer : public hrlib::serialization::CustomSerializer<CustomSerializable>
 {
-public:
+protected:
     virtual QJsonObject serializeImpl(const CustomSerializable *object) const override
     {
         QJsonObject retVal;
@@ -65,7 +65,7 @@ public:
         retVal.insert("custom", val);
         return retVal;
     }
-    virtual std::unique_ptr<CustomSerializable> deserializeImpl(const QJsonObject *jsonObject) const override
+    virtual std::unique_ptr<CustomSerializable> deserializeImpl(const QJsonObject *jsonObject, QString* /*unused*/) const override
     {
         std::unique_ptr<CustomSerializable> retVal(new CustomSerializable());
         qreal x = jsonObject->value("custom").toDouble() + 5;

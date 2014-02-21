@@ -203,7 +203,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
 
     // Use custom deserializer if available
     if (serializerMap().contains(className))
-        return std::unique_ptr<QObject>(serializerMap()[className]->deserialize(jsonObj));
+        return std::unique_ptr<QObject>(serializerMap()[className]->deserialize(jsonObj, errorMsg));
 
     const QObject *obj = typeMap()[className];
     std::unique_ptr<QObject> retVal(obj->metaObject()->newInstance());
