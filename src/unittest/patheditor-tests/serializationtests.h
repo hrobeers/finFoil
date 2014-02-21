@@ -73,7 +73,7 @@ protected:
         return retVal;
     }
 };
-CUSTOMSERIALIZABLE(CustomSerializable, cserial, CustomSerializableSerializer)
+CUSTOMSERIALIZABLE(CustomSerializable, CustomSerializableSerializer, cserial)
 
 class Nestedobject : public QObject
 {

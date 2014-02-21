@@ -23,15 +23,15 @@
 #ifndef HRLIB_SERIALIZATION_H
 #define HRLIB_SERIALIZATION_H
 
-#define SERIALIZABLE(CLASS, UNIQUE_NAME) Q_DECLARE_METATYPE(CLASS *) \
+#define SERIALIZABLE(CLASS, SERIAL_NAME) Q_DECLARE_METATYPE(CLASS *) \
     namespace serialization_register { /*Avoid name clashes with global variables*/\
-        static hrlib::serialization::registerForSerialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME);\
+        static hrlib::serialization::registerForSerialization<CLASS> SERIAL_NAME(#SERIAL_NAME);\
     }
 
-#define CUSTOMSERIALIZABLE(CLASS, UNIQUE_NAME, CUSTOM_SERIALIZER_CLASS) Q_DECLARE_METATYPE(CLASS *) \
+#define CUSTOMSERIALIZABLE(CLASS, CUSTOM_SERIALIZER_CLASS, SERIAL_NAME) Q_DECLARE_METATYPE(CLASS *) \
     namespace serialization_register { /*Avoid name clashes with global variables*/\
-        static const CUSTOM_SERIALIZER_CLASS CUSTOM_SERIALIZER_CLASS;\
-        static hrlib::serialization::registerForSerialization<CLASS> UNIQUE_NAME(#UNIQUE_NAME, &CUSTOM_SERIALIZER_CLASS);\
+        static const CUSTOM_SERIALIZER_CLASS SERIAL_NAME##_SERIALIZER; \
+        static hrlib::serialization::registerForSerialization<CLASS> SERIAL_NAME(#SERIAL_NAME, &SERIAL_NAME##_SERIALIZER);\
     }
 
 

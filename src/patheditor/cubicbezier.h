@@ -34,11 +34,7 @@ namespace patheditor
      */
     class CubicBezier : public PathItem
     {
-        Q_OBJECT
-
     public:
-        Q_INVOKABLE CubicBezier() {}
-
         explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
@@ -49,11 +45,11 @@ namespace patheditor
 
         // implementing PathItem
         QList<std::shared_ptr<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
+        virtual QPointF pointAtPercent(qreal t) override;
         QRectF controlPointRect() const;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true);
+        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
+                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) override;
 
         virtual ~CubicBezier() {}
 
@@ -64,6 +60,5 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
-SERIALIZABLE(patheditor::CubicBezier, cubic)
 
 #endif // CUBICBEZIER_H

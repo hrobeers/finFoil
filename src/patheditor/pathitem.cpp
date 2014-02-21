@@ -27,13 +27,6 @@
 
 using namespace patheditor;
 
-PathItem::PathItem()
-{
-    std::shared_ptr<PathPoint> startPnt, endPnt;
-    setStartPoint(startPnt);
-    setEndPoint(endPnt);
-}
-
 PathItem::PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
 {
     setStartPoint(startPoint);
@@ -98,13 +91,4 @@ void PathItem::paintControlPoints(PathSettings *settings, QPainter *painter)
     }
 
     painter->drawPath(painterPath);
-}
-
-QVariantList PathItem::pnts()
-{
-    QVariantList retVal;
-    retVal.append(QVariant::fromValue(startPoint().get()));
-    foreach (std::shared_ptr<ControlPoint> pnt, controlPoints()) { retVal.append(QVariant::fromValue(pnt.get())); }
-    retVal.append(QVariant::fromValue(endPoint().get()));
-    return retVal;
 }

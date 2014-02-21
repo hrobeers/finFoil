@@ -34,20 +34,16 @@ namespace patheditor
      */
     class Line : public PathItem
     {
-        Q_OBJECT
-
     public:
-        Q_INVOKABLE Line() {}
-
         explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         // implementing PathItem
         QList<std::shared_ptr<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
+        virtual QPointF pointAtPercent(qreal t) override;
         QRectF controlPointRect() const;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true);
+        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
+                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) override;
 
         virtual ~Line() {}
 
@@ -55,6 +51,5 @@ namespace patheditor
         QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
-SERIALIZABLE(patheditor::Line, line)
 
 #endif // LINE_H

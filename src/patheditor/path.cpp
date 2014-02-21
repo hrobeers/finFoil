@@ -180,3 +180,16 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
     else
         return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), *t_ext) * multiplier;
 }
+
+
+QJsonObject PathSerializer::serializeImpl(const Path *object) const
+{
+    //TODO
+    return QJsonObject();
+}
+
+std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const
+{
+    if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl not implemented");
+    return nullptr;
+}
