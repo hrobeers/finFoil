@@ -36,8 +36,7 @@ private slots:
     void testCustomSerialization();
     void testSerializationFailures();
 
-    void testPathPointSerialization();
-    void testControlPointSerialization();
+    void testPathSerialization();
 };
 
 
@@ -58,7 +57,7 @@ public:
 class CustomSerializableSerializer : public hrlib::serialization::CustomSerializer<CustomSerializable>
 {
 protected:
-    virtual QJsonObject serializeImpl(const CustomSerializable *object) const override
+    virtual QJsonValue serializeImpl(const CustomSerializable *object) const override
     {
         QJsonObject retVal;
         QJsonValue val(object->x / 2);

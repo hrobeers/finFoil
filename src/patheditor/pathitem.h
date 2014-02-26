@@ -39,12 +39,16 @@ namespace patheditor
         //
         // Functions needed by EditablePath
         //
-        virtual std::shared_ptr<PathPoint> startPoint();
-        virtual std::shared_ptr<PathPoint> endPoint();
-        virtual void setStartPoint(std::shared_ptr<PathPoint> startPoint);
-        virtual void setEndPoint(std::shared_ptr<PathPoint> endPoint);
+        std::shared_ptr<PathPoint> startPoint();
+        std::shared_ptr<PathPoint> endPoint();
+        void setStartPoint(std::shared_ptr<PathPoint> startPoint);
+        void setEndPoint(std::shared_ptr<PathPoint> endPoint);
 
         virtual QList<std::shared_ptr<ControlPoint> > controlPoints() = 0;
+
+        // const getters
+        const PathPoint* constStartPoint() const;
+        const PathPoint* constEndPoint() const;
 
         virtual std::weak_ptr<PathItem> nextPathItem();
         virtual std::weak_ptr<PathItem> prevPathItem();

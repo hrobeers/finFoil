@@ -53,6 +53,16 @@ void PathItem::setEndPoint(std::shared_ptr<PathPoint> endPoint)
     _endPoint = endPoint;
 }
 
+const PathPoint *PathItem::constStartPoint() const
+ {
+    return _startPoint.get();
+}
+
+const PathPoint *PathItem::constEndPoint() const
+ {
+    return _endPoint.get();
+ }
+
 std::weak_ptr<PathItem> PathItem::nextPathItem()
 {
     return _nextPathItem;

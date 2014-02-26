@@ -30,11 +30,6 @@ using namespace patheditor;
 
 static QMap<QGraphicsScene*, PathPoint*> s_prevSelected;
 
-PathPoint::PathPoint()
-    : _selected(false), _pointHandle(0), _toFollowPoint(0)
-{
-}
-
 PathPoint::PathPoint(qreal xpos, qreal ypos)
     : QPointF(xpos, ypos), _selected(false), _pointHandle(0), _toFollowPoint(0)
 {

@@ -128,14 +128,19 @@ static QJsonValue serialize(const QVariant var, bool *ok)
 QJsonObject serialization::serialize(const QObject *qObj)
 {
     QJsonObject retVal; // return value
-    QJsonObject propObj; // QProperties container
+    QJsonValue value;
 
-    if (serializerMap().contains(qObj->metaObject()->className()))
+    QString className = qObj->metaObject()->className();
+    QString serialName = toSerialName(className);
+
+    if (serializerMap().contains(className))
     {
-        propObj = serializerMap()[qObj->metaObject()->className()]->serialize(qObj);
+        value = serializerMap()[className]->serialize(qObj);
     }
     else
     {
+        QJsonObject propObj; // QProperties container
+
         // The first propetry objectName is skipped
         for (int i = 1; i < qObj->metaObject()->propertyCount(); i++)
         {
@@ -152,9 +157,11 @@ QJsonObject serialization::serialize(const QObject *qObj)
 
             propObj.insert(mp.name(), v);
         }
+
+        value = propObj;
     }
 
-    retVal.insert(toSerialName(qObj->metaObject()->className()), propObj);
+    retVal.insert(serialName, value);
 
     return retVal;
 }

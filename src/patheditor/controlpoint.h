@@ -32,7 +32,6 @@ namespace patheditor
         Q_OBJECT
 
     public:
-        Q_INVOKABLE ControlPoint();
         explicit ControlPoint(qreal xpos, qreal ypos);
 
         virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent) override;
@@ -40,6 +39,5 @@ namespace patheditor
         virtual ~ControlPoint() {}
     };
 }
-SERIALIZABLE(patheditor::ControlPoint, cp)
 
 #endif // CONTROLPOINT_H

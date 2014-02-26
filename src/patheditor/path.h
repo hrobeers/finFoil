@@ -48,6 +48,7 @@ namespace patheditor
         virtual void append(std::shared_ptr<PathItem> pathItem);
 
         QList<std::shared_ptr<PathItem> > pathItems();
+        QList<const PathItem *> constPathItems() const;
 
         // TODO unittest methods below
 
@@ -83,7 +84,7 @@ namespace patheditor
     class PathSerializer : public hrlib::serialization::CustomSerializer<Path>
     {
     protected:
-        virtual QJsonObject serializeImpl(const Path *object) const override;
+        virtual QJsonValue serializeImpl(const Path *object) const override;
         virtual std::unique_ptr<Path> deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const override;
     };
 }

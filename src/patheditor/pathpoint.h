@@ -37,11 +37,7 @@ namespace patheditor
     {
         Q_OBJECT
 
-        Q_PROPERTY(qreal x READ x WRITE setRestrictedX)
-        Q_PROPERTY(qreal y READ y WRITE setRestrictedY)
-
     public:
-        Q_INVOKABLE PathPoint();
         explicit PathPoint(qreal xpos, qreal ypos);
 
         virtual void setParent(QObject *object);
@@ -104,6 +100,5 @@ namespace patheditor
 
     };
 }
-SERIALIZABLE(patheditor::PathPoint, pp)
 
 #endif // PATHPOINT_H

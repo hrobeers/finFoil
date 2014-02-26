@@ -23,6 +23,7 @@
 #include "path.h"
 
 #include <QVarLengthArray>
+#include <QJsonArray>
 #include "pathfunctors.h"
 
 using namespace patheditor;
@@ -62,6 +63,15 @@ void Path::append(std::shared_ptr<PathItem> pathItem)
 QList<std::shared_ptr<PathItem> > Path::pathItems()
 {
     return _pathItemList;
+}
+
+QList<const PathItem *> Path::constPathItems() const
+{
+    QList<const PathItem *> retVal;
+    foreach (std::shared_ptr<PathItem> pathItem, _pathItemList) {
+        retVal.append(pathItem.get());
+    }
+    return retVal;
 }
 
 QRectF Path::controlPointRect() const
@@ -182,10 +192,35 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
 }
 
 
-QJsonObject PathSerializer::serializeImpl(const Path *object) const
+QJsonValue PathSerializer::serializeImpl(const Path *object) const
 {
-    //TODO
-    return QJsonObject();
+    QJsonArray retVal;
+
+    // Move to first point
+    QJsonArray firstPnt;
+    firstPnt.append(QStringLiteral("M"));
+    firstPnt.append(object->constPathItems().first()->constStartPoint()->x());
+    firstPnt.append(object->constPathItems().first()->constStartPoint()->y());
+    retVal.append(firstPnt);
+
+//    foreach (std::shared_ptr<PathItem> pathItem, object->pathItems())
+//    {
+//        QJsonArray nestedArr;
+//        char itemType;
+
+//        switch (pathItem->controlPoints().count())
+//        {
+//        case 0:
+//            itemType = 'L';
+//            break;
+
+//        case 2:
+//            itemType = 'C';
+//            break;
+//        }
+//    }
+
+    return retVal;
 }
 
 std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const
