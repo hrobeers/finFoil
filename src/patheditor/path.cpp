@@ -67,11 +67,7 @@ QList<std::shared_ptr<PathItem> > Path::pathItems()
 
 QList<const PathItem *> Path::constPathItems() const
 {
-    QList<const PathItem *> retVal;
-    foreach (std::shared_ptr<PathItem> pathItem, _pathItemList) {
-        retVal.append(pathItem.get());
-    }
-    return retVal;
+    return hrlib::toConstList(_pathItemList);
 }
 
 QRectF Path::controlPointRect() const
@@ -192,33 +188,50 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
 }
 
 
+static void appendPntToJsonArray(const PathPoint *pnt, QJsonArray *array)
+{
+    array->append(pnt->x());
+    array->append(pnt->y());
+}
+
 QJsonValue PathSerializer::serializeImpl(const Path *object) const
 {
     QJsonArray retVal;
 
     // Move to first point
-    QJsonArray firstPnt;
-    firstPnt.append(QStringLiteral("M"));
-    firstPnt.append(object->constPathItems().first()->constStartPoint()->x());
-    firstPnt.append(object->constPathItems().first()->constStartPoint()->y());
-    retVal.append(firstPnt);
+    QJsonArray moveToStart;
+    moveToStart.append(QStringLiteral("M"));
+    ::appendPntToJsonArray(object->constPathItems().first()->constStartPoint(), &moveToStart);
+    retVal.append(moveToStart);
 
-//    foreach (std::shared_ptr<PathItem> pathItem, object->pathItems())
-//    {
-//        QJsonArray nestedArr;
-//        char itemType;
+    foreach (const PathItem *pathItem, object->constPathItems())
+    {
+        QJsonArray nestedArr;
 
-//        switch (pathItem->controlPoints().count())
-//        {
-//        case 0:
-//            itemType = 'L';
-//            break;
+        switch (pathItem->constControlPoints().count())
+        {
+        case 0:
+            nestedArr.append(QStringLiteral("L"));
+            break;
 
-//        case 2:
-//            itemType = 'C';
-//            break;
-//        }
-//    }
+        case 2:
+            nestedArr.append(QStringLiteral("C"));
+            break;
+
+        default:
+            QString msg = QStringLiteral("PathSerializer has no implementation to serialize a path with ")
+                    + pathItem->constControlPoints().count()
+                    + QStringLiteral(" controlpoints.");
+            throw hrlib::NotImplementedException(msg);
+        }
+
+        foreach (const ControlPoint *pnt, pathItem->constControlPoints())
+            ::appendPntToJsonArray(pnt, &nestedArr);
+
+        ::appendPntToJsonArray(pathItem->constEndPoint(), &nestedArr);
+
+        retVal.append(nestedArr);
+    }
 
     return retVal;
 }

@@ -37,7 +37,12 @@ Line::Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> end
 
 QList<std::shared_ptr<ControlPoint> > Line::controlPoints()
 {
-    return _controlPoints;
+    return QList<std::shared_ptr<ControlPoint> >();
+}
+
+const QList<const ControlPoint *> Line::constControlPoints() const
+{
+    return QList<const ControlPoint *>();
 }
 
 QPointF Line::pointAtPercent(qreal t)

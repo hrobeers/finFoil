@@ -63,12 +63,12 @@ const PathPoint *PathItem::constEndPoint() const
     return _endPoint.get();
  }
 
-std::weak_ptr<PathItem> PathItem::nextPathItem()
+std::weak_ptr<PathItem> PathItem::nextPathItem() const
 {
     return _nextPathItem;
 }
 
-std::weak_ptr<PathItem> PathItem::prevPathItem()
+std::weak_ptr<PathItem> PathItem::prevPathItem() const
 {
     return _prevPathItem;
 }

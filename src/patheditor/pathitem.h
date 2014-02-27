@@ -49,9 +49,10 @@ namespace patheditor
         // const getters
         const PathPoint* constStartPoint() const;
         const PathPoint* constEndPoint() const;
+        virtual const QList<const ControlPoint*> constControlPoints() const = 0;
 
-        virtual std::weak_ptr<PathItem> nextPathItem();
-        virtual std::weak_ptr<PathItem> prevPathItem();
+        virtual std::weak_ptr<PathItem> nextPathItem() const;
+        virtual std::weak_ptr<PathItem> prevPathItem() const;
         virtual void setNextPathItem(std::shared_ptr<PathItem> nextPathItem);
         virtual void setPrevPathItem(std::shared_ptr<PathItem> prevPathItem);
 

@@ -68,6 +68,11 @@ QList<std::shared_ptr<ControlPoint> > CubicBezier::controlPoints()
     return _controlPoints;
 }
 
+const QList<const ControlPoint *> CubicBezier::constControlPoints() const
+{
+    return hrlib::toConstList(_controlPoints);
+}
+
 QPointF CubicBezier::pointAtPercent(qreal t)
 {
     // X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3

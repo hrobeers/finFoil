@@ -138,6 +138,16 @@ namespace hrlib
 
         virtual ~SerializationException() throw() {}
     };
+
+    template <typename T>
+    static QList<const T*> toConstList(QList<std::shared_ptr<T>> list)
+    {
+        QList<const T *> retVal;
+        for (std::shared_ptr<T> &item: list) {
+            retVal.append(item.get());
+        }
+        return retVal;
+    }
 }
 
 #endif // HRLIB_SERIALIZATION_H
