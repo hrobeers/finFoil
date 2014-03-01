@@ -195,10 +195,15 @@ std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj, 
     if (!findClass(jsonObj, &className, errorMsg))
         return nullptr;
 
-    // Extract the object containing the properties
-    QJsonObject propertiesObject = jsonObj->value(toSerialName(className)).toObject();
+    // Extract the class data
+    QJsonValue classValue = jsonObj->value(toSerialName(className));
 
-    return deserializeClass(&propertiesObject, className, errorMsg);
+    // Use custom deserializer if available
+    if (serializerMap().contains(className))
+        return serializerMap()[className]->deserialize(&classValue, errorMsg);
+
+    QJsonObject classDataObject = classValue.toObject();
+    return deserializeClass(&classDataObject, className, errorMsg);
 }
 
 std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg)
@@ -207,10 +212,6 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
 
     if (!isRegistered(&className, errorMsg))
         return nullptr;
-
-    // Use custom deserializer if available
-    if (serializerMap().contains(className))
-        return std::unique_ptr<QObject>(serializerMap()[className]->deserialize(jsonObj, errorMsg));
 
     const QObject *obj = typeMap()[className];
     std::unique_ptr<QObject> retVal(obj->metaObject()->newInstance());
@@ -232,6 +233,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
         {
             QObject *nestedObj = nullptr;
             QJsonObject nestedJSON;
+            QJsonValue nestedJsonValue;
             QJsonArray jsonArray;
             QVariant var;
             QList<QVariant> varList;
@@ -239,10 +241,17 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
             switch (mp.type())
             {
             case QVariant::UserType:
-                nestedJSON = jsonObj->value(propName).toObject();
+                nestedJsonValue = jsonObj->value(propName);
+                nestedJSON = nestedJsonValue.toObject();
 
                 if (findClass(&nestedJSON, &className, nullptr))
-                    nestedObj = deserializeClass(&nestedJSON, className, errorMsg).release();
+                {
+                    // Use custom deserializer if available
+                    if (serializerMap().contains(className))
+                        nestedObj = serializerMap()[className]->deserialize(&nestedJsonValue, errorMsg).release();
+                    else
+                        nestedObj = deserializeClass(&nestedJSON, className, errorMsg).release();
+                }
                 else
                 {
                     QString tn = mp.typeName();

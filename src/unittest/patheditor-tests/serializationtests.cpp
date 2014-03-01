@@ -88,7 +88,7 @@ void SerializationTests::testCustomSerialization()
 {
     CustomSerializable custom;
     QJsonObject jObj = hrlib::serialization::serialize(&custom);
-    qDebug() << jObj;
+
     std::unique_ptr<CustomSerializable> deserialized((CustomSerializable*)hrlib::serialization::deserialize(&jObj).release());
     QCOMPARE(deserialized->x, (custom.x / 2) + 5);
 }
@@ -169,7 +169,16 @@ void SerializationTests::testPathSerialization()
 
     QJsonObject obj = hrlib::serialization::serialize(path.get());
 
-    qDebug() << obj;
+    // TODO templated version returning the casted unique_ptr
+    std::unique_ptr<Path> deserialized((Path*)hrlib::serialization::deserialize(&obj).release());
+
+    // Test PathItem count
+    QVERIFY(deserialized->pathItems().count() > 0);
+    QCOMPARE(deserialized->pathItems().count(), path->pathItems().count());
+    // Compare startPoints of last pathItems
+    QCOMPARE(*deserialized->pathItems().last()->constStartPoint(), *path->pathItems().last()->constStartPoint());
+    // Make sure that point to different objects
+    QVERIFY(deserialized->pathItems().last()->constStartPoint() != path->pathItems().last()->constStartPoint());
 }
 
 QTR_ADD_TEST(SerializationTests)

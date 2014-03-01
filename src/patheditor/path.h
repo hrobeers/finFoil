@@ -85,7 +85,7 @@ namespace patheditor
     {
     protected:
         virtual QJsonValue serializeImpl(const Path *object) const override;
-        virtual std::unique_ptr<Path> deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const override;
+        virtual std::unique_ptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
     };
 }
 CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)

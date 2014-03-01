@@ -56,7 +56,7 @@ namespace hrlib
         {
         public:
             virtual QJsonValue serialize(const QObject *object) const = 0;
-            virtual std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObject, QString *errorMsg = 0) const = 0;
+            virtual std::unique_ptr<QObject> deserialize(const QJsonValue *jsonValue, QString *errorMsg = 0) const = 0;
 
             virtual ~ICustomSerializer() {}
         };
@@ -66,13 +66,13 @@ namespace hrlib
         {
         protected:
             virtual QJsonValue serializeImpl(const T *object) const = 0;
-            virtual std::unique_ptr<T> deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const = 0;
+            virtual std::unique_ptr<T> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const = 0;
 
         public:
             virtual QJsonValue serialize(const QObject *object) const override final
                 { return serializeImpl(qobject_cast<const T*>(object)); }
-            virtual std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObject, QString *errorMsg = 0) const override final
-                { return deserializeImpl(jsonObject, errorMsg); }
+            virtual std::unique_ptr<QObject> deserialize(const QJsonValue *jsonValue, QString *errorMsg = 0) const override final
+                { return deserializeImpl(jsonValue, errorMsg); }
 
             virtual ~CustomSerializer() {}
         };

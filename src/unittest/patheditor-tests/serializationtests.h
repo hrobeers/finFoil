@@ -64,10 +64,10 @@ protected:
         retVal.insert("custom", val);
         return retVal;
     }
-    virtual std::unique_ptr<CustomSerializable> deserializeImpl(const QJsonObject *jsonObject, QString* /*unused*/) const override
+    virtual std::unique_ptr<CustomSerializable> deserializeImpl(const QJsonValue *jsonValue, QString* /*unused*/) const override
     {
         std::unique_ptr<CustomSerializable> retVal(new CustomSerializable());
-        qreal x = jsonObject->value("custom").toDouble() + 5;
+        qreal x = jsonValue->toObject().value("custom").toDouble() + 5;
         retVal->x = x;
         return retVal;
     }

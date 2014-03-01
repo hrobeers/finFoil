@@ -25,6 +25,8 @@
 #include <QVarLengthArray>
 #include <QJsonArray>
 #include "pathfunctors.h"
+#include "patheditor/line.h"
+#include "patheditor/cubicbezier.h"
 
 using namespace patheditor;
 
@@ -236,8 +238,75 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
     return retVal;
 }
 
-std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonObject *jsonObject, QString *errorMsg) const
+template <typename Tpnt>
+static std::shared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
 {
-    if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl not implemented");
-    return nullptr;
+    std::shared_ptr<Tpnt> retVal;
+
+    QJsonValue xval = pntArray->takeAt(0), yval = pntArray->takeAt(0);
+
+    if(xval.isDouble() && yval.isDouble())
+    {
+        retVal.reset(new Tpnt(xval.toDouble(), yval.toDouble()));
+    }
+
+    return retVal;
+}
+
+static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
+{
+    static thread_local std::shared_ptr<PathPoint> s_previousEndPoint;
+
+    std::shared_ptr<PathItem> retVal;
+
+    QString typeId = pathItemJson.takeAt(0).toString();
+
+    if (typeId == QStringLiteral("M"))
+    {
+        s_previousEndPoint = ::takePoint<PathPoint>(&pathItemJson);
+    }
+    else if (typeId == QStringLiteral("L"))
+    {
+        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        if (s_previousEndPoint && endPnt)
+            retVal = std::shared_ptr<PathItem>(new Line(s_previousEndPoint, endPnt));
+        s_previousEndPoint = endPnt;
+    }
+    else if (typeId == QStringLiteral("C"))
+    {
+        std::shared_ptr<ControlPoint> cPnt1 = ::takePoint<ControlPoint>(&pathItemJson);
+        std::shared_ptr<ControlPoint> cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
+        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        if (s_previousEndPoint && cPnt1 && cPnt2 && endPnt)
+            retVal = std::shared_ptr<PathItem>(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
+        s_previousEndPoint = endPnt;
+    }
+
+    return retVal;
+}
+
+std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const
+{
+    if (!jsonValue->isArray())
+    {
+        if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl -> path is not a json array");
+        return nullptr;
+    }
+
+    std::unique_ptr<Path> path(new Path());
+
+    QJsonArray array = jsonValue->toArray();
+
+    foreach (QJsonValue value, array)
+    {
+        if (value.isArray())
+        {
+            std::shared_ptr<PathItem> pathItem = ::toPathItem(value.toArray());
+
+            if (pathItem)
+                path->append(pathItem);
+        }
+    }
+
+    return path;
 }
