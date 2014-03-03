@@ -23,6 +23,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -36,6 +40,23 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+bool MainWindow::save()
+{
+    if (_currentFilePath.isEmpty())
+        return saveAs();
+    else
+        return saveFile(_currentFilePath);
+}
+
+bool MainWindow::saveAs()
+{
+    QString filePath = QFileDialog::getSaveFileName(this); // TODO extension
+    if (filePath.isEmpty())
+        return false;
+
+    return saveFile(filePath);
 }
 
 void MainWindow::createActions()
@@ -55,13 +76,13 @@ void MainWindow::createActions()
     saveAct = new QAction(QIcon(), tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::Save);
     saveAct->setStatusTip(tr("Save the fin to current file"));
-    //connect
+    connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
 //    QAction *saveAsAct;
     saveAsAct = new QAction(QIcon(), tr("Save &As ..."), this);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
     saveAsAct->setStatusTip(tr("Save the fin to a different file"));
-    //connect
+    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
 
     quitAct = new QAction(QIcon(), tr("&Quit"), this);
@@ -79,4 +100,29 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
+}
+
+bool MainWindow::saveFile(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+    {
+        QMessageBox::warning(this, tr("Cannot save fin"),
+                             tr("Cannot write to file %1:\n%2.")
+                             .arg(path)
+                             .arg(file.errorString()));
+        return false;
+    }
+
+    QTextStream out(&file);
+    out << "This is a fin";
+
+    setCurrentFilePath(path);
+    statusBar()->showMessage(tr("Fin saved"), 2000);
+    return true;
+}
+
+void MainWindow::setCurrentFilePath(const QString &path)
+{
+    _currentFilePath = path;
 }

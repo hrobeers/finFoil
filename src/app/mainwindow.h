@@ -37,8 +37,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    bool save();
+    bool saveAs();
+
 private:
     Ui::MainWindow *ui;
+
+    QString _currentFilePath;
 
     QMenu *fileMenu;
 //    QMenu *helpMenu;
@@ -53,6 +59,9 @@ private:
 
     void createActions();
     void createMenus();
+    bool saveFile(const QString &path);
+
+    void setCurrentFilePath(const QString &path);
 };
 
 #endif // MAINWINDOW_H
