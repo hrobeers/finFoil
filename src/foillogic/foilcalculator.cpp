@@ -185,10 +185,10 @@ AreaCalculator::AreaCalculator(Foil *foil)
 void AreaCalculator::run()
 {
     qreal outlineTop = _foil->outline()->path()->minY();
-    qreal scalefactor = qPow(_foil->height().value() / qAbs(outlineTop), 2);
+    qreal scalefactor = qPow(_foil->outline()->height().value() / qAbs(outlineTop), 2);
     qreal smArea = _foil->outline()->path()->area() * scalefactor;
     quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
-    _foil->setArea(area);
+    _foil->outline()->setArea(area);
 }
 
 
@@ -217,5 +217,5 @@ void SweepCalculator::run()
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
     quantity<si::plane_angle, qreal> sweep(qAtan(os/ns) * si::radian);
-    _foil->setSweep(sweep);
+    _foil->outline()->setSweep(sweep);
 }

@@ -29,11 +29,15 @@
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace boost::units;
 
 Outline::Outline(QObject *parent) :
     QObject(parent)
 {
-    initOutline();
+    initPath();
+
+    _height = quantity<si::length, qreal>(0.1 * si::meter); // 10cm
+    _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
 }
 
 std::shared_ptr<Path> Outline::path()
@@ -41,12 +45,42 @@ std::shared_ptr<Path> Outline::path()
     return _outline;
 }
 
+quantity<si::length, qreal> Outline::height()
+{
+    return _height;
+}
+
+quantity<si::area, qreal> Outline::area()
+{
+    return _area;
+}
+
+boost::units::quantity<si::plane_angle, qreal> Outline::sweep()
+{
+    return _sweep;
+}
+
+void Outline::setHeight(quantity<si::length, qreal> height)
+{
+    _height = height;
+}
+
+void Outline::setArea(quantity<si::area, qreal> area)
+{
+    _area = area;
+}
+
+void Outline::setSweep(boost::units::quantity<si::plane_angle, qreal> sweep)
+{
+    _sweep = sweep;
+}
+
 Path *Outline::pPath()
 {
     return path().get();
 }
 
-void Outline::initOutline()
+void Outline::initPath()
 {
     _outline.reset(new Path());
 

@@ -27,6 +27,10 @@
 
 #include <QObject>
 #include <memory>
+#include "boost/units/quantity.hpp"
+#include "boost/units/systems/si/length.hpp"
+#include "boost/units/systems/si/area.hpp"
+#include "boost/units/systems/si/plane_angle.hpp"
 #include "serialization/serialization.h"
 
 namespace foillogic
@@ -35,15 +39,30 @@ namespace foillogic
     {
         Q_OBJECT
 
+        // read-only properties
         Q_PROPERTY(patheditor::Path* path READ pPath)
+        Q_PROPERTY(qreal height READ pHeight)
+        Q_PROPERTY(qreal area READ pArea)
+        Q_PROPERTY(qreal sweep READ pSweep)
 
     public:
         Q_INVOKABLE explicit Outline(QObject *parent = 0);
 
         std::shared_ptr<patheditor::Path> path();
 
+        boost::units::quantity<boost::units::si::length, qreal> height();
+        boost::units::quantity<boost::units::si::area, qreal> area();
+        boost::units::quantity<boost::units::si::plane_angle, qreal> sweep();
+
+        void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
+        void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
+        void setSweep(boost::units::quantity<boost::units::si::plane_angle, qreal> sweep);
+
         // Q_PROPERTY getters
         patheditor::Path* pPath();
+        qreal pHeight() { return height().value(); }
+        qreal pArea() { return area().value(); }
+        qreal pSweep() { return sweep().value(); }
 
     signals:
         void outlineChanged(Outline* sender);
@@ -54,7 +73,11 @@ namespace foillogic
     private:
         std::shared_ptr<patheditor::Path> _outline;
 
-        void initOutline();
+        boost::units::quantity<boost::units::si::length, qreal> _height;
+        boost::units::quantity<boost::units::si::area, qreal> _area;
+        boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
+
+        void initPath();
 
     private slots:
         void onOutlineChanged();

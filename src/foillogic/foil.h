@@ -29,21 +29,12 @@
 #include <QObject>
 #include <memory>
 #include "path.h"
-#include "boost/units/quantity.hpp"
-#include "boost/units/systems/si/length.hpp"
-#include "boost/units/systems/si/area.hpp"
-#include "boost/units/systems/si/plane_angle.hpp"
 
 namespace foillogic
 {
     class Foil : public QObject
     {
         Q_OBJECT
-
-        // read-only properties
-        Q_PROPERTY(qreal height READ pHeight)
-        Q_PROPERTY(qreal area READ pArea)
-        Q_PROPERTY(qreal sweep READ pSweep)
 
         // read-write properties
         Q_PROPERTY(foillogic::Outline* outline READ pOutline)
@@ -57,18 +48,7 @@ namespace foillogic
         std::shared_ptr<Profile> profile();
         std::shared_ptr<ThicknessProfile> thickness();
 
-        boost::units::quantity<boost::units::si::length, qreal> height();
-        boost::units::quantity<boost::units::si::area, qreal> area();
-        boost::units::quantity<boost::units::si::plane_angle, qreal> sweep();
-
-        void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
-        void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
-        void setSweep(boost::units::quantity<boost::units::si::plane_angle, qreal> sweep);
-
         // Q_PROPERTY getters
-        qreal pHeight() { return height().value(); }
-        qreal pArea() { return area().value(); }
-        qreal pSweep() { return sweep().value(); }
         Outline* pOutline() { return outline().get(); }
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
@@ -82,10 +62,6 @@ namespace foillogic
     public slots:
 
     private:
-        boost::units::quantity<boost::units::si::length, qreal> _height;
-        boost::units::quantity<boost::units::si::area, qreal> _area;
-        boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
-
         std::shared_ptr<foillogic::Outline> _outline;
         std::shared_ptr<foillogic::Profile> _profile;
         std::shared_ptr<foillogic::ThicknessProfile> _thickness;

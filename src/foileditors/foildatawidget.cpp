@@ -75,7 +75,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     // Depth section
     //
-    _depth.setInternalValue(_foilCalculator->foil()->height());
+    _depth.setInternalValue(_foilCalculator->foil()->outline()->height());
     _depthEdit = new UnitDoubleSpinbox<Length>();
 //    _depthEdit->setMaximum(10000);
     _depthEdit->setValue(_depth);
@@ -121,7 +121,7 @@ void FoilDataWidget::onDepthChange(IQuantity *depth)
 {
     Length* ldepth = static_cast<Length*>(depth);
     _depth.setInternalValue(ldepth->internalValue());
-    _foilCalculator->foil()->setHeight(_depth.internalValue());
+    _foilCalculator->foil()->outline()->setHeight(_depth.internalValue());
     _foilCalculator->recalculateArea();
     onFoilCalculated();
 }
@@ -142,7 +142,7 @@ void FoilDataWidget::updateArea()
 {
     if (_pxPerUnit != 0)
     {
-        _area.setInternalValue(_foilCalculator->foil()->area());
+        _area.setInternalValue(_foilCalculator->foil()->outline()->area());
         _areaEdit->setValue(_area);
     }
 }
@@ -158,7 +158,7 @@ void FoilDataWidget::onFoilCalculated()
 {
     updatePxPerUnit();
     updateArea();
-    _sweep.setInternalValue(_foilCalculator->foil()->sweep());
+    _sweep.setInternalValue(_foilCalculator->foil()->outline()->sweep());
     _sweepEdit->setValue(_sweep);
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
