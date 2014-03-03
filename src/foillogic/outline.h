@@ -40,10 +40,12 @@ namespace foillogic
         Q_OBJECT
 
         // read-only properties
-        Q_PROPERTY(patheditor::Path* path READ pPath)
-        Q_PROPERTY(qreal height READ pHeight)
         Q_PROPERTY(qreal area READ pArea)
         Q_PROPERTY(qreal sweep READ pSweep)
+
+        // read-write properties
+        Q_PROPERTY(patheditor::Path* path READ pPath)
+        Q_PROPERTY(qreal height READ pHeight WRITE pSetHeight)
 
     public:
         Q_INVOKABLE explicit Outline(QObject *parent = 0);
@@ -63,6 +65,9 @@ namespace foillogic
         qreal pHeight() { return height().value(); }
         qreal pArea() { return area().value(); }
         qreal pSweep() { return sweep().value(); }
+
+        // Q_PROPERTY setters
+        void pSetHeight(qreal height) { setHeight(height * boost::units::si::meter); }
 
     signals:
         void outlineChanged(Outline* sender);
