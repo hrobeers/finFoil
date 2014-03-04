@@ -27,7 +27,6 @@
 #include "finfoil_version.h"
 #include "mainwindow.h"
 #include "foileditors.h"
-#include "../hrlib/exceptions.h"
 #include "foil.h"
 
 using namespace foileditors;
@@ -64,8 +63,6 @@ int main(int argc, char *argv[])
         QWidget* centralWidget = new QWidget();
         centralWidget->setLayout(mainLayout);
 
-        qDebug() << hrlib::serialization::serialize(fin.get());
-
         MainWindow w(&fin);
         w.setCentralWidget(centralWidget);
         w.setWindowTitle("finFoil v" + version.toString());
@@ -73,9 +70,9 @@ int main(int argc, char *argv[])
 
         return a.exec();
     }
-    catch (hrlib::Exception &ex)
+    catch (std::exception &ex)
     {
-        qDebug() << ex.message();
+        qDebug() << ex.what();
         return 1;
     }
 }
