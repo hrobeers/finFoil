@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
         qDebug() << hrlib::serialization::serialize(fin.get());
 
-        MainWindow w;
+        MainWindow w(&fin);
         w.setCentralWidget(centralWidget);
         w.setWindowTitle("finFoil v" + version.toString());
         w.show();

@@ -26,12 +26,16 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QJsonDocument>
+#include "hrlib/serialization/serialization.h"
+#include "foillogic/foil.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(std::shared_ptr<foillogic::Foil> *fin, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    finPtr = fin;
 
     createActions();
     createMenus();
@@ -52,7 +56,9 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    QString filePath = QFileDialog::getSaveFileName(this); // TODO extension
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Fin"),
+                                                    "untitled.foil",
+                                                    tr("Foils (*.foil)"));
     if (filePath.isEmpty())
         return false;
 
@@ -115,7 +121,8 @@ bool MainWindow::saveFile(const QString &path)
     }
 
     QTextStream out(&file);
-    out << "This is a fin";
+    QJsonDocument json(hrlib::serialization::serialize((*finPtr).get()));
+    out << json.toJson();
 
     setCurrentFilePath(path);
     statusBar()->showMessage(tr("Fin saved"), 2000);

@@ -23,7 +23,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "foillogicfwd/foillogicfwd.h"
+
 #include <QMainWindow>
+#include <memory>
 
 namespace Ui {
     class MainWindow;
@@ -34,7 +37,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(std::shared_ptr<foillogic::Foil> *fin, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -43,6 +46,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    std::shared_ptr<foillogic::Foil> *finPtr;
 
     QString _currentFilePath;
 
