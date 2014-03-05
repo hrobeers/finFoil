@@ -27,6 +27,7 @@
 
 #include <QMainWindow>
 #include <memory>
+#include <QFileInfo>
 
 namespace Ui {
     class MainWindow;
@@ -43,12 +44,13 @@ public:
 private slots:
     bool save();
     bool saveAs();
+    void open();
 
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<foillogic::Foil> *finPtr;
 
-    QString _currentFilePath;
+    QFileInfo _currentFile;
 
     QMenu *fileMenu;
 //    QMenu *helpMenu;
@@ -64,6 +66,7 @@ private:
     void createActions();
     void createMenus();
     bool saveFile(const QString &path);
+    void loadFile(const QString &path);
 
     void setCurrentFilePath(const QString &path);
 };

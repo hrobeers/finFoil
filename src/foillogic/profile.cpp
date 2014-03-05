@@ -119,6 +119,32 @@ Path *Profile::pBotProfile()
         return nullptr;
 }
 
+void Profile::setSymmetryStr(QString symmetry)
+{
+    QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
+    bool ok;
+    _symmetry = (Symmetry)symmetryEnum.keyToValue(symmetry.toStdString().c_str(), &ok);
+    if (!ok)
+        _symmetry = Symmetry::Symmetric;
+}
+
+void Profile::pSetTopProfile(Path *topProfile)
+{
+    // TODO reuse restricted points
+    _topProfile = std::shared_ptr<Path>(topProfile);
+}
+
+void Profile::pSetBotProfile(Path *botProfile)
+{
+    // TODO reuse restricted points
+    _botProfile = std::shared_ptr<Path>(botProfile);
+}
+
+void Profile::pResetBotProfile()
+{
+    // Do nothing, initialized in ctor
+}
+
 Profile::~Profile()
 {
 }

@@ -42,7 +42,7 @@ Outline::Outline(QObject *parent) :
 
 std::shared_ptr<Path> Outline::path()
 {
-    return _outline;
+    return _path;
 }
 
 quantity<si::length, qreal> Outline::height()
@@ -80,9 +80,15 @@ Path *Outline::pPath()
     return path().get();
 }
 
+void Outline::pSetPath(Path *path)
+{
+    // TODO reuse restricted points
+    _path = std::shared_ptr<patheditor::Path>(path);
+}
+
 void Outline::initPath()
 {
-    _outline.reset(new Path());
+    _path.reset(new Path());
 
     qreal m = 2;
     std::shared_ptr<PathPoint> point1(new PathPoint(m*0, m*0));
@@ -108,14 +114,14 @@ void Outline::initPath()
     point10->setRestrictor(aboveHorizontalRestrictor);
     point13->setRestrictor(horizontalAxisRestrictor);
 
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point4, point5, point6, point7)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
-    _outline->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
+    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point4, point5, point6, point7)));
+    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
+    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
 
     // pipe the path signals
-    connect(_outline.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()));
-    connect(_outline.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()));
+    connect(_path.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()));
+    connect(_path.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()));
 }
 
 void Outline::onOutlineChanged()

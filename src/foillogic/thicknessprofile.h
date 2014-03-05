@@ -35,16 +35,19 @@ namespace foillogic
     {
         Q_OBJECT
 
-        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile)
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
 
     public:
-        explicit ThicknessProfile(QObject *parent = 0);
+        Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);
 
         std::shared_ptr<patheditor::Path> topProfile();
         std::shared_ptr<patheditor::Path> botProfile();
 
         // Q_PROPERTY getters
         patheditor::Path* pTopProfile();
+
+        // Q_PROPERTY setters
+        void pSetTopProfile(patheditor::Path *topProfile);
 
         virtual ~ThicknessProfile();
 

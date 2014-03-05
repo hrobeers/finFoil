@@ -48,21 +48,39 @@ MainWindow::~MainWindow()
 
 bool MainWindow::save()
 {
-    if (_currentFilePath.isEmpty())
-        return saveAs();
+    if (_currentFile.isFile())
+        return saveFile(_currentFile.absoluteFilePath());
     else
-        return saveFile(_currentFilePath);
+        return saveAs();
 }
 
 bool MainWindow::saveAs()
 {
+    QString suggestedPath = "untitled.foil";
+    if (_currentFile.isFile())
+        suggestedPath = _currentFile.absoluteFilePath();
+
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Fin"),
-                                                    "untitled.foil",
+                                                    suggestedPath,
                                                     tr("Foils (*.foil)"));
     if (filePath.isEmpty())
         return false;
 
     return saveFile(filePath);
+}
+
+void MainWindow::open()
+{
+    QString currentDir;
+    if (_currentFile.isFile())
+        currentDir = _currentFile.canonicalPath();
+
+    // if (maybeSave)   TODO
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Fin"),
+                                                    currentDir,
+                                                    tr("Foils (*.foil);;All files (*)"));
+    if (!filePath.isEmpty())
+        loadFile(filePath);
 }
 
 void MainWindow::createActions()
@@ -76,7 +94,7 @@ void MainWindow::createActions()
     openAct = new QAction(QIcon(), tr("&Open"), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open a fin from file"));
-    //connect
+    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
 //    QAction *saveAct;
     saveAct = new QAction(QIcon(), tr("&Save"), this);
@@ -129,7 +147,27 @@ bool MainWindow::saveFile(const QString &path)
     return true;
 }
 
+void MainWindow::loadFile(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        QMessageBox::warning(this, tr("Cannot read fin"),
+                             tr("Cannot read file %1:\n%2.")
+                             .arg(path)
+                             .arg(file.errorString()));
+        return;
+    }
+
+    QTextStream in(&file);
+    QString jsonStr = in.readAll();
+
+    // TODO error handling
+    QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
+    std::unique_ptr<QObject> deserialized = hrlib::serialization::deserialize(&jObj);
+}
+
 void MainWindow::setCurrentFilePath(const QString &path)
 {
-    _currentFilePath = path;
+    _currentFile = path;
 }

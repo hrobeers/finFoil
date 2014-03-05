@@ -79,6 +79,12 @@ Path *ThicknessProfile::pTopProfile()
     return topProfile().get();
 }
 
+void ThicknessProfile::pSetTopProfile(Path *topProfile)
+{
+    // TODO reuse restricted points
+    _topProfile = std::shared_ptr<Path>(topProfile);
+}
+
 ThicknessProfile::~ThicknessProfile()
 {
 }

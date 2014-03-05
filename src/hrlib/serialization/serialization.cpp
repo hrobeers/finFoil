@@ -38,12 +38,13 @@ static bool findClass(const QJsonObject *jsonObj, QString *className, QString *e
     int keyCount = jsonObj->keys().count();
     if (keyCount == 1)
     {
-        *className = serialization::toClassName(jsonObj->keys().first());
+        QString type = serialization::toClassName(jsonObj->keys().first());
 
-        if (serialization::isRegistered(className, errorMsg))
+        if (serialization::isRegistered(&type, errorMsg))
+        {
+            *className = type;
             return true;
-
-        className->clear();
+        }
     }
     else if (errorMsg)
     {
@@ -228,6 +229,8 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
     {
         QMetaProperty mp = retVal->metaObject()->property(i);
         QString propName = mp.name();
+        className = mp.typeName();
+        className = className.replace('*', "");
 
         if (mp.isWritable())
         {
@@ -244,18 +247,17 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
                 nestedJsonValue = jsonObj->value(propName);
                 nestedJSON = nestedJsonValue.toObject();
 
-                if (findClass(&nestedJSON, &className, nullptr))
+                // Use custom deserializer if available
+                if (serializerMap().contains(className))
                 {
-                    // Use custom deserializer if available
-                    if (serializerMap().contains(className))
-                        nestedObj = serializerMap()[className]->deserialize(&nestedJsonValue, errorMsg).release();
-                    else
-                        nestedObj = deserializeClass(&nestedJSON, className, errorMsg).release();
+                    nestedObj = serializerMap()[className]->deserialize(&nestedJsonValue, errorMsg).release();
                 }
                 else
                 {
-                    QString tn = mp.typeName();
-                    nestedObj = deserializeClass(&nestedJSON, tn, errorMsg).release();
+                    // get className from nestedJSON if specified
+                    findClass(&nestedJSON, &className, nullptr);
+
+                    nestedObj = deserializeClass(&nestedJSON, className, errorMsg).release();
                 }
 
                 if (nestedObj)

@@ -67,6 +67,21 @@ std::shared_ptr<ThicknessProfile> Foil::thickness()
     return _thickness;
 }
 
+void Foil::pSetOutline(Outline *outline)
+{
+    _outline = std::shared_ptr<Outline>(outline);
+}
+
+void Foil::pSetProfile(Profile *profile)
+{
+    _profile = std::shared_ptr<Profile>(profile);
+}
+
+void Foil::pSetThickness(ThicknessProfile *thickness)
+{
+    _thickness = std::shared_ptr<ThicknessProfile>(thickness);
+}
+
 Foil::~Foil()
 {
 }

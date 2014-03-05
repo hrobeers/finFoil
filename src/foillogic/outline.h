@@ -44,7 +44,7 @@ namespace foillogic
         Q_PROPERTY(qreal sweep READ pSweep)
 
         // read-write properties
-        Q_PROPERTY(patheditor::Path* path READ pPath)
+        Q_PROPERTY(patheditor::Path* path READ pPath WRITE pSetPath)
         Q_PROPERTY(qreal height READ pHeight WRITE pSetHeight)
 
     public:
@@ -67,6 +67,7 @@ namespace foillogic
         qreal pSweep() { return sweep().value(); }
 
         // Q_PROPERTY setters
+        void pSetPath(patheditor::Path *path);
         void pSetHeight(qreal height) { setHeight(height * boost::units::si::meter); }
 
     signals:
@@ -76,7 +77,7 @@ namespace foillogic
     public slots:
 
     private:
-        std::shared_ptr<patheditor::Path> _outline;
+        std::shared_ptr<patheditor::Path> _path;
 
         boost::units::quantity<boost::units::si::length, qreal> _height;
         boost::units::quantity<boost::units::si::area, qreal> _area;

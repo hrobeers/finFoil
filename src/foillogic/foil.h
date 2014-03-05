@@ -37,12 +37,12 @@ namespace foillogic
         Q_OBJECT
 
         // read-write properties
-        Q_PROPERTY(foillogic::Outline* outline READ pOutline)
-        Q_PROPERTY(foillogic::Profile* profile READ pProfile)
-        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness)
+        Q_PROPERTY(foillogic::Outline* outline READ pOutline WRITE pSetOutline)
+        Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
+        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
 
     public:
-        explicit Foil(QObject *parent = 0);
+        Q_INVOKABLE explicit Foil(QObject *parent = 0);
 
         std::shared_ptr<Outline> outline();
         std::shared_ptr<Profile> profile();
@@ -52,6 +52,11 @@ namespace foillogic
         Outline* pOutline() { return outline().get(); }
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
+
+        // Q_PROPERTY setters
+        void pSetOutline(Outline *outline);
+        void pSetProfile(Profile *profile);
+        void pSetThickness(ThicknessProfile *thickness);
 
         virtual ~Foil();
 

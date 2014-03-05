@@ -39,9 +39,9 @@ namespace foillogic
         Q_PROPERTY(qreal thicknessRatio READ thicknessRatio)
 
         // read-write properties
-        Q_PROPERTY(QString symmetry READ symmetryStr)
-        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile)
-        Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile)
+        Q_PROPERTY(QString symmetry READ symmetryStr WRITE setSymmetryStr)
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+        Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile WRITE pSetBotProfile RESET pResetBotProfile)
 
         Q_ENUMS(Symmetry)
 
@@ -65,6 +65,13 @@ namespace foillogic
         QString symmetryStr();
         patheditor::Path* pTopProfile();
         patheditor::Path* pBotProfile();
+
+        // Q_PROPERTY setters
+        void setSymmetryStr(QString symmetry);
+        void pSetTopProfile(patheditor::Path *topProfile);
+        void pSetBotProfile(patheditor::Path *botProfile);
+
+        void pResetBotProfile();
 
         virtual ~Profile();
 
