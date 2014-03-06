@@ -21,16 +21,9 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include <QLayout>
-#include <QGraphicsView>
 #include <QDebug>
 #include "finfoil_version.h"
 #include "mainwindow.h"
-#include "foileditors.h"
-#include "foil.h"
-
-using namespace foileditors;
-using namespace foillogic;
 
 int main(int argc, char *argv[])
 {
@@ -42,29 +35,7 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        std::shared_ptr<Foil> fin(new Foil());
-
-        OutlineEditor* outlineEditor = new OutlineEditor(fin.get());
-        ProfileEditor* profileEditor = new ProfileEditor(fin.get());
-        ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.get());
-        FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
-        QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
-
-        QHBoxLayout* mainLayout = new QHBoxLayout();
-        QVBoxLayout* ptLayout = new QVBoxLayout();
-
-        ptLayout->addWidget(thicknessEditor);
-        ptLayout->addWidget(profileEditor);
-        ptLayout->addWidget(foilDataWidget);
-
-        mainLayout->addWidget(outlineEditor);
-        mainLayout->addLayout(ptLayout);
-
-        QWidget* centralWidget = new QWidget();
-        centralWidget->setLayout(mainLayout);
-
-        MainWindow w(&fin);
-        w.setCentralWidget(centralWidget);
+        MainWindow w;
         w.setWindowTitle("finFoil v" + version.toString());
         w.show();
 

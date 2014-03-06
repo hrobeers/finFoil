@@ -28,17 +28,22 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include "hrlib/serialization/serialization.h"
-#include "foillogic/foil.h"
+#include "foileditors.h"
+#include "foil.h"
 
-MainWindow::MainWindow(std::shared_ptr<foillogic::Foil> *fin, QWidget *parent) :
+using namespace foileditors;
+using namespace foillogic;
+
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    finPtr = fin;
 
     createActions();
     createMenus();
+
+    initCentralWidget();
 }
 
 MainWindow::~MainWindow()
@@ -81,6 +86,32 @@ void MainWindow::open()
                                                     tr("Foils (*.foil);;All files (*)"));
     if (!filePath.isEmpty())
         loadFile(filePath);
+}
+
+void MainWindow::initCentralWidget()
+{
+    _fin.reset(new Foil());
+
+    OutlineEditor* outlineEditor = new OutlineEditor(_fin.get());
+    ProfileEditor* profileEditor = new ProfileEditor(_fin.get());
+    ThicknessEditor* thicknessEditor = new ThicknessEditor(_fin.get());
+    FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
+    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
+
+    QHBoxLayout* mainLayout = new QHBoxLayout();
+    QVBoxLayout* ptLayout = new QVBoxLayout();
+
+    ptLayout->addWidget(thicknessEditor);
+    ptLayout->addWidget(profileEditor);
+    ptLayout->addWidget(foilDataWidget);
+
+    mainLayout->addWidget(outlineEditor);
+    mainLayout->addLayout(ptLayout);
+
+    QWidget* centralWidget = new QWidget();
+    centralWidget->setLayout(mainLayout);
+
+    setCentralWidget(centralWidget);
 }
 
 void MainWindow::createActions()
@@ -139,7 +170,7 @@ bool MainWindow::saveFile(const QString &path)
     }
 
     QTextStream out(&file);
-    QJsonDocument json(hrlib::serialization::serialize((*finPtr).get()));
+    QJsonDocument json(hrlib::serialization::serialize(_fin.get()));
     out << json.toJson();
 
     setCurrentFilePath(path);

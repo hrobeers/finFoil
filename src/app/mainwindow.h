@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(std::shared_ptr<foillogic::Foil> *fin, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -48,7 +48,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    std::shared_ptr<foillogic::Foil> *finPtr;
+
+    std::unique_ptr<foillogic::Foil> _fin;
 
     QFileInfo _currentFile;
 
@@ -63,6 +64,7 @@ private:
 
 //    QAction *aboutAct;
 
+    void initCentralWidget();
     void createActions();
     void createMenus();
     bool saveFile(const QString &path);
