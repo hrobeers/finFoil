@@ -86,11 +86,20 @@ void SerializationTests::testSerialization()
 
 void SerializationTests::testCustomSerialization()
 {
+    // Test a plain custom serializable class
     CustomSerializable custom;
     QJsonObject jObj = hrlib::serialization::serialize(&custom);
 
     std::unique_ptr<CustomSerializable> deserialized((CustomSerializable*)hrlib::serialization::deserialize(&jObj).release());
     QCOMPARE(deserialized->x, (custom.x / 2) + 5);
+
+    // Test a nested custom serializable class
+    CustomContainer cont;
+    cont.setNested(deserialized.release());
+    jObj = hrlib::serialization::serialize(&cont);
+
+    std::unique_ptr<CustomContainer> dCont((CustomContainer*)hrlib::serialization::deserialize(&jObj).release());
+    QCOMPARE(dCont->nested()->x, ((custom.x / 2) + 5) / 2 + 5);
 }
 
 void SerializationTests::testSerializationFailures()

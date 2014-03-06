@@ -234,6 +234,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
 
         if (mp.isWritable())
         {
+            // init local variables
             QObject *nestedObj = nullptr;
             QJsonObject nestedJSON;
             QJsonValue nestedJsonValue;
@@ -241,6 +242,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
             QVariant var;
             QList<QVariant> varList;
             bool writeSucceeded = false;
+
             switch (mp.type())
             {
             case QVariant::UserType:

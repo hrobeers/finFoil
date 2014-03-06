@@ -74,6 +74,22 @@ protected:
 };
 CUSTOMSERIALIZABLE(CustomSerializable, CustomSerializableSerializer, cserial)
 
+class CustomContainer : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(CustomSerializable* nested READ nested WRITE setNested)
+
+private:
+    std::unique_ptr<CustomSerializable> _nested;
+
+public:
+    Q_INVOKABLE CustomContainer() { _nested.reset(new CustomSerializable()); }
+    CustomSerializable* nested() { return _nested.get(); }
+    void setNested(CustomSerializable* nested) { _nested.reset(nested); }
+};
+SERIALIZABLE(CustomContainer, cContainer)
+
 class Nestedobject : public QObject
 {
     Q_OBJECT
