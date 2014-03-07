@@ -28,6 +28,7 @@
 
 #include <QWidget>
 #include <memory>
+#include <QFlags>
 #include "restrictor.h"
 
 namespace patheditor
@@ -36,9 +37,9 @@ namespace patheditor
     {
         enum e
         {
-            None = 0,
-            HorizontalAxis = 1,
-            VerticalAxis = 2
+            None = 0x0,
+            HorizontalAxis = 0x1,
+            VerticalAxis = 0x2
         };
     };
 
@@ -62,12 +63,14 @@ namespace patheditor
         void addPath(EditablePath *path);
         void addGraphicsItem(QGraphicsItem *item);
 
+        void clear();
+
         /**
          * Enables a specific feature
          *
-         * @param feature to enable
+         * @param features to enable
          */
-        void enableFeature(Features::e feature);
+        void enableFeatures(QFlags<Features::e> features);
 
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the origin
@@ -98,7 +101,7 @@ namespace patheditor
         QVBoxLayout* _mainLayout;
 
         // Features
-        int _enabledFeatures;
+        QFlags<Features::e> _enabledFeatures;
         QGraphicsLineItem* _horizontalAxis;
         QGraphicsLineItem* _verticalAxis;
 

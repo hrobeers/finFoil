@@ -36,27 +36,14 @@ using namespace foillogic;
 
 OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
-{    
-    _foilCalculator.reset(new FoilCalculator(foil));
-
-
+{
     //
     // PathEditors
     //
     _topPathEditor = new patheditor::PathEditorWidget();
-    _topPathEditor->enableFeature(Features::HorizontalAxis);
+    _topPathEditor->enableFeatures(Features::HorizontalAxis);
     _botPathEditor = new patheditor::PathEditorWidget();
-    _botPathEditor->enableFeature(Features::HorizontalAxis);
-
-    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
-    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
-
-    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path());
-    nonEditableOutline->setEditable(false);
-    _topPathEditor->addGraphicsItem(topContours);
-    _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
-    _botPathEditor->addGraphicsItem(botContours);
-    _botPathEditor->addPath(nonEditableOutline);
+    _botPathEditor->enableFeatures(Features::HorizontalAxis);
 
 
     //
@@ -77,6 +64,30 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     _mainLayout->addWidget(topGb);
     _mainLayout->addWidget(botGb);
     this->setLayout(_mainLayout);
+
+
+    //
+    // Set foil
+    //
+    setFoil(foil);
+}
+
+void OutlineEditor::setFoil(Foil *foil)
+{
+    _topPathEditor->clear();
+    _botPathEditor->clear();
+
+    _foilCalculator.reset(new FoilCalculator(foil));
+
+    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
+
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path());
+    nonEditableOutline->setEditable(false);
+    _topPathEditor->addGraphicsItem(topContours);
+    _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
+    _botPathEditor->addGraphicsItem(botContours);
+    _botPathEditor->addPath(nonEditableOutline);
 }
 
 FoilCalculator *OutlineEditor::foilCalculator()

@@ -28,7 +28,6 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include "hrlib/serialization/serialization.h"
-#include "foileditors.h"
 #include "foil.h"
 
 using namespace foileditors;
@@ -92,20 +91,20 @@ void MainWindow::initCentralWidget()
 {
     _fin.reset(new Foil());
 
-    OutlineEditor* outlineEditor = new OutlineEditor(_fin.get());
-    ProfileEditor* profileEditor = new ProfileEditor(_fin.get());
-    ThicknessEditor* thicknessEditor = new ThicknessEditor(_fin.get());
-    FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
-    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
+    _outlineEditor = new OutlineEditor(_fin.get());
+    _profileEditor = new ProfileEditor(_fin.get());
+    _thicknessEditor = new ThicknessEditor(_fin.get());
+    FoilDataWidget* foilDataWidget = new FoilDataWidget(_outlineEditor->foilCalculator());
+    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
 
     QHBoxLayout* mainLayout = new QHBoxLayout();
     QVBoxLayout* ptLayout = new QVBoxLayout();
 
-    ptLayout->addWidget(thicknessEditor);
-    ptLayout->addWidget(profileEditor);
+    ptLayout->addWidget(_thicknessEditor);
+    ptLayout->addWidget(_profileEditor);
     ptLayout->addWidget(foilDataWidget);
 
-    mainLayout->addWidget(outlineEditor);
+    mainLayout->addWidget(_outlineEditor);
     mainLayout->addLayout(ptLayout);
 
     QWidget* centralWidget = new QWidget();

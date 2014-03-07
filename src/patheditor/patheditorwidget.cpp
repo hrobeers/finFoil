@@ -76,29 +76,36 @@ void PathEditorWidget::addGraphicsItem(QGraphicsItem *item)
     this->scene()->addItem(item);
 }
 
-void PathEditorWidget::enableFeature(Features::e feature)
+void PathEditorWidget::clear()
 {
-    if (!featureEnabled(feature))
+    this->scene()->clear();
+
+    // Re-enableFeatures
+    QFlags<Features::e> prevEnabledFeatures = _enabledFeatures;
+    _enabledFeatures = Features::None;
+    enableFeatures(prevEnabledFeatures);
+}
+
+void PathEditorWidget::enableFeatures(QFlags<Features::e> features)
+{
+    if (Features::HorizontalAxis == (Features::HorizontalAxis & features) &&
+        Features::HorizontalAxis != (Features::HorizontalAxis & _enabledFeatures))
     {
-        switch (feature)
-        {
-        case Features::HorizontalAxis:
-            _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
-                                                    this->scene()->sceneRect().right(), 0);
-            this->scene()->addItem(_horizontalAxis);
-            break;
+        _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
+                                                this->scene()->sceneRect().right(), 0);
+        this->scene()->addItem(_horizontalAxis);
 
-        case Features::VerticalAxis:
-            _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
-                                                  0, this->scene()->sceneRect().top());
-            this->scene()->addItem(_verticalAxis);
-            break;
+        _enabledFeatures = _enabledFeatures | Features::HorizontalAxis;
+    }
 
-        case Features::None:
-            break;
-        }
+    if (Features::VerticalAxis == (Features::VerticalAxis & features) &&
+        Features::VerticalAxis != (Features::VerticalAxis & _enabledFeatures))
+    {
+        _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
+                                              0, this->scene()->sceneRect().top());
+        this->scene()->addItem(_verticalAxis);
 
-        _enabledFeatures = _enabledFeatures | feature;
+        _enabledFeatures = _enabledFeatures | Features::HorizontalAxis;
     }
 }
 

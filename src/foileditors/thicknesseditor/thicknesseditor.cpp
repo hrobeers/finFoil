@@ -36,16 +36,8 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-    _pathEditor->enableFeature(Features::VerticalAxis);
-
-    EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
-    botPath->setEditable(false);
-    connect(foil->thickness().get(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
-    EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
-
-    _pathEditor->addPath(topPath);
-    _pathEditor->addPath(botPath);
+    _pathEditor->enableFeatures(Features::HorizontalAxis);
+    _pathEditor->enableFeatures(Features::VerticalAxis);
 
     QGroupBox* gb = new QGroupBox(tr("Thickness"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
@@ -55,6 +47,21 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
+
+    setFoil(foil);
+}
+
+void ThicknessEditor::setFoil(Foil *foil)
+{
+    _pathEditor->clear();
+
+    EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
+    botPath->setEditable(false);
+    connect(foil->thickness().get(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
+
+    _pathEditor->addPath(topPath);
+    _pathEditor->addPath(botPath);
 }
 
 ThicknessEditor::~ThicknessEditor()

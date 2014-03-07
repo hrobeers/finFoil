@@ -28,6 +28,7 @@
 #include <QMainWindow>
 #include <memory>
 #include <QFileInfo>
+#include "foileditors.h"
 
 namespace Ui {
     class MainWindow;
@@ -50,6 +51,10 @@ private:
     Ui::MainWindow *ui;
 
     std::unique_ptr<foillogic::Foil> _fin;
+
+    foileditors::OutlineEditor* _outlineEditor;
+    foileditors::ProfileEditor* _profileEditor;
+    foileditors::ThicknessEditor* _thicknessEditor;
 
     QFileInfo _currentFile;
 
