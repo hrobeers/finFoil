@@ -39,7 +39,7 @@ namespace patheditor
     {
         Q_OBJECT
     public:
-        explicit EditablePath(std::shared_ptr<Path> path, QGraphicsItem * parent = 0);
+        explicit EditablePath(Path* path, QGraphicsItem * parent = 0);
 
         // Implementing QGraphicsItem
         virtual QRectF boundingRect() const;
@@ -77,7 +77,7 @@ namespace patheditor
         bool _editable;
         bool _firstPaint;
         bool _released;
-        std::shared_ptr<Path> _path;
+        Path* _path;
         PathSettings _settings;
         std::shared_ptr<QPainterPath> _painterPath;
 

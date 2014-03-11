@@ -33,8 +33,8 @@ CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
-    _cPoint1 = std::shared_ptr<ControlPoint>(new ControlPoint(0,0));
-    _cPoint2 = std::shared_ptr<ControlPoint>(new ControlPoint(0,0));
+    _cPoint1.reset(new ControlPoint(0,0));
+    _cPoint2.reset(new ControlPoint(0,0));
     *_cPoint1 += *startPoint + increment;
     *_cPoint2 += *_cPoint1 + increment;
 

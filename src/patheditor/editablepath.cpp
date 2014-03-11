@@ -28,7 +28,7 @@
 
 using namespace patheditor;
 
-EditablePath::EditablePath(std::shared_ptr<Path> path, QGraphicsItem *parent)
+EditablePath::EditablePath(Path *path, QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
     _editable = true;
@@ -36,7 +36,7 @@ EditablePath::EditablePath(std::shared_ptr<Path> path, QGraphicsItem *parent)
     _path = path;
     foreach(std::shared_ptr<PathItem> item, _path->pathItems())
         onAppend(item.get());
-    connect(path.get(), SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)));
+    connect(path, SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)));
 
     _firstPaint = true;
     _released = true;
@@ -74,7 +74,7 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 Path *EditablePath::path()
 {
-    return _path.get();
+    return _path;
 }
 
 std::shared_ptr<QPainterPath> EditablePath::painterPath()

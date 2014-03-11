@@ -40,8 +40,8 @@ namespace foillogic
     public:
         Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);
 
-        std::shared_ptr<patheditor::Path> topProfile();
-        std::shared_ptr<patheditor::Path> botProfile();
+        patheditor::Path* topProfile();
+        patheditor::Path* botProfile();
 
         // Q_PROPERTY getters
         patheditor::Path* pTopProfile();

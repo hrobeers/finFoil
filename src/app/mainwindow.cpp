@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    initCentralWidget();
+    setFoilEditors(new Foil());
 }
 
 MainWindow::~MainWindow()
@@ -87,9 +87,9 @@ void MainWindow::open()
         loadFile(filePath);
 }
 
-void MainWindow::initCentralWidget()
+void MainWindow::setFoilEditors(Foil *foil)
 {
-    _fin.reset(new Foil());
+    _fin.reset(foil);
 
     _outlineEditor = new OutlineEditor(_fin.get());
     _profileEditor = new ProfileEditor(_fin.get());
@@ -194,7 +194,9 @@ void MainWindow::loadFile(const QString &path)
 
     // TODO error handling
     QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
-    std::unique_ptr<QObject> deserialized = hrlib::serialization::deserialize(&jObj);
+    std::unique_ptr<Foil> deserialized(qobject_cast<Foil*>(hrlib::serialization::deserialize(&jObj).release()));
+
+    setFoilEditors(deserialized.release());
 }
 
 void MainWindow::setCurrentFilePath(const QString &path)

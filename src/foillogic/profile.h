@@ -50,8 +50,8 @@ namespace foillogic
 
         Q_INVOKABLE explicit Profile(QObject *parent = 0);
 
-        std::shared_ptr<patheditor::Path> topProfile();
-        std::shared_ptr<patheditor::Path> botProfile();
+        patheditor::Path* topProfile();
+        patheditor::Path* botProfile();
 
         Symmetry symmetry() const;
         void setSymmetry(Symmetry symmetry);
@@ -84,8 +84,8 @@ namespace foillogic
     private:
         Symmetry _symmetry;
 
-        std::shared_ptr<patheditor::Path> _topProfile;
-        std::shared_ptr<patheditor::Path> _botProfile;
+        std::unique_ptr<patheditor::Path> _topProfile;
+        std::unique_ptr<patheditor::Path> _botProfile;
 
         QPointF _topProfileTop, _botProfileTop;
         qreal t_topProfileTop, t_botProfileTop;

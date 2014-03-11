@@ -69,7 +69,7 @@ private:
 
 //    QAction *aboutAct;
 
-    void initCentralWidget();
+    void setFoilEditors(foillogic::Foil* foil);
     void createActions();
     void createMenus();
     bool saveFile(const QString &path);

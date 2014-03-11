@@ -43,13 +43,13 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     _enabledFeatures = Features::None;
 
     QPointF origin(0,0);
-    _originRestrictor = std::shared_ptr<Restrictor>(new PointRestrictor(origin));
+    _originRestrictor.reset(new PointRestrictor(origin));
 
     QPointF right(1,0);
-    _horizontalAxisRestrictor = std::shared_ptr<Restrictor>(new LineRestrictor(origin, right));
+    _horizontalAxisRestrictor.reset(new LineRestrictor(origin, right));
 
     QPointF under(0,1);
-    _verticalAxisRestrictor = std::shared_ptr<Restrictor>(new LineRestrictor(origin, under));
+    _verticalAxisRestrictor.reset(new LineRestrictor(origin, under));
 
     // view options
     _view->setRenderHint(QPainter::Antialiasing);

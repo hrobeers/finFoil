@@ -269,7 +269,7 @@ static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
     {
         std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
         if (s_previousEndPoint && endPnt)
-            retVal = std::shared_ptr<PathItem>(new Line(s_previousEndPoint, endPnt));
+            retVal.reset(new Line(s_previousEndPoint, endPnt));
         s_previousEndPoint = endPnt;
     }
     else if (typeId == QStringLiteral("C"))
@@ -278,7 +278,7 @@ static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
         std::shared_ptr<ControlPoint> cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
         std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
         if (s_previousEndPoint && cPnt1 && cPnt2 && endPnt)
-            retVal = std::shared_ptr<PathItem>(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
+            retVal.reset(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
         s_previousEndPoint = endPnt;
     }
 

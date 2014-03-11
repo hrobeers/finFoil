@@ -32,6 +32,7 @@
 #include "boost/units/systems/si/area.hpp"
 #include "boost/units/systems/si/plane_angle.hpp"
 #include "serialization/serialization.h"
+#include "path.h"
 
 namespace foillogic
 {
@@ -50,7 +51,7 @@ namespace foillogic
     public:
         Q_INVOKABLE explicit Outline(QObject *parent = 0);
 
-        std::shared_ptr<patheditor::Path> path();
+        patheditor::Path* path();
 
         boost::units::quantity<boost::units::si::length, qreal> height();
         boost::units::quantity<boost::units::si::area, qreal> area();
@@ -77,7 +78,7 @@ namespace foillogic
     public slots:
 
     private:
-        std::shared_ptr<patheditor::Path> _path;
+        std::unique_ptr<patheditor::Path> _path;
 
         boost::units::quantity<boost::units::si::length, qreal> _height;
         boost::units::quantity<boost::units::si::area, qreal> _area;

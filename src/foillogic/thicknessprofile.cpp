@@ -53,8 +53,8 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     point1->setRestrictor(verticalAxisRestrictor);
     point4->setRestrictor(horizontalAxisRestrictor);
 
-    _topBezier = std::shared_ptr<patheditor::CubicBezier>(new CubicBezier(point1, point2, point3, point4));
-    _botBezier = std::shared_ptr<patheditor::CubicBezier>(new CubicBezier(point5, point6, point7, point4));
+    _topBezier.reset(new CubicBezier(point1, point2, point3, point4));
+    _botBezier.reset(new CubicBezier(point5, point6, point7, point4));
 
     _topProfile->append(_topBezier);
     _botProfile->append(_botBezier);
@@ -64,25 +64,25 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     connect(_topProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
 
-std::shared_ptr<Path> ThicknessProfile::topProfile()
+Path *ThicknessProfile::topProfile()
 {
-    return _topProfile;
+    return _topProfile.get();
 }
 
-std::shared_ptr<Path> ThicknessProfile::botProfile()
+Path *ThicknessProfile::botProfile()
 {
-    return _botProfile;
+    return _botProfile.get();
 }
 
 Path *ThicknessProfile::pTopProfile()
 {
-    return topProfile().get();
+    return topProfile();
 }
 
 void ThicknessProfile::pSetTopProfile(Path *topProfile)
 {
     // TODO reuse restricted points
-    _topProfile = std::shared_ptr<Path>(topProfile);
+    _topProfile.reset(topProfile);
 }
 
 ThicknessProfile::~ThicknessProfile()

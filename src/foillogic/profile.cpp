@@ -39,14 +39,14 @@ Profile::Profile(QObject *parent) :
     initProfile();
 }
 
-std::shared_ptr<Path> Profile::topProfile()
+Path *Profile::topProfile()
 {
-    return _topProfile;
+    return _topProfile.get();
 }
 
-std::shared_ptr<Path> Profile::botProfile()
+Path *Profile::botProfile()
 {
-    return _botProfile;
+    return _botProfile.get();
 }
 
 Profile::Symmetry Profile::symmetry() const
@@ -108,13 +108,13 @@ QString Profile::symmetryStr()
 
 Path *Profile::pTopProfile()
 {
-    return topProfile().get();
+    return topProfile();
 }
 
 Path *Profile::pBotProfile()
 {
     if (symmetry() == Symmetry::Asymmetric)
-        return botProfile().get();
+        return botProfile();
     else
         return nullptr;
 }
@@ -131,13 +131,13 @@ void Profile::setSymmetryStr(QString symmetry)
 void Profile::pSetTopProfile(Path *topProfile)
 {
     // TODO reuse restricted points
-    _topProfile = std::shared_ptr<Path>(topProfile);
+    _topProfile.reset(topProfile);
 }
 
 void Profile::pSetBotProfile(Path *botProfile)
 {
     // TODO reuse restricted points
-    _botProfile = std::shared_ptr<Path>(botProfile);
+    _botProfile.reset(botProfile);
 }
 
 void Profile::pResetBotProfile()
@@ -151,8 +151,8 @@ Profile::~Profile()
 
 void Profile::initProfile()
 {
-    _topProfile = std::shared_ptr<Path>(new Path());
-    _botProfile = std::shared_ptr<Path>(new Path());
+    _topProfile.reset(new Path());
+    _botProfile.reset(new Path());
 
     std::shared_ptr<PathPoint> point1(new PathPoint(0,0));
     std::shared_ptr<PathPoint> point3(new PathPoint(300,0));
@@ -176,11 +176,11 @@ void Profile::initProfile()
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    _tPart1 = std::shared_ptr<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    _tPart2 = std::shared_ptr<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
+    _tPart1.reset(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
+    _tPart2.reset(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
 
-    _bPart1 = std::shared_ptr<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    _bPart2 = std::shared_ptr<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
+    _bPart1.reset(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
+    _bPart2.reset(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
 
     _topProfile->append(_tPart1);
     _topProfile->append(_tPart2);

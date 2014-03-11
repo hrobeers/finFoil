@@ -40,9 +40,9 @@ Outline::Outline(QObject *parent) :
     _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
 }
 
-std::shared_ptr<Path> Outline::path()
+Path *Outline::path()
 {
-    return _path;
+    return _path.get();
 }
 
 quantity<si::length, qreal> Outline::height()
@@ -77,13 +77,13 @@ void Outline::setSweep(boost::units::quantity<si::plane_angle, qreal> sweep)
 
 Path *Outline::pPath()
 {
-    return path().get();
+    return path();
 }
 
 void Outline::pSetPath(Path *path)
 {
     // TODO reuse restricted points
-    _path = std::shared_ptr<patheditor::Path>(path);
+    _path.reset(path);
 }
 
 void Outline::initPath()
