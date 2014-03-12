@@ -31,8 +31,10 @@ using namespace foillogic;
 using namespace boost::units;
 
 FoilCalculator::FoilCalculator(Foil *foil) :
-    QObject(), _calculated(false), _foil(foil)
+    QObject(), _calculated(false)
 {
+    _foil = foil;
+
     int numOfContours = 6;
     qreal increment = qreal(1) / qreal(numOfContours);
     qreal thickness = 0;

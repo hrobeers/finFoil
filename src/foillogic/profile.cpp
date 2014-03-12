@@ -132,12 +132,16 @@ void Profile::pSetTopProfile(Path *topProfile)
 {
     // TODO reuse restricted points
     _topProfile.reset(topProfile);
+
+    attachSignals(_topProfile.get());
 }
 
 void Profile::pSetBotProfile(Path *botProfile)
 {
     // TODO reuse restricted points
     _botProfile.reset(botProfile);
+
+    attachSignals(_botProfile.get());
 }
 
 void Profile::pResetBotProfile()
@@ -189,10 +193,14 @@ void Profile::initProfile()
     _botProfile->append(_bPart2);
 
     // connect the profiles
-    connect(_topProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_botProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_topProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
-    connect(_botProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    attachSignals(_topProfile.get());
+    attachSignals(_botProfile.get());
+}
+
+void Profile::attachSignals(Path *path)
+{
+    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
 
 void Profile::mirror(CubicBezier *source, CubicBezier *destination)

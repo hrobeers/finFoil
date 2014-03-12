@@ -60,8 +60,7 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     _botProfile->append(_botBezier);
 
     // connect the profile
-    connect(_topProfile.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_topProfile.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    attachSignals(_topProfile.get());
 }
 
 Path *ThicknessProfile::topProfile()
@@ -83,6 +82,8 @@ void ThicknessProfile::pSetTopProfile(Path *topProfile)
 {
     // TODO reuse restricted points
     _topProfile.reset(topProfile);
+
+    attachSignals(_topProfile.get());
 }
 
 ThicknessProfile::~ThicknessProfile()
@@ -95,8 +96,16 @@ void ThicknessProfile::setThicknessRatio(qreal profileRatio)
     mirror();
 }
 
+void ThicknessProfile::attachSignals(Path *path)
+{
+    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+}
+
 void ThicknessProfile::mirror()
 {
+    // TODO fix mirror, using profiles instead of Beziers
+
     _botBezier->startPoint()->setRestrictedPos(_topBezier->startPoint()->x(), -_topBezier->startPoint()->y()/_thicknessRatio);
     _botBezier->endPoint()->setRestrictedPos(_topBezier->endPoint()->x(), -_topBezier->endPoint()->y()/_thicknessRatio);
 

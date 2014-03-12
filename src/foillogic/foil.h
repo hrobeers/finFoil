@@ -75,6 +75,10 @@ namespace foillogic
         void initProfile();
         void initThickness();
 
+        void connectOutline();
+        void connectProfile();
+        void connectThickness();
+
     private slots:
         void onFoilChanged();
         void onFoilReleased();

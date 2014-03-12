@@ -98,6 +98,7 @@ namespace foillogic
         std::shared_ptr<patheditor::CubicBezier> _bPart2;
 
         void initProfile();
+        void attachSignals(patheditor::Path* path);
 
         void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
 

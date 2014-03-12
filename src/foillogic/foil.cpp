@@ -40,16 +40,6 @@ Foil::Foil(QObject *parent) :
     initOutline();
     initProfile();
     initThickness();
-
-    connect(_outline.get(), SIGNAL(outlineChanged(Outline*)), this, SLOT(onFoilChanged()));
-    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
-    connect(_thickness.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
-
-    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
-
-    connect(_outline.get(), SIGNAL(outlineReleased(Outline*)), this, SLOT(onFoilReleased()));
-    connect(_profile.get(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
-    connect(_thickness.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
 std::shared_ptr<Outline> Foil::outline()
@@ -70,16 +60,19 @@ std::shared_ptr<ThicknessProfile> Foil::thickness()
 void Foil::pSetOutline(Outline *outline)
 {
     _outline.reset(outline);
+    connectOutline();
 }
 
 void Foil::pSetProfile(Profile *profile)
 {
     _profile.reset(profile);
+    connectProfile();
 }
 
 void Foil::pSetThickness(ThicknessProfile *thickness)
 {
     _thickness.reset(thickness);
+    connectThickness();
 }
 
 Foil::~Foil()
@@ -89,16 +82,39 @@ Foil::~Foil()
 void Foil::initOutline()
 {
     _outline.reset(new Outline());
+    connectOutline();
 }
 
 void Foil::initProfile()
 {
     _profile.reset(new Profile());
+    connectProfile();
 }
 
 void Foil::initThickness()
 {
     _thickness.reset(new ThicknessProfile());
+    connectThickness();
+}
+
+void Foil::connectOutline()
+{
+    connect(_outline.get(), SIGNAL(outlineChanged(Outline*)), this, SLOT(onFoilChanged()));
+    connect(_outline.get(), SIGNAL(outlineReleased(Outline*)), this, SLOT(onFoilReleased()));
+}
+
+void Foil::connectProfile()
+{
+    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
+    connect(_profile.get(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
+
+    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
+}
+
+void Foil::connectThickness()
+{
+    connect(_thickness.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
+    connect(_thickness.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
 void Foil::onFoilChanged()

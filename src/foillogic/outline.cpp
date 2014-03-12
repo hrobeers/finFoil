@@ -84,6 +84,8 @@ void Outline::pSetPath(Path *path)
 {
     // TODO reuse restricted points
     _path.reset(path);
+
+    attachSignals(_path.get());
 }
 
 void Outline::initPath()
@@ -120,8 +122,13 @@ void Outline::initPath()
     _path->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
 
     // pipe the path signals
-    connect(_path.get(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()));
-    connect(_path.get(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()));
+    attachSignals(_path.get());
+}
+
+void Outline::attachSignals(Path *path)
+{
+    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()));
+    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()));
 }
 
 void Outline::onOutlineChanged()

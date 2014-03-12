@@ -85,6 +85,7 @@ namespace foillogic
         boost::units::quantity<boost::units::si::plane_angle, qreal> _sweep;
 
         void initPath();
+        void attachSignals(patheditor::Path* path);
 
     private slots:
         void onOutlineChanged();
