@@ -56,6 +56,8 @@ ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     this->setLayout(_mainLayout);
 
     setFoil(foil);
+
+    symmetryCombo->setCurrentIndex(foil->profile()->symmetry());
 }
 
 void ProfileEditor::setFoil(Foil *foil)
