@@ -66,9 +66,6 @@ namespace foillogic
         std::shared_ptr<patheditor::Path> _topProfile;
         std::shared_ptr<patheditor::Path> _botProfile;
 
-        std::shared_ptr<patheditor::CubicBezier> _topBezier;
-        std::shared_ptr<patheditor::CubicBezier> _botBezier;
-
         void attachSignals(patheditor::Path* path);
 
         void mirror();

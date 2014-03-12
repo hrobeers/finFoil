@@ -53,11 +53,8 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     point1->setRestrictor(verticalAxisRestrictor);
     point4->setRestrictor(horizontalAxisRestrictor);
 
-    _topBezier.reset(new CubicBezier(point1, point2, point3, point4));
-    _botBezier.reset(new CubicBezier(point5, point6, point7, point4));
-
-    _topProfile->append(_topBezier);
-    _botProfile->append(_botBezier);
+    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point5, point6, point7, point4)));
 
     // connect the profile
     attachSignals(_topProfile.get());
@@ -104,13 +101,18 @@ void ThicknessProfile::attachSignals(Path *path)
 
 void ThicknessProfile::mirror()
 {
-    // TODO fix mirror, using profiles instead of Beziers
+    PathItem* topPI = _topProfile->pathItems().first().get();
+    PathItem* bottomPI = _botProfile->pathItems().first().get();
 
-    _botBezier->startPoint()->setRestrictedPos(_topBezier->startPoint()->x(), -_topBezier->startPoint()->y()/_thicknessRatio);
-    _botBezier->endPoint()->setRestrictedPos(_topBezier->endPoint()->x(), -_topBezier->endPoint()->y()/_thicknessRatio);
+    bottomPI->startPoint()->setRestrictedPos(topPI->startPoint()->x(), -topPI->startPoint()->y()/_thicknessRatio);
+    bottomPI->endPoint()->setRestrictedPos(topPI->endPoint()->x(), -topPI->endPoint()->y()/_thicknessRatio);
 
-    _botBezier->controlPoint1()->setRestrictedPos(_topBezier->controlPoint1()->x(), -_topBezier->controlPoint1()->y()/_thicknessRatio);
-    _botBezier->controlPoint2()->setRestrictedPos(_topBezier->controlPoint2()->x(), -_topBezier->controlPoint2()->y()/_thicknessRatio);
+    auto topContrPoints = topPI->constControlPoints();
+    auto botContrPoints = bottomPI->controlPoints();
+    for (int i=0; i<topContrPoints.count(); i++)
+    {
+        botContrPoints[i]->setRestrictedPos(topContrPoints[i]->x(), -topContrPoints[i]->y()/_thicknessRatio);
+    }
 
     emit mirrored();
 }
