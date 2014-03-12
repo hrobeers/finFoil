@@ -180,17 +180,11 @@ void Profile::initProfile()
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    _tPart1.reset(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    _tPart2.reset(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
+    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint)));
+    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3)));
 
-    _bPart1.reset(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    _bPart2.reset(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
-
-    _topProfile->append(_tPart1);
-    _topProfile->append(_tPart2);
-
-    _botProfile->append(_bPart1);
-    _botProfile->append(_bPart2);
+    _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint)));
+    _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3)));
 
     // connect the profiles
     attachSignals(_topProfile.get());
@@ -203,28 +197,39 @@ void Profile::attachSignals(Path *path)
     connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
 }
 
-void Profile::mirror(CubicBezier *source, CubicBezier *destination)
+void Profile::mirror(const PathItem *source, PathItem *destination)
 {
-    destination->startPoint()->setRestrictedPos(source->startPoint()->x(), -source->startPoint()->y());
-    destination->endPoint()->setRestrictedPos(source->endPoint()->x(), -source->endPoint()->y());
+    destination->startPoint()->setRestrictedPos(source->constStartPoint()->x(), -source->constStartPoint()->y());
+    destination->endPoint()->setRestrictedPos(source->constEndPoint()->x(), -source->constEndPoint()->y());
 
-    destination->controlPoint1()->setRestrictedPos(source->controlPoint1()->x(), -source->controlPoint1()->y());
-    destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
+    auto topContrPoints = source->constControlPoints();
+    auto botContrPoints = destination->controlPoints();
+    for (int i=0; i<topContrPoints.count(); i++)
+    {
+        botContrPoints[i]->setRestrictedPos(topContrPoints[i]->x(), -topContrPoints[i]->y());
+    }
 }
 
 void Profile::onProfileChanged(Path* path)
 {
     if (_symmetry == Symmetry::Symmetric)
     {
+        auto topItems = _topProfile->pathItems();
+        auto botItems = _botProfile->pathItems();
+
         if (path == _topProfile.get())
         {
-            mirror(_tPart1.get(), _bPart1.get());
-            mirror(_tPart2.get(), _bPart2.get());
+            for (int i=0; i<topItems.count(); i++)
+            {
+                mirror(topItems[i].get(), botItems[i].get());
+            }
         }
         else
         {
-            mirror(_bPart1.get(), _tPart1.get());
-            mirror(_bPart2.get(), _tPart2.get());
+            for (int i=0; i<topItems.count(); i++)
+            {
+                mirror(botItems[i].get(), topItems[i].get());
+            }
         }
     }
 

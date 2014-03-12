@@ -91,16 +91,10 @@ namespace foillogic
         qreal t_topProfileTop, t_botProfileTop;
         qreal _thickness;
 
-        // parts of the profile for connecting when symmetric
-        std::shared_ptr<patheditor::CubicBezier> _tPart1;
-        std::shared_ptr<patheditor::CubicBezier> _tPart2;
-        std::shared_ptr<patheditor::CubicBezier> _bPart1;
-        std::shared_ptr<patheditor::CubicBezier> _bPart2;
-
         void initProfile();
         void attachSignals(patheditor::Path* path);
 
-        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
+        void mirror(const patheditor::PathItem *source, patheditor::PathItem* destination);
 
     private slots:
         void onProfileChanged(patheditor::Path *path);
