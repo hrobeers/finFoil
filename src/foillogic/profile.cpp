@@ -130,7 +130,15 @@ void Profile::setSymmetryStr(QString symmetry)
 
 void Profile::pSetTopProfile(Path *topProfile)
 {
-    // TODO reuse restricted points
+    std::shared_ptr<Restrictor> startPntRestrictor = _topProfile->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _topProfile->pathItems().last()->endPoint()->restrictor();
+
+    topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
+    _botProfile->pathItems().first()->setStartPoint(topProfile->pathItems().first()->startPoint());
+    _botProfile->pathItems().last()->setEndPoint(topProfile->pathItems().last()->endPoint());
+
     _topProfile.reset(topProfile);
 
     attachSignals(_topProfile.get());
@@ -138,7 +146,16 @@ void Profile::pSetTopProfile(Path *topProfile)
 
 void Profile::pSetBotProfile(Path *botProfile)
 {
-    // TODO reuse restricted points
+    // TODO refactor
+    std::shared_ptr<Restrictor> startPntRestrictor = _botProfile->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _botProfile->pathItems().last()->endPoint()->restrictor();
+
+    botProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    botProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
+    _topProfile->pathItems().first()->setStartPoint(botProfile->pathItems().first()->startPoint());
+    _topProfile->pathItems().last()->setEndPoint(botProfile->pathItems().last()->endPoint());
+
     _botProfile.reset(botProfile);
 
     attachSignals(_botProfile.get());

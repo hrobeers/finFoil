@@ -46,6 +46,7 @@ namespace patheditor
         void setRestrictedY(qreal ypos);
         void setRestrictedPos(qreal xpos, qreal ypos);
 
+        std::shared_ptr<Restrictor> restrictor();
         void setRestrictor(std::shared_ptr<Restrictor> restrictor);
 
         /**
@@ -58,6 +59,7 @@ namespace patheditor
          */
         virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
 
+        PathPoint* toFollowPoint();
         void addFollowingPoint(std::shared_ptr<PathPoint> point);
 
         bool visible();

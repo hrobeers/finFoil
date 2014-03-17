@@ -73,6 +73,11 @@ void PathPoint::setRestrictedPos(qreal xpos, qreal ypos)
     }
 }
 
+std::shared_ptr<Restrictor> PathPoint::restrictor()
+{
+    return _restrictor;
+}
+
 void PathPoint::setRestrictor(std::shared_ptr<Restrictor> restrictor)
 {
     _restrictor = restrictor;
@@ -84,6 +89,11 @@ void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent)
     PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent);
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
+}
+
+PathPoint *PathPoint::toFollowPoint()
+{
+    return _toFollowPoint;
 }
 
 void PathPoint::addFollowingPoint(std::shared_ptr<PathPoint> point)

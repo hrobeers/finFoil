@@ -29,7 +29,6 @@
 using namespace patheditor;
 
 CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
-    : PathItem(startPoint, endPoint)
 {
     QPointF startToEnd = *endPoint - *startPoint;
     QPointF increment = startToEnd / 3;
@@ -40,17 +39,22 @@ CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<
 
     _controlPoints.append(_cPoint1);
     _controlPoints.append(_cPoint2);
+
+    setStartPoint(startPoint);
+    setEndPoint(endPoint);
 }
 
 CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
                          std::shared_ptr<ControlPoint> controlPoint2, std::shared_ptr<PathPoint> endPoint)
-    : PathItem(startPoint, endPoint)
 {
     _cPoint1 = controlPoint1;
     _cPoint2 = controlPoint2;
 
     _controlPoints.append(_cPoint1);
     _controlPoints.append(_cPoint2);
+
+    setStartPoint(startPoint);
+    setEndPoint(endPoint);
 }
 
 std::shared_ptr<ControlPoint> CubicBezier::controlPoint1()

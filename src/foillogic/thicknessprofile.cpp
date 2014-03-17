@@ -77,7 +77,12 @@ Path *ThicknessProfile::pTopProfile()
 
 void ThicknessProfile::pSetTopProfile(Path *topProfile)
 {
-    // TODO reuse restricted points
+    std::shared_ptr<Restrictor> startPntRestrictor = _topProfile->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _topProfile->pathItems().last()->endPoint()->restrictor();
+
+    topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
     _topProfile.reset(topProfile);
 
     attachSignals(_topProfile.get());

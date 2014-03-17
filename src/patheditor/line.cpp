@@ -31,8 +31,9 @@
 using namespace patheditor;
 
 Line::Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
-    : PathItem(startPoint, endPoint)
 {
+    setStartPoint(startPoint);
+    setEndPoint(endPoint);
 }
 
 QList<std::shared_ptr<ControlPoint> > Line::controlPoints()

@@ -27,12 +27,6 @@
 
 using namespace patheditor;
 
-PathItem::PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
-{
-    setStartPoint(startPoint);
-    setEndPoint(endPoint);
-}
-
 std::shared_ptr<PathPoint> PathItem::startPoint()
 {
     return _startPoint;
@@ -46,11 +40,23 @@ std::shared_ptr<PathPoint> PathItem::endPoint()
 void PathItem::setStartPoint(std::shared_ptr<PathPoint> startPoint)
 {
     _startPoint = startPoint;
+
+    if (controlPoints().count() >= 2 &&
+        controlPoints().first()->toFollowPoint() != _startPoint.get())
+    {
+            _startPoint->addFollowingPoint(controlPoints().first());
+    }
 }
 
 void PathItem::setEndPoint(std::shared_ptr<PathPoint> endPoint)
 {
     _endPoint = endPoint;
+
+    if (controlPoints().count() >= 2 &&
+        controlPoints().last()->toFollowPoint() != _endPoint.get())
+    {
+        _endPoint->addFollowingPoint(controlPoints().last());
+    }
 }
 
 const PathPoint *PathItem::constStartPoint() const

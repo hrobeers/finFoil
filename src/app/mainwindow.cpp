@@ -197,6 +197,8 @@ void MainWindow::loadFile(const QString &path)
     std::unique_ptr<Foil> deserialized(qobject_cast<Foil*>(hrlib::serialization::deserialize(&jObj).release()));
 
     setFoilEditors(deserialized.release());
+
+    _currentFile = path;
 }
 
 void MainWindow::setCurrentFilePath(const QString &path)

@@ -50,14 +50,6 @@ void Path::append(std::shared_ptr<PathItem> pathItem)
         pathItem->setStartPoint(_pathItemList.last()->endPoint());
     }
 
-    // Link endpoints to controlpoints
-    if (pathItem->controlPoints().count() >= 2)
-    {
-        pathItem->startPoint()->addFollowingPoint(pathItem->controlPoints().first());
-        pathItem->endPoint()->addFollowingPoint(pathItem->controlPoints().last());
-    }
-
-//    connectPoints(pathItem.data());
     emit onAppend(pathItem.get());
     _pathItemList.append(pathItem);
 }

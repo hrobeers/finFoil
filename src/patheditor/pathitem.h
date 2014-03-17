@@ -33,9 +33,6 @@ namespace patheditor
     class PathItem
     {
     public:
-        PathItem(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
-
-
         //
         // Functions needed by EditablePath
         //

@@ -24,6 +24,7 @@
 
 #include "path.h"
 #include "cubicbezier.h"
+#include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "quadrantrestrictor.h"
 
@@ -82,7 +83,12 @@ Path *Outline::pPath()
 
 void Outline::pSetPath(Path *path)
 {
-    // TODO reuse restricted points
+    std::shared_ptr<Restrictor> startPntRestrictor = _path->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _path->pathItems().last()->endPoint()->restrictor();
+
+    path->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    path->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
     _path.reset(path);
 
     attachSignals(_path.get());
@@ -107,10 +113,11 @@ void Outline::initPath()
     std::shared_ptr<ControlPoint> point12(new ControlPoint(m*116.439959, m*0));
     std::shared_ptr<PathPoint> point13(new PathPoint(m*116.439959, m*0));
 
+    std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
     std::shared_ptr<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
 
-    point1->setRestrictor(horizontalAxisRestrictor);
+    point1->setRestrictor(originRestrictor);
     point4->setRestrictor(aboveHorizontalRestrictor);
     point7->setRestrictor(aboveHorizontalRestrictor);
     point10->setRestrictor(aboveHorizontalRestrictor);
