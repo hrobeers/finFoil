@@ -167,10 +167,10 @@ QJsonObject serialization::serialize(const QObject *qObj)
     return retVal;
 }
 
-std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj)
+std::unique_ptr<QObject> serialization::deserializeToObject(const QJsonObject *jsonObj)
 {
     QString errorMsg;
-    std::unique_ptr<QObject> retVal = deserialize(jsonObj, &errorMsg);
+    std::unique_ptr<QObject> retVal = deserializeToObject(jsonObj, &errorMsg);
 
     if (!retVal)
         throw SerializationException(errorMsg);
@@ -189,7 +189,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
     return retVal;
 }
 
-std::unique_ptr<QObject> serialization::deserialize(const QJsonObject *jsonObj, QString *errorMsg)
+std::unique_ptr<QObject> serialization::deserializeToObject(const QJsonObject *jsonObj, QString *errorMsg)
 {
     QString className;
 
@@ -291,7 +291,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
                     }
 
                     // deserialize custom type
-                    vObj.setValue(deserialize(&nestedJSON).release());
+                    vObj.setValue(deserializeToObject(&nestedJSON).release());
                     varList.append(vObj);
                 }
                 writeSucceeded = mp.write(retVal.get(), varList);

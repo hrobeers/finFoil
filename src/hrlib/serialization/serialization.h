@@ -45,6 +45,15 @@ namespace hrlib
 {
     typedef boost::bimap<QString, QString> nm_type;
 
+    class SerializationException : public Exception
+    {
+    public:
+        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
+            : Exception(message, thrower) { }
+
+        virtual ~SerializationException() throw() {}
+    };
+
     class serialization
     {
     public:
@@ -97,12 +106,39 @@ namespace hrlib
     public:
         // Exception throwing methods
         static QJsonObject serialize(const QObject *qObj);
-        static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj);
+        static std::unique_ptr<QObject> deserializeToObject(const QJsonObject *jsonObj);
         static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className);
 
         // ErrorMsg methods
-        static std::unique_ptr<QObject> deserialize(const QJsonObject *jsonObj, QString *errorMsg);
+        static std::unique_ptr<QObject> deserializeToObject(const QJsonObject *jsonObj, QString *errorMsg);
         static std::unique_ptr<QObject> deserializeClass(const QJsonObject *jsonObj, QString className, QString *errorMsg);
+
+        // Casting methods
+        template <typename T>
+        static std::unique_ptr<T> deserialize(const QJsonObject *jsonObj, QString *errorMsg)
+        {
+            QObject* deserialized = deserializeToObject(jsonObj).release();
+            T* casted = qobject_cast<T*>(deserialized);
+            if (!casted)
+            {
+                delete deserialized;
+                T instance;
+                if (errorMsg)
+                {
+                    errorMsg->append("\n Failed to cast to type: ");
+                    errorMsg->append(instance.metaObject()->className());
+                }
+            }
+            return std::unique_ptr<T>(casted);
+        }
+        template <typename T>
+        static std::unique_ptr<T> deserialize(const QJsonObject *jsonObj)
+        {
+            QString errorMsg;
+            std::unique_ptr<T> retVal = deserialize<T>(jsonObj, &errorMsg);
+            if (!retVal) throw SerializationException(errorMsg);
+            return retVal;
+        }
 
         // Public map getters
         static const QMap<QString, const QObject*>& typeMap() { return typeMapPriv(); }
@@ -128,15 +164,6 @@ namespace hrlib
                 qRegisterMetaType<T*>();
             }
         };
-    };
-
-    class SerializationException : public Exception
-    {
-    public:
-        explicit SerializationException(QString &message, QObject *thrower = 0) throw()
-            : Exception(message, thrower) { }
-
-        virtual ~SerializationException() throw() {}
     };
 
     template <typename T>

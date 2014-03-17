@@ -46,7 +46,7 @@ void SerializationTests::testSerialization()
     //
     // Test deserialization
     //
-    std::unique_ptr<QObject> o = hrlib::serialization::deserialize(&obj);
+    std::unique_ptr<QObject> o = hrlib::serialization::deserializeToObject(&obj);
 
     QCOMPARE(o->metaObject()->className(), p.metaObject()->className());
 
@@ -80,7 +80,7 @@ void SerializationTests::testSerialization()
     pObj.remove("optionalStr");
     obj[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
-    std::unique_ptr<Testobject> optionalObj((Testobject*)hrlib::serialization::deserialize(&obj).release());
+    std::unique_ptr<Testobject> optionalObj = hrlib::serialization::deserialize<Testobject>(&obj);
     QCOMPARE(optionalObj->optionalStr(), QStringLiteral("initialized"));
 }
 
@@ -90,7 +90,7 @@ void SerializationTests::testCustomSerialization()
     CustomSerializable custom;
     QJsonObject jObj = hrlib::serialization::serialize(&custom);
 
-    std::unique_ptr<CustomSerializable> deserialized((CustomSerializable*)hrlib::serialization::deserialize(&jObj).release());
+    std::unique_ptr<CustomSerializable> deserialized = hrlib::serialization::deserialize<CustomSerializable>(&jObj);
     QCOMPARE(deserialized->x, (custom.x / 2) + 5);
 
     // Test a nested custom serializable class
@@ -98,7 +98,7 @@ void SerializationTests::testCustomSerialization()
     cont.setNested(deserialized.release());
     jObj = hrlib::serialization::serialize(&cont);
 
-    std::unique_ptr<CustomContainer> dCont((CustomContainer*)hrlib::serialization::deserialize(&jObj).release());
+    std::unique_ptr<CustomContainer> dCont = hrlib::serialization::deserialize<CustomContainer>(&jObj);
     QCOMPARE(dCont->nested()->x, ((custom.x / 2) + 5) / 2 + 5);
 }
 
@@ -112,13 +112,13 @@ void SerializationTests::testSerializationFailures()
 
     QVERIFY(errorMsg.isEmpty());
 
-    std::unique_ptr<QObject> qObj = hrlib::serialization::deserialize(&json, &errorMsg);
+    std::unique_ptr<QObject> qObj = hrlib::serialization::deserializeToObject(&json, &errorMsg);
 
     QVERIFY(qObj == 0);
     QVERIFY(!errorMsg.isEmpty());
 
     // Test exception version
-    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json), hrlib::SerializationException)
+    QTR_ASSERT_THROW(hrlib::serialization::deserializeToObject(&json), hrlib::SerializationException)
 
 
     //
@@ -128,14 +128,14 @@ void SerializationTests::testSerializationFailures()
     QString className("NotRegisteredClass");
     json.insert(className, QJsonValue());
 
-    qObj = hrlib::serialization::deserialize(&json, &errorMsg2);
+    qObj = hrlib::serialization::deserializeToObject(&json, &errorMsg2);
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg != errorMsg2);
     QVERIFY(errorMsg2.contains(className));
 
     // Test exception version
-    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json), hrlib::SerializationException)
+    QTR_ASSERT_THROW(hrlib::serialization::deserializeToObject(&json), hrlib::SerializationException)
 
 
     //
@@ -148,14 +148,21 @@ void SerializationTests::testSerializationFailures()
     pObj.remove("x");
     json2[hrlib::serialization::toSerialName(p.metaObject()->className())] = pObj;
 
-    qObj = hrlib::serialization::deserialize(&json2, &errorMsg3);
+    qObj = hrlib::serialization::deserializeToObject(&json2, &errorMsg3);
 
     QVERIFY(qObj == 0);
     QVERIFY(errorMsg2 != errorMsg3);
     QVERIFY(errorMsg3.contains("x"));
 
     // Test exception version
-    QTR_ASSERT_THROW(hrlib::serialization::deserialize(&json2), hrlib::SerializationException)
+    QTR_ASSERT_THROW(hrlib::serialization::deserializeToObject(&json2), hrlib::SerializationException)
+
+
+    //
+    // Test exception on cast failure
+    //
+    QJsonObject json3 = hrlib::serialization::serialize(&p);
+    QTR_ASSERT_THROW(std::unique_ptr<Nestedobject> invalidCast = hrlib::serialization::deserialize<Nestedobject>(&json3), hrlib::SerializationException)
 }
 
 void SerializationTests::testPathSerialization()
@@ -178,8 +185,7 @@ void SerializationTests::testPathSerialization()
 
     QJsonObject obj = hrlib::serialization::serialize(path.get());
 
-    // TODO templated version returning the casted unique_ptr
-    std::unique_ptr<Path> deserialized((Path*)hrlib::serialization::deserialize(&obj).release());
+    std::unique_ptr<Path> deserialized = hrlib::serialization::deserialize<Path>(&obj);
 
     // Test PathItem count
     QVERIFY(deserialized->pathItems().count() > 0);

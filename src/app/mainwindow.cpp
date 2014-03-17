@@ -194,7 +194,7 @@ void MainWindow::loadFile(const QString &path)
 
     // TODO error handling
     QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
-    std::unique_ptr<Foil> deserialized(qobject_cast<Foil*>(hrlib::serialization::deserialize(&jObj).release()));
+    std::unique_ptr<Foil> deserialized = hrlib::serialization::deserialize<Foil>(&jObj);
 
     setFoilEditors(deserialized.release());
 
