@@ -117,7 +117,7 @@ namespace hrlib
         template <typename T>
         static std::unique_ptr<T> deserialize(const QJsonObject *jsonObj, QString *errorMsg)
         {
-            QObject* deserialized = deserializeToObject(jsonObj).release();
+            QObject* deserialized = deserializeToObject(jsonObj, errorMsg).release();
             T* casted = qobject_cast<T*>(deserialized);
             if (!casted)
             {

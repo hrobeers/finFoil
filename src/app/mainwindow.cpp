@@ -192,13 +192,21 @@ void MainWindow::loadFile(const QString &path)
     QTextStream in(&file);
     QString jsonStr = in.readAll();
 
-    // TODO error handling
+    QString errorMsg;
     QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
-    std::unique_ptr<Foil> deserialized = hrlib::serialization::deserialize<Foil>(&jObj);
+    std::unique_ptr<Foil> deserialized = hrlib::serialization::deserialize<Foil>(&jObj, &errorMsg);
 
-    setFoilEditors(deserialized.release());
-
-    _currentFile = path;
+    if (deserialized)
+    {
+        setFoilEditors(deserialized.release());
+        _currentFile = path;
+    }
+    else
+    {
+        errorMsg.prepend(tr("Failed to open fin: "));
+        statusBar()->showMessage(errorMsg, 5000);
+        qCritical(errorMsg.toStdString().c_str());
+    }
 }
 
 void MainWindow::setCurrentFilePath(const QString &path)

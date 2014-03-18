@@ -146,7 +146,6 @@ void Profile::pSetTopProfile(Path *topProfile)
 
 void Profile::pSetBotProfile(Path *botProfile)
 {
-    // TODO refactor
     std::shared_ptr<Restrictor> startPntRestrictor = _botProfile->pathItems().first()->startPoint()->restrictor();
     std::shared_ptr<Restrictor> endPntRestrictor = _botProfile->pathItems().last()->endPoint()->restrictor();
 
