@@ -28,6 +28,7 @@
 
 #include <QObject>
 #include <memory>
+#include <QUuid>
 #include "path.h"
 
 namespace foillogic
@@ -40,6 +41,8 @@ namespace foillogic
         Q_PROPERTY(foillogic::Outline* outline READ pOutline WRITE pSetOutline)
         Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
+        Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
+        Q_PROPERTY(QVariantList history READ history WRITE setHistory)
 
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
@@ -52,11 +55,15 @@ namespace foillogic
         Outline* pOutline() { return outline().get(); }
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
+        QUuid uuid();
+        QVariantList history();
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
         void pSetThickness(ThicknessProfile *thickness);
+        void setUuid(QUuid uuid);
+        void setHistory(QVariantList history);
 
         virtual ~Foil();
 
@@ -67,6 +74,8 @@ namespace foillogic
     public slots:
 
     private:
+        QUuid _uuid;
+        QList<QUuid> _history;
         std::shared_ptr<foillogic::Outline> _outline;
         std::shared_ptr<foillogic::Profile> _profile;
         std::shared_ptr<foillogic::ThicknessProfile> _thickness;
