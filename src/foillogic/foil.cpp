@@ -64,14 +64,13 @@ QUuid Foil::uuid()
     return _uuid;
 }
 
-QVariantList Foil::history()
+QStringList Foil::history()
 {
-    QVariantList retVal;
+    QStringList retVal;
+
     foreach (const QUuid &id, _history)
-    {
-        QVariant var = QVariant::fromValue(id);
-        retVal.append(var);
-    }
+        retVal.append(id.toString());
+
     return retVal;
 }
 
@@ -98,11 +97,15 @@ void Foil::setUuid(QUuid uuid)
     _uuid = uuid;
 }
 
-void Foil::setHistory(QVariantList history)
+void Foil::setHistory(QStringList history)
 {
     _history.clear();
-    foreach (const QVariant &id, history)
-        _history.append(id.toUuid());
+    foreach (const QString &id, history)
+    {
+        QUuid uuid(id);
+        if (!uuid.isNull())
+            _history.append(uuid);
+    }
 }
 
 Foil::~Foil()

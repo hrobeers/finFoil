@@ -81,6 +81,16 @@ static QJsonValue serialize(const QVariant var, bool *ok)
         }
         break;
 
+    case QVariant::StringList:
+        varList = var.toList();
+
+        foreach (QVariant lvar, varList)
+            jsArray.append(QJsonValue::fromVariant(lvar));
+
+        v = jsArray;
+        *ok = !v.isNull();
+        break;
+
     case QVariant::List:
         varList = var.toList();
         foreach (QVariant lvar, varList)
@@ -241,6 +251,7 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
             QJsonArray jsonArray;
             QVariant var;
             QList<QVariant> varList;
+            QStringList stringList;
             bool writeSucceeded = false;
 
             switch (mp.type())
@@ -268,6 +279,15 @@ std::unique_ptr<QObject> serialization::deserializeClass(const QJsonObject *json
                     var.setValue(nestedObj);
                     writeSucceeded = mp.write(retVal.get(), var);
                 }
+                break;
+
+            case QVariant::StringList:
+                jsonArray = jsonObj->value(propName).toArray();
+
+                foreach (QJsonValue item, jsonArray)
+                    stringList.append(item.toString());
+
+                writeSucceeded = mp.write(retVal.get(), stringList);
                 break;
 
             case QVariant::List:

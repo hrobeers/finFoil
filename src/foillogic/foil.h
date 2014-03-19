@@ -42,7 +42,7 @@ namespace foillogic
         Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
         Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
-        Q_PROPERTY(QVariantList history READ history WRITE setHistory)
+        Q_PROPERTY(QStringList history READ history WRITE setHistory) // QStringList to omit class information (Compacter serialization)
 
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
@@ -56,14 +56,14 @@ namespace foillogic
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
         QUuid uuid();
-        QVariantList history();
+        QStringList history();
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
         void pSetThickness(ThicknessProfile *thickness);
         void setUuid(QUuid uuid);
-        void setHistory(QVariantList history);
+        void setHistory(QStringList history);
 
         virtual ~Foil();
 
