@@ -46,14 +46,12 @@ namespace foileditors
     signals:
         void pxPerUnitChanged(qreal pxPerUnit);
 
-    public slots:
-        void onDepthChange(qt::units::IQuantity *depth);
-
     protected:
         virtual void showEvent(QShowEvent *);
 
     private:
         qt::units::Length _depth;
+        qt::units::Length _thickness;
         qt::units::Area _area;
         qt::units::Angle _sweep;
 
@@ -64,6 +62,7 @@ namespace foileditors
         QComboBox* _unitSelector;
         QSpinBox* _layerEdit;
         qt::units::UnitDoubleSpinbox<qt::units::Length>* _depthEdit;
+        qt::units::UnitDoubleSpinbox<qt::units::Length>* _thicknessEdit;
         qt::units::UnitLineEdit<qt::units::Area>* _areaEdit;
         qt::units::UnitLineEdit<qt::units::Angle>* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
@@ -76,6 +75,8 @@ namespace foileditors
         void onFoilCalculated();
         void onLayerChange(int layerCount);
         void onUnitSystemChange(const QString &system);
+        void onDepthChange(qt::units::IQuantity *depth);
+        void onThicknessChange(qt::units::IQuantity *thickness);
     };
 }
 

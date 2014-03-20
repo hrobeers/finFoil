@@ -31,10 +31,12 @@
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace boost::units;
 
 Profile::Profile(QObject *parent) :
     QObject(parent), _symmetry(Symmetry::Symmetric),
-    t_topProfileTop(0.3), t_botProfileTop(0.3)
+    t_topProfileTop(0.3), t_botProfileTop(0.3),
+    _thickness(0.01 * si::meter) // 1cm
 {
     initProfile();
 }
@@ -74,6 +76,16 @@ void Profile::setSymmetry(Symmetry symmetry)
     onProfileReleased();
 }
 
+boost::units::quantity<boost::units::si::length, qreal> Profile::thickness() const
+{
+    return _thickness;
+}
+
+void Profile::setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness)
+{
+    _thickness = thickness;
+}
+
 QPointF Profile::topProfileTop(qreal *t_top) const
 {
     if (t_top) *t_top = t_topProfileTop;
@@ -86,7 +98,7 @@ QPointF Profile::bottomProfileTop(qreal *t_top) const
     return _botProfileTop;
 }
 
-qreal Profile::thickness() const
+qreal Profile::pxThickness() const
 {
     return _botProfileTop.y() - _topProfileTop.y();
 }
@@ -100,7 +112,7 @@ qreal Profile::thicknessRatio() const
     return -_topProfileTop.y() / _botProfileTop.y();
 }
 
-QString Profile::symmetryStr()
+QString Profile::symmetryStr() const
 {
     QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
     return QString(symmetryEnum.valueToKey((int)_symmetry));

@@ -84,6 +84,16 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
 
 
     //
+    // Thickness section
+    //
+    _thickness.setInternalValue(_foilCalculator->foil()->profile()->thickness());
+    _thicknessEdit = new UnitDoubleSpinbox<Length>();
+    _thicknessEdit->setValue(_thickness);
+    _formLayout->addRow(tr("Thickness:"), _thicknessEdit);
+    connect(_thicknessEdit, SIGNAL(valueChanged(qt::units::IQuantity*)), this, SLOT(onThicknessChange(qt::units::IQuantity*)));
+
+
+    //
     // Area section
     //
     _areaEdit = new UnitLineEdit<Area>();
@@ -114,16 +124,6 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     layout->addWidget(gb);
 
     this->setLayout(layout);
-}
-
-
-void FoilDataWidget::onDepthChange(IQuantity *depth)
-{
-    Length* ldepth = static_cast<Length*>(depth);
-    _depth.setInternalValue(ldepth->internalValue());
-    _foilCalculator->foil()->outline()->setHeight(_depth.internalValue());
-    _foilCalculator->recalculateArea();
-    onFoilCalculated();
 }
 
 void FoilDataWidget::showEvent(QShowEvent *)
@@ -203,4 +203,20 @@ void FoilDataWidget::onUnitSystemChange(const QString &system)
 
     updateArea();
     _depthEdit->setValue(_depth);
+}
+
+void FoilDataWidget::onDepthChange(IQuantity *depth)
+{
+    Length* ldepth = static_cast<Length*>(depth);
+    _depth.setInternalValue(ldepth->internalValue());
+    _foilCalculator->foil()->outline()->setHeight(_depth.internalValue());
+    _foilCalculator->recalculateArea();
+    onFoilCalculated();
+}
+
+void FoilDataWidget::onThicknessChange(IQuantity *thickness)
+{
+    Length* lthickness = static_cast<Length*>(thickness);
+    _thickness.setInternalValue(lthickness->internalValue());
+    _foilCalculator->foil()->profile()->setThickness(_thickness.internalValue());
 }

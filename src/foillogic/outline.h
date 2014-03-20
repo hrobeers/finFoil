@@ -53,9 +53,9 @@ namespace foillogic
 
         patheditor::Path* path();
 
-        boost::units::quantity<boost::units::si::length, qreal> height();
-        boost::units::quantity<boost::units::si::area, qreal> area();
-        boost::units::quantity<boost::units::si::plane_angle, qreal> sweep();
+        boost::units::quantity<boost::units::si::length, qreal> height() const;
+        boost::units::quantity<boost::units::si::area, qreal> area() const;
+        boost::units::quantity<boost::units::si::plane_angle, qreal> sweep() const;
 
         void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
         void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
@@ -63,9 +63,9 @@ namespace foillogic
 
         // Q_PROPERTY getters
         patheditor::Path* pPath();
-        qreal pHeight() { return height().value(); }
-        qreal pArea() { return area().value(); }
-        qreal pSweep() { return sweep().value(); }
+        qreal pHeight() const { return height().value(); }
+        qreal pArea() const { return area().value(); }
+        qreal pSweep() const { return sweep().value(); }
 
         // Q_PROPERTY setters
         void pSetPath(patheditor::Path *path);

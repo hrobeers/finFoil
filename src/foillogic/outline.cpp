@@ -33,12 +33,11 @@ using namespace patheditor;
 using namespace boost::units;
 
 Outline::Outline(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    _height(0.1 * si::meter), // 10cm
+    _area(0 * si::meter * si::meter)
 {
     initPath();
-
-    _height = quantity<si::length, qreal>(0.1 * si::meter); // 10cm
-    _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
 }
 
 Path *Outline::path()
@@ -46,17 +45,17 @@ Path *Outline::path()
     return _path.get();
 }
 
-quantity<si::length, qreal> Outline::height()
+quantity<si::length, qreal> Outline::height() const
 {
     return _height;
 }
 
-quantity<si::area, qreal> Outline::area()
+quantity<si::area, qreal> Outline::area() const
 {
     return _area;
 }
 
-boost::units::quantity<si::plane_angle, qreal> Outline::sweep()
+boost::units::quantity<si::plane_angle, qreal> Outline::sweep() const
 {
     return _sweep;
 }

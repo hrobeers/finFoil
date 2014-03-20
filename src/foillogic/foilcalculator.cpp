@@ -116,7 +116,7 @@ void FoilCalculator::calculate(bool fastCalc)
     {
         if (inProfileSide(thickness, Side::Top))
         {
-            qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
+            qreal specificPerc = -_foil->profile()->pxThickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
             std::shared_ptr<QPainterPath> topPath(new QPainterPath());
             _topContours.append(topPath);
             _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.get(), Side::Top, fastCalc));
@@ -124,7 +124,7 @@ void FoilCalculator::calculate(bool fastCalc)
 
         if (inProfileSide(thickness, Side::Bottom))
         {
-            qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
+            qreal specificPerc = -(_foil->profile()->pxThickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
             std::shared_ptr<QPainterPath> botPath(new QPainterPath());
             _botContours.prepend(botPath);
             _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.get(), Side::Bottom, fastCalc));
@@ -158,11 +158,11 @@ bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
 
     switch (side) {
     case Side::Bottom:
-        if (thicknessPercent - (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->thickness() < 0.1)
+        if (thicknessPercent - (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->pxThickness() < 0.1)
             return true;
         return false;
     default:
-        if ((profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->thickness() - thicknessPercent < 0.1)
+        if ((profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->pxThickness() - thicknessPercent < 0.1)
             return true;
         return false;
     }

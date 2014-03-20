@@ -1,7 +1,7 @@
 v1.0 TODO's
 ===========
 
-* Serialization flag with/without classNames
+* Serialization include className for derived objects
 
 
 General TODO's
