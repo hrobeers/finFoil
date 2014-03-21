@@ -95,7 +95,8 @@ void MainWindow::setFoilEditors(Foil *foil)
     _profileEditor = new ProfileEditor(_fin.get());
     _thicknessEditor = new ThicknessEditor(_fin.get());
     FoilDataWidget* foilDataWidget = new FoilDataWidget(_outlineEditor->foilCalculator());
-    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
+    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
+    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
 
     QHBoxLayout* mainLayout = new QHBoxLayout();
     QVBoxLayout* ptLayout = new QVBoxLayout();

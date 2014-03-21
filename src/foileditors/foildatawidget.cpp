@@ -42,7 +42,7 @@ using namespace foillogic;
 using namespace qt::units;
 
 FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidget *parent) :
-    QWidget(parent), _pxPerUnit(0)
+    QWidget(parent), _pxPerUnitOutline(0), _pxPerUnitProfile(0)
 {
     _foilCalculator = foilCalculator;
     _formLayout = new QFormLayout();
@@ -133,14 +133,16 @@ void FoilDataWidget::showEvent(QShowEvent *)
 
 void FoilDataWidget::updatePxPerUnit()
 {
-    _pxPerUnit = -_foilCalculator->foil()->outline()->path()->minY() / _depthEdit->value()->value();
+    _pxPerUnitOutline = qAbs(_foilCalculator->foil()->outline()->path()->minY() / _depthEdit->value()->value());
+    _pxPerUnitProfile = qAbs(_foilCalculator->foil()->profile()->pxThickness() / _thicknessEdit->value()->value());
 
-    emit pxPerUnitChanged(_pxPerUnit);
+    emit pxPerUnitOutlineChanged(_pxPerUnitOutline);
+    emit pxPerUnitProfileChanged(_pxPerUnitProfile);
 }
 
 void FoilDataWidget::updateArea()
 {
-    if (_pxPerUnit != 0)
+    if (_pxPerUnitOutline != 0)
     {
         _area.setInternalValue(_foilCalculator->foil()->outline()->area());
         _areaEdit->setValue(_area);
@@ -152,6 +154,12 @@ QString FoilDataWidget::thicknessRatioString(qreal ratio)
     qreal bot = qRound(100 / (1 + ratio));
     qreal top = 100 - bot;
     return QString::number(top) + "/" + QString::number(bot);
+}
+
+void FoilDataWidget::setLengthUnits(LengthUnit lengthUnit)
+{
+    _depth.setUnit(lengthUnit);
+    _thickness.setUnit(lengthUnit);
 }
 
 void FoilDataWidget::onFoilCalculated()
@@ -182,27 +190,28 @@ void FoilDataWidget::onUnitSystemChange(const QString &system)
 {
     if (system == "m")
     {
-        _depth.setUnit(LengthUnit::m);
+        setLengthUnits(LengthUnit::m);
         _area.setUnit(AreaUnit::m2);
     }
     else if (system == "cm")
     {
-        _depth.setUnit(LengthUnit::cm);
+        setLengthUnits(LengthUnit::cm);
         _area.setUnit(AreaUnit::cm2);
     }
     else if (system == "ft")
     {
-        _depth.setUnit(LengthUnit::ft);
+        setLengthUnits(LengthUnit::ft);
         _area.setUnit(AreaUnit::ft2);
     }
     else if (system == "inch")
     {
-        _depth.setUnit(LengthUnit::inch);
+        setLengthUnits(LengthUnit::inch);
         _area.setUnit(AreaUnit::inch2);
     }
 
     updateArea();
     _depthEdit->setValue(_depth);
+    _thicknessEdit->setValue(_thickness);
 }
 
 void FoilDataWidget::onDepthChange(IQuantity *depth)
@@ -219,4 +228,5 @@ void FoilDataWidget::onThicknessChange(IQuantity *thickness)
     Length* lthickness = static_cast<Length*>(thickness);
     _thickness.setInternalValue(lthickness->internalValue());
     _foilCalculator->foil()->profile()->setThickness(_thickness.internalValue());
+    updatePxPerUnit();
 }

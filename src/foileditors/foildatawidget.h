@@ -44,7 +44,8 @@ namespace foileditors
         explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
-        void pxPerUnitChanged(qreal pxPerUnit);
+        void pxPerUnitOutlineChanged(qreal pxPerUnit);
+        void pxPerUnitProfileChanged(qreal pxPerUnit);
 
     protected:
         virtual void showEvent(QShowEvent *);
@@ -55,7 +56,8 @@ namespace foileditors
         qt::units::Area _area;
         qt::units::Angle _sweep;
 
-        qreal _pxPerUnit;
+        qreal _pxPerUnitOutline;
+        qreal _pxPerUnitProfile;
         foillogic::FoilCalculator* _foilCalculator;
 
         QFormLayout* _formLayout;
@@ -70,6 +72,8 @@ namespace foileditors
         void updatePxPerUnit();
         void updateArea();
         QString thicknessRatioString(qreal ratio);
+
+        void setLengthUnits(qt::units::LengthUnit lengthUnit);
 
     private slots:
         void onFoilCalculated();

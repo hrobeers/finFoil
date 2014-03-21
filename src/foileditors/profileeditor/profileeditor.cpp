@@ -78,6 +78,11 @@ ProfileEditor::~ProfileEditor()
 {
 }
 
+void ProfileEditor::setGridUnitSize(qreal pxPerUnit)
+{
+    _pathEditor->setGridUnitSize(pxPerUnit);
+}
+
 void ProfileEditor::symmetryChanged(int sym)
 {
     switch (sym)

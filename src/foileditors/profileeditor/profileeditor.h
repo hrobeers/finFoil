@@ -46,6 +46,7 @@ namespace foileditors
     signals:
 
     public slots:
+        void setGridUnitSize(qreal pxPerUnit);
 
     private:
         foillogic::Foil* _foil;
