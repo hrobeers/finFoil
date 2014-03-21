@@ -45,7 +45,10 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     QWidget(parent), _pxPerUnitOutline(0), _pxPerUnitProfile(0)
 {
     _foilCalculator = foilCalculator;
-    _formLayout = new QFormLayout();
+    QFormLayout* formLayoutLeft = new QFormLayout();
+    QFormLayout* formLayoutRight = new QFormLayout();
+    formLayoutLeft->setFormAlignment(Qt::AlignBottom);
+    formLayoutRight->setFormAlignment(Qt::AlignBottom);
 
     connect(_foilCalculator, SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(onFoilCalculated()));
 
@@ -59,7 +62,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _unitSelector->addItem("ft");
     _unitSelector->addItem("inch");
     _unitSelector->setCurrentIndex(1);
-    _formLayout->addRow(tr("Unit system"), _unitSelector);
+    formLayoutLeft->addRow(tr("Unit system"), _unitSelector);
     connect(_unitSelector, SIGNAL(currentIndexChanged(QString)), this, SLOT(onUnitSystemChange(QString)));
 
 
@@ -68,7 +71,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     _layerEdit = new QSpinBox();
     _layerEdit->setValue(_foilCalculator->contourThicknesses().count() + 1);
-    _formLayout->addRow(tr("#Layers:"), _layerEdit);
+    formLayoutLeft->addRow(tr("#Layers:"), _layerEdit);
     connect(_layerEdit, SIGNAL(valueChanged(int)), this, SLOT(onLayerChange(int)));
 
 
@@ -79,7 +82,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _depthEdit = new UnitDoubleSpinbox<Length>();
 //    _depthEdit->setMaximum(10000);
     _depthEdit->setValue(_depth);
-    _formLayout->addRow(tr("Depth:"), _depthEdit);
+    formLayoutLeft->addRow(tr("Depth:"), _depthEdit);
     connect(_depthEdit, SIGNAL(valueChanged(qt::units::IQuantity*)), this, SLOT(onDepthChange(qt::units::IQuantity*)));
 
 
@@ -89,7 +92,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _thickness.setInternalValue(_foilCalculator->foil()->profile()->thickness());
     _thicknessEdit = new UnitDoubleSpinbox<Length>();
     _thicknessEdit->setValue(_thickness);
-    _formLayout->addRow(tr("Thickness:"), _thicknessEdit);
+    formLayoutLeft->addRow(tr("Thickness:"), _thicknessEdit);
     connect(_thicknessEdit, SIGNAL(valueChanged(qt::units::IQuantity*)), this, SLOT(onThicknessChange(qt::units::IQuantity*)));
 
 
@@ -98,7 +101,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     _areaEdit = new UnitLineEdit<Area>();
     _areaEdit->setReadOnly(true);
-    _formLayout->addRow(tr("Area:"), _areaEdit);
+    formLayoutRight->addRow(tr("Area:"), _areaEdit);
 
 
     //
@@ -107,7 +110,7 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     _sweep.setUnit(AngleUnit::degree);
     _sweepEdit = new UnitLineEdit<Angle>();
     _sweepEdit->setReadOnly(true);
-    _formLayout->addRow(tr("Sweep:"), _sweepEdit);
+    formLayoutRight->addRow(tr("Sweep:"), _sweepEdit);
 
 
     //
@@ -115,11 +118,15 @@ FoilDataWidget::FoilDataWidget(foillogic::FoilCalculator *foilCalculator, QWidge
     //
     _thicknessRatioEdit = new QLineEdit(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
     _thicknessRatioEdit->setReadOnly(true);
-    _formLayout->addRow(tr("Thickness ratio:"), _thicknessRatioEdit);
+    formLayoutRight->addRow(tr("Thickness ratio:"), _thicknessRatioEdit);
 
 
     QGroupBox* gb = new QGroupBox(tr("Fin Properties"));
-    gb->setLayout(_formLayout);
+    QHBoxLayout* formContainer = new QHBoxLayout();
+    formContainer->addLayout(formLayoutLeft, 1);
+    formContainer->addSpacing(5);
+    formContainer->addLayout(formLayoutRight, 1);
+    gb->setLayout(formContainer);
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(gb);
 

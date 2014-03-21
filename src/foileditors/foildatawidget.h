@@ -60,7 +60,6 @@ namespace foileditors
         qreal _pxPerUnitProfile;
         foillogic::FoilCalculator* _foilCalculator;
 
-        QFormLayout* _formLayout;
         QComboBox* _unitSelector;
         QSpinBox* _layerEdit;
         qt::units::UnitDoubleSpinbox<qt::units::Length>* _depthEdit;
