@@ -23,6 +23,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QSplitter>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
@@ -98,20 +99,16 @@ void MainWindow::setFoilEditors(Foil *foil)
     QObject::connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
     QObject::connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
 
-    QHBoxLayout* mainLayout = new QHBoxLayout();
-    QVBoxLayout* ptLayout = new QVBoxLayout();
+    QSplitter* ptSplitter = new QSplitter(Qt::Vertical);
+    ptSplitter->addWidget(_thicknessEditor);
+    ptSplitter->addWidget(_profileEditor);
+    ptSplitter->addWidget(foilDataWidget);
 
-    ptLayout->addWidget(_thicknessEditor);
-    ptLayout->addWidget(_profileEditor);
-    ptLayout->addWidget(foilDataWidget);
+    QSplitter* mainSplitter = new QSplitter(Qt::Horizontal);
+    mainSplitter->addWidget(_outlineEditor);
+    mainSplitter->addWidget(ptSplitter);
 
-    mainLayout->addWidget(_outlineEditor);
-    mainLayout->addLayout(ptLayout);
-
-    QWidget* centralWidget = new QWidget();
-    centralWidget->setLayout(mainLayout);
-
-    setCentralWidget(centralWidget);
+    setCentralWidget(mainSplitter);
 }
 
 void MainWindow::createActions()
