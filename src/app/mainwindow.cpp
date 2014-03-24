@@ -43,12 +43,19 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    setFoilEditors(new Foil());
+    newFile();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::newFile()
+{
+    QFileInfo empty;
+    _currentFile = empty;
+    setFoilEditors(new Foil());
 }
 
 bool MainWindow::save()
@@ -118,7 +125,7 @@ void MainWindow::createActions()
     newAct = new QAction(QIcon(), tr("&New"), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("Create a new fin"));
-    //connect TODO
+    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
 
 //    QAction *openAct;
     openAct = new QAction(QIcon(), tr("&Open"), this);

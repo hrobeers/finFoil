@@ -43,6 +43,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void newFile();
     bool save();
     bool saveAs();
     void open();
