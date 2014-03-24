@@ -34,9 +34,10 @@
 using namespace foileditors;
 using namespace foillogic;
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QString title, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _title(title)
 {
     ui->setupUi(this);
 
@@ -56,6 +57,7 @@ void MainWindow::newFile()
     QFileInfo empty;
     _currentFile = empty;
     setFoilEditors(new Foil());
+    setDirty();
 }
 
 bool MainWindow::save()
@@ -92,7 +94,22 @@ void MainWindow::open()
                                                     currentDir,
                                                     tr("Foils (*.foil);;All files (*)"));
     if (!filePath.isEmpty())
-        loadFile(filePath);
+    {
+        if (loadFile(filePath))
+            setClean();
+    }
+}
+
+void MainWindow::setDirty()
+{
+    _dirty = true;
+    this->setWindowTitle(_currentFile.fileName() + "*" + " -- " + _title);
+}
+
+void MainWindow::setClean()
+{
+    _dirty = false;
+    this->setWindowTitle(_currentFile.fileName() + " -- " + _title);
 }
 
 void MainWindow::setFoilEditors(Foil *foil)
@@ -103,8 +120,8 @@ void MainWindow::setFoilEditors(Foil *foil)
     _profileEditor = new ProfileEditor(_fin.get());
     _thicknessEditor = new ThicknessEditor(_fin.get());
     FoilDataWidget* foilDataWidget = new FoilDataWidget(_outlineEditor->foilCalculator());
-    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
-    QObject::connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
+    connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
+    connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
 
     QSplitter* ptSplitter = new QSplitter(Qt::Vertical);
     ptSplitter->addWidget(_thicknessEditor);
@@ -118,6 +135,11 @@ void MainWindow::setFoilEditors(Foil *foil)
     mainSplitter->setSizes(sizes);
 
     setCentralWidget(mainSplitter);
+
+    // connect dirty flagging
+    connect(_outlineEditor->foilCalculator(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(setDirty()));
+    connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), this, SLOT(setDirty()));
+    connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), this, SLOT(setDirty()));
 }
 
 void MainWindow::createActions()
@@ -181,10 +203,12 @@ bool MainWindow::saveFile(const QString &path)
 
     setCurrentFilePath(path);
     statusBar()->showMessage(tr("Fin saved"), 2000);
+
+    setClean();
     return true;
 }
 
-void MainWindow::loadFile(const QString &path)
+bool MainWindow::loadFile(const QString &path)
 {
     QFile file(path);
     if (!file.open(QFile::ReadOnly | QFile::Text))
@@ -193,7 +217,7 @@ void MainWindow::loadFile(const QString &path)
                              tr("Cannot read file %1:\n%2.")
                              .arg(path)
                              .arg(file.errorString()));
-        return;
+        return false;
     }
 
     QTextStream in(&file);
@@ -207,12 +231,16 @@ void MainWindow::loadFile(const QString &path)
     {
         setFoilEditors(deserialized.release());
         _currentFile = path;
+
+        return true;
     }
     else
     {
         errorMsg.prepend(tr("Failed to open fin: "));
         statusBar()->showMessage(errorMsg, 5000);
         qCritical(errorMsg.toStdString().c_str());
+
+        return false;
     }
 }
 

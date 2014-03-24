@@ -39,7 +39,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QString title, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -48,7 +48,11 @@ private slots:
     bool saveAs();
     void open();
 
+    void setDirty();
+    void setClean();
+
 private:
+    QString _title;
     Ui::MainWindow *ui;
 
     std::unique_ptr<foillogic::Foil> _fin;
@@ -57,6 +61,7 @@ private:
     foileditors::ProfileEditor* _profileEditor;
     foileditors::ThicknessEditor* _thicknessEditor;
 
+    bool _dirty;
     QFileInfo _currentFile;
 
     QMenu *fileMenu;
@@ -74,7 +79,7 @@ private:
     void createActions();
     void createMenus();
     bool saveFile(const QString &path);
-    void loadFile(const QString &path);
+    bool loadFile(const QString &path);
 
     void setCurrentFilePath(const QString &path);
 };
