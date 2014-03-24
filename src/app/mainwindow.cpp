@@ -107,6 +107,8 @@ void MainWindow::setFoilEditors(Foil *foil)
     QSplitter* mainSplitter = new QSplitter(Qt::Horizontal);
     mainSplitter->addWidget(_outlineEditor);
     mainSplitter->addWidget(ptSplitter);
+    QList<int> sizes = { this->width()/2, this->width()/2 };
+    mainSplitter->setSizes(sizes);
 
     setCentralWidget(mainSplitter);
 }
@@ -116,7 +118,7 @@ void MainWindow::createActions()
     newAct = new QAction(QIcon(), tr("&New"), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("Create a new fin"));
-    //connect
+    //connect TODO
 
 //    QAction *openAct;
     openAct = new QAction(QIcon(), tr("&Open"), this);

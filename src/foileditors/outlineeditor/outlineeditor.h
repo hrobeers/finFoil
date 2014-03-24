@@ -23,7 +23,6 @@
 #ifndef OUTLINEEDITOR_H
 #define OUTLINEEDITOR_H
 
-#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
 
@@ -56,8 +55,6 @@ namespace foileditors
 
     private:
         std::unique_ptr<foillogic::FoilCalculator> _foilCalculator;
-
-        QVBoxLayout* _mainLayout;
 
         PathEditorWidget* _topPathEditor;
         PathEditorWidget* _botPathEditor;

@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
+#include <QSplitter>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
@@ -60,9 +61,12 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     botGbLayout->addWidget(_botPathEditor);
     botGb->setLayout(botGbLayout);
 
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(topGb);
-    _mainLayout->addWidget(botGb);
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(topGb);
+    splitter->addWidget(botGb);
+
+    QVBoxLayout* _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(splitter);
     this->setLayout(_mainLayout);
 
 
