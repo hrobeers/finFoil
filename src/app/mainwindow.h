@@ -42,11 +42,16 @@ public:
     explicit MainWindow(QString title, QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void newFile();
     bool save();
     bool saveAs();
     void open();
+
+    bool maybeSave();
 
     void setDirty();
     void setClean();

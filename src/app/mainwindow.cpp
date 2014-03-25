@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QJsonDocument>
+#include <QCloseEvent>
 #include "hrlib/serialization/serialization.h"
 #include "foil.h"
 
@@ -37,7 +38,8 @@ using namespace foillogic;
 MainWindow::MainWindow(QString title, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    _title(title)
+    _title(title),
+    _dirty(false)
 {
     ui->setupUi(this);
 
@@ -52,12 +54,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (maybeSave())
+    {
+        // TODO store settings
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
+}
+
 void MainWindow::newFile()
 {
-    QFileInfo empty;
-    _currentFile = empty;
-    setFoilEditors(new Foil());
-    setDirty();
+    if (maybeSave())
+    {
+        QFileInfo empty;
+        _currentFile = empty;
+        setFoilEditors(new Foil());
+        setClean();
+    }
 }
 
 bool MainWindow::save()
@@ -85,19 +103,38 @@ bool MainWindow::saveAs()
 
 void MainWindow::open()
 {
-    QString currentDir;
-    if (_currentFile.isFile())
-        currentDir = _currentFile.canonicalPath();
-
-    // if (maybeSave)   TODO
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Fin"),
-                                                    currentDir,
-                                                    tr("Foils (*.foil);;All files (*)"));
-    if (!filePath.isEmpty())
+    if (maybeSave())
     {
-        if (loadFile(filePath))
-            setClean();
+        QString currentDir;
+        if (_currentFile.isFile())
+            currentDir = _currentFile.canonicalPath();
+
+        QString filePath = QFileDialog::getOpenFileName(this, tr("Open Fin"),
+                                                        currentDir,
+                                                        tr("Foils (*.foil);;All files (*)"));
+        if (!filePath.isEmpty())
+        {
+            if (loadFile(filePath))
+                setClean();
+        }
     }
+}
+
+bool MainWindow::maybeSave()
+{
+    if (_dirty)
+    {
+        QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("Unsaved changes"),
+            tr("The fin has unsaved changes.\nDo you want to save your changes?"),
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+
+        if (ret == QMessageBox::Save)
+            return save();
+        else if (ret == QMessageBox::Cancel)
+            return false;
+    }
+
+    return true;
 }
 
 void MainWindow::setDirty()
@@ -108,6 +145,7 @@ void MainWindow::setDirty()
 
 void MainWindow::setClean()
 {
+    // TODO set clean not working properly (clean after painting)
     _dirty = false;
     this->setWindowTitle(_currentFile.fileName() + " -- " + _title);
 }
