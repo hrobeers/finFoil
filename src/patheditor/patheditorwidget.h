@@ -39,7 +39,8 @@ namespace patheditor
         {
             None = 0x0,
             HorizontalAxis = 0x1,
-            VerticalAxis = 0x2
+            VerticalAxis = 0x2,
+            DropImageHereText = 0x4
         };
     };
 

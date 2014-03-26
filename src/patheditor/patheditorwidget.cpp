@@ -88,24 +88,31 @@ void PathEditorWidget::clear()
 
 void PathEditorWidget::enableFeatures(QFlags<Features::e> features)
 {
-    if (Features::HorizontalAxis == (Features::HorizontalAxis & features) &&
-        Features::HorizontalAxis != (Features::HorizontalAxis & _enabledFeatures))
+    if (features.testFlag(Features::HorizontalAxis) && !_enabledFeatures.testFlag(Features::HorizontalAxis))
     {
         _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
                                                 this->scene()->sceneRect().right(), 0);
         this->scene()->addItem(_horizontalAxis);
 
-        _enabledFeatures = _enabledFeatures | Features::HorizontalAxis;
+        _enabledFeatures |= Features::HorizontalAxis;
     }
 
-    if (Features::VerticalAxis == (Features::VerticalAxis & features) &&
-        Features::VerticalAxis != (Features::VerticalAxis & _enabledFeatures))
+    if (features.testFlag(Features::VerticalAxis) && !_enabledFeatures.testFlag(Features::VerticalAxis))
     {
         _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
                                               0, this->scene()->sceneRect().top());
         this->scene()->addItem(_verticalAxis);
 
-        _enabledFeatures = _enabledFeatures | Features::HorizontalAxis;
+        _enabledFeatures |= Features::VerticalAxis;
+    }
+
+    if (features.testFlag(Features::DropImageHereText) && !_enabledFeatures.testFlag(Features::DropImageHereText))
+    {
+        QFont font;
+        font.setWeight(QFont::Light);
+        this->scene()->addText(tr("Drop Image Here"), font);
+
+        _enabledFeatures |= Features::DropImageHereText;
     }
 }
 
