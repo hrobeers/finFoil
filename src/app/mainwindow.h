@@ -51,6 +51,8 @@ private slots:
     bool saveAs();
     void open();
 
+    void about();
+
     bool maybeSave();
 
     void setDirty();
@@ -70,7 +72,7 @@ private:
     QFileInfo _currentFile;
 
     QMenu *fileMenu;
-//    QMenu *helpMenu;
+    QMenu *aboutMenu;
 
     QAction *newAct;
     QAction *openAct;
@@ -78,7 +80,8 @@ private:
     QAction *saveAsAct;
     QAction *quitAct;
 
-//    QAction *aboutAct;
+    QAction *aboutAct;
+    QAction *aboutQtAct;
 
     void setFoilEditors(foillogic::Foil* foil);
     void createActions();

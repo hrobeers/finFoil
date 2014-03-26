@@ -120,6 +120,13 @@ void MainWindow::open()
     }
 }
 
+void MainWindow::about()
+{
+    QMessageBox::about(this, tr("About finFoil"),
+                       tr("<h3>About finFoil</h3>"
+                          "<p>finFoil is an easy to use surf fin design tool.</p>"));
+}
+
 bool MainWindow::maybeSave()
 {
     if (_dirty)
@@ -187,29 +194,32 @@ void MainWindow::createActions()
     newAct->setStatusTip(tr("Create a new fin"));
     connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
 
-//    QAction *openAct;
     openAct = new QAction(QIcon(), tr("&Open"), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open a fin from file"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-//    QAction *saveAct;
     saveAct = new QAction(QIcon(), tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::Save);
     saveAct->setStatusTip(tr("Save the fin to current file"));
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-//    QAction *saveAsAct;
     saveAsAct = new QAction(QIcon(), tr("Save &As ..."), this);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
     saveAsAct->setStatusTip(tr("Save the fin to a different file"));
     connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-
     quitAct = new QAction(QIcon(), tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit finFoil"));
     connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+
+    aboutAct = new QAction(QIcon(), tr("About f&inFoil"), this);
+    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+    aboutQtAct = new QAction(QIcon(), tr("About &Qt"), this);
+    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 void MainWindow::createMenus()
@@ -221,6 +231,10 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
+
+    aboutMenu = menuBar()->addMenu(tr("&About"));
+    aboutMenu->addAction(aboutAct);
+    aboutMenu->addAction(aboutQtAct);
 }
 
 bool MainWindow::saveFile(const QString &path)
