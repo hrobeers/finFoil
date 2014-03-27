@@ -37,7 +37,7 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
 {
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::VerticalAxis |
-                                                    Features::DropImageHereText));
+                                                    Features::DragImageHereText));
 
     QGroupBox* gb = new QGroupBox(tr("Thickness"));
     QVBoxLayout* gbLayout = new QVBoxLayout();

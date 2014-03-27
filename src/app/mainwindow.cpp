@@ -35,10 +35,10 @@
 using namespace foileditors;
 using namespace foillogic;
 
-MainWindow::MainWindow(QString title, QWidget *parent) :
+MainWindow::MainWindow(const hrlib::Version version, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    _title(title),
+    _version(version),
     _dirty(false)
 {
     ui->setupUi(this);
@@ -124,7 +124,15 @@ void MainWindow::about()
 {
     QMessageBox::about(this, tr("About finFoil"),
                        tr("<h3>About finFoil</h3>"
-                          "<p>finFoil is an easy to use surf fin design tool.</p>"));
+                          "<p>finFoil v") +
+                       _version.toString() + "</p>" +
+                       tr("<p>finFoil is an easy to use fin or wing design tool.</p>"
+                          "<p>finFoil is licensed under the GNU LGPL version 2.1. "
+                          "In Short this means that you can use and distribute the finFoil binaries without restrictions.</p>"
+                          "<p>The majority of the finFoil code is licensed under the 2-clause BSD license. "
+                          "Meaning that you can reuse these parts of the code under the conditions of the 2-clause BSD license. "
+                          "However, since some source files are licensed under the GNU LGPL version 2.1, the entire application inherits this license.</p>"
+                          "<p>Copyright 2011-2014 Hans Robeers (hrobeers). All rights reserved.</p>"));
 }
 
 bool MainWindow::maybeSave()
@@ -147,14 +155,14 @@ bool MainWindow::maybeSave()
 void MainWindow::setDirty()
 {
     _dirty = true;
-    this->setWindowTitle(_currentFile.fileName() + "*" + " -- " + _title);
+    this->setWindowTitle(_currentFile.fileName() + "*" + " -- finFoil v" + _version.toString());
 }
 
 void MainWindow::setClean()
 {
     // TODO set clean not working properly (clean after painting)
     _dirty = false;
-    this->setWindowTitle(_currentFile.fileName() + " -- " + _title);
+    this->setWindowTitle(_currentFile.fileName() + " -- finFoil v" + _version.toString());
 }
 
 void MainWindow::setFoilEditors(Foil *foil)

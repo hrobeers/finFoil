@@ -29,6 +29,7 @@
 #include <memory>
 #include <QFileInfo>
 #include "foileditors.h"
+#include "version.h"
 
 namespace Ui {
     class MainWindow;
@@ -39,7 +40,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QString title, QWidget *parent = 0);
+    explicit MainWindow(const hrlib::Version version, QWidget *parent = 0);
     ~MainWindow();
 
 protected:
@@ -59,7 +60,7 @@ private slots:
     void setClean();
 
 private:
-    QString _title;
+    const hrlib::Version _version;
     Ui::MainWindow *ui;
 
     std::unique_ptr<foillogic::Foil> _fin;

@@ -37,7 +37,7 @@ ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::DropImageHereText));
+    _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::DragImageHereText));
 
     QComboBox* symmetryCombo = new QComboBox();
     symmetryCombo->addItem(tr("Symmetric"));

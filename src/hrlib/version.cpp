@@ -60,12 +60,12 @@ Version::Version(int major, int minor, int revision, int build, QString commit, 
     }
 }
 
-QString hrlib::Version::toString()
+QString hrlib::Version::toString() const
 {
     return _string;
 }
 
-QString Version::commit()
+QString Version::commit() const
 {
     return _commit;
 }

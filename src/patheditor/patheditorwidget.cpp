@@ -106,13 +106,13 @@ void PathEditorWidget::enableFeatures(QFlags<Features::e> features)
         _enabledFeatures |= Features::VerticalAxis;
     }
 
-    if (features.testFlag(Features::DropImageHereText) && !_enabledFeatures.testFlag(Features::DropImageHereText))
+    if (features.testFlag(Features::DragImageHereText) && !_enabledFeatures.testFlag(Features::DragImageHereText))
     {
         QFont font;
         font.setWeight(QFont::Light);
-        this->scene()->addText(tr("Drop Image Here"), font);
+        this->scene()->addText(tr("Drag an image here"), font);
 
-        _enabledFeatures |= Features::DropImageHereText;
+        _enabledFeatures |= Features::DragImageHereText;
     }
 }
 

@@ -27,7 +27,7 @@
 
 int main(int argc, char *argv[])
 {
-    hrlib::Version version = finfoil::version();
+    const hrlib::Version version = finfoil::version();
     qDebug() << "Starting finFoil" << version.toString()
              << "git-hash" << version.commit();
 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        MainWindow w("finFoil v" + version.toString());
+        MainWindow w(version);
         w.show();
 
         return a.exec();

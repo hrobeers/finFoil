@@ -37,8 +37,8 @@ namespace hrlib
     public:
         explicit Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType);
 
-        QString toString();
-        QString commit();
+        QString toString() const;
+        QString commit() const;
 
     private:
         int _major;

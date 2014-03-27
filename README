@@ -6,19 +6,19 @@ Compilation from source
 Make sure that the dependencies are installed (see below).
 Execute the follwing commands in a terminal in the finfoil directory:
 
-$ qmake-qt4 finfoil.pro
+$ qmake-qt5 finfoil.pro
 $ make
 
 Dependencies
 ============
 g++ >= 4.7
-Qt >= 4.8
+Qt >= 5.0
 Boost >= 1.54
 
 LICENSE
 =======
 The majority of the code is licensed under the 2-clause BSD license.
-However, parts of the code are licensed under the LGPLv2.
+However, parts of the code are licensed under the GNU LGPL version 2.1.
 Since Everything is statically linked, the total project inherits the LGPL license.
 It should be trivial for every Qt/C++ programmer to extract this code for dynamic linking so that a BSD licensed project is obtained with a dynamic dependency on a LGPL library.
 
