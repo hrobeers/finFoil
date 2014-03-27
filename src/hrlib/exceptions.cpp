@@ -48,6 +48,11 @@ Exception::Exception(QString &message, exception &innerException, QObject *throw
     _innerException = &innerException;
 }
 
+const char *Exception::what() const throw()
+{
+    return message().toStdString().c_str();
+}
+
 void Exception::setMessage(QString &message, QObject *thrower) throw()
 {
     if (thrower)
@@ -61,27 +66,12 @@ void Exception::setMessage(QString &message, QObject *thrower) throw()
     _message = message;
 }
 
-const QString &Exception::message() const
+const QString &Exception::message() const throw()
 {
     return _message;
 }
 
-const std::exception &Exception::innerException() const
+const std::exception &Exception::innerException() const throw()
 {
     return *_innerException;
 }
-
-
-ArgumentException::ArgumentException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-
-NotImplementedException::NotImplementedException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-ImplementationException::ImplementationException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }
-
-
-InitializationException::InitializationException(QString &message, QObject *thrower) throw()
-    : Exception(message, thrower) { }

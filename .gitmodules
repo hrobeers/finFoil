@@ -1,0 +1,6 @@
+[submodule "submodules/qtestrunner"]
+	path = submodules/qtestrunner
+	url = https://github.com/hrobeers/qtestrunner.hpp.git
+[submodule "submodules/qtunits"]
+	path = submodules/qtunits
+	url = https://github.com/hrobeers/QtUnits.git

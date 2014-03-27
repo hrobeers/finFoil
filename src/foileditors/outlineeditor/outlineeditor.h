@@ -23,7 +23,6 @@
 #ifndef OUTLINEEDITOR_H
 #define OUTLINEEDITOR_H
 
-#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
 
@@ -44,6 +43,7 @@ namespace foileditors
     public:
         explicit OutlineEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
+        void setFoil(foillogic::Foil *foil);
         foillogic::FoilCalculator* foilCalculator();
 
         virtual ~OutlineEditor() {}
@@ -54,9 +54,7 @@ namespace foileditors
         void setGridUnitSize(qreal pxPerUnit);
 
     private:
-        QScopedPointer<foillogic::FoilCalculator> _foilCalculator;
-
-        QVBoxLayout* _mainLayout;
+        std::unique_ptr<foillogic::FoilCalculator> _foilCalculator;
 
         PathEditorWidget* _topPathEditor;
         PathEditorWidget* _botPathEditor;

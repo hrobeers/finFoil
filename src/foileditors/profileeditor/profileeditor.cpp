@@ -36,17 +36,8 @@ using namespace foillogic;
 ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     QWidget(parent)
 {
-    _foil = foil;
-
     _pathEditor = new patheditor::PathEditorWidget();
-    _pathEditor->enableFeature(Features::HorizontalAxis);
-
-    _topProfile = new EditablePath(_foil->profile()->topProfile());
-    _botProfile = new EditablePath(_foil->profile()->botProfile());
-    symmetryChanged(0);
-
-    _pathEditor->addPath(_botProfile);
-    _pathEditor->addPath(_topProfile);
+    _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::DragImageHereText));
 
     QComboBox* symmetryCombo = new QComboBox();
     symmetryCombo->addItem(tr("Symmetric"));
@@ -63,10 +54,33 @@ ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
+
+    setFoil(foil);
+
+    symmetryCombo->setCurrentIndex(foil->profile()->symmetry());
+}
+
+void ProfileEditor::setFoil(Foil *foil)
+{
+    _pathEditor->clear();
+
+    _foil = foil;
+
+    _topProfile = new EditablePath(_foil->profile()->topProfile());
+    _botProfile = new EditablePath(_foil->profile()->botProfile());
+    symmetryChanged(_foil->profile()->symmetry());
+
+    _pathEditor->addPath(_botProfile);
+    _pathEditor->addPath(_topProfile);
 }
 
 ProfileEditor::~ProfileEditor()
 {
+}
+
+void ProfileEditor::setGridUnitSize(qreal pxPerUnit)
+{
+    _pathEditor->setGridUnitSize(pxPerUnit);
 }
 
 void ProfileEditor::symmetryChanged(int sym)
@@ -74,16 +88,16 @@ void ProfileEditor::symmetryChanged(int sym)
     switch (sym)
     {
     case 0:
-        _foil->profile()->setSymmetry(Symmetry::Symmetric);
+        _foil->profile()->setSymmetry(Profile::Symmetric);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;
     case 1:
-        _foil->profile()->setSymmetry(Symmetry::Asymmetric);
+        _foil->profile()->setSymmetry(Profile::Asymmetric);
         _botProfile->setEditable(true);
         break;
     case 2:
-        _foil->profile()->setSymmetry(Symmetry::Flat);
+        _foil->profile()->setSymmetry(Profile::Flat);
         _botProfile->setEditable(false);
         _topProfile->setEditable(true);
         break;

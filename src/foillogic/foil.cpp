@@ -27,77 +27,85 @@
 #include "linerestrictor.h"
 #include "quadrantrestrictor.h"
 #include "cubicbezier.h"
+#include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
 
 using namespace foillogic;
 using namespace patheditor;
-using namespace boost::units;
 
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
+    _uuid = QUuid::createUuid();
+
     initOutline();
     initProfile();
     initThickness();
-
-    _height = quantity<si::length, qreal>(0.1 * si::meter); // 10cm
-    _area = quantity<si::area, qreal>(0 * si::meter * si::meter);
-
-    connect(_outline.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onFoilChanged()));
-    connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
-    connect(_thickness.data(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
-
-    connect(_profile.data(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
-
-    connect(_outline.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onFoilReleased()));
-    connect(_profile.data(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
-    connect(_thickness.data(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
-QSharedPointer<Path> Foil::outline()
+std::shared_ptr<Outline> Foil::outline()
 {
     return _outline;
 }
 
-QSharedPointer<Profile> Foil::profile()
+std::shared_ptr<Profile> Foil::profile()
 {
     return _profile;
 }
 
-QSharedPointer<ThicknessProfile> Foil::thickness()
+std::shared_ptr<ThicknessProfile> Foil::thickness()
 {
     return _thickness;
 }
 
-quantity<si::length, qreal> Foil::height()
+QUuid Foil::uuid()
 {
-    return _height;
+    return _uuid;
 }
 
-quantity<si::area, qreal> Foil::area()
+QStringList Foil::history()
 {
-    return _area;
+    QStringList retVal;
+
+    foreach (const QUuid &id, _history)
+        retVal.append(id.toString());
+
+    return retVal;
 }
 
-boost::units::quantity<degree::plane_angle, qreal> Foil::sweep()
+void Foil::pSetOutline(Outline *outline)
 {
-    return _sweep;
+    _outline.reset(outline);
+    connectOutline();
 }
 
-void Foil::setHeight(quantity<si::length, qreal> height)
+void Foil::pSetProfile(Profile *profile)
 {
-    _height = height;
+    _profile.reset(profile);
+    connectProfile();
 }
 
-void Foil::setArea(quantity<si::area, qreal> area)
+void Foil::pSetThickness(ThicknessProfile *thickness)
 {
-    _area = area;
+    _thickness.reset(thickness);
+    connectThickness();
 }
 
-void Foil::setSweep(boost::units::quantity<degree::plane_angle, qreal> sweep)
+void Foil::setUuid(QUuid uuid)
 {
-    _sweep = sweep;
+    _uuid = uuid;
+}
+
+void Foil::setHistory(QStringList history)
+{
+    _history.clear();
+    foreach (const QString &id, history)
+    {
+        QUuid uuid(id);
+        if (!uuid.isNull())
+            _history.append(uuid);
+    }
 }
 
 Foil::~Foil()
@@ -106,46 +114,40 @@ Foil::~Foil()
 
 void Foil::initOutline()
 {
-    _outline = QSharedPointer<Path>(new Path());
-
-    qreal m = 2;
-    QSharedPointer<PathPoint> point1(new PathPoint(m*0, m*0));
-    QSharedPointer<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
-    QSharedPointer<ControlPoint> point3(new ControlPoint(m*70.39944295, m*-113.577872));
-    QSharedPointer<PathPoint> point4(new PathPoint(m*134.750359, m*-114.484482));
-    QSharedPointer<ControlPoint> point5(new ControlPoint(m*148.079229, m*-114.672267));
-    QSharedPointer<ControlPoint> point6(new ControlPoint(m*168.493739, m*-110.447322));
-    QSharedPointer<PathPoint> point7(new PathPoint(m*170.304549, m*-97.240702));
-    QSharedPointer<ControlPoint> point8(new ControlPoint(m*171.482419, m*-88.650189));
-    QSharedPointer<ControlPoint> point9(new ControlPoint(m*134.604629, m*-78.11541));
-    QSharedPointer<PathPoint> point10(new PathPoint(m*123.550789, m*-62.04205));
-    QSharedPointer<ControlPoint> point11(new ControlPoint(m*99.87859895, m*-27.6204));
-    QSharedPointer<ControlPoint> point12(new ControlPoint(m*116.439959, m*0));
-    QSharedPointer<PathPoint> point13(new PathPoint(m*116.439959, m*0));
-
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
-    QSharedPointer<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
-
-    point1->setRestrictor(horizontalAxisRestrictor);
-    point4->setRestrictor(aboveHorizontalRestrictor);
-    point7->setRestrictor(aboveHorizontalRestrictor);
-    point10->setRestrictor(aboveHorizontalRestrictor);
-    point13->setRestrictor(horizontalAxisRestrictor);
-
-    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point4, point5, point6, point7)));
-    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point7, point8, point9, point10)));
-    _outline->append(QSharedPointer<PathItem>(new CubicBezier(point10, point11, point12, point13)));
+    _outline.reset(new Outline());
+    connectOutline();
 }
 
 void Foil::initProfile()
 {
-    _profile = QSharedPointer<Profile>(new Profile());
+    _profile.reset(new Profile());
+    connectProfile();
 }
 
 void Foil::initThickness()
 {
-    _thickness = QSharedPointer<ThicknessProfile>(new ThicknessProfile());
+    _thickness.reset(new ThicknessProfile());
+    connectThickness();
+}
+
+void Foil::connectOutline()
+{
+    connect(_outline.get(), SIGNAL(outlineChanged(Outline*)), this, SLOT(onFoilChanged()));
+    connect(_outline.get(), SIGNAL(outlineReleased(Outline*)), this, SLOT(onFoilReleased()));
+}
+
+void Foil::connectProfile()
+{
+    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onFoilChanged()));
+    connect(_profile.get(), SIGNAL(profileReleased(Profile*)), this, SLOT(onFoilReleased()));
+
+    connect(_profile.get(), SIGNAL(profileChanged(Profile*)), this, SLOT(onProfileChanged()));
+}
+
+void Foil::connectThickness()
+{
+    connect(_thickness.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
+    connect(_thickness.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
 void Foil::onFoilChanged()

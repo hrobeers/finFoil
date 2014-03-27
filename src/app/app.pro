@@ -5,17 +5,11 @@
 #-------------------------------------------------
 
 QT       += core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-# C++11 compiler flags depending on Qt version
-greaterThan(QT_MAJOR_VERSION, 4): CONFIG += c++11
-equals(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
+include(../../common.pri)
 
 TARGET = finFoil
 TEMPLATE = app
-
-QMAKE_CXXFLAGS +=   -Wno-multichar \
-                    -Wno-reorder
 
 SOURCES += main.cpp\
         mainwindow.cpp
@@ -30,7 +24,7 @@ INCLUDEPATH +=  ../ \
                 ../patheditor/ \
                 ../foileditors/ \
                 ../hrlib/ \
-		../foillogic/
+                ../foillogic/
 
 DEPENDPATH += ..
 
@@ -43,3 +37,11 @@ OTHER_FILES +=  ../../LICENSE.BSD \
                 ../../LICENSE.LGPLv2 \
                 ../../README \
                 ../../TODO
+
+#
+# QtUnits lib include
+#
+
+unix|win32: LIBS += -L$${_PRO_FILE_PWD_}/../../submodules/qtunits/bin/ -lQtUnits
+
+INCLUDEPATH += $${_PRO_FILE_PWD_}/../../submodules/qtunits/src/

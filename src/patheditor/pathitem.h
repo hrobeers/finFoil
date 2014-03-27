@@ -33,23 +33,25 @@ namespace patheditor
     class PathItem
     {
     public:
-        explicit PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
-
-
         //
         // Functions needed by EditablePath
         //
-        virtual QSharedPointer<PathPoint> startPoint();
-        virtual QSharedPointer<PathPoint> endPoint();
-        virtual void setStartPoint(QSharedPointer<PathPoint> startPoint);
-        virtual void setEndPoint(QSharedPointer<PathPoint> endPoint);
+        std::shared_ptr<PathPoint> startPoint();
+        std::shared_ptr<PathPoint> endPoint();
+        void setStartPoint(std::shared_ptr<PathPoint> startPoint);
+        void setEndPoint(std::shared_ptr<PathPoint> endPoint);
 
-        virtual QList<QSharedPointer<ControlPoint> > controlPoints() = 0;
+        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() = 0;
 
-        virtual QWeakPointer<PathItem> nextPathItem();
-        virtual QWeakPointer<PathItem> prevPathItem();
-        virtual void setNextPathItem(QSharedPointer<PathItem> nextPathItem);
-        virtual void setPrevPathItem(QSharedPointer<PathItem> prevPathItem);
+        // const getters
+        const PathPoint* constStartPoint() const;
+        const PathPoint* constEndPoint() const;
+        virtual const QList<const ControlPoint*> constControlPoints() const = 0;
+
+        virtual std::weak_ptr<PathItem> nextPathItem() const;
+        virtual std::weak_ptr<PathItem> prevPathItem() const;
+        virtual void setNextPathItem(std::shared_ptr<PathItem> nextPathItem);
+        virtual void setPrevPathItem(std::shared_ptr<PathItem> prevPathItem);
 
         virtual QRectF controlPointRect() const = 0;
 
@@ -68,12 +70,12 @@ namespace patheditor
         virtual ~PathItem() {}
 
     protected:
-        QSharedPointer<PathPoint> _startPoint;
-        QSharedPointer<PathPoint> _endPoint;
+        std::shared_ptr<PathPoint> _startPoint;
+        std::shared_ptr<PathPoint> _endPoint;
 
     private:
-        QWeakPointer<PathItem> _nextPathItem;
-        QWeakPointer<PathItem> _prevPathItem;
+        std::weak_ptr<PathItem> _nextPathItem;
+        std::weak_ptr<PathItem> _prevPathItem;
     };
 }
 

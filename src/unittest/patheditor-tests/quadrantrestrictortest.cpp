@@ -22,8 +22,7 @@
 
 #include "quadrantrestrictortest.h"
 #include "patheditor/quadrantrestrictor.h"
-#include "hrtestlib/unittesting.hpp"
-
+#include "submodules/qtestrunner/qtestrunner.hpp"
 
 void QuadrantRestrictorTest::testException()
 {
@@ -33,7 +32,7 @@ void QuadrantRestrictorTest::testException()
 
         qreal a(1);
 
-        HR_ASSERT_THROW(res.restrictCoordinate(&a, &a), hrlib::ArgumentException)
+        QTR_ASSERT_THROW(res.restrictCoordinate(&a, &a), hrlib::ArgumentException)
     }
     catch(...)
     {
@@ -41,4 +40,4 @@ void QuadrantRestrictorTest::testException()
     }
 }
 
-HR_ADD_TEST(QuadrantRestrictorTest)
+QTR_ADD_TEST(QuadrantRestrictorTest)

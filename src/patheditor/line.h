@@ -35,20 +35,18 @@ namespace patheditor
     class Line : public PathItem
     {
     public:
-        explicit Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
-        QRectF controlPointRect() const;
+        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
+        virtual const QList<const ControlPoint*> constControlPoints() const override;
+        virtual QPointF pointAtPercent(qreal t) override;
+        virtual QRectF controlPointRect() const override;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true);
+        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
+                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) override;
 
         virtual ~Line() {}
-
-    private:
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
     };
 }
 

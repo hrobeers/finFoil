@@ -1,23 +1,14 @@
 /****************************************************************************
-  
+
  Copyright (c) 2013, Hans Robeers
  All rights reserved.
- 
- BSD 2-Clause License
- 
- Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
-   * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-   
-   * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-   
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
+ This code is distributed under the GNU LGPL version 2.1.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
 ****************************************************************************/
 
 #include "foilcalculator.h"
@@ -25,13 +16,16 @@
 #include "qmath.h"
 #include "foil.h"
 #include "profile.h"
+#include "outline.h"
 
 using namespace foillogic;
 using namespace boost::units;
 
 FoilCalculator::FoilCalculator(Foil *foil) :
-    QObject(), _calculated(false), _foil(foil)
+    QObject(), _calculated(false)
 {
+    _foil = foil;
+
     int numOfContours = 6;
     qreal increment = qreal(1) / qreal(numOfContours);
     qreal thickness = 0;
@@ -65,12 +59,12 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::topContours()
+QList<std::shared_ptr<QPainterPath> > FoilCalculator::topContours()
 {
     return _topContours;
 }
 
-QList<QSharedPointer<QPainterPath> > FoilCalculator::bottomContours()
+QList<std::shared_ptr<QPainterPath> > FoilCalculator::bottomContours()
 {
     return _botContours;
 }
@@ -85,18 +79,18 @@ void FoilCalculator::calculate(bool fastCalc)
         if (inProfileSide(thickness, Side::Top))
         {
             qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
-            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> topPath(new QPainterPath());
             _contours.append(topPath);
-            ContourCalculator tcCalc(specificPerc, _foil, topPath.data(), Side::Top, fastCalc);
+            ContourCalculator tcCalc(specificPerc, _foil, topPath.get(), Side::Top, fastCalc);
             tcCalc.run();
         }
 
         if (inProfileSide(thickness, Side::Bottom))
         {
             qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
-            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            std::shared_ptr<QPainterPath> botPath(new QPainterPath());
             _botContours.append(botPath);
-            ContourCalculator bcCalc(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc);
+            ContourCalculator bcCalc(specificPerc, _foil, botPath.get(), Side::Bottom, fastCalc);
             bcCalc.run();
         }
 
@@ -113,18 +107,18 @@ void FoilCalculator::calculate(bool fastCalc)
     {
         if (inProfileSide(thickness, Side::Top))
         {
-            qreal specificPerc = -_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
-            QSharedPointer<QPainterPath> topPath(new QPainterPath());
+            qreal specificPerc = -_foil->profile()->pxThickness() * (thickness - 1)/_foil->profile()->topProfileTop().y() + 1;
+            std::shared_ptr<QPainterPath> topPath(new QPainterPath());
             _topContours.append(topPath);
-            _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.data(), Side::Top, fastCalc));
+            _tPool.start(new ContourCalculator(specificPerc, _foil, topPath.get(), Side::Top, fastCalc));
         }
 
         if (inProfileSide(thickness, Side::Bottom))
         {
-            qreal specificPerc = -(_foil->profile()->thickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
-            QSharedPointer<QPainterPath> botPath(new QPainterPath());
+            qreal specificPerc = -(_foil->profile()->pxThickness() * (thickness - 1)/_foil->profile()->bottomProfileTop().y() + thicknessRatio);
+            std::shared_ptr<QPainterPath> botPath(new QPainterPath());
             _botContours.prepend(botPath);
-            _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.data(), Side::Bottom, fastCalc));
+            _tPool.start(new ContourCalculator(specificPerc, _foil, botPath.get(), Side::Bottom, fastCalc));
         }
     }
 
@@ -151,15 +145,15 @@ void FoilCalculator::recalculateArea()
 
 bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
 {
-    Profile* profile = _foil->profile().data();
+    Profile* profile = _foil->profile().get();
 
     switch (side) {
     case Side::Bottom:
-        if (thicknessPercent - (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->thickness() < 0.1)
+        if (thicknessPercent - (profile->bottomProfileTop().y()-profile->botProfile()->minY())/profile->pxThickness() < 0.1)
             return true;
         return false;
     default:
-        if ((profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->thickness() - thicknessPercent < 0.1)
+        if ((profile->bottomProfileTop().y()-profile->topProfile()->maxY())/profile->pxThickness() - thicknessPercent < 0.1)
             return true;
         return false;
     }
@@ -183,11 +177,11 @@ AreaCalculator::AreaCalculator(Foil *foil)
 
 void AreaCalculator::run()
 {
-    qreal outlineTop = _foil->outline()->minY();
-    qreal scalefactor = qPow(_foil->height().value() / qAbs(outlineTop), 2);
-    qreal smArea = _foil->outline()->area() * scalefactor;
+    qreal outlineTop = _foil->outline()->path()->minY();
+    qreal scalefactor = qPow(_foil->outline()->height().value() / qAbs(outlineTop), 2);
+    qreal smArea = _foil->outline()->path()->area() * scalefactor;
     quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
-    _foil->setArea(area);
+    _foil->outline()->setArea(area);
 }
 
 
@@ -200,10 +194,10 @@ void SweepCalculator::run()
 {
     // find top and outline edges
     qreal t_top = 0;
-    _foil->outline()->minY(&t_top);
-    QPointF top = _foil->outline()->pointAtPercent(t_top);
-    qreal oLEdge = _foil->outline()->pointAtPercent(0).x();
-    qreal oTEdge = _foil->outline()->pointAtPercent(1).x();
+    _foil->outline()->path()->minY(&t_top);
+    QPointF top = _foil->outline()->path()->pointAtPercent(t_top);
+    qreal oLEdge = _foil->outline()->path()->pointAtPercent(0).x();
+    qreal oTEdge = _foil->outline()->path()->pointAtPercent(1).x();
 
     // find thickest point
     qreal t_thick = 0;
@@ -215,6 +209,6 @@ void SweepCalculator::run()
     // calculate the sweep angle in degrees
     qreal os = top.x() - thickX;
     qreal ns = -top.y();
-    quantity<degree::plane_angle, qreal> sweep(qAtan(os/ns) * 180 / M_PI * degree::degree);
-    _foil->setSweep(sweep);
+    quantity<si::plane_angle, qreal> sweep(qAtan(os/ns) * si::radian);
+    _foil->outline()->setSweep(sweep);
 }

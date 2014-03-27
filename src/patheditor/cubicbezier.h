@@ -35,29 +35,30 @@ namespace patheditor
     class CubicBezier : public PathItem
     {
     public:
-        explicit CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint);
+        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
-        explicit CubicBezier(QSharedPointer<PathPoint> startPoint, QSharedPointer<ControlPoint> controlPoint1,
-                             QSharedPointer<ControlPoint> controlPoint2, QSharedPointer<PathPoint> endPoint);
+        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
+                             std::shared_ptr<ControlPoint> controlPoint2, std::shared_ptr<PathPoint> endPoint);
 
-        QSharedPointer<ControlPoint> controlPoint1();
-        QSharedPointer<ControlPoint> controlPoint2();
+        std::shared_ptr<ControlPoint> controlPoint1();
+        std::shared_ptr<ControlPoint> controlPoint2();
 
         // implementing PathItem
-        QList<QSharedPointer<ControlPoint> > controlPoints();
-        virtual QPointF pointAtPercent(qreal t);
-        QRectF controlPointRect() const;
+        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
+        virtual const QList<const ControlPoint*> constControlPoints() const override;
+        virtual QPointF pointAtPercent(qreal t) override;
+        virtual QRectF controlPointRect() const override;
 
-        void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true);
+        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
+                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) override;
 
         virtual ~CubicBezier() {}
 
     private:
-        QSharedPointer<ControlPoint> _cPoint1;
-        QSharedPointer<ControlPoint> _cPoint2;
+        std::shared_ptr<ControlPoint> _cPoint1;
+        std::shared_ptr<ControlPoint> _cPoint2;
 
-        QList<QSharedPointer<ControlPoint> > _controlPoints;
+        QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
 

@@ -43,13 +43,13 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     _enabledFeatures = Features::None;
 
     QPointF origin(0,0);
-    _originRestrictor = QSharedPointer<Restrictor>(new PointRestrictor(origin));
+    _originRestrictor.reset(new PointRestrictor(origin));
 
     QPointF right(1,0);
-    _horizontalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(origin, right));
+    _horizontalAxisRestrictor.reset(new LineRestrictor(origin, right));
 
     QPointF under(0,1);
-    _verticalAxisRestrictor = QSharedPointer<Restrictor>(new LineRestrictor(origin, under));
+    _verticalAxisRestrictor.reset(new LineRestrictor(origin, under));
 
     // view options
     _view->setRenderHint(QPainter::Antialiasing);
@@ -76,43 +76,57 @@ void PathEditorWidget::addGraphicsItem(QGraphicsItem *item)
     this->scene()->addItem(item);
 }
 
-void PathEditorWidget::enableFeature(Features::e feature)
+void PathEditorWidget::clear()
 {
-    if (!featureEnabled(feature))
+    this->scene()->clear();
+
+    // Re-enableFeatures
+    QFlags<Features::e> prevEnabledFeatures = _enabledFeatures;
+    _enabledFeatures = Features::None;
+    enableFeatures(prevEnabledFeatures);
+}
+
+void PathEditorWidget::enableFeatures(QFlags<Features::e> features)
+{
+    if (features.testFlag(Features::HorizontalAxis) && !_enabledFeatures.testFlag(Features::HorizontalAxis))
     {
-        switch (feature)
-        {
-        case Features::HorizontalAxis:
-            _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
-                                                    this->scene()->sceneRect().right(), 0);
-            this->scene()->addItem(_horizontalAxis);
-            break;
+        _horizontalAxis = new QGraphicsLineItem(this->scene()->sceneRect().left(), 0,
+                                                this->scene()->sceneRect().right(), 0);
+        this->scene()->addItem(_horizontalAxis);
 
-        case Features::VerticalAxis:
-            _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
-                                                  0, this->scene()->sceneRect().top());
-            this->scene()->addItem(_verticalAxis);
-            break;
+        _enabledFeatures |= Features::HorizontalAxis;
+    }
 
-        case Features::None:
-            break;
-        }
+    if (features.testFlag(Features::VerticalAxis) && !_enabledFeatures.testFlag(Features::VerticalAxis))
+    {
+        _verticalAxis = new QGraphicsLineItem(0, this->scene()->sceneRect().bottom(),
+                                              0, this->scene()->sceneRect().top());
+        this->scene()->addItem(_verticalAxis);
 
-        _enabledFeatures = _enabledFeatures | feature;
+        _enabledFeatures |= Features::VerticalAxis;
+    }
+
+    if (features.testFlag(Features::DragImageHereText) && !_enabledFeatures.testFlag(Features::DragImageHereText))
+    {
+        QFont font;
+        font.setWeight(QFont::Light);
+        this->scene()->addText(tr("Drag an image here"), font);
+
+        _enabledFeatures |= Features::DragImageHereText;
     }
 }
 
-QSharedPointer<Restrictor> PathEditorWidget::originRestrictor()
+std::shared_ptr<Restrictor> PathEditorWidget::originRestrictor()
 {
     return _originRestrictor;
 }
 
-QSharedPointer<Restrictor> PathEditorWidget::horizontalAxisRestrictor()
+std::shared_ptr<Restrictor> PathEditorWidget::horizontalAxisRestrictor()
 {
     return _horizontalAxisRestrictor;
 }
 
-QSharedPointer<Restrictor> PathEditorWidget::verticalAxisRestrictor()
+std::shared_ptr<Restrictor> PathEditorWidget::verticalAxisRestrictor()
 {
     return _verticalAxisRestrictor;
 }

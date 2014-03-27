@@ -23,7 +23,10 @@
 #include "path.h"
 
 #include <QVarLengthArray>
+#include <QJsonArray>
 #include "pathfunctors.h"
+#include "patheditor/line.h"
+#include "patheditor/cubicbezier.h"
 
 using namespace patheditor;
 
@@ -32,12 +35,12 @@ Path::Path(QObject *parent) :
 {
 }
 
-void Path::append(QSharedPointer<PathItem> pathItem)
+void Path::append(std::shared_ptr<PathItem> pathItem)
 {
     // Set pathItem next and prev
     if (!_pathItemList.isEmpty())
     {
-        QSharedPointer<PathItem> last = _pathItemList.last();
+        std::shared_ptr<PathItem> last = _pathItemList.last();
         last->setNextPathItem(pathItem);
         pathItem->setPrevPathItem(last);
     }
@@ -47,21 +50,18 @@ void Path::append(QSharedPointer<PathItem> pathItem)
         pathItem->setStartPoint(_pathItemList.last()->endPoint());
     }
 
-    // Link endpoints to controlpoints
-    if (pathItem->controlPoints().count() >= 2)
-    {
-        pathItem->startPoint()->addFollowingPoint(pathItem->controlPoints().first());
-        pathItem->endPoint()->addFollowingPoint(pathItem->controlPoints().last());
-    }
-
-//    connectPoints(pathItem.data());
-    emit onAppend(pathItem.data());
+    emit onAppend(pathItem.get());
     _pathItemList.append(pathItem);
 }
 
-QList<QSharedPointer<PathItem> > Path::pathItems()
+QList<std::shared_ptr<PathItem> > Path::pathItems()
 {
     return _pathItemList;
+}
+
+QList<const PathItem *> Path::constPathItems() const
+{
+    return hrlib::toConstList(_pathItemList);
 }
 
 QRectF Path::controlPointRect() const
@@ -70,7 +70,7 @@ QRectF Path::controlPointRect() const
         return QRectF(0,0,0,0);
 
     QRectF retVal = _pathItemList.first()->controlPointRect();
-    foreach(QSharedPointer<PathItem> item, _pathItemList)
+    foreach(std::shared_ptr<PathItem> item, _pathItemList)
     {
         retVal |= item->controlPointRect();
     }
@@ -152,7 +152,7 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
 {
     qreal multiplier = 1;
 
-    QScopedPointer<hrlib::func_mult_offset_base> target;
+    std::unique_ptr<hrlib::func_mult_offset_base> target;
 
     switch (dimension)
     {
@@ -175,8 +175,130 @@ qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) c
     if (t_ext == 0)
     {
         qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), t) * multiplier;
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), t) * multiplier;
     }
     else
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.data()), *t_ext) * multiplier;
+        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), *t_ext) * multiplier;
+}
+
+
+static void appendPntToJsonArray(const PathPoint *pnt, QJsonArray *array)
+{
+    array->append(pnt->x());
+    array->append(pnt->y());
+}
+
+QJsonValue PathSerializer::serializeImpl(const Path *object) const
+{
+    QJsonArray retVal;
+
+    // Move to first point
+    QJsonArray moveToStart;
+    moveToStart.append(QStringLiteral("M"));
+    ::appendPntToJsonArray(object->constPathItems().first()->constStartPoint(), &moveToStart);
+    retVal.append(moveToStart);
+
+    foreach (const PathItem *pathItem, object->constPathItems())
+    {
+        QJsonArray nestedArr;
+
+        switch (pathItem->constControlPoints().count())
+        {
+        case 0:
+            nestedArr.append(QStringLiteral("L"));
+            break;
+
+        case 2:
+            nestedArr.append(QStringLiteral("C"));
+            break;
+
+        default:
+            QString msg = QStringLiteral("PathSerializer has no implementation to serialize a path with ")
+                    + pathItem->constControlPoints().count()
+                    + QStringLiteral(" controlpoints.");
+            throw hrlib::NotImplementedException(msg);
+        }
+
+        foreach (const ControlPoint *pnt, pathItem->constControlPoints())
+            ::appendPntToJsonArray(pnt, &nestedArr);
+
+        ::appendPntToJsonArray(pathItem->constEndPoint(), &nestedArr);
+
+        retVal.append(nestedArr);
+    }
+
+    return retVal;
+}
+
+template <typename Tpnt>
+static std::shared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
+{
+    std::shared_ptr<Tpnt> retVal;
+
+    QJsonValue xval = pntArray->takeAt(0), yval = pntArray->takeAt(0);
+
+    if(xval.isDouble() && yval.isDouble())
+    {
+        retVal.reset(new Tpnt(xval.toDouble(), yval.toDouble()));
+    }
+
+    return retVal;
+}
+
+static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
+{
+    static thread_local std::shared_ptr<PathPoint> s_previousEndPoint;
+
+    std::shared_ptr<PathItem> retVal;
+
+    QString typeId = pathItemJson.takeAt(0).toString();
+
+    if (typeId == QStringLiteral("M"))
+    {
+        s_previousEndPoint = ::takePoint<PathPoint>(&pathItemJson);
+    }
+    else if (typeId == QStringLiteral("L"))
+    {
+        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        if (s_previousEndPoint && endPnt)
+            retVal.reset(new Line(s_previousEndPoint, endPnt));
+        s_previousEndPoint = endPnt;
+    }
+    else if (typeId == QStringLiteral("C"))
+    {
+        std::shared_ptr<ControlPoint> cPnt1 = ::takePoint<ControlPoint>(&pathItemJson);
+        std::shared_ptr<ControlPoint> cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
+        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        if (s_previousEndPoint && cPnt1 && cPnt2 && endPnt)
+            retVal.reset(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
+        s_previousEndPoint = endPnt;
+    }
+
+    return retVal;
+}
+
+std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const
+{
+    if (!jsonValue->isArray())
+    {
+        if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl -> path is not a json array");
+        return nullptr;
+    }
+
+    std::unique_ptr<Path> path(new Path());
+
+    QJsonArray array = jsonValue->toArray();
+
+    foreach (QJsonValue value, array)
+    {
+        if (value.isArray())
+        {
+            std::shared_ptr<PathItem> pathItem = ::toPathItem(value.toArray());
+
+            if (pathItem)
+                path->append(pathItem);
+        }
+    }
+
+    return path;
 }

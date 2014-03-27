@@ -27,6 +27,8 @@
 #include "hrlibfwd/qtfwd.h"
 
 #include <QWidget>
+#include <memory>
+#include <QFlags>
 #include "restrictor.h"
 
 namespace patheditor
@@ -35,9 +37,10 @@ namespace patheditor
     {
         enum e
         {
-            None = 0,
-            HorizontalAxis = 1,
-            VerticalAxis = 2
+            None = 0x0,
+            HorizontalAxis = 0x1,
+            VerticalAxis = 0x2,
+            DragImageHereText = 0x4
         };
     };
 
@@ -61,25 +64,27 @@ namespace patheditor
         void addPath(EditablePath *path);
         void addGraphicsItem(QGraphicsItem *item);
 
+        void clear();
+
         /**
          * Enables a specific feature
          *
-         * @param feature to enable
+         * @param features to enable
          */
-        void enableFeature(Features::e feature);
+        void enableFeatures(QFlags<Features::e> features);
 
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the origin
          */
-        QSharedPointer<Restrictor> originRestrictor();
+        std::shared_ptr<Restrictor> originRestrictor();
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the horizontal axis
          */
-        QSharedPointer<Restrictor> horizontalAxisRestrictor();
+        std::shared_ptr<Restrictor> horizontalAxisRestrictor();
         /**
          * Returns a Restrictor that can be used to pin PathPoints to the vertical axis
          */
-        QSharedPointer<Restrictor> verticalAxisRestrictor();
+        std::shared_ptr<Restrictor> verticalAxisRestrictor();
 
         virtual ~PathEditorWidget() {}
 
@@ -97,14 +102,14 @@ namespace patheditor
         QVBoxLayout* _mainLayout;
 
         // Features
-        int _enabledFeatures;
+        QFlags<Features::e> _enabledFeatures;
         QGraphicsLineItem* _horizontalAxis;
         QGraphicsLineItem* _verticalAxis;
 
         // Restrictors
-        QSharedPointer<Restrictor> _originRestrictor;
-        QSharedPointer<Restrictor> _horizontalAxisRestrictor;
-        QSharedPointer<Restrictor> _verticalAxisRestrictor;
+        std::shared_ptr<Restrictor> _originRestrictor;
+        std::shared_ptr<Restrictor> _horizontalAxisRestrictor;
+        std::shared_ptr<Restrictor> _verticalAxisRestrictor;
     };
 }
 

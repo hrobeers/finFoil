@@ -38,6 +38,8 @@ namespace foileditors
     public:
         explicit ThicknessEditor(foillogic::Foil *foil, QWidget *parent = 0);
 
+        void setFoil(foillogic::Foil* foil);
+
         virtual ~ThicknessEditor();
 
     signals:

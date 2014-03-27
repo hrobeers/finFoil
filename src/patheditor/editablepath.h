@@ -39,7 +39,7 @@ namespace patheditor
     {
         Q_OBJECT
     public:
-        explicit EditablePath(QSharedPointer<Path> path, QGraphicsItem * parent = 0);
+        explicit EditablePath(Path* path, QGraphicsItem * parent = 0);
 
         // Implementing QGraphicsItem
         virtual QRectF boundingRect() const;
@@ -53,7 +53,7 @@ namespace patheditor
          *        Typically used when pathChanged is emitted.
          * @return
          */
-        QSharedPointer<QPainterPath> painterPath();
+        std::shared_ptr<QPainterPath> painterPath();
 
         QPointF pointAtPercent(qreal t);
 
@@ -77,9 +77,9 @@ namespace patheditor
         bool _editable;
         bool _firstPaint;
         bool _released;
-        QSharedPointer<Path> _path;
+        Path* _path;
         PathSettings _settings;
-        QSharedPointer<QPainterPath> _painterPath;
+        std::shared_ptr<QPainterPath> _painterPath;
 
         void connectPoints(PathItem *pathItem);
         void emitPathChanged();

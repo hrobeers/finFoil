@@ -31,13 +31,7 @@
 #include <QComboBox>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
-
-//TODO forward declare & refactor
-#include "hrlib/units/widgets/unitlineedit.h"
-#include "hrlib/units/widgets/unitdoublespinbox.h"
-#include "hrlib/units/length.h"
-#include "hrlib/units/area.h"
-#include "hrlib/units/angle.h"
+#include <QtUnits>
 
 using namespace patheditor;
 
@@ -50,38 +44,42 @@ namespace foileditors
         explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
-        void pxPerUnitChanged(qreal pxPerUnit);
-
-    public slots:
-        void onDepthChange(hrlib::units::IQuantity *depth);
+        void pxPerUnitOutlineChanged(qreal pxPerUnit);
+        void pxPerUnitProfileChanged(qreal pxPerUnit);
 
     protected:
         virtual void showEvent(QShowEvent *);
 
     private:
-        hrlib::units::Length _depth;
-        hrlib::units::Area _area;
-        hrlib::units::Angle _sweep;
+        qt::units::Length _depth;
+        qt::units::Length _thickness;
+        qt::units::Area _area;
+        qt::units::Angle _sweep;
 
-        qreal _pxPerUnit;
+        qreal _pxPerUnitOutline;
+        qreal _pxPerUnitProfile;
         foillogic::FoilCalculator* _foilCalculator;
 
-        QFormLayout* _formLayout;
         QComboBox* _unitSelector;
         QSpinBox* _layerEdit;
-        hrlib::units::UnitDoubleSpinbox<hrlib::units::Length>* _depthEdit;
-        hrlib::units::UnitLineEdit<hrlib::units::Area>* _areaEdit;
-        hrlib::units::UnitLineEdit<hrlib::units::Angle>* _sweepEdit;
+        qt::units::UnitDoubleSpinbox<qt::units::Length>* _depthEdit;
+        qt::units::UnitDoubleSpinbox<qt::units::Length>* _thicknessEdit;
+        qt::units::UnitLineEdit<qt::units::Area>* _areaEdit;
+        qt::units::UnitLineEdit<qt::units::Angle>* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
 
         void updatePxPerUnit();
         void updateArea();
         QString thicknessRatioString(qreal ratio);
 
+        void setLengthUnits(qt::units::LengthUnit lengthUnit);
+
     private slots:
         void onFoilCalculated();
         void onLayerChange(int layerCount);
         void onUnitSystemChange(const QString &system);
+        void onDepthChange(qt::units::IQuantity *depth);
+        void onThicknessChange(qt::units::IQuantity *thickness);
     };
 }
 

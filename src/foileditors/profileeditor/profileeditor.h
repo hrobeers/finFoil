@@ -39,11 +39,14 @@ namespace foileditors
     public:
         explicit ProfileEditor(foillogic::Foil* foil, QWidget *parent = 0);
 
+        void setFoil(foillogic::Foil* foil);
+
         virtual ~ProfileEditor();
 
     signals:
 
     public slots:
+        void setGridUnitSize(qreal pxPerUnit);
 
     private:
         foillogic::Foil* _foil;

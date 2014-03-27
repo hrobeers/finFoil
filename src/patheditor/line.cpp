@@ -30,14 +30,20 @@
 
 using namespace patheditor;
 
-Line::Line(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
-    : PathItem(startPoint, endPoint)
+Line::Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
 {
+    setStartPoint(startPoint);
+    setEndPoint(endPoint);
 }
 
-QList<QSharedPointer<ControlPoint> > Line::controlPoints()
+QList<std::shared_ptr<ControlPoint> > Line::controlPoints()
 {
-    return _controlPoints;
+    return QList<std::shared_ptr<ControlPoint> >();
+}
+
+const QList<const ControlPoint *> Line::constControlPoints() const
+{
+    return QList<const ControlPoint *>();
 }
 
 QPointF Line::pointAtPercent(qreal t)

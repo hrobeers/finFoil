@@ -22,13 +22,11 @@
 
 #include <QCoreApplication>
 
-#include "hrtestlib/unittesting.hpp"
-
-using namespace hrlib;
+#include "submodules/qtestrunner/qtestrunner.hpp"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    return UnitTests::runTests(app);
+    return QTestRunner::runTests(app);
 }

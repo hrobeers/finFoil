@@ -26,7 +26,7 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
 #include "pathitem.h"
 
 #define PATH_AREARES 512
@@ -37,6 +37,7 @@ namespace patheditor
     class Path : public QObject
     {
         Q_OBJECT
+
     public:
         explicit Path(QObject *parent = 0);
 
@@ -44,9 +45,10 @@ namespace patheditor
          * @brief append Append a new path item to the path
          * @param pathItem PathItem to append
          */
-        virtual void append(QSharedPointer<PathItem> pathItem);
+        virtual void append(std::shared_ptr<PathItem> pathItem);
 
-        QList<QSharedPointer<PathItem> > pathItems();
+        QList<std::shared_ptr<PathItem> > pathItems();
+        QList<const PathItem *> constPathItems() const;
 
         // TODO unittest methods below
 
@@ -74,10 +76,18 @@ namespace patheditor
         enum Ext { Min, Max };
         enum Dimension { X, Y };
 
-        QList<QSharedPointer<PathItem> > _pathItemList;
+        QList<std::shared_ptr<PathItem> > _pathItemList;
 
         qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
+
+    class PathSerializer : public hrlib::serialization::CustomSerializer<Path>
+    {
+    protected:
+        virtual QJsonValue serializeImpl(const Path *object) const override;
+        virtual std::unique_ptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
+    };
 }
+CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 
 #endif // PATH_H

@@ -29,10 +29,12 @@ namespace patheditor
 {
     class ControlPoint : public PathPoint
     {
+        Q_OBJECT
+
     public:
         explicit ControlPoint(qreal xpos, qreal ypos);
 
-        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
+        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent) override;
 
         virtual ~ControlPoint() {}
     };

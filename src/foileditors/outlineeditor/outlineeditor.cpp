@@ -25,37 +25,27 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
+#include <QSplitter>
 #include "patheditor/patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
 #include "thicknesscontours.h"
+#include "outline.h"
 
 using namespace foileditors;
 using namespace foillogic;
 
 OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QWidget(parent)
-{    
-    _foilCalculator.reset(new FoilCalculator(foil));
-
-
+{
     //
     // PathEditors
     //
+    QFlags<Features::e> features(Features::HorizontalAxis | Features::DragImageHereText);
     _topPathEditor = new patheditor::PathEditorWidget();
-    _topPathEditor->enableFeature(Features::HorizontalAxis);
+    _topPathEditor->enableFeatures(features);
     _botPathEditor = new patheditor::PathEditorWidget();
-    _botPathEditor->enableFeature(Features::HorizontalAxis);
-
-    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.data(), Side::Top);
-    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.data(), Side::Bottom);
-
-    EditablePath* nonEditableOutline = new EditablePath(foil->outline());
-    nonEditableOutline->setEditable(false);
-    _topPathEditor->addGraphicsItem(topContours);
-    _topPathEditor->addPath(new EditablePath(foil->outline()));
-    _botPathEditor->addGraphicsItem(botContours);
-    _botPathEditor->addPath(nonEditableOutline);
+    _botPathEditor->enableFeatures(features);
 
 
     //
@@ -72,15 +62,42 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     botGbLayout->addWidget(_botPathEditor);
     botGb->setLayout(botGbLayout);
 
-    _mainLayout = new QVBoxLayout();
-    _mainLayout->addWidget(topGb);
-    _mainLayout->addWidget(botGb);
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(topGb);
+    splitter->addWidget(botGb);
+
+    QVBoxLayout* _mainLayout = new QVBoxLayout();
+    _mainLayout->addWidget(splitter);
     this->setLayout(_mainLayout);
+
+
+    //
+    // Set foil
+    //
+    setFoil(foil);
+}
+
+void OutlineEditor::setFoil(Foil *foil)
+{
+    _topPathEditor->clear();
+    _botPathEditor->clear();
+
+    _foilCalculator.reset(new FoilCalculator(foil));
+
+    ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
+    ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
+
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path());
+    nonEditableOutline->setEditable(false);
+    _topPathEditor->addGraphicsItem(topContours);
+    _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
+    _botPathEditor->addGraphicsItem(botContours);
+    _botPathEditor->addPath(nonEditableOutline);
 }
 
 FoilCalculator *OutlineEditor::foilCalculator()
 {
-    return _foilCalculator.data();
+    return _foilCalculator.get();
 }
 
 void OutlineEditor::setGridUnitSize(qreal pxPerUnit)

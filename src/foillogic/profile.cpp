@@ -22,6 +22,7 @@
 
 #include "foillogic/profile.h"
 
+#include "path.h"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "cubicbezier.h"
@@ -30,47 +31,59 @@
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace boost::units;
 
 Profile::Profile(QObject *parent) :
     QObject(parent), _symmetry(Symmetry::Symmetric),
-    t_topProfileTop(0.3), t_botProfileTop(0.3)
+    t_topProfileTop(0.3), t_botProfileTop(0.3),
+    _thickness(0.01 * si::meter) // 1cm
 {
     initProfile();
 }
 
-QSharedPointer<Path> Profile::topProfile()
+Path *Profile::topProfile()
 {
-    return _topProfile;
+    return _topProfile.get();
 }
 
-QSharedPointer<Path> Profile::botProfile()
+Path *Profile::botProfile()
 {
-    return _botProfile;
+    return _botProfile.get();
 }
 
-Symmetry::e Profile::symmetry() const
+Profile::Symmetry Profile::symmetry() const
 {
     return _symmetry;
 }
 
-void Profile::setSymmetry(Symmetry::e symmetry)
+void Profile::setSymmetry(Symmetry symmetry)
 {
     _symmetry = symmetry;
 
     if (_symmetry == Symmetry::Flat)
     {
-        foreach (QSharedPointer<PathItem> item, _botProfile->pathItems())
+        foreach (std::shared_ptr<PathItem> item, _botProfile->pathItems())
         {
             item->startPoint()->setRestrictedY(0);
             item->endPoint()->setRestrictedY(0);
-            foreach (QSharedPointer<ControlPoint> pnt, item->controlPoints())
+            foreach (std::shared_ptr<ControlPoint> pnt, item->controlPoints())
                 pnt->setRestrictedY(0);
         }
     }
 
-    onProfileChanged(_topProfile.data());
+    onProfileChanged(_topProfile.get());
 
     onProfileReleased();
+}
+
+boost::units::quantity<boost::units::si::length, qreal> Profile::thickness() const
+{
+    return _thickness;
+}
+
+void Profile::setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness)
+{
+    _thickness = thickness;
 }
 
 QPointF Profile::topProfileTop(qreal *t_top) const
@@ -85,7 +98,7 @@ QPointF Profile::bottomProfileTop(qreal *t_top) const
     return _botProfileTop;
 }
 
-qreal Profile::thickness() const
+qreal Profile::pxThickness() const
 {
     return _botProfileTop.y() - _topProfileTop.y();
 }
@@ -99,78 +112,152 @@ qreal Profile::thicknessRatio() const
     return -_topProfileTop.y() / _botProfileTop.y();
 }
 
+QString Profile::symmetryStr() const
+{
+    QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
+    return QString(symmetryEnum.valueToKey((int)_symmetry));
+}
+
+Path *Profile::pTopProfile()
+{
+    return topProfile();
+}
+
+Path *Profile::pBotProfile()
+{
+    if (symmetry() == Symmetry::Asymmetric)
+        return botProfile();
+    else
+        return nullptr;
+}
+
+void Profile::setSymmetryStr(QString symmetry)
+{
+    QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
+    bool ok;
+    _symmetry = (Symmetry)symmetryEnum.keyToValue(symmetry.toStdString().c_str(), &ok);
+    if (!ok)
+        _symmetry = Symmetry::Symmetric;
+}
+
+void Profile::pSetTopProfile(Path *topProfile)
+{
+    std::shared_ptr<Restrictor> startPntRestrictor = _topProfile->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _topProfile->pathItems().last()->endPoint()->restrictor();
+
+    topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
+    _botProfile->pathItems().first()->setStartPoint(topProfile->pathItems().first()->startPoint());
+    _botProfile->pathItems().last()->setEndPoint(topProfile->pathItems().last()->endPoint());
+
+    _topProfile.reset(topProfile);
+
+    attachSignals(_topProfile.get());
+}
+
+void Profile::pSetBotProfile(Path *botProfile)
+{
+    std::shared_ptr<Restrictor> startPntRestrictor = _botProfile->pathItems().first()->startPoint()->restrictor();
+    std::shared_ptr<Restrictor> endPntRestrictor = _botProfile->pathItems().last()->endPoint()->restrictor();
+
+    botProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
+    botProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+
+    _topProfile->pathItems().first()->setStartPoint(botProfile->pathItems().first()->startPoint());
+    _topProfile->pathItems().last()->setEndPoint(botProfile->pathItems().last()->endPoint());
+
+    _botProfile.reset(botProfile);
+
+    attachSignals(_botProfile.get());
+}
+
+void Profile::pResetBotProfile()
+{
+    // Do nothing, initialized in ctor
+}
+
 Profile::~Profile()
 {
 }
 
 void Profile::initProfile()
 {
-    _topProfile = QSharedPointer<Path>(new Path());
-    _botProfile = QSharedPointer<Path>(new Path());
+    _topProfile.reset(new Path());
+    _botProfile.reset(new Path());
 
-    QSharedPointer<PathPoint> point1(new PathPoint(0,0));
-    QSharedPointer<PathPoint> point3(new PathPoint(300,0));
+    std::shared_ptr<PathPoint> point1(new PathPoint(0,0));
+    std::shared_ptr<PathPoint> point3(new PathPoint(300,0));
 
-    QSharedPointer<PathPoint> tPoint(new PathPoint(90,-35));
-    QSharedPointer<PathPoint> bPoint(new PathPoint(90,35));
+    std::shared_ptr<PathPoint> tPoint(new PathPoint(90,-35));
+    std::shared_ptr<PathPoint> bPoint(new PathPoint(90,35));
 
-    QSharedPointer<ControlPoint> tcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> tcPoint2(new ControlPoint(0,-35));
-    QSharedPointer<ControlPoint> tcPoint3(new ControlPoint(135,-35));
-    QSharedPointer<ControlPoint> tcPoint4(new ControlPoint(300,0));
+    std::shared_ptr<ControlPoint> tcPoint1(new ControlPoint(0,0));
+    std::shared_ptr<ControlPoint> tcPoint2(new ControlPoint(0,-35));
+    std::shared_ptr<ControlPoint> tcPoint3(new ControlPoint(135,-35));
+    std::shared_ptr<ControlPoint> tcPoint4(new ControlPoint(300,0));
 
-    QSharedPointer<ControlPoint> bcPoint1(new ControlPoint(0,0));
-    QSharedPointer<ControlPoint> bcPoint2(new ControlPoint(0,35));
-    QSharedPointer<ControlPoint> bcPoint3(new ControlPoint(135,35));
-    QSharedPointer<ControlPoint> bcPoint4(new ControlPoint(300,0));
+    std::shared_ptr<ControlPoint> bcPoint1(new ControlPoint(0,0));
+    std::shared_ptr<ControlPoint> bcPoint2(new ControlPoint(0,35));
+    std::shared_ptr<ControlPoint> bcPoint3(new ControlPoint(135,35));
+    std::shared_ptr<ControlPoint> bcPoint4(new ControlPoint(300,0));
 
-    QSharedPointer<Restrictor> originRestrictor(new PointRestrictor(*point1));
-    QSharedPointer<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
+    std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
+    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
 
     point1->setRestrictor(originRestrictor);
     point3->setRestrictor(horizontalAxisRestrictor);
 
-    _tPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint));
-    _tPart2 = QSharedPointer<CubicBezier>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3));
+    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint)));
+    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3)));
 
-    _bPart1 = QSharedPointer<CubicBezier>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint));
-    _bPart2 = QSharedPointer<CubicBezier>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3));
-
-    _topProfile->append(_tPart1);
-    _topProfile->append(_tPart2);
-
-    _botProfile->append(_bPart1);
-    _botProfile->append(_bPart2);
+    _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint)));
+    _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3)));
 
     // connect the profiles
-    connect(_topProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_botProfile.data(), SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
-    connect(_topProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
-    connect(_botProfile.data(), SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    attachSignals(_topProfile.get());
+    attachSignals(_botProfile.get());
 }
 
-void Profile::mirror(CubicBezier *source, CubicBezier *destination)
+void Profile::attachSignals(Path *path)
 {
-    destination->startPoint()->setRestrictedPos(source->startPoint()->x(), -source->startPoint()->y());
-    destination->endPoint()->setRestrictedPos(source->endPoint()->x(), -source->endPoint()->y());
+    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
+    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+}
 
-    destination->controlPoint1()->setRestrictedPos(source->controlPoint1()->x(), -source->controlPoint1()->y());
-    destination->controlPoint2()->setRestrictedPos(source->controlPoint2()->x(), -source->controlPoint2()->y());
+void Profile::mirror(const PathItem *source, PathItem *destination)
+{
+    destination->startPoint()->setRestrictedPos(source->constStartPoint()->x(), -source->constStartPoint()->y());
+    destination->endPoint()->setRestrictedPos(source->constEndPoint()->x(), -source->constEndPoint()->y());
+
+    auto topContrPoints = source->constControlPoints();
+    auto botContrPoints = destination->controlPoints();
+    for (int i=0; i<topContrPoints.count(); i++)
+    {
+        botContrPoints[i]->setRestrictedPos(topContrPoints[i]->x(), -topContrPoints[i]->y());
+    }
 }
 
 void Profile::onProfileChanged(Path* path)
 {
     if (_symmetry == Symmetry::Symmetric)
     {
-        if (path == _topProfile.data())
+        auto topItems = _topProfile->pathItems();
+        auto botItems = _botProfile->pathItems();
+
+        if (path == _topProfile.get())
         {
-            mirror(_tPart1.data(), _bPart1.data());
-            mirror(_tPart2.data(), _bPart2.data());
+            for (int i=0; i<topItems.count(); i++)
+            {
+                mirror(topItems[i].get(), botItems[i].get());
+            }
         }
         else
         {
-            mirror(_bPart1.data(), _tPart1.data());
-            mirror(_bPart2.data(), _tPart2.data());
+            for (int i=0; i<topItems.count(); i++)
+            {
+                mirror(botItems[i].get(), topItems[i].get());
+            }
         }
     }
 

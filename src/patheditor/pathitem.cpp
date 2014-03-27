@@ -27,50 +27,66 @@
 
 using namespace patheditor;
 
-PathItem::PathItem(QSharedPointer<PathPoint> startPoint, QSharedPointer<PathPoint> endPoint)
-{
-    setStartPoint(startPoint);
-    setEndPoint(endPoint);
-}
-
-QSharedPointer<PathPoint> PathItem::startPoint()
+std::shared_ptr<PathPoint> PathItem::startPoint()
 {
     return _startPoint;
 }
 
-QSharedPointer<PathPoint> PathItem::endPoint()
+std::shared_ptr<PathPoint> PathItem::endPoint()
 {
     return _endPoint;
 }
 
-void PathItem::setStartPoint(QSharedPointer<PathPoint> startPoint)
+void PathItem::setStartPoint(std::shared_ptr<PathPoint> startPoint)
 {
     _startPoint = startPoint;
+
+    if (controlPoints().count() >= 2 &&
+        controlPoints().first()->toFollowPoint() != _startPoint.get())
+    {
+            _startPoint->addFollowingPoint(controlPoints().first());
+    }
 }
 
-void PathItem::setEndPoint(QSharedPointer<PathPoint> endPoint)
+void PathItem::setEndPoint(std::shared_ptr<PathPoint> endPoint)
 {
     _endPoint = endPoint;
+
+    if (controlPoints().count() >= 2 &&
+        controlPoints().last()->toFollowPoint() != _endPoint.get())
+    {
+        _endPoint->addFollowingPoint(controlPoints().last());
+    }
 }
 
-QWeakPointer<PathItem> PathItem::nextPathItem()
+const PathPoint *PathItem::constStartPoint() const
+ {
+    return _startPoint.get();
+}
+
+const PathPoint *PathItem::constEndPoint() const
+ {
+    return _endPoint.get();
+ }
+
+std::weak_ptr<PathItem> PathItem::nextPathItem() const
 {
     return _nextPathItem;
 }
 
-QWeakPointer<PathItem> PathItem::prevPathItem()
+std::weak_ptr<PathItem> PathItem::prevPathItem() const
 {
     return _prevPathItem;
 }
 
-void PathItem::setNextPathItem(QSharedPointer<PathItem> nextPathItem)
+void PathItem::setNextPathItem(std::shared_ptr<PathItem> nextPathItem)
 {
-    _nextPathItem = nextPathItem.toWeakRef();
+    _nextPathItem = nextPathItem;
 }
 
-void PathItem::setPrevPathItem(QSharedPointer<PathItem> prevPathItem)
+void PathItem::setPrevPathItem(std::shared_ptr<PathItem> prevPathItem)
 {
-    _prevPathItem = prevPathItem.toWeakRef();
+    _prevPathItem = prevPathItem;
 }
 
 void PathItem::paintControlPoints(PathSettings *settings, QPainter *painter)

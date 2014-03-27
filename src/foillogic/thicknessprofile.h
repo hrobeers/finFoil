@@ -26,18 +26,28 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
+#include "serialization/serialization.h"
 
 namespace foillogic
 {
     class ThicknessProfile : public QObject
     {
         Q_OBJECT
-    public:
-        explicit ThicknessProfile(QObject *parent = 0);
 
-        QSharedPointer<patheditor::Path> topProfile();
-        QSharedPointer<patheditor::Path> botProfile();
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+
+    public:
+        Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);
+
+        patheditor::Path* topProfile();
+        patheditor::Path* botProfile();
+
+        // Q_PROPERTY getters
+        patheditor::Path* pTopProfile();
+
+        // Q_PROPERTY setters
+        void pSetTopProfile(patheditor::Path *topProfile);
 
         virtual ~ThicknessProfile();
 
@@ -53,11 +63,10 @@ namespace foillogic
     private:
         qreal _thicknessRatio;
 
-        QSharedPointer<patheditor::Path> _topProfile;
-        QSharedPointer<patheditor::Path> _botProfile;
+        std::shared_ptr<patheditor::Path> _topProfile;
+        std::shared_ptr<patheditor::Path> _botProfile;
 
-        QSharedPointer<patheditor::CubicBezier> _topBezier;
-        QSharedPointer<patheditor::CubicBezier> _botBezier;
+        void attachSignals(patheditor::Path* path);
 
         void mirror();
 
@@ -66,5 +75,6 @@ namespace foillogic
         void onProfileReleased();
     };
 }
+SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
 
 #endif // THICKNESSPROFILE_H

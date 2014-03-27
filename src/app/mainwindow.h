@@ -23,7 +23,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "foillogicfwd/foillogicfwd.h"
+
 #include <QMainWindow>
+#include <memory>
+#include <QFileInfo>
+#include "foileditors.h"
+#include "version.h"
 
 namespace Ui {
     class MainWindow;
@@ -34,11 +40,57 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(const hrlib::Version version, QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
+private slots:
+    void newFile();
+    bool save();
+    bool saveAs();
+    void open();
+
+    void about();
+
+    bool maybeSave();
+
+    void setDirty();
+    void setClean();
+
 private:
+    const hrlib::Version _version;
     Ui::MainWindow *ui;
+
+    std::unique_ptr<foillogic::Foil> _fin;
+
+    foileditors::OutlineEditor* _outlineEditor;
+    foileditors::ProfileEditor* _profileEditor;
+    foileditors::ThicknessEditor* _thicknessEditor;
+
+    bool _dirty;
+    QFileInfo _currentFile;
+
+    QMenu *fileMenu;
+    QMenu *aboutMenu;
+
+    QAction *newAct;
+    QAction *openAct;
+    QAction *saveAct;
+    QAction *saveAsAct;
+    QAction *quitAct;
+
+    QAction *aboutAct;
+    QAction *aboutQtAct;
+
+    void setFoilEditors(foillogic::Foil* foil);
+    void createActions();
+    void createMenus();
+    bool saveFile(const QString &path);
+    bool loadFile(const QString &path);
+
+    void setCurrentFilePath(const QString &path);
 };
 
 #endif // MAINWINDOW_H

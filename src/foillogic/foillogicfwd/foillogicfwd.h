@@ -29,6 +29,7 @@
 
 namespace foillogic
 {
+    class Outline;
     class Profile;
     class ThicknessProfile;
     class Foil;

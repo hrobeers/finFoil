@@ -21,21 +21,13 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include <QLayout>
-#include <QGraphicsView>
 #include <QDebug>
 #include "finfoil_version.h"
 #include "mainwindow.h"
-#include "foileditors.h"
-#include "../hrlib/exceptions.h"
-#include "foil.h"
-
-using namespace foileditors;
-using namespace foillogic;
 
 int main(int argc, char *argv[])
 {
-    hrlib::Version version = finfoil::version();
+    const hrlib::Version version = finfoil::version();
     qDebug() << "Starting finFoil" << version.toString()
              << "git-hash" << version.commit();
 
@@ -43,37 +35,14 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
-        QSharedPointer<Foil> fin(new Foil());
-
-        OutlineEditor* outlineEditor = new OutlineEditor(fin.data());
-        ProfileEditor* profileEditor = new ProfileEditor(fin.data());
-        ThicknessEditor* thicknessEditor = new ThicknessEditor(fin.data());
-        FoilDataWidget* foilDataWidget = new FoilDataWidget(outlineEditor->foilCalculator());
-        QObject::connect(foilDataWidget, SIGNAL(pxPerUnitChanged(qreal)), outlineEditor, SLOT(setGridUnitSize(qreal)));
-
-        QHBoxLayout* mainLayout = new QHBoxLayout();
-        QVBoxLayout* ptLayout = new QVBoxLayout();
-
-        ptLayout->addWidget(thicknessEditor);
-        ptLayout->addWidget(profileEditor);
-        ptLayout->addWidget(foilDataWidget);
-
-        mainLayout->addWidget(outlineEditor);
-        mainLayout->addLayout(ptLayout);
-
-        QWidget* centralWidget = new QWidget();
-        centralWidget->setLayout(mainLayout);
-
-        MainWindow w;
-        w.setCentralWidget(centralWidget);
-        w.setWindowTitle("finFoil v" + version.toString());
+        MainWindow w(version);
         w.show();
 
         return a.exec();
     }
-    catch (hrlib::Exception &ex)
+    catch (std::exception &ex)
     {
-        qDebug() << ex.message();
+        qDebug() << ex.what();
         return 1;
     }
 }

@@ -23,33 +23,63 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QObject>
-#include <QSharedPointer>
-#include "path.h"
+#include <QPointF>
+#include "boost/units/quantity.hpp"
+#include "boost/units/systems/si/length.hpp"
+#include "serialization/serialization.h"
 
 namespace foillogic
 {
-    struct Symmetry
-    {
-        enum e { Symmetric, Asymmetric, Flat };
-    };
-
     class Profile : public QObject
     {
         Q_OBJECT
+
+        // read-only properties
+        Q_PROPERTY(qreal thicknessRatio READ thicknessRatio)
+
+        // read-write properties
+        Q_PROPERTY(qreal thickness READ pThickness WRITE pSetThickness)
+        Q_PROPERTY(QString symmetry READ symmetryStr WRITE setSymmetryStr)
+        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+        Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile WRITE pSetBotProfile RESET pResetBotProfile)
+
+        Q_ENUMS(Symmetry)
+
     public:
-        explicit Profile(QObject *parent = 0);
+        enum Symmetry { Symmetric, Asymmetric, Flat };
 
-        QSharedPointer<patheditor::Path> topProfile();
-        QSharedPointer<patheditor::Path> botProfile();
+        Q_INVOKABLE explicit Profile(QObject *parent = 0);
 
-        Symmetry::e symmetry() const;
-        void setSymmetry(Symmetry::e symmetry);
+        patheditor::Path* topProfile();
+        patheditor::Path* botProfile();
+
+        Symmetry symmetry() const;
+        void setSymmetry(Symmetry symmetry);
+
+        boost::units::quantity<boost::units::si::length, qreal> thickness() const;
+        void setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness);
 
         QPointF topProfileTop(qreal* t_top = 0) const;
         QPointF bottomProfileTop(qreal* t_top = 0) const;
-        qreal thickness() const;
+        qreal pxThickness() const;
         qreal thicknessRatio() const;
+
+        // Q_PROPERTY getters
+        QString symmetryStr() const;
+        qreal pThickness() const { return thickness().value(); }
+        patheditor::Path* pTopProfile();
+        patheditor::Path* pBotProfile();
+
+        // Q_PROPERTY setters
+        void setSymmetryStr(QString symmetry);
+        void pSetThickness(qreal thickness) { setThickness(thickness * boost::units::si::meter); }
+        void pSetTopProfile(patheditor::Path *topProfile);
+        void pSetBotProfile(patheditor::Path *botProfile);
+
+        void pResetBotProfile();
 
         virtual ~Profile();
 
@@ -60,29 +90,25 @@ namespace foillogic
     public slots:
 
     private:
-        Symmetry::e _symmetry;
+        Symmetry _symmetry;
+        boost::units::quantity<boost::units::si::length, qreal> _thickness;
 
-        QSharedPointer<patheditor::Path> _topProfile;
-        QSharedPointer<patheditor::Path> _botProfile;
+        std::unique_ptr<patheditor::Path> _topProfile;
+        std::unique_ptr<patheditor::Path> _botProfile;
 
         QPointF _topProfileTop, _botProfileTop;
         qreal t_topProfileTop, t_botProfileTop;
-        qreal _thickness;
-
-        // parts of the profile for connecting when symmetric
-        QSharedPointer<patheditor::CubicBezier> _tPart1;
-        QSharedPointer<patheditor::CubicBezier> _tPart2;
-        QSharedPointer<patheditor::CubicBezier> _bPart1;
-        QSharedPointer<patheditor::CubicBezier> _bPart2;
 
         void initProfile();
+        void attachSignals(patheditor::Path* path);
 
-        void mirror(patheditor::CubicBezier* source, patheditor::CubicBezier* destination);
+        void mirror(const patheditor::PathItem *source, patheditor::PathItem* destination);
 
     private slots:
         void onProfileChanged(patheditor::Path *path);
         void onProfileReleased();
     };
 }
+SERIALIZABLE(foillogic::Profile, profile)
 
 #endif // PROFILE_H

@@ -27,32 +27,43 @@
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
+#include <QUuid>
 #include "path.h"
-#include "boost/units/quantity.hpp"
-#include "boost/units/systems/si/length.hpp"
-#include "boost/units/systems/si/area.hpp"
-#include "boost/units/systems/angle/degrees.hpp"
 
 namespace foillogic
 {
     class Foil : public QObject
     {
         Q_OBJECT
+
+        // read-write properties
+        Q_PROPERTY(foillogic::Outline* outline READ pOutline WRITE pSetOutline)
+        Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
+        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
+        Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
+        Q_PROPERTY(QStringList history READ history WRITE setHistory) // QStringList to omit class information (Compacter serialization)
+
     public:
-        explicit Foil(QObject *parent = 0);
+        Q_INVOKABLE explicit Foil(QObject *parent = 0);
 
-        QSharedPointer<patheditor::Path> outline();
-        QSharedPointer<Profile> profile();
-        QSharedPointer<ThicknessProfile> thickness();
+        std::shared_ptr<Outline> outline();
+        std::shared_ptr<Profile> profile();
+        std::shared_ptr<ThicknessProfile> thickness();
 
-        boost::units::quantity<boost::units::si::length, qreal> height();
-        boost::units::quantity<boost::units::si::area, qreal> area();
-        boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep();
+        // Q_PROPERTY getters
+        Outline* pOutline() { return outline().get(); }
+        Profile* pProfile() { return profile().get(); }
+        ThicknessProfile* pThickness() { return thickness().get(); }
+        QUuid uuid();
+        QStringList history();
 
-        void setHeight(boost::units::quantity<boost::units::si::length, qreal> height);
-        void setArea(boost::units::quantity<boost::units::si::area, qreal> area);
-        void setSweep(boost::units::quantity<boost::units::degree::plane_angle, qreal> sweep);
+        // Q_PROPERTY setters
+        void pSetOutline(Outline *outline);
+        void pSetProfile(Profile *profile);
+        void pSetThickness(ThicknessProfile *thickness);
+        void setUuid(QUuid uuid);
+        void setHistory(QStringList history);
 
         virtual ~Foil();
 
@@ -63,17 +74,19 @@ namespace foillogic
     public slots:
 
     private:
-        boost::units::quantity<boost::units::si::length, qreal> _height;
-        boost::units::quantity<boost::units::si::area, qreal> _area;
-        boost::units::quantity<boost::units::degree::plane_angle, qreal> _sweep;
-
-        QSharedPointer<patheditor::Path> _outline;
-        QSharedPointer<foillogic::Profile> _profile;
-        QSharedPointer<foillogic::ThicknessProfile> _thickness;
+        QUuid _uuid;
+        QList<QUuid> _history;
+        std::shared_ptr<foillogic::Outline> _outline;
+        std::shared_ptr<foillogic::Profile> _profile;
+        std::shared_ptr<foillogic::ThicknessProfile> _thickness;
 
         void initOutline();
         void initProfile();
         void initThickness();
+
+        void connectOutline();
+        void connectProfile();
+        void connectThickness();
 
     private slots:
         void onFoilChanged();
@@ -82,5 +95,6 @@ namespace foillogic
         void onProfileChanged();
     };
 }
+SERIALIZABLE(foillogic::Foil, foil)
 
 #endif // FOIL_H

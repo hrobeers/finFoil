@@ -48,12 +48,12 @@ ScalableImage::ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QG
     PathSettings settings = PathSettings::Default();
     _scalePoint->createPointHandle(settings, this);
 
-    connect(_scalePoint.data(), SIGNAL(pointDrag(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
-    connect(_scalePoint.data(), SIGNAL(pointRelease(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
+    connect(_scalePoint.get(), SIGNAL(pointDrag(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
+    connect(_scalePoint.get(), SIGNAL(pointRelease(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
 
     QPointF botLeft(_rect.bottomLeft());
     QPointF topRight(_rect.topRight());
-    QSharedPointer<LineRestrictor> restrictor(new LineRestrictor(botLeft, topRight));
+    std::shared_ptr<LineRestrictor> restrictor(new LineRestrictor(botLeft, topRight));
     _scalePoint->setRestrictor(restrictor);
 }
 
@@ -64,7 +64,7 @@ void ScalableImage::paint(QPainter *painter, const QStyleOptionGraphicsItem */*u
 
 QRectF ScalableImage::boundingRect() const
 {
-    return QRectF(_rect) | _scalePoint.data()->handle()->boundingRect();
+    return QRectF(_rect) | _scalePoint.get()->handle()->boundingRect();
 }
 
 ScalableImage::~ScalableImage()
