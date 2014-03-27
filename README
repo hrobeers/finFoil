@@ -6,8 +6,15 @@ Compilation from source
 Make sure that the dependencies are installed (see below).
 Execute the follwing commands in a terminal in the finfoil directory:
 
+$ cd submodules/qtunits/
+$ qmake-qt5 qtunits.pro
+$ make
+$ make install
+$ cd ../..
+
 $ qmake-qt5 finfoil.pro
 $ make
+$ make install
 
 Dependencies
 ============
