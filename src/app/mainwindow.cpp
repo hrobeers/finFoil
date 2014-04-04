@@ -29,11 +29,12 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QCloseEvent>
-#include "hrlib/serialization/serialization.h"
+#include "jenson.h"
 #include "foil.h"
 
 using namespace foileditors;
 using namespace foillogic;
+using namespace jenson;
 
 MainWindow::MainWindow(const hrlib::Version version, QWidget *parent) :
     QMainWindow(parent),
@@ -258,7 +259,7 @@ bool MainWindow::saveFile(const QString &path)
     }
 
     QTextStream out(&file);
-    QJsonDocument json(hrlib::serialization::serialize(_fin.get()));
+    QJsonDocument json(JenSON::serialize(_fin.get()));
     out << json.toJson();
 
     setCurrentFilePath(path);
@@ -285,7 +286,7 @@ bool MainWindow::loadFile(const QString &path)
 
     QString errorMsg;
     QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
-    std::unique_ptr<Foil> deserialized = hrlib::serialization::deserialize<Foil>(&jObj, &errorMsg);
+    std::unique_ptr<Foil> deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
 
     if (deserialized)
     {

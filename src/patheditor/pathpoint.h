@@ -29,7 +29,7 @@
 #include <QPen>
 #include "restrictor.h"
 #include "pointhandle.h"
-#include "serialization/serialization.h"
+#include "jenson.h"
 
 namespace patheditor
 {

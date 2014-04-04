@@ -27,7 +27,7 @@
 
 #include <QObject>
 #include <memory>
-#include "serialization/serialization.h"
+#include "jenson.h"
 
 namespace foillogic
 {

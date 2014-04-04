@@ -81,7 +81,7 @@ namespace patheditor
         qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
 
-    class PathSerializer : public hrlib::serialization::CustomSerializer<Path>
+    class PathSerializer : public jenson::JenSON::CustomSerializer<Path>
     {
     protected:
         virtual QJsonValue serializeImpl(const Path *object) const override;

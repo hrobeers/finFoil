@@ -61,7 +61,7 @@ QList<std::shared_ptr<PathItem> > Path::pathItems()
 
 QList<const PathItem *> Path::constPathItems() const
 {
-    return hrlib::toConstList(_pathItemList);
+    return jenson::toConstList(_pathItemList);
 }
 
 QRectF Path::controlPointRect() const
@@ -216,7 +216,7 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
             QString msg = QStringLiteral("PathSerializer has no implementation to serialize a path with ")
                     + pathItem->constControlPoints().count()
                     + QStringLiteral(" controlpoints.");
-            throw hrlib::NotImplementedException(msg);
+            throw jenson::SerializationException(msg);
         }
 
         foreach (const ControlPoint *pnt, pathItem->constControlPoints())

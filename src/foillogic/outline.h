@@ -31,7 +31,7 @@
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/si/area.hpp"
 #include "boost/units/systems/si/plane_angle.hpp"
-#include "serialization/serialization.h"
+#include "jenson.h"
 #include "path.h"
 
 namespace foillogic
