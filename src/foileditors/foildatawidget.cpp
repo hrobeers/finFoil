@@ -228,6 +228,7 @@ void FoilDataWidget::onDepthChange(IQuantity *depth)
     _foilCalculator->foil()->outline()->setHeight(_depth.internalValue());
     _foilCalculator->recalculateArea();
     onFoilCalculated();
+    emit depthChanged(&_depth);
 }
 
 void FoilDataWidget::onThicknessChange(IQuantity *thickness)
@@ -236,4 +237,5 @@ void FoilDataWidget::onThicknessChange(IQuantity *thickness)
     _thickness.setInternalValue(lthickness->internalValue());
     _foilCalculator->foil()->profile()->setThickness(_thickness.internalValue());
     updatePxPerUnit();
+    emit thicknessChanged(&_thickness);
 }

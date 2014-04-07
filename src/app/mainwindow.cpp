@@ -155,13 +155,15 @@ bool MainWindow::maybeSave()
 
 void MainWindow::setDirty()
 {
-    _dirty = true;
-    this->setWindowTitle(_currentFile.fileName() + "*" + " -- finFoil v" + _version.toString());
+    if (!_dirty)
+    {
+        _dirty = true;
+        this->setWindowTitle(_currentFile.fileName() + "*" + " -- finFoil v" + _version.toString());
+    }
 }
 
 void MainWindow::setClean()
 {
-    // TODO set clean not working properly (clean after painting)
     _dirty = false;
     this->setWindowTitle(_currentFile.fileName() + " -- finFoil v" + _version.toString());
 }
@@ -191,9 +193,9 @@ void MainWindow::setFoilEditors(Foil *foil)
     setCentralWidget(mainSplitter);
 
     // connect dirty flagging
-    connect(_outlineEditor->foilCalculator(), SIGNAL(foilCalculated(FoilCalculator*)), this, SLOT(setDirty()));
-    connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), this, SLOT(setDirty()));
-    connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), this, SLOT(setDirty()));
+    connect(_outlineEditor->foilCalculator()->foil(), SIGNAL(foilChanged(Foil*)), this, SLOT(setDirty()));
+    connect(foilDataWidget, SIGNAL(depthChanged(qt::units::Length*)), this, SLOT(setDirty()));
+    connect(foilDataWidget, SIGNAL(thicknessChanged(qt::units::Length*)), this, SLOT(setDirty()));
 }
 
 void MainWindow::createActions()
