@@ -4,3 +4,6 @@
 [submodule "submodules/qtunits"]
 	path = submodules/qtunits
 	url = https://github.com/hrobeers/QtUnits.git
+[submodule "submodules/jenson"]
+	path = submodules/jenson
+	url = https://github.com/hrobeers/jenson.git

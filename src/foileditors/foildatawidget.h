@@ -44,6 +44,9 @@ namespace foileditors
         explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
 
     signals:
+        void depthChanged(qt::units::Length *height);
+        void thicknessChanged(qt::units::Length *thickness);
+
         void pxPerUnitOutlineChanged(qreal pxPerUnit);
         void pxPerUnitProfileChanged(qreal pxPerUnit);
 

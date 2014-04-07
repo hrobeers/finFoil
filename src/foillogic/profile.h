@@ -29,7 +29,7 @@
 #include <QPointF>
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
-#include "serialization/serialization.h"
+#include "jenson.h"
 
 namespace foillogic
 {

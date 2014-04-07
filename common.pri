@@ -12,3 +12,7 @@ equals(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
 
 # Disable reorder warning
 QMAKE_CXXFLAGS += -Wno-reorder
+
+# JenSON lib include
+unix|win32: LIBS += -L$${_PRO_FILE_PWD_}/../../submodules/jenson/bin/ -ljenson
+INCLUDEPATH += $${_PRO_FILE_PWD_}/../../submodules/jenson/src/
