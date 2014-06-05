@@ -2,3 +2,4 @@ name: finFoil
 markdown: redcarpet
 pygments: true
 encoding: UTF-8
+baseurl: /finFoil
