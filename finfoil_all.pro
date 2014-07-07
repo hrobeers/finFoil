@@ -1,5 +1,4 @@
-TEMPLATE = subdirs
+CONFIG += deps \
+          unittests
 
-SUBDIRS += \
-    src/app \
-    src/unittest
+include(./finfoil.pro)
