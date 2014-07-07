@@ -30,7 +30,7 @@ using namespace patheditor;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
     _side(side), _outline(foil->outline()->path()), _thickness(foil->thickness()->topProfile()), _percContourHeight(percContourHeight),
-    _result(result), _sectionCount(INITCNT / 2), _resolution(500), _tTol(0.0001), _fTol(0.001)
+    _result(result), _sectionCount(INITCNT / 2), _resolution(200), _tTol(0.0001), _fTol(0.001)
 {
     switch (_side) {
     case Side::Bottom:
@@ -44,7 +44,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
     if (!fast)
     {
         _sectionCount = INITCNT * 2;
-        _resolution = 2000;
+        _resolution = 500;
         _tTol = 0.00001;
         _fTol = 0.0001;
     }

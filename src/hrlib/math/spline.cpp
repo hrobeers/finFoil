@@ -10,6 +10,7 @@
 # include <qmath.h>
 # include <ctime>
 # include <cstring>
+# include <boost/math/special_functions/pow.hpp>
 
 using namespace std;
 
@@ -96,7 +97,7 @@ qreal basis_function_b_val ( qreal tdata[], qreal tval )
 //
   if ( tval < tdata[1] )
   {
-    yval = pow ( u, 3 ) / 6.0;
+    yval = boost::math::pow<3>( u ) / 6.0;
   }
   else if ( tval < tdata[2] )
   {
@@ -114,7 +115,7 @@ qreal basis_function_b_val ( qreal tdata[], qreal tval )
   }
   else if ( tval < tdata[4] )
   {
-    yval = pow ( ( 1.0 - u ), 3 ) / 6.0;
+    yval = boost::math::pow<3>( 1.0 - u ) / 6.0;
   }
   else
   {
@@ -255,7 +256,7 @@ qreal basis_function_beta_val ( qreal beta1, qreal beta2, qreal tdata[],
   }
   else if ( tval < tdata[4] )
   {
-    yval = 2.0 * pow ( beta1 * ( 1.0 - u ), 3 );
+    yval = 2.0 * boost::math::pow<3>( beta1 * ( 1.0 - u ) );
   }
   else
   {
@@ -2859,7 +2860,7 @@ void least_set_old ( int ntab, qreal xtab[], qreal ytab[], int ndeg,
     *eps = 0.0;
     for ( i = 0; i < ntab; i++ )
     {
-      *eps = *eps + pow ( ( y_sum / ( qreal ) ( ntab ) - ytab[i] ), 2 );
+      *eps = *eps + boost::math::pow<2>( ( y_sum / ( qreal ) ( ntab ) - ytab[i] ) );
     }
 
     *eps = sqrt ( *eps / ( qreal ) ( ntab ) );
@@ -2900,7 +2901,7 @@ void least_set_old ( int ntab, qreal xtab[], qreal ytab[], int ndeg,
     *eps = 0.0;
     for ( i = 0; i < ntab; i++ )
     {
-      *eps = *eps + pow ( ( ptab[i] - ytab[i] ), 2 );
+      *eps = *eps + boost::math::pow<2>( ( ptab[i] - ytab[i] ) );
     }
 
     *eps = sqrt ( *eps / ( qreal ) ( ntab ) );
@@ -2968,7 +2969,7 @@ void least_set_old ( int ntab, qreal xtab[], qreal ytab[], int ndeg,
   *eps = 0.0;
   for ( i = 0; i < ntab; i++ )
   {
-    *eps = *eps + pow ( ( ptab[i] - ytab[i] ), 2 );
+    *eps = *eps + boost::math::pow<2>( ( ptab[i] - ytab[i] ) );
   }
 
   *eps = sqrt ( *eps / ( qreal ) ( ntab ) );
@@ -4376,7 +4377,7 @@ qreal spline_b_val ( int ndata, qreal tdata[], qreal ydata[], qreal tval )
 //  B function associated with node RIGHT+1, (or "phantom node"),
 //  evaluated in its first interval.
 //
-  bval = pow ( u, 3 ) / 6.0;
+  bval = boost::math::pow<3>( u ) / 6.0;
 
   if ( right+1 <= ndata )
   {
@@ -4475,7 +4476,7 @@ qreal spline_beta_val ( qreal beta1, qreal beta2, int ndata, qreal tdata[],
 //  Beta function associated with node LEFT - 1, (or "phantom node"),
 //  evaluated in its 4th interval.
 //
-  bval = 2.0 * pow ( ( beta1 * ( 1.0 - u ) ), 3 )  / delta;
+  bval = 2.0 * boost::math::pow<3>( ( beta1 * ( 1.0 - u ) ) )  / delta;
 
   if ( 0 < left-1 )
   {
@@ -4525,7 +4526,7 @@ qreal spline_beta_val ( qreal beta1, qreal beta2, int ndata, qreal tdata[],
 //  Beta function associated with node RIGHT+1, (or "phantom node"),
 //  evaluated in its first interval.
 //
-  bval = 2.0 * pow ( u, 3 ) / delta;
+  bval = 2.0 * boost::math::pow<3> ( u ) / delta;
 
   if ( right+1 <= ndata )
   {
@@ -5636,11 +5637,11 @@ qreal spline_overhauser_nonuni_val ( int ndata, qreal tdata[],
 //
   if ( left == 1 )
   {
-    d21 = sqrt ( pow ( tdata[1] - tdata[0], 2 )
-               + pow ( ydata[1] - ydata[0], 2 ) );
+    d21 = sqrt ( boost::math::pow<2> ( tdata[1] - tdata[0] )
+               + boost::math::pow<2> ( ydata[1] - ydata[0] ) );
 
-    d32 = sqrt ( pow ( tdata[2] - tdata[1], 2 )
-               + pow ( ydata[2] - ydata[1], 2 ) );
+    d32 = sqrt ( boost::math::pow<2> ( tdata[2] - tdata[1] )
+               + boost::math::pow<2> ( ydata[2] - ydata[1] ) );
 
     alpha = d21 / ( d32 + d21 );
 
@@ -5650,14 +5651,14 @@ qreal spline_overhauser_nonuni_val ( int ndata, qreal tdata[],
   }
   else if ( left < ndata-1 )
   {
-    d21 = sqrt ( pow ( tdata[left-1] - tdata[left-2], 2 )
-               + pow ( ydata[left-1] - ydata[left-2], 2 ) );
+    d21 = sqrt ( boost::math::pow<2> ( tdata[left-1] - tdata[left-2] )
+               + boost::math::pow<2> ( ydata[left-1] - ydata[left-2] ) );
 
-    d32 = sqrt ( pow ( tdata[left] - tdata[left-1], 2 )
-               + pow ( ydata[left] - ydata[left-1], 2 ) );
+    d32 = sqrt ( boost::math::pow<2> ( tdata[left] - tdata[left-1] )
+               + boost::math::pow<2> ( ydata[left] - ydata[left-1] ) );
 
-    d43 = sqrt ( pow ( tdata[left+1] - tdata[left], 2 )
-               + pow ( ydata[left+1] - ydata[left], 2 ) );
+    d43 = sqrt ( boost::math::pow<2> ( tdata[left+1] - tdata[left] )
+               + boost::math::pow<2> ( ydata[left+1] - ydata[left] ) );
 
     alpha = d21 / ( d32 + d21 );
     beta  = d32 / ( d43 + d32 );
@@ -5668,11 +5669,11 @@ qreal spline_overhauser_nonuni_val ( int ndata, qreal tdata[],
   }
   else if ( left == ndata-1 )
   {
-    d32 = sqrt ( pow ( tdata[ndata-2] - tdata[ndata-3], 2 )
-               + pow ( ydata[ndata-2] - ydata[ndata-3], 2 ) );
+    d32 = sqrt ( boost::math::pow<2> ( tdata[ndata-2] - tdata[ndata-3] )
+               + boost::math::pow<2> ( ydata[ndata-2] - ydata[ndata-3] ) );
 
-    d43 = sqrt ( pow ( tdata[ndata-1] - tdata[ndata-2], 2 )
-               + pow ( ydata[ndata-1] - ydata[ndata-2], 2 ) );
+    d43 = sqrt ( boost::math::pow<2> ( tdata[ndata-1] - tdata[ndata-2] )
+               + boost::math::pow<2> ( ydata[ndata-1] - ydata[ndata-2] ) );
 
     beta  = d32 / ( d43 + d32 );
 
