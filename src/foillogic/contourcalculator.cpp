@@ -15,7 +15,7 @@
 
 #include <QVarLengthArray>
 #include <QPainterPath>
-#include <qmath.h>
+#include <boost/math/tools/roots.hpp>
 #include "pathfunctors.h"
 #include "hrlib/math/spline.hpp"
 #include "foil.h"
@@ -77,9 +77,10 @@ void ContourCalculator::run()
 
 
     //
-    // create the pathfunctors
+    // create the functors
     //
 
+    f_diffTol<qreal> tTolerance(_tTol);
     f_yValueAtPercentPath yOutline(_outline);
     f_yValueAtPercentPath yProfile(_profile);
 
@@ -111,8 +112,9 @@ void ContourCalculator::run()
         }
 
         yOutline.setOffset(sectionHeightArray[i] * y_top);
-        qreal t_outlineLeadingEdge = hrlib::Brent::zero(0, t_top, _tTol, yOutline);
-        qreal t_outlineTrailingEdge = hrlib::Brent::zero(t_top, 1, _tTol, yOutline);
+
+        qreal t_outlineLeadingEdge = boost::math::tools::bisect(yOutline, 0.0, t_top, tTolerance).first;
+        qreal t_outlineTrailingEdge = boost::math::tools::bisect(yOutline, t_top, 1.0, tTolerance).first;
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
@@ -127,8 +129,10 @@ void ContourCalculator::run()
 
         qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
-        qreal t_profileLE = hrlib::Brent::zero(0, t_profileTop, _tTol, yProfile);
-        qreal t_profileTE = hrlib::Brent::zero(t_profileTop, 1, _tTol, yProfile);
+
+        qreal t_profileLE = boost::math::tools::bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
+        qreal t_profileTE = boost::math::tools::bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
+
         qreal leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
         qreal trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
 
@@ -157,7 +161,7 @@ void ContourCalculator::run()
 
             if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
             {
-//                createLinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i);
+//                createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
                 createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
 //                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, overhauser);
             }

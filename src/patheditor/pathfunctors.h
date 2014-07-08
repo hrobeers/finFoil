@@ -38,11 +38,8 @@ namespace patheditor
         qreal _offset;
 
     public:
-        explicit f_xValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0){
-            _path = path;
-            _multiplier = multiplier;
-            _offset = offset;
-        }
+        explicit f_xValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
+            _path(path), _multiplier(multiplier), _offset(offset) {}
 
         virtual qreal operator ()(qreal t){
             return (_path->pointAtPercent(t).x() - _offset) * _multiplier;
@@ -67,11 +64,8 @@ namespace patheditor
         qreal _offset;
 
     public:
-        explicit f_yValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0){
-            _path = path;
-            _multiplier = multiplier;
-            _offset = offset;
-        }
+        explicit f_yValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
+            _path(path), _multiplier(multiplier), _offset(offset) {}
 
         virtual qreal operator ()(qreal t){
             return (_path->pointAtPercent(t).y() - _offset) * _multiplier;
@@ -86,6 +80,20 @@ namespace patheditor
         }
 
         virtual ~f_yValueAtPercentPath() {}
+    };
+
+    template <class T>
+    class f_diffTol
+    {
+    private:
+        T _tolerance;
+
+    public:
+        explicit f_diffTol(T tolerance) : _tolerance(tolerance) {}
+
+        bool operator ()(T min, T max){
+            return (max - min) < _tolerance;
+        }
     };
 }
 
