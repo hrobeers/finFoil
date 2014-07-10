@@ -30,7 +30,6 @@
 #include "pathitem.h"
 
 #define PATH_AREARES 512
-#define PATH_DEFAULT_PERCTOL 0.0001
 
 namespace patheditor
 {
@@ -56,10 +55,10 @@ namespace patheditor
 
         QPointF pointAtPercent(qreal t) const;
 
-        qreal minX(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
-        qreal maxX(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
-        qreal minY(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
-        qreal maxY(qreal *t_top = 0, qreal percTol = PATH_DEFAULT_PERCTOL) const;
+        qreal minX(qreal *t_top = 0) const;
+        qreal maxX(qreal *t_top = 0) const;
+        qreal minY(qreal *t_top = 0) const;
+        qreal maxY(qreal *t_top = 0) const;
 
         qreal area(int resolution = PATH_AREARES) const;
 
@@ -73,12 +72,7 @@ namespace patheditor
         void onPathReleased();
 
     private:
-        enum Ext { Min, Max };
-        enum Dimension { X, Y };
-
         QList<std::shared_ptr<PathItem> > _pathItemList;
-
-        qreal extreme(Ext ext, Dimension dimension, qreal *t, qreal percTol) const;
     };
 
     class PathSerializer : public jenson::JenSON::CustomSerializer<Path>

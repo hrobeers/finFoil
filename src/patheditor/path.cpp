@@ -21,10 +21,10 @@
 ****************************************************************************/
 
 #include "path.h"
+#include "pathtemplates.hpp"
 
 #include <QVarLengthArray>
 #include <QJsonArray>
-#include "pathfunctors.h"
 #include "patheditor/line.h"
 #include "patheditor/cubicbezier.h"
 
@@ -95,24 +95,24 @@ QPointF Path::pointAtPercent(qreal t) const
     return _pathItemList[item]->pointAtPercent(t);
 }
 
-qreal Path::minX(qreal *t_top, qreal percTol) const
+qreal Path::minX(qreal *t_top) const
 {
-    return extreme(Min, X, t_top, percTol);
+    return extreme<X>(this, Min, t_top);
 }
 
-qreal Path::maxX(qreal *t_top, qreal percTol) const
+qreal Path::maxX(qreal *t_top) const
 {
-    return extreme(Max, X, t_top, percTol);
+    return extreme<X>(this, Max, t_top);
 }
 
-qreal Path::minY(qreal *t_top, qreal percTol) const
+qreal Path::minY(qreal *t_top) const
 {
-    return extreme(Min, Y, t_top, percTol);
+    return extreme<Y>(this, Min, t_top);
 }
 
-qreal Path::maxY(qreal *t_top, qreal percTol) const
+qreal Path::maxY(qreal *t_top) const
 {
-    return extreme(Max, Y, t_top, percTol);
+    return extreme<Y>(this, Max, t_top);
 }
 
 qreal Path::area(int resolution) const
@@ -146,39 +146,6 @@ void Path::onPathChanged()
 void Path::onPathReleased()
 {
     emit pathReleased(this);
-}
-
-qreal Path::extreme(Ext ext, Dimension dimension, qreal *t_ext, qreal percTol) const
-{
-    qreal multiplier = 1;
-
-    std::unique_ptr<hrlib::func_mult_offset_base> target;
-
-    switch (dimension)
-    {
-    case X:
-        target.reset(new f_xValueAtPercentPath(this));
-        break;
-    case Y:
-        target.reset(new f_yValueAtPercentPath(this));
-        break;
-    }
-
-    if (ext == Max)
-    {
-        target->setMultiplier(-1);
-        multiplier = -1;
-    }
-
-
-    // find the min of the path
-    if (t_ext == 0)
-    {
-        qreal t = 0.5;
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), t) * multiplier;
-    }
-    else
-        return hrlib::Brent::local_min(0, 1, percTol, *(target.get()), *t_ext) * multiplier;
 }
 
 

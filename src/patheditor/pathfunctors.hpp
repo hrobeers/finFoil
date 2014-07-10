@@ -20,17 +20,16 @@
  
 ****************************************************************************/
 
-#ifndef PATHFUNCTORS_H
-#define PATHFUNCTORS_H
+#ifndef PATHFUNCTORS_HPP
+#define PATHFUNCTORS_HPP
 
 #include "hrlibfwd/qtfwd.h"
 
-#include "hrlib/math/brent.hpp"
 #include "path.h"
 
 namespace patheditor
 {
-    class f_xValueAtPercentPath : public hrlib::func_mult_offset_base
+    class f_xValueAtPercentPath
     {
     private:
         Path const *_path;
@@ -41,22 +40,20 @@ namespace patheditor
         explicit f_xValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
             _path(path), _multiplier(multiplier), _offset(offset) {}
 
-        virtual qreal operator ()(qreal t){
+        qreal operator ()(qreal t){
             return (_path->pointAtPercent(t).x() - _offset) * _multiplier;
         }
 
-        virtual void setMultiplier(qreal multiplier){
+        void setMultiplier(qreal multiplier){
             _multiplier = multiplier;
         }
 
-        virtual void setOffset(qreal offset){
+        void setOffset(qreal offset){
             _offset = offset;
         }
-
-        virtual ~f_xValueAtPercentPath() {}
     };
 
-    class f_yValueAtPercentPath : public hrlib::func_mult_offset_base
+    class f_yValueAtPercentPath
     {
     private:
         Path const *_path;
@@ -67,19 +64,17 @@ namespace patheditor
         explicit f_yValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
             _path(path), _multiplier(multiplier), _offset(offset) {}
 
-        virtual qreal operator ()(qreal t){
+        qreal operator ()(qreal t){
             return (_path->pointAtPercent(t).y() - _offset) * _multiplier;
         }
 
-        virtual void setMultiplier(qreal multiplier){
+        void setMultiplier(qreal multiplier){
             _multiplier = multiplier;
         }
 
-        virtual void setOffset(qreal offset){
+        void setOffset(qreal offset){
             _offset = offset;
         }
-
-        virtual ~f_yValueAtPercentPath() {}
     };
 
     template <class T>
@@ -91,10 +86,10 @@ namespace patheditor
     public:
         explicit f_diffTol(T tolerance) : _tolerance(tolerance) {}
 
-        bool operator ()(T min, T max){
+        bool operator ()(const T& min, const T& max){
             return (max - min) < _tolerance;
         }
     };
 }
 
-#endif // PATHFUNCTORS_H
+#endif // PATHFUNCTORS_HPP

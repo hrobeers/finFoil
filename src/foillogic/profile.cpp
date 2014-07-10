@@ -27,8 +27,6 @@
 #include "linerestrictor.h"
 #include "cubicbezier.h"
 
-#define TTOL 0.00001
-
 using namespace foillogic;
 using namespace patheditor;
 using namespace boost::units;
@@ -261,8 +259,8 @@ void Profile::onProfileChanged(Path* path)
         }
     }
 
-    _topProfile->minY(&t_topProfileTop, TTOL);
-    _botProfile->maxY(&t_botProfileTop, TTOL);
+    _topProfile->minY(&t_topProfileTop);
+    _botProfile->maxY(&t_botProfileTop);
     _topProfileTop = _topProfile->pointAtPercent(t_topProfileTop);
     _botProfileTop = _botProfile->pointAtPercent(t_botProfileTop);
 

@@ -24,9 +24,11 @@
 
 #include <QPainter>
 #include <QRectF>
+#include <boost/math/special_functions/pow.hpp>
 #include "pathsettings.h"
 
 using namespace patheditor;
+using namespace boost::math;
 
 CubicBezier::CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
 {
@@ -81,14 +83,11 @@ QPointF CubicBezier::pointAtPercent(qreal t)
 {
     // X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3
 
-    qreal oneMt = 1-t;
-    qreal tSq = t*t;
-    qreal tCu = tSq * t;
+    qreal xAtPercent = pow<3>(1-t) * _startPoint->x() + 3 * pow<2>(1-t) * t * _cPoint1->x() +
+            3 * (1-t) * pow<2>(t) * _cPoint2->x() + pow<3>(t) * _endPoint->x();
 
-    qreal xAtPercent = (oneMt*oneMt*oneMt) * _startPoint->x() + 3 * (oneMt*oneMt) * t * _cPoint1->x() +
-            3 * oneMt * tSq * _cPoint2->x() + tCu * _endPoint->x();
-    qreal yAtPercent = (oneMt*oneMt*oneMt) * _startPoint->y() + 3 * (oneMt*oneMt) * t * _cPoint1->y() +
-            3 * oneMt * tSq * _cPoint2->y() + tCu * _endPoint->y();
+    qreal yAtPercent = pow<3>(1-t) * _startPoint->y() + 3 * pow<2>(1-t) * t * _cPoint1->y() +
+            3 * (1-t) * pow<2>(t) * _cPoint2->y() + pow<3>(t) * _endPoint->y();
 
     return QPointF(xAtPercent, yAtPercent);
 }

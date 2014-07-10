@@ -16,7 +16,7 @@
 #include <QVarLengthArray>
 #include <QPainterPath>
 #include <boost/math/tools/roots.hpp>
-#include "pathfunctors.h"
+#include "pathfunctors.hpp"
 #include "hrlib/math/spline.hpp"
 #include "foil.h"
 #include "profile.h"
@@ -90,7 +90,7 @@ void ContourCalculator::run()
     //
 
     qreal t_top = 0.5; // start value
-    qreal y_top = _outline->minY(&t_top, _tTol);
+    qreal y_top = _outline->minY(&t_top);
 
 
     //

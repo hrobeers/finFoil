@@ -14,10 +14,11 @@ HEADERS += \
     ../patheditor/quadrantrestrictor.h \
     ../patheditor/controlpoint.h \
     ../patheditor/patheditorview.h \
-    ../patheditor/pathfunctors.h \
     ../patheditor/path.h \
     ../patheditor/scalepoint.h \
-    ../patheditor/scalableimage.h
+    ../patheditor/scalableimage.h \
+    ../patheditor/pathtemplates.hpp \
+    ../patheditor/pathfunctors.hpp
 
 SOURCES += \
     ../patheditor/editablepath.cpp \
