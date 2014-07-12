@@ -97,22 +97,22 @@ QPointF Path::pointAtPercent(qreal t) const
 
 qreal Path::minX(qreal *t_top) const
 {
-    return extreme<X>(this, Min, t_top);
+    return extreme<X, Min>(this, t_top);
 }
 
 qreal Path::maxX(qreal *t_top) const
 {
-    return extreme<X>(this, Max, t_top);
+    return extreme<X, Max>(this, t_top);
 }
 
 qreal Path::minY(qreal *t_top) const
 {
-    return extreme<Y>(this, Min, t_top);
+    return extreme<Y, Min>(this, t_top);
 }
 
 qreal Path::maxY(qreal *t_top) const
 {
-    return extreme<Y>(this, Max, t_top);
+    return extreme<Y, Max>(this, t_top);
 }
 
 qreal Path::area(int resolution) const

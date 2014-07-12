@@ -29,23 +29,27 @@
 
 namespace patheditor
 {
-    class f_xValueAtPercentPath
+    enum Dimension { X, Y };
+    enum Multiplier { Min = 1, Max = -1 };
+
+    // Declaration of the generic path evaluation implementation type
+    template <int Dimension, int Multiplier>
+    class f_ValueAtPercentPathImpl;
+
+    // Specific implementation for the X dimension
+    template <int Multiplier>
+    class f_ValueAtPercentPathImpl<X, Multiplier>
     {
     private:
         Path const *_path;
-        qreal _multiplier;
         qreal _offset;
 
     public:
-        explicit f_xValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
-            _path(path), _multiplier(multiplier), _offset(offset) {}
+        explicit f_ValueAtPercentPathImpl(Path const *path, qreal offset = 0) :
+            _path(path), _offset(offset) {}
 
         qreal operator ()(qreal t){
-            return (_path->pointAtPercent(t).x() - _offset) * _multiplier;
-        }
-
-        void setMultiplier(qreal multiplier){
-            _multiplier = multiplier;
+            return (_path->pointAtPercent(t).x() - _offset) * Multiplier;
         }
 
         void setOffset(qreal offset){
@@ -53,23 +57,20 @@ namespace patheditor
         }
     };
 
-    class f_yValueAtPercentPath
+    // Specific implementation for the Y dimension
+    template <int Multiplier>
+    class f_ValueAtPercentPathImpl<Y, Multiplier>
     {
     private:
         Path const *_path;
-        qreal _multiplier;
         qreal _offset;
 
     public:
-        explicit f_yValueAtPercentPath(Path const *path, qreal multiplier = 1, qreal offset = 0) :
-            _path(path), _multiplier(multiplier), _offset(offset) {}
+        explicit f_ValueAtPercentPathImpl(Path const *path, qreal offset = 0) :
+            _path(path), _offset(offset) {}
 
         qreal operator ()(qreal t){
-            return (_path->pointAtPercent(t).y() - _offset) * _multiplier;
-        }
-
-        void setMultiplier(qreal multiplier){
-            _multiplier = multiplier;
+            return (_path->pointAtPercent(t).y() - _offset) * Multiplier;
         }
 
         void setOffset(qreal offset){
@@ -77,6 +78,16 @@ namespace patheditor
         }
     };
 
+    // Path evaluation function with default Multiplier
+    template <int Dimension, int Multiplier = Min>
+    class f_ValueAtPercentPath : public f_ValueAtPercentPathImpl<Dimension, Multiplier>
+    {
+    public:
+        explicit f_ValueAtPercentPath(Path const *path, qreal offset = 0) :
+            f_ValueAtPercentPathImpl<Dimension, Multiplier>(path, offset) {}
+    };
+
+    // Functor for the root solving stop condition
     template <class T>
     class f_diffTol
     {

@@ -30,30 +30,17 @@
 
 namespace patheditor
 {
-    typedef f_xValueAtPercentPath X;
-    typedef f_yValueAtPercentPath Y;
-
-    enum Ext { Min, Max };
-
-    template <class Dim>
-    static qreal extreme(const Path *self, Ext ext, qreal *t_ext)
+    template <int Dimension, int Multiplier>
+    static qreal extreme(const Path *self, qreal *t_ext)
     {
-        qreal multiplier = 1;
-
-        std::unique_ptr<Dim> target(new Dim(self));
-
-        if (ext == Max)
-        {
-            target->setMultiplier(-1);
-            multiplier = -1;
-        }
+        std::unique_ptr<f_ValueAtPercentPath<Dimension,Multiplier>> target(new f_ValueAtPercentPath<Dimension,Multiplier>(self));
 
         std::pair<qreal, qreal> min = boost::math::tools::brent_find_minima(*target, 0.0, 1.0, 5);
 
         if (t_ext)
             *t_ext = min.first;
 
-        return min.second * multiplier;
+        return min.second * Multiplier;
     }
 }
 

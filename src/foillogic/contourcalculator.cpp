@@ -27,10 +27,12 @@
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace boost::math;
+using namespace boost::math::tools;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
     _side(side), _outline(foil->outline()->path()), _thickness(foil->thickness()->topProfile()), _percContourHeight(percContourHeight),
-    _result(result), _sectionCount(INITCNT / 2), _resolution(200), _tTol(0.0001), _fTol(0.001)
+    _result(result), _sectionCount(INITCNT / 2), _resolution(200), _tTol(0.0015)
 {
     switch (_side) {
     case Side::Bottom:
@@ -45,8 +47,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
     {
         _sectionCount = INITCNT * 2;
         _resolution = 500;
-        _tTol = 0.00001;
-        _fTol = 0.0001;
+        _tTol = 0.0001;
     }
 }
 
@@ -81,8 +82,8 @@ void ContourCalculator::run()
     //
 
     f_diffTol<qreal> tTolerance(_tTol);
-    f_yValueAtPercentPath yOutline(_outline);
-    f_yValueAtPercentPath yProfile(_profile);
+    f_ValueAtPercentPath<Y> yOutline(_outline);
+    f_ValueAtPercentPath<Y> yProfile(_profile);
 
 
     //
@@ -110,11 +111,16 @@ void ContourCalculator::run()
             trailingEdgePnts[i] = 0;
             continue;
         }
+        else if (thicknessOffsetPercent < 0)
+        {
+            thicknessOffsetPercent = 0;
+        }
 
         yOutline.setOffset(sectionHeightArray[i] * y_top);
 
-        qreal t_outlineLeadingEdge = boost::math::tools::bisect(yOutline, 0.0, t_top, tTolerance).first;
-        qreal t_outlineTrailingEdge = boost::math::tools::bisect(yOutline, t_top, 1.0, tTolerance).first;
+        qreal t_outlineLeadingEdge = bisect(yOutline, 0.0, t_top, tTolerance).first;
+        qreal t_outlineTrailingEdge = bisect(yOutline, t_top, 1.0, tTolerance).first;
+
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
@@ -130,8 +136,8 @@ void ContourCalculator::run()
         qreal profileOffset = thicknessOffsetPercent * y_profileTop;
         yProfile.setOffset(profileOffset);
 
-        qreal t_profileLE = boost::math::tools::bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
-        qreal t_profileTE = boost::math::tools::bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
+        qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
+        qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
 
         qreal leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
         qreal trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;

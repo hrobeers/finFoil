@@ -50,7 +50,6 @@ namespace foillogic
         int _sectionCount;
         int _resolution;
         qreal _tTol;
-        qreal _fTol;
 
         void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
         void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
