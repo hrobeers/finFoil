@@ -51,6 +51,19 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
     }
 }
 
+static bool includePoint(QPointF *prevPoint, QPointF *curPoint)
+{
+    if (!prevPoint)
+        return true;
+
+    QPointF diff = (*curPoint - *prevPoint);
+
+    if (qAbs(diff.x()/diff.y()) > 1)
+        return true;
+
+    return false;
+}
+
 void ContourCalculator::run()
 {
     qreal t_profileTop;
@@ -144,16 +157,28 @@ void ContourCalculator::run()
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
-        leadingEdgePnts.append(new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y()));
-        trailingEdgePnts.append(new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y()));
 
-        // set points to 0 when closer than 1 manhattan pixel
-        if ((*(leadingEdgePnts.last()) - *(trailingEdgePnts.last())).manhattanLength() < 1)
+        std::unique_ptr<QPointF> leadingEdgePnt(new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y()));
+        std::unique_ptr<QPointF> trailingEdgePnt(new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y()));
+
+        if ((*(leadingEdgePnt) - *(trailingEdgePnt)).manhattanLength() < 1)
         {
-            delete leadingEdgePnts[i];
-            delete trailingEdgePnts[i];
-            leadingEdgePnts.last() = 0;
-            trailingEdgePnts.last() = 0;
+            // set nullptr when closer than 1 manhattan pixel
+            leadingEdgePnts.append(0);
+            trailingEdgePnts.append(0);
+        }
+        else if (i%5 == 0)
+        {
+            // Make sure that at least one in 5 points is added for spline evaluation
+            leadingEdgePnts.append(leadingEdgePnt.release());
+            trailingEdgePnts.append(trailingEdgePnt.release());
+        }
+        else if (includePoint(leadingEdgePnts.last(), leadingEdgePnt.get()) ||
+                 includePoint(trailingEdgePnts.last(), trailingEdgePnt.get()))
+        {
+            // Only add point for spline evaluation when abs(x/y) > 1 (close to the tip)
+            leadingEdgePnts.append(leadingEdgePnt.release());
+            trailingEdgePnts.append(trailingEdgePnt.release());
         }
     }
 
@@ -171,7 +196,6 @@ void ContourCalculator::run()
             {
 //                createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
                 createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
-//                createSplinePath(leadingEdgePnts, trailingEdgePnts, firstIndex, i, overhauser);
             }
         }
     }
