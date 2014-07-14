@@ -98,8 +98,8 @@ void ContourCalculator::run()
     // calculate the contour points
     //
 
-    QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts(_sectionCount);
-    QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts(_sectionCount);
+    QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts;
+    QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts;
 
     for (int i=0; i<_sectionCount; i++)
     {
@@ -107,8 +107,8 @@ void ContourCalculator::run()
         // if Offset > 1, no intersection exists
         if (thicknessOffsetPercent > 1)
         {
-            leadingEdgePnts[i] = 0;
-            trailingEdgePnts[i] = 0;
+            leadingEdgePnts.append(0);
+            trailingEdgePnts.append(0);
             continue;
         }
         else if (thicknessOffsetPercent < 0)
@@ -144,28 +144,30 @@ void ContourCalculator::run()
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
-        leadingEdgePnts[i] = new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y());
-        trailingEdgePnts[i] = new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y());
+        leadingEdgePnts.append(new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y()));
+        trailingEdgePnts.append(new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y()));
 
         // set points to 0 when closer than 1 manhattan pixel
-        if ((*(leadingEdgePnts.at(i)) - *(trailingEdgePnts.at(i))).manhattanLength() < 1)
+        if ((*(leadingEdgePnts.last()) - *(trailingEdgePnts.last())).manhattanLength() < 1)
         {
             delete leadingEdgePnts[i];
             delete trailingEdgePnts[i];
-            leadingEdgePnts[i] = 0;
-            trailingEdgePnts[i] = 0;
+            leadingEdgePnts.last() = 0;
+            trailingEdgePnts.last() = 0;
         }
     }
 
+    int pointCount = leadingEdgePnts.count();
+
     int firstIndex = 0;
-    for (int i=0; i<_sectionCount; i++)
+    for (int i=0; i<pointCount; i++)
     {
         if (leadingEdgePnts[i] != 0)
         {
             if (i == 0 || leadingEdgePnts[i-1] == 0) // first or nullptr
                 firstIndex = i;
 
-            if (i == _sectionCount-1 || leadingEdgePnts[i+1] == 0)
+            if (i == pointCount-1 || leadingEdgePnts[i+1] == 0)
             {
 //                createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
                 createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
@@ -174,7 +176,7 @@ void ContourCalculator::run()
         }
     }
 
-    for (int i = 0; i < _sectionCount; i++)
+    for (int i = 0; i<pointCount; i++)
     {
         if (leadingEdgePnts[i] != 0)
         {
