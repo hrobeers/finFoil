@@ -114,6 +114,8 @@ void ContourCalculator::run()
     QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts;
     QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts;
 
+    try {
+
     for (int i=0; i<_sectionCount; i++)
     {
         qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
@@ -200,14 +202,11 @@ void ContourCalculator::run()
         }
     }
 
-    for (int i = 0; i<pointCount; i++)
-    {
-        if (leadingEdgePnts[i] != 0)
-        {
-            delete leadingEdgePnts[i];
-            delete trailingEdgePnts[i];
-        }
-    }
+    } catch (evaluation_error /*unused*/) { /*bisect() can throw an evaluation_error.*/ }
+
+    // cleanup
+    foreach (QPointF *point, leadingEdgePnts) if (point) delete point;
+    foreach (QPointF *point, trailingEdgePnts) if (point) delete point;
 }
 
 ContourCalculator::~ContourCalculator()
