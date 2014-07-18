@@ -23,7 +23,15 @@
 #include "thicknessprofile.h"
 #include "outline.h"
 
-#define INITCNT 1024
+#ifdef QT_DEBUG
+    #define INITCNT 128
+    #define LOW_RES 20
+    #define HI_RES 50
+#else
+    #define INITCNT 1024
+    #define LOW_RES 200
+    #define HI_RES 500
+#endif
 
 using namespace foillogic;
 using namespace patheditor;
@@ -32,7 +40,7 @@ using namespace boost::math::tools;
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
     _side(side), _outline(foil->outline()->path()), _thickness(foil->thickness()->topProfile()), _percContourHeight(percContourHeight),
-    _result(result), _sectionCount(INITCNT / 8), _resolution(200), _tTol(0.0015)
+    _result(result), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
 {
     switch (_side) {
     case Side::Bottom:
@@ -46,7 +54,7 @@ ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPaint
     if (!fast)
     {
         _sectionCount = INITCNT / 2;
-        _resolution = 500;
+        _resolution = HI_RES;
         _tTol = 0.0001;
     }
 }
