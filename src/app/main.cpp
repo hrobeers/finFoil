@@ -21,15 +21,18 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include <QDebug>
+#include <QTextStream>
 #include "finfoil_version.h"
 #include "mainwindow.h"
+
+QTextStream out(stdout);
+QTextStream err(stderr);
 
 int main(int argc, char *argv[])
 {
     const hrlib::Version version = finfoil::version();
-    qDebug() << "Starting finFoil" << version.toString()
-             << "git-hash" << version.commit();
+    out << "Starting finFoil " << version.toString()
+        << " git-hash " << version.commit() << endl;
 
     try
     {
@@ -42,7 +45,7 @@ int main(int argc, char *argv[])
     }
     catch (std::exception &ex)
     {
-        qDebug() << ex.what();
+        err << ex.what() << endl;
         return 1;
     }
 }
