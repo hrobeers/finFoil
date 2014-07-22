@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2014, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,22 +20,24 @@
 
 ****************************************************************************/
 
-#ifndef FINFOIL_VERSION_H
-#define FINFOIL_VERSION_H
+#ifndef RUNINTERACTIVE_HPP
+#define RUNINTERACTIVE_HPP
 
-#include "hrlib/version.h"
-#include "../version_autogen.h"
+#include <QApplication>
+#include "main.h"
+#include "mainwindow.h"
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 0
-#define REVISION 0
-
-#include <QString>
-
-namespace finfoil
+int runInteractive(int argc, char *argv[])
 {
-    const hrlib::Version version(MAJOR_VERSION, MINOR_VERSION, REVISION, BUILD_NUMBER,
-                                 COMMIT_HASH, hrlib::ReleaseType::Dev);
+    out << "Starting finFoil " << version.toString() << endl
+        << "git-hash " << version.commit() << endl;
+
+    QApplication a(argc, argv);
+
+    MainWindow w(version);
+    w.show();
+
+    return a.exec();
 }
 
-#endif // FINFOIL_VERSION_H
+#endif // RUNINTERACTIVE_HPP

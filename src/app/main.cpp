@@ -20,28 +20,15 @@
 
 ****************************************************************************/
 
-#include <QApplication>
-#include <QTextStream>
-#include "finfoil_version.h"
-#include "mainwindow.h"
+#include "main.h"
 
-QTextStream out(stdout);
-QTextStream err(stderr);
+#include "runinteractive.hpp"
 
 int main(int argc, char *argv[])
 {
-    const hrlib::Version version = finfoil::version();
-    out << "Starting finFoil " << version.toString()
-        << " git-hash " << version.commit() << endl;
-
     try
     {
-        QApplication a(argc, argv);
-
-        MainWindow w(version);
-        w.show();
-
-        return a.exec();
+        return runInteractive(argc, argv);
     }
     catch (std::exception &ex)
     {

@@ -16,7 +16,9 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     finfoil_version.h \
-    ../version_autogen.h
+    ../version_autogen.h \
+    runinteractive.hpp \
+    main.h
 
 FORMS    += mainwindow.ui
 

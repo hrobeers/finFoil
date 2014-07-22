@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2014, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,22 +20,15 @@
 
 ****************************************************************************/
 
-#ifndef FINFOIL_VERSION_H
-#define FINFOIL_VERSION_H
+#ifndef MAIN_H
+#define MAIN_H
 
-#include "hrlib/version.h"
-#include "../version_autogen.h"
+#include <QTextStream>
+#include "finfoil_version.h"
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 0
-#define REVISION 0
+using namespace finfoil;
 
-#include <QString>
+QTextStream out(stdout);
+QTextStream err(stderr);
 
-namespace finfoil
-{
-    const hrlib::Version version(MAJOR_VERSION, MINOR_VERSION, REVISION, BUILD_NUMBER,
-                                 COMMIT_HASH, hrlib::ReleaseType::Dev);
-}
-
-#endif // FINFOIL_VERSION_H
+#endif // MAIN_H
