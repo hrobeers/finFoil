@@ -20,24 +20,39 @@
 
 ****************************************************************************/
 
-#ifndef RUNINTERACTIVE_HPP
-#define RUNINTERACTIVE_HPP
+#ifndef ABOUT_HPP
+#define ABOUT_HPP
 
-#include "mainwindow.h"
+#include <QCoreApplication>
 
-int runInteractive(QApplication &app, const QString &filePath)
+QString buildAbout(QString paragraphDelimiter)
 {
-    out << "Starting finFoil " << version.toString() << endl
-        << "git-hash " << version.commit() << endl;
-
-    MainWindow w(version);
-
-    w.show();
-
-    if (!filePath.isEmpty())
-        w.loadFile(filePath);
-
-    return app.exec();
+    return QString(QCoreApplication::QCoreApplication::tr("finFoil v") +
+                   version.toString() +
+                   paragraphDelimiter +
+                   QCoreApplication::tr("finFoil is an easy to use fin or wing design tool.") +
+                   paragraphDelimiter +
+                   QCoreApplication::tr("finFoil is licensed under the GNU LGPL version 2.1. "
+                      "In Short this means that you can use and distribute the finFoil binaries without restrictions.") +
+                   paragraphDelimiter +
+                   QCoreApplication::tr("The majority of the finFoil code is licensed under the 2-clause BSD license. "
+                      "Meaning that you can reuse these parts of the code under the conditions of the 2-clause BSD license. "
+                      "However, since some source files are licensed under the GNU LGPL version 2.1, the entire application inherits this license.") +
+                   paragraphDelimiter +
+                   QCoreApplication::tr("Copyright 2011-2014 Hans Robeers (hrobeers). All rights reserved."));
 }
 
-#endif // RUNINTERACTIVE_HPP
+QString about()
+{
+    return buildAbout("\n\n");
+}
+
+QString aboutHtml()
+{
+    return QString(QCoreApplication::tr("<h3>About finFoil</h3>") +
+                   "</p><p>" +
+                   buildAbout("</p><p>") +
+                   "</p>");
+}
+
+#endif // ABOUT_HPP

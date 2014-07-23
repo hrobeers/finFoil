@@ -43,6 +43,9 @@ public:
     explicit MainWindow(const hrlib::Version version, QWidget *parent = 0);
     ~MainWindow();
 
+    bool saveFile(const QString &path);
+    bool loadFile(const QString &path);
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -87,8 +90,6 @@ private:
     void setFoilEditors(foillogic::Foil* foil);
     void createActions();
     void createMenus();
-    bool saveFile(const QString &path);
-    bool loadFile(const QString &path);
 
     void setCurrentFilePath(const QString &path);
 };

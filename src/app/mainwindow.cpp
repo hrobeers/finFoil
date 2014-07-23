@@ -29,6 +29,7 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QCloseEvent>
+#include "main.h"
 #include "jenson.h"
 #include "foil.h"
 
@@ -123,17 +124,7 @@ void MainWindow::open()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About finFoil"),
-                       tr("<h3>About finFoil</h3>"
-                          "<p>finFoil v") +
-                       _version.toString() + "</p>" +
-                       tr("<p>finFoil is an easy to use fin or wing design tool.</p>"
-                          "<p>finFoil is licensed under the GNU LGPL version 2.1. "
-                          "In Short this means that you can use and distribute the finFoil binaries without restrictions.</p>"
-                          "<p>The majority of the finFoil code is licensed under the 2-clause BSD license. "
-                          "Meaning that you can reuse these parts of the code under the conditions of the 2-clause BSD license. "
-                          "However, since some source files are licensed under the GNU LGPL version 2.1, the entire application inherits this license.</p>"
-                          "<p>Copyright 2011-2014 Hans Robeers (hrobeers). All rights reserved.</p>"));
+    QMessageBox::about(this, tr("About finFoil"), aboutHtml());
 }
 
 bool MainWindow::maybeSave()

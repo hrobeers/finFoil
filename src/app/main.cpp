@@ -22,13 +22,40 @@
 
 #include "main.h"
 
+#include <QApplication>
+#include <QCommandLineParser>
+
+QTextStream out(stdout);
+QTextStream err(stderr);
+
+#include "about.hpp"
 #include "runinteractive.hpp"
 
 int main(int argc, char *argv[])
 {
     try
     {
-        return runInteractive(argc, argv);
+        QApplication app(argc, argv);
+        QApplication::setApplicationName("finFoil");
+        QApplication::setApplicationVersion(version.toString());
+
+        QCommandLineParser parser;
+        parser.setApplicationDescription(about());
+        parser.addHelpOption();
+        parser.addVersionOption();
+
+        parser.addPositionalArgument("file", QApplication::tr("File to open."));
+
+        // Process the actual command line arguments given by the user
+        parser.process(app);
+        const QStringList args = parser.positionalArguments();
+
+        // Read the file path
+        QString filePath;
+        if (!args.isEmpty())
+            filePath = args.first();
+
+        return runInteractive(app, filePath);
     }
     catch (std::exception &ex)
     {

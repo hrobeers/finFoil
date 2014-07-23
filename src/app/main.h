@@ -28,7 +28,7 @@
 
 using namespace finfoil;
 
-QTextStream out(stdout);
-QTextStream err(stderr);
+QString about();
+QString aboutHtml();
 
 #endif // MAIN_H
