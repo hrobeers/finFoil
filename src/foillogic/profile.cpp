@@ -221,6 +221,7 @@ void Profile::attachSignals(Path *path)
 {
     connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
     connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+    onProfileChanged(path);
 }
 
 void Profile::mirror(const PathItem *source, PathItem *destination)

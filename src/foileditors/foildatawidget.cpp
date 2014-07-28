@@ -180,17 +180,7 @@ void FoilDataWidget::onFoilCalculated()
 
 void FoilDataWidget::onLayerChange(int layerCount)
 {
-    qreal increment = qreal(1) / qreal(layerCount);
-    qreal thickness = 0;
-    QList<qreal> thicknesses;
-    for (int i = 0; i < layerCount - 1; i++)
-    {
-        thickness += increment;
-        thicknesses.append(thickness);
-    }
-
-    qSort(thicknesses);
-    _foilCalculator->setContourThicknesses(thicknesses);
+    _foilCalculator->setEquidistantContours(layerCount);
 }
 
 void FoilDataWidget::onUnitSystemChange(const QString &system)

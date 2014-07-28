@@ -36,6 +36,7 @@ namespace foillogic
 
         QList<qreal> contourThicknesses() const;
         void setContourThicknesses(QList<qreal> thicknesses);
+        void setEquidistantContours(int contourCount);
         QList<std::shared_ptr<QPainterPath> > topContours();
         QList<std::shared_ptr<QPainterPath> > bottomContours();
 

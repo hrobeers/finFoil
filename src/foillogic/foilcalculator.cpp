@@ -59,6 +59,21 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
     calculate(false);
 }
 
+void FoilCalculator::setEquidistantContours(int contourCount)
+{
+    qreal increment = qreal(1) / qreal(contourCount);
+    qreal thickness = 0;
+    QList<qreal> thicknesses;
+    for (int i = 0; i < contourCount - 1; i++)
+    {
+        thickness += increment;
+        thicknesses.append(thickness);
+    }
+
+    qSort(thicknesses);
+    setContourThicknesses(thicknesses);
+}
+
 QList<std::shared_ptr<QPainterPath> > FoilCalculator::topContours()
 {
     return _topContours;
