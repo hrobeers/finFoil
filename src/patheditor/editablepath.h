@@ -25,10 +25,7 @@
 
 #include "patheditorfwd/patheditorfwd.h"
 
-#include <QList>
-#include "path.h"
-#include "pathitem.h"
-#include "pathsettings.h"
+#include <QGraphicsObject>
 
 namespace patheditor
 {
@@ -48,13 +45,6 @@ namespace patheditor
 
         Path* path();
 
-        /**
-         * @brief get the last drawn QPainterPath.
-         *        Typically used when pathChanged is emitted.
-         * @return
-         */
-        std::shared_ptr<QPainterPath> painterPath();
-
         QPointF pointAtPercent(qreal t);
 
         bool released();
@@ -62,7 +52,7 @@ namespace patheditor
         void setEditable(bool editable);
         bool editable();
 
-        virtual ~EditablePath();
+        virtual ~EditablePath() {}
 
     signals:
         void pathChanged(EditablePath *sender);
@@ -74,12 +64,11 @@ namespace patheditor
         void onPointRelease(PathPoint *sender);
 
     private:
-        bool _editable;
-        bool _firstPaint;
-        bool _released;
-        Path* _path;
-        PathSettings _settings;
-        std::shared_ptr<QPainterPath> _painterPath;
+        bool _editable = true;
+        bool _firstPaint = true;
+        bool _released = true;
+        Path* _path = 0;
+        const PathSettings* _settings = 0;
 
         void connectPoints(PathItem *pathItem);
         void emitPathChanged();

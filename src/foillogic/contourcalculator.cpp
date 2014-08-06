@@ -217,10 +217,6 @@ void ContourCalculator::run()
     foreach (QPointF *point, trailingEdgePnts) if (point) delete point;
 }
 
-ContourCalculator::~ContourCalculator()
-{
-}
-
 void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[])
 {
     qreal increment = qreal(1) / _sectionCount;

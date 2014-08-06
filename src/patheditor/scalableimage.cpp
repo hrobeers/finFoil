@@ -26,6 +26,8 @@
 #include "qmath.h"
 #include "pathsettings.h"
 #include "linerestrictor.h"
+#include "pointhandle.h"
+#include "scalepoint.h"
 
 using namespace patheditor;
 
@@ -45,8 +47,9 @@ ScalableImage::ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QG
 
     _scalePoint.reset(new ScalePoint(_rect.topRight().x(), _rect.topRight().y()));
 
-    PathSettings settings = PathSettings::Default();
-    _scalePoint->createPointHandle(settings, this);
+    // TODO make configurable
+    const PathSettings *settings = PathSettings::Default();
+    _scalePoint->createPointHandle(this, settings);
 
     connect(_scalePoint.get(), SIGNAL(pointDrag(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
     connect(_scalePoint.get(), SIGNAL(pointRelease(PathPoint*)), this, SLOT(onScaleMove(PathPoint*)));
@@ -67,9 +70,7 @@ QRectF ScalableImage::boundingRect() const
     return QRectF(_rect) | _scalePoint.get()->handle()->boundingRect();
 }
 
-ScalableImage::~ScalableImage()
-{
-}
+ScalableImage::~ScalableImage() {}
 
 void ScalableImage::onScaleMove(PathPoint *point)
 {

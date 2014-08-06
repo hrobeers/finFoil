@@ -32,7 +32,6 @@
 #include "boost/units/systems/si/area.hpp"
 #include "boost/units/systems/si/plane_angle.hpp"
 #include "jenson.h"
-#include "path.h"
 
 namespace foillogic
 {
@@ -71,6 +70,8 @@ namespace foillogic
         void pSetPath(patheditor::Path *path);
         void pSetHeight(qreal height) { setHeight(height * boost::units::si::meter); }
 
+        virtual ~Outline();
+
     signals:
         void outlineChanged(Outline* sender);
         void outlineReleased(Outline* sender);
@@ -92,6 +93,5 @@ namespace foillogic
         void onOutlineReleased();
     };
 }
-SERIALIZABLE(foillogic::Outline, outline)
 
 #endif // OUTLINE_H

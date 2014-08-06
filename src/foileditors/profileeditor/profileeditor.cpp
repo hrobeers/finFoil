@@ -26,6 +26,7 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QGraphicsScene>
+#include "patheditorwidget.h"
 #include "editablepath.h"
 #include "foil.h"
 #include "profile.h"
@@ -72,10 +73,6 @@ void ProfileEditor::setFoil(Foil *foil)
 
     _pathEditor->addPath(_botProfile);
     _pathEditor->addPath(_topProfile);
-}
-
-ProfileEditor::~ProfileEditor()
-{
 }
 
 void ProfileEditor::setGridUnitSize(qreal pxPerUnit)

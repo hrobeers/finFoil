@@ -24,6 +24,8 @@
 
 using namespace patheditor;
 
+const PathSettings _default;
+
 PathSettings::PathSettings()
 {
     _lineWidth = 2;
@@ -55,37 +57,37 @@ PathSettings::PathSettings()
     _scalePointBrush.setColor(green);
 }
 
-PathSettings PathSettings::Default()
+const PathSettings *PathSettings::Default()
 {
-    return PathSettings();
+    return &_default;
 }
 
-int &PathSettings::handleSize()
+int PathSettings::handleSize() const
 {
     return _handleSize;
 }
 
-QPen &PathSettings::linePen()
+const QPen &PathSettings::linePen() const
 {
     return _linePen;
 }
 
-QPen &PathSettings::controlLinePen()
+const QPen &PathSettings::controlLinePen() const
 {
     return _controlLinePen;
 }
 
-QBrush &PathSettings::pointBrush()
+const QBrush &PathSettings::pointBrush() const
 {
     return _pointBrush;
 }
 
-QBrush &PathSettings::controlPointBrush()
+const QBrush &PathSettings::controlPointBrush() const
 {
     return _controlPointBrush;
 }
 
-QBrush &PathSettings::scalePointBrush()
+const QBrush &PathSettings::scalePointBrush() const
 {
     return _scalePointBrush;
 }

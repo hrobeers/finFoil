@@ -25,6 +25,10 @@
 
 #include "mainwindow.h"
 
+#ifndef MAIN_CPP
+QTextStream out(stdout);
+#endif
+
 int runInteractive(QApplication &app, const QString &filePath)
 {
     out << "Starting finFoil " << version.toString() << endl

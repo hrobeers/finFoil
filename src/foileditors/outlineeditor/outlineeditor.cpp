@@ -26,7 +26,8 @@
 #include <QGroupBox>
 #include <QGraphicsScene>
 #include <QSplitter>
-#include "patheditor/patheditorwidget.h"
+#include "foilcalculator.h"
+#include "patheditorwidget.h"
 #include "foil.h"
 #include "editablepath.h"
 #include "thicknesscontours.h"
@@ -99,6 +100,8 @@ FoilCalculator *OutlineEditor::foilCalculator()
 {
     return _foilCalculator.get();
 }
+
+OutlineEditor::~OutlineEditor() {}
 
 void OutlineEditor::setGridUnitSize(qreal pxPerUnit)
 {

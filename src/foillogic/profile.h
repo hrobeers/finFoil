@@ -109,6 +109,5 @@ namespace foillogic
         void onProfileReleased();
     };
 }
-SERIALIZABLE(foillogic::Profile, profile)
 
 #endif // PROFILE_H

@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
+#include "patheditorwidget.h"
 #include "editablepath.h"
 #include "foil.h"
 #include "thicknessprofile.h"
@@ -62,10 +63,6 @@ void ThicknessEditor::setFoil(Foil *foil)
 
     _pathEditor->addPath(topPath);
     _pathEditor->addPath(botPath);
-}
-
-ThicknessEditor::~ThicknessEditor()
-{
 }
 
 void ThicknessEditor::update()

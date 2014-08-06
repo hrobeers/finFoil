@@ -29,7 +29,6 @@
 #include <QWidget>
 #include <memory>
 #include <QFlags>
-#include "restrictor.h"
 
 namespace patheditor
 {

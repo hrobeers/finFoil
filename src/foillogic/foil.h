@@ -29,7 +29,7 @@
 #include <QObject>
 #include <memory>
 #include <QUuid>
-#include "path.h"
+#include "jenson.h"
 
 namespace foillogic
 {
@@ -65,7 +65,7 @@ namespace foillogic
         void setUuid(QUuid uuid);
         void setHistory(QStringList history);
 
-        virtual ~Foil();
+        virtual ~Foil() {}
 
     signals:
         void foilChanged(Foil* sender);
@@ -95,6 +95,5 @@ namespace foillogic
         void onProfileChanged();
     };
 }
-SERIALIZABLE(foillogic::Foil, foil)
 
 #endif // FOIL_H

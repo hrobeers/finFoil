@@ -25,10 +25,12 @@
 #include <qmath.h>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QComboBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 
+#include "path.h"
 #include "editablepath.h"
 #include "foilcalculator.h"
 #include "foillogic/foil.h"

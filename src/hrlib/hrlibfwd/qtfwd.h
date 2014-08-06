@@ -30,6 +30,7 @@ QT_BEGIN_NAMESPACE
 class QObject;
 class QGraphicsView;
 class QGraphicsScene;
+class QGraphicsSceneMouseEvent;
 class QGraphicsItem;
 class QVBoxLayout;
 class QHBoxLayout;
@@ -41,8 +42,12 @@ class QPainterPath;
 class QAbstractSpinBox;
 class QSpinBox;
 class QDoubleSpinBox;
+class QComboBox;
 class QLineEdit;
 class QLabel;
+class QFile;
+class QRectF;
+class QPainter;
 
 QT_END_NAMESPACE
 

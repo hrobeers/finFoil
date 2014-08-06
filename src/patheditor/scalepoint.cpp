@@ -22,6 +22,7 @@
 
 #include "scalepoint.h"
 #include "pathsettings.h"
+#include "pointhandle.h"
 
 using namespace patheditor;
 
@@ -30,9 +31,9 @@ ScalePoint::ScalePoint(qreal xpos, qreal ypos) :
 {
 }
 
-void ScalePoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent)
+void ScalePoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings)
 {
-    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.scalePointBrush(), parent);
+    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->scalePointBrush(), parent);
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
 }

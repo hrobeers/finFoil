@@ -22,11 +22,6 @@
 
 namespace foillogic
 {
-    struct Side
-    {
-        enum e { Top, Bottom };
-    };
-
     class ContourCalculator : public QRunnable
     {
     public:
@@ -35,7 +30,7 @@ namespace foillogic
 
         virtual void run();
 
-        virtual ~ContourCalculator();
+        virtual ~ContourCalculator() {}
 
     private:
         enum SplineFunction { bSpline, overhauser };

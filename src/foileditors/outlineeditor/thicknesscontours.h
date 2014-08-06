@@ -28,7 +28,6 @@
 
 #include <QGraphicsObject>
 #include <QThreadPool>
-#include "contourcalculator.h"
 
 using namespace patheditor;
 

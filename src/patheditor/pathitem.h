@@ -23,10 +23,11 @@
 #ifndef PATHITEM_H
 #define PATHITEM_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
-#include "pathpoint.h"
-#include "controlpoint.h"
+#include <memory>
+#include <QList>
 
 namespace patheditor
 {
@@ -58,20 +59,23 @@ namespace patheditor
         //
         // EditablePath paint methods
         //
-        void paintControlPoints(PathSettings *settings, QPainter *painter);
-        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                           const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) = 0;
+        void paintControlPoints(QPainter *painter, const PathSettings *settings = 0) const;
+        void paintPathItem(QPainterPath *totalPainterPath, QPainter *painter,
+                           bool editable = true, const PathSettings *settings = 0) const;
 
         //
         // Custom path calculation (preferably faster than using QPainterPath)
         //
-        virtual QPointF pointAtPercent(qreal t) = 0;
+        virtual QPointF pointAtPercent(qreal t) const = 0;
 
         virtual ~PathItem() {}
 
     protected:
         std::shared_ptr<PathPoint> _startPoint;
         std::shared_ptr<PathPoint> _endPoint;
+
+        virtual void paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
+                                       bool editable, const PathSettings *settings) const = 0;
 
     private:
         std::weak_ptr<PathItem> _nextPathItem;

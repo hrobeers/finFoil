@@ -26,6 +26,8 @@
 #include <QRectF>
 #include <boost/math/special_functions/pow.hpp>
 #include "pathsettings.h"
+#include "controlpoint.h"
+#include "jenson.h"
 
 using namespace patheditor;
 using namespace boost::math;
@@ -79,7 +81,7 @@ const QList<const ControlPoint *> CubicBezier::constControlPoints() const
     return jenson::toConstList(_controlPoints);
 }
 
-QPointF CubicBezier::pointAtPercent(qreal t)
+QPointF CubicBezier::pointAtPercent(qreal t) const
 {
     // X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3
 
@@ -108,11 +110,11 @@ QRectF CubicBezier::controlPointRect() const
     return retVal;
 }
 
-void CubicBezier::paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                        const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/, bool editable)
+void CubicBezier::paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
+                                    bool editable, const PathSettings *settings) const
 {
     if (editable)
-        paintControlPoints(settings, painter);
+        paintControlPoints(painter, settings);
 
     totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
 }

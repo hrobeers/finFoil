@@ -40,13 +40,14 @@ namespace patheditor
         // implementing PathItem
         virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
         virtual const QList<const ControlPoint*> constControlPoints() const override;
-        virtual QPointF pointAtPercent(qreal t) override;
+        virtual QPointF pointAtPercent(qreal t) const override;
         virtual QRectF controlPointRect() const override;
 
-        virtual void paintPathItem(PathSettings *settings, QPainterPath *totalPainterPath, QPainter *painter,
-                   const QStyleOptionGraphicsItem *option, QWidget *widget, bool editable = true) override;
-
         virtual ~Line() {}
+
+    protected:
+        virtual void paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
+                                       bool editable, const PathSettings *settings) const override;
     };
 }
 

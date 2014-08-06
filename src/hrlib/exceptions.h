@@ -41,7 +41,7 @@ namespace hrlib
         virtual const QString& message() const throw();
         virtual const std::exception& innerException() const throw();
 
-        virtual ~Exception() throw() { }
+        virtual ~Exception() throw() {}
 
     protected:
         void setMessage(QString &message, QObject *thrower = 0) throw();

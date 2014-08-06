@@ -20,9 +20,9 @@
 #include <QThreadPool>
 #include <memory>
 #include <QPainterPath>
-#include "contourcalculator.h"
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/area.hpp>
+#include "contourcalculator.h"
 
 namespace foillogic
 {
@@ -43,6 +43,8 @@ namespace foillogic
         void calculate(bool fastCalc);
         bool calculated() const;
         void recalculateArea();
+
+        virtual ~FoilCalculator() {}
 
     signals:
         void foilCalculated(FoilCalculator* sender);

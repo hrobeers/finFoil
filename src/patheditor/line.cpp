@@ -46,7 +46,7 @@ const QList<const ControlPoint *> Line::constControlPoints() const
     return QList<const ControlPoint *>();
 }
 
-QPointF Line::pointAtPercent(qreal t)
+QPointF Line::pointAtPercent(qreal t) const
 {
     return (*_endPoint - *_startPoint) * t + *_startPoint;
 }
@@ -67,8 +67,8 @@ QRectF Line::controlPointRect() const
     return retVal;
 }
 
-void Line::paintPathItem(PathSettings * /*unused*/, QPainterPath *totalPainterPath, QPainter * /*unused*/,
-                 const QStyleOptionGraphicsItem * /*unused*/, QWidget * /*unused*/, bool /*unused*/)
+void Line::paintPathItemImpl(QPainterPath *totalPainterPath, QPainter * /*unused*/,
+                             bool /*unused*/, const PathSettings * /*unused*/) const
 {
     totalPainterPath->lineTo(*_endPoint);
 }

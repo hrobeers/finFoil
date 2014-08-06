@@ -25,22 +25,21 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+#include "path.h"
+#include "pathitem.h"
+#include "pathpoint.h"
+#include "controlpoint.h"
+#include "pathsettings.h"
+#include "pointhandle.h"
 
 using namespace patheditor;
 
 EditablePath::EditablePath(Path *path, QGraphicsItem *parent)
-    : QGraphicsObject(parent)
+    : QGraphicsObject(parent), _path(path), _settings(PathSettings::Default())
 {
-    _editable = true;
-
-    _path = path;
     foreach(std::shared_ptr<PathItem> item, _path->pathItems())
         onAppend(item.get());
     connect(path, SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)));
-
-    _firstPaint = true;
-    _released = true;
-    _settings = PathSettings::Default();
 }
 
 QRectF EditablePath::boundingRect() const
@@ -48,21 +47,11 @@ QRectF EditablePath::boundingRect() const
     return _path->controlPointRect();
 }
 
-void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*unused*/, QWidget* /*unused*/)
 {
-    if (isVisible() && !_path->pathItems().isEmpty())
+    if (isVisible())
     {
-        std::shared_ptr<QPainterPath> newPainterPath(new QPainterPath(*(_path->pathItems().first()->startPoint())));
-
-        foreach(std::shared_ptr<PathItem> item, _path->pathItems())
-        {
-            item->paintPathItem(&_settings, newPainterPath.get(), painter, option, widget, _editable);
-        }
-
-        painter->setPen(_settings.linePen());
-        painter->drawPath(*(newPainterPath.get()));
-
-        _painterPath.swap(newPainterPath);
+        _path->paint(painter, _editable, _settings);
 
         if (_firstPaint)
         {
@@ -75,11 +64,6 @@ void EditablePath::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 Path *EditablePath::path()
 {
     return _path;
-}
-
-std::shared_ptr<QPainterPath> EditablePath::painterPath()
-{
-    return _painterPath;
 }
 
 QPointF EditablePath::pointAtPercent(qreal t)
@@ -113,22 +97,18 @@ bool EditablePath::editable()
     return _editable;
 }
 
-EditablePath::~EditablePath()
-{
-}
-
 void EditablePath::onAppend(PathItem *pathItem)
 {
     // Add the startpoint pointHandle
-    pathItem->startPoint()->createPointHandle(_settings, this);
+    pathItem->startPoint()->createPointHandle(this, _settings);
 
     // Add the endpoint pointHandle
-    pathItem->endPoint()->createPointHandle(_settings, this);
+    pathItem->endPoint()->createPointHandle(this, _settings);
 
     // Add the controlPoint's pointHandles
     foreach(std::shared_ptr<PathPoint> controlPoint, pathItem->controlPoints())
     {
-        controlPoint->createPointHandle(_settings, this);
+        controlPoint->createPointHandle(this, _settings);
     }
 
     connectPoints(pathItem);

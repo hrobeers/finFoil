@@ -30,8 +30,7 @@
 
 using namespace patheditor;
 
-PointHandle::PointHandle(PathPoint *point,
-                         int &size, QBrush &brush, QGraphicsItem *parent)
+PointHandle::PointHandle(PathPoint *point, int size, const QBrush &brush, QGraphicsItem *parent)
     : QGraphicsEllipseItem(0, 0, size, size, parent)
 {
     _point = point;

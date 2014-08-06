@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2014, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,45 +20,14 @@
 
 ****************************************************************************/
 
-#ifndef PATHSETTINGS_H
-#define PATHSETTINGS_H
+#ifndef FOILEDITORSFWD_H
+#define FOILEDITORSFWD_H
 
-#include "patheditorfwd/patheditorfwd.h"
-
-#include <QPen>
-
-namespace patheditor
+namespace foileditors
 {
-    class PathSettings
-    {
-    public:
-        explicit PathSettings();
-
-        static const PathSettings *Default();
-
-        int handleSize() const;
-
-        const QPen &linePen() const;
-        const QPen &controlLinePen() const;
-
-        const QBrush &pointBrush() const;
-        const QBrush& controlPointBrush() const;
-        const QBrush& scalePointBrush() const;
-
-        virtual ~PathSettings() {}
-
-    private:
-        int _lineWidth;
-        int _controlLineWidth;
-        int _handleSize;
-
-        QPen _linePen;
-        QPen _controlLinePen;
-
-        QBrush _pointBrush;
-        QBrush _controlPointBrush;
-        QBrush _scalePointBrush;
-    };
+    class OutlineEditor;
+    class ProfileEditor;
+    class ThicknessEditor;
 }
 
-#endif // PATHSETTINGS_H
+#endif // FOILEDITORSFWD_H

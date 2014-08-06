@@ -23,8 +23,10 @@
 #include "pathpoint.h"
 
 #include <QGraphicsScene>
+#include "pointhandle.h"
 #include "pathsettings.h"
 #include "exceptions.h"
+#include "restrictor.h"
 
 using namespace patheditor;
 
@@ -84,11 +86,10 @@ void PathPoint::setRestrictor(std::shared_ptr<Restrictor> restrictor)
     setRestrictedPos(this->rx(), this->ry());
 }
 
-void PathPoint::createPointHandle(PathSettings &settings, QGraphicsItem *parent)
+void PathPoint::createPointHandle(QGraphicsItem *parent, const PathSettings *settings)
 {
-    PointHandle *newPointHandle = new PointHandle(this, settings.handleSize(), settings.pointBrush(), parent);
-    newPointHandle->setZValue(1);
-    replaceCurrentPointHandle(newPointHandle);
+    if (!settings) settings = PathSettings::Default();
+    createPointHandleImpl(parent, settings);
 }
 
 PathPoint *PathPoint::toFollowPoint()
@@ -144,6 +145,13 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
     }
 
     _pointHandle = pointHandle;
+}
+
+void PathPoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings)
+{
+    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->pointBrush(), parent);
+    newPointHandle->setZValue(1);
+    replaceCurrentPointHandle(newPointHandle);
 }
 
 void PathPoint::setPos(qreal xpos, qreal ypos)

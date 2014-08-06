@@ -32,7 +32,7 @@ namespace patheditor
     public:
         explicit ScalePoint(qreal xpos, qreal ypos);
 
-        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
+        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;
 
         virtual ~ScalePoint() {}
     };

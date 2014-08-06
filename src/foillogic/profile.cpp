@@ -23,9 +23,12 @@
 #include "foillogic/profile.h"
 
 #include "path.h"
+#include "controlpoint.h"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "cubicbezier.h"
+
+SERIALIZABLE(foillogic::Profile, profile)
 
 using namespace foillogic;
 using namespace patheditor;
@@ -175,9 +178,7 @@ void Profile::pResetBotProfile()
     // Do nothing, initialized in ctor
 }
 
-Profile::~Profile()
-{
-}
+Profile::~Profile() {}
 
 void Profile::initProfile()
 {

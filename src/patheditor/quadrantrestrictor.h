@@ -27,7 +27,6 @@
 
 #include <QPointF>
 #include "restrictor.h"
-#include "../hrlib/exceptions.h"
 
 namespace patheditor
 {

@@ -23,11 +23,12 @@
 #ifndef PATH_H
 #define PATH_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>
 #include <memory>
-#include "pathitem.h"
+#include "jenson.h"
 
 #define PATH_AREARES 512
 
@@ -62,6 +63,10 @@ namespace patheditor
 
         qreal area(int resolution = PATH_AREARES) const;
 
+        void paint(QPainter *painter, bool editable = false, const PathSettings *settings = 0);
+
+        virtual ~Path() {}
+
     signals:
         void onAppend(patheditor::PathItem *pathItem);
         void pathChanged(patheditor::Path *sender);
@@ -82,6 +87,5 @@ namespace patheditor
         virtual std::unique_ptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
     };
 }
-CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 
 #endif // PATH_H

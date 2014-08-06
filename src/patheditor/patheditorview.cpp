@@ -74,10 +74,6 @@ void PathEditorView::setImage(const QUrl &url)
     }
 }
 
-PathEditorView::~PathEditorView()
-{
-}
-
 void PathEditorView::drawBackground(QPainter *painter, const QRectF &rect)
 {
     // Find a suitable unitSize

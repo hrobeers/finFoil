@@ -23,10 +23,13 @@
 #include "outline.h"
 
 #include "path.h"
+#include "controlpoint.h"
 #include "cubicbezier.h"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "quadrantrestrictor.h"
+
+SERIALIZABLE(foillogic::Outline, outline)
 
 using namespace foillogic;
 using namespace patheditor;
@@ -92,6 +95,8 @@ void Outline::pSetPath(Path *path)
 
     attachSignals(_path.get());
 }
+
+Outline::~Outline() {}
 
 void Outline::initPath()
 {

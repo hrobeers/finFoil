@@ -20,12 +20,12 @@
  
 ****************************************************************************/
 
-#ifndef FINEDITORS_H
-#define FINEDITORS_H
+#ifndef FOILEDITORS_H
+#define FOILEDITORS_H
 
 #include "outlineeditor/outlineeditor.h"
 #include "profileeditor/profileeditor.h"
 #include "thicknesseditor/thicknesseditor.h"
 #include "foildatawidget.h"
 
-#endif // FINEDITORS_H
+#endif // FOILEDITORS_H

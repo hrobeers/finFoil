@@ -28,7 +28,6 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include <QComboBox>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
 #include <QtUnits>
@@ -42,6 +41,8 @@ namespace foileditors
         Q_OBJECT
     public:
         explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
+
+        virtual ~FoilDataWidget() {}
 
     signals:
         void depthChanged(qt::units::Length *height);

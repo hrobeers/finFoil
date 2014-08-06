@@ -20,6 +20,7 @@
 
 ****************************************************************************/
 
+#define MAIN_CPP
 #include "main.h"
 
 #include <QApplication>

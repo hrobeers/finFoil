@@ -13,7 +13,8 @@
 
 #include "foilcalculator.h"
 
-#include "qmath.h"
+#include <QtMath>
+#include "path.h"
 #include "foil.h"
 #include "profile.h"
 #include "outline.h"

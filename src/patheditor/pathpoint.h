@@ -23,13 +23,12 @@
 #ifndef PATHPOINT_H
 #define PATHPOINT_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <memory>
-#include <QPen>
-#include "restrictor.h"
-#include "pointhandle.h"
-#include "jenson.h"
+#include <QObject>
+#include <QPointF>
 
 namespace patheditor
 {
@@ -57,7 +56,7 @@ namespace patheditor
          * @param settings The PathSettings to use
          * @param scene The QGraphicsScene to add the PointHandle to
          */
-        virtual void createPointHandle(PathSettings &settings, QGraphicsItem *parent);
+        void createPointHandle(QGraphicsItem *parent, const PathSettings *settings = 0);
 
         PathPoint* toFollowPoint();
         void addFollowingPoint(std::shared_ptr<PathPoint> point);
@@ -86,7 +85,8 @@ namespace patheditor
          *
          * @param pointHandle PointHandle to replace the current handle with
          */
-        void replaceCurrentPointHandle(PointHandle *pointHandle);
+        virtual void replaceCurrentPointHandle(PointHandle *pointHandle);
+        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings);
 
     private:
         void setPos(qreal xpos, qreal ypos);

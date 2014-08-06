@@ -22,6 +22,8 @@
 
 #include "quadrantrestrictor.h"
 
+#include "hrlib/exceptions.h"
+
 #define notIn(x) !(_quadrants & x)
 
 using namespace patheditor;

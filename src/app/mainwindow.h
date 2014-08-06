@@ -23,12 +23,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "foileditorsfwd/foileditorsfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QMainWindow>
 #include <memory>
 #include <QFileInfo>
-#include "foileditors.h"
 #include "version.h"
 
 namespace Ui {

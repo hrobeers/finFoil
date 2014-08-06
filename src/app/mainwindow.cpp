@@ -30,8 +30,10 @@
 #include <QJsonDocument>
 #include <QCloseEvent>
 #include "main.h"
+#include "foileditors.h"
 #include "jenson.h"
 #include "foil.h"
+#include "foilcalculator.h"
 
 using namespace foileditors;
 using namespace foillogic;

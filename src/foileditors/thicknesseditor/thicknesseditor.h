@@ -23,10 +23,11 @@
 #ifndef THICKNESSEDITOR_H
 #define THICKNESSEDITOR_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
+#include "patheditorfwd/patheditorfwd.h"
 
 #include <QWidget>
-#include "patheditorwidget.h"
 
 using namespace patheditor;
 
@@ -40,7 +41,7 @@ namespace foileditors
 
         void setFoil(foillogic::Foil* foil);
 
-        virtual ~ThicknessEditor();
+        virtual ~ThicknessEditor() {}
 
     signals:
 

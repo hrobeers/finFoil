@@ -24,6 +24,7 @@
 
 #include <QPainter>
 #include "pathsettings.h"
+#include "controlpoint.h"
 
 using namespace patheditor;
 
@@ -89,22 +90,30 @@ void PathItem::setPrevPathItem(std::shared_ptr<PathItem> prevPathItem)
     _prevPathItem = prevPathItem;
 }
 
-void PathItem::paintControlPoints(PathSettings *settings, QPainter *painter)
+void PathItem::paintControlPoints(QPainter *painter, const PathSettings *settings) const
 {
+    if (!settings) settings = PathSettings::Default();
+
     painter->setPen(settings->controlLinePen());
     QPainterPath painterPath;
 
-    if (startPoint()->selected())
+    if (constStartPoint()->selected())
     {
-        painterPath.moveTo(*startPoint());
-        painterPath.lineTo(*(controlPoints().first()));
+        painterPath.moveTo(*constStartPoint());
+        painterPath.lineTo(*(constControlPoints().first()));
     }
 
-    if (endPoint()->selected())
+    if (constEndPoint()->selected())
     {
-        painterPath.moveTo(*endPoint());
-        painterPath.lineTo(*(controlPoints().last()));
+        painterPath.moveTo(*constEndPoint());
+        painterPath.lineTo(*(constControlPoints().last()));
     }
 
     painter->drawPath(painterPath);
+}
+
+void PathItem::paintPathItem(QPainterPath *totalPainterPath, QPainter *painter, bool editable, const PathSettings *settings) const
+{
+    if (!settings) settings = PathSettings::Default();
+    paintPathItemImpl(totalPainterPath, painter, editable, settings);
 }

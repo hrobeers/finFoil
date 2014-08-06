@@ -38,7 +38,7 @@ namespace patheditor
 
         void setImage(const QUrl &url);
 
-        virtual ~PathEditorView();
+        virtual ~PathEditorView() {}
 
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);

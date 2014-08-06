@@ -63,8 +63,8 @@ namespace foillogic
     private:
         qreal _thicknessRatio;
 
-        std::shared_ptr<patheditor::Path> _topProfile;
-        std::shared_ptr<patheditor::Path> _botProfile;
+        std::unique_ptr<patheditor::Path> _topProfile;
+        std::unique_ptr<patheditor::Path> _botProfile;
 
         void attachSignals(patheditor::Path* path);
 
@@ -75,6 +75,5 @@ namespace foillogic
         void onProfileReleased();
     };
 }
-SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
 
 #endif // THICKNESSPROFILE_H

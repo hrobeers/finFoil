@@ -34,6 +34,11 @@ namespace foillogic
     class ThicknessProfile;
     class Foil;
     class FoilCalculator;
+
+    struct Side
+    {
+        enum e { Top, Bottom };
+    };
 }
 
 #endif // FOILLOGICFWD_H

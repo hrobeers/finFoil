@@ -23,8 +23,10 @@
 #ifndef SCALABLEIMAGE_H
 #define SCALABLEIMAGE_H
 
+#include "patheditorfwd/patheditorfwd.h"
+
 #include <QGraphicsObject>
-#include "scalepoint.h"
+#include <memory>
 
 namespace patheditor
 {

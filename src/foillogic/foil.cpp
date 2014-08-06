@@ -22,6 +22,7 @@
 
 #include "foil.h"
 
+#include "path.h"
 #include "pathpoint.h"
 #include "editablepath.h"
 #include "linerestrictor.h"
@@ -30,6 +31,8 @@
 #include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
+
+SERIALIZABLE(foillogic::Foil, foil)
 
 using namespace foillogic;
 using namespace patheditor;
@@ -106,10 +109,6 @@ void Foil::setHistory(QStringList history)
         if (!uuid.isNull())
             _history.append(uuid);
     }
-}
-
-Foil::~Foil()
-{
 }
 
 void Foil::initOutline()

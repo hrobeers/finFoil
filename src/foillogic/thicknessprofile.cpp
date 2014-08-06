@@ -28,13 +28,15 @@
 #include "linerestrictor.h"
 #include "cubicbezier.h"
 
+SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
+
 using namespace foillogic;
 using namespace patheditor;
 
 ThicknessProfile::ThicknessProfile(QObject *parent) :
     QObject(parent), _thicknessRatio(1),
-    _topProfile(std::shared_ptr<Path>(new Path())),
-    _botProfile(std::shared_ptr<Path>(new Path()))
+    _topProfile(std::unique_ptr<Path>(new Path())),
+    _botProfile(std::unique_ptr<Path>(new Path()))
 {
     std::shared_ptr<PathPoint> point0(new PathPoint(0,0));
 
@@ -88,9 +90,7 @@ void ThicknessProfile::pSetTopProfile(Path *topProfile)
     attachSignals(_topProfile.get());
 }
 
-ThicknessProfile::~ThicknessProfile()
-{
-}
+ThicknessProfile::~ThicknessProfile() {}
 
 void ThicknessProfile::setThicknessRatio(qreal profileRatio)
 {

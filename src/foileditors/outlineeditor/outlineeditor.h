@@ -27,7 +27,7 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include "foilcalculator.h"
+#include <memory>
 
 using namespace patheditor;
 
@@ -46,7 +46,7 @@ namespace foileditors
         void setFoil(foillogic::Foil *foil);
         foillogic::FoilCalculator* foilCalculator();
 
-        virtual ~OutlineEditor() {}
+        virtual ~OutlineEditor();
 
     signals:
 

@@ -25,8 +25,14 @@
 
 #include <QVarLengthArray>
 #include <QJsonArray>
+#include <QPainter>
+#include "controlpoint.h"
+#include "pathitem.h"
 #include "patheditor/line.h"
 #include "patheditor/cubicbezier.h"
+#include "patheditor/pathsettings.h"
+
+CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 
 using namespace patheditor;
 
@@ -136,6 +142,24 @@ qreal Path::area(int resolution) const
     }
 
     return qAbs(area) / 2;
+}
+
+void Path::paint(QPainter *painter, bool editable, const PathSettings *settings)
+{
+    if (!pathItems().isEmpty())
+    {
+        if (!settings) settings = PathSettings::Default();
+
+        QPainterPath painterPath(*(pathItems().first()->startPoint()));
+
+        foreach(std::shared_ptr<PathItem> item, pathItems())
+        {
+            item->paintPathItem(&painterPath, painter, editable, settings);
+        }
+
+        painter->setPen(settings->linePen());
+        painter->drawPath(painterPath);
+    }
 }
 
 void Path::onPathChanged()

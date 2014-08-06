@@ -23,11 +23,11 @@
 #ifndef PROFILEEDITOR_H
 #define PROFILEEDITOR_H
 
+#include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>
-#include "patheditorwidget.h"
 
 using namespace patheditor;
 
@@ -41,7 +41,7 @@ namespace foileditors
 
         void setFoil(foillogic::Foil* foil);
 
-        virtual ~ProfileEditor();
+        virtual ~ProfileEditor() {}
 
     signals:
 
