@@ -255,7 +255,7 @@ bool MainWindow::saveFile(const QString &path)
 
     QTextStream out(&file);
     QJsonDocument json(JenSON::serialize(_fin.get()));
-    out << json.toJson();
+    out << json.toJson(QJsonDocument::Compact);
 
     setCurrentFilePath(path);
     statusBar()->showMessage(tr("Fin saved"), 2000);
