@@ -1,42 +1,42 @@
 HEADERS += \
-    ../patheditor/editablepath.h \
-    ../patheditor/pathsettings.h \
-    ../patheditor/pathitem.h \
-    ../patheditor/cubicbezier.h \
-    ../patheditor/patheditorwidget.h \
-    ../patheditor/pointhandle.h \
-    ../patheditor/line.h \
-    ../patheditor/restrictor.h \
-    ../patheditor/linerestrictor.h \
-    ../patheditor/pointrestrictor.h \
-    ../patheditor/pathpoint.h \
-    ../patheditor/patheditorfwd/patheditorfwd.h \
-    ../patheditor/quadrantrestrictor.h \
-    ../patheditor/controlpoint.h \
-    ../patheditor/patheditorview.h \
-    ../patheditor/path.h \
-    ../patheditor/scalepoint.h \
-    ../patheditor/scalableimage.h \
-    ../patheditor/pathtemplates.hpp \
-    ../patheditor/pathfunctors.hpp
+    ../../src/patheditor/editablepath.h \
+    ../../src/patheditor/pathsettings.h \
+    ../../src/patheditor/pathitem.h \
+    ../../src/patheditor/cubicbezier.h \
+    ../../src/patheditor/patheditorwidget.h \
+    ../../src/patheditor/pointhandle.h \
+    ../../src/patheditor/line.h \
+    ../../src/patheditor/restrictor.h \
+    ../../src/patheditor/linerestrictor.h \
+    ../../src/patheditor/pointrestrictor.h \
+    ../../src/patheditor/pathpoint.h \
+    ../../src/patheditor/patheditorfwd/patheditorfwd.h \
+    ../../src/patheditor/quadrantrestrictor.h \
+    ../../src/patheditor/controlpoint.h \
+    ../../src/patheditor/patheditorview.h \
+    ../../src/patheditor/path.h \
+    ../../src/patheditor/scalepoint.h \
+    ../../src/patheditor/scalableimage.h \
+    ../../src/patheditor/pathtemplates.hpp \
+    ../../src/patheditor/pathfunctors.hpp
 
 SOURCES += \
-    ../patheditor/editablepath.cpp \
-    ../patheditor/pathsettings.cpp \
-    ../patheditor/pathitem.cpp \
-    ../patheditor/cubicbezier.cpp \
-    ../patheditor/patheditorwidget.cpp \
-    ../patheditor/pointhandle.cpp \
-    ../patheditor/line.cpp \
-    ../patheditor/linerestrictor.cpp \
-    ../patheditor/pointrestrictor.cpp \
-    ../patheditor/pathpoint.cpp \
-    ../patheditor/quadrantrestrictor.cpp \
-    ../patheditor/controlpoint.cpp \
-    ../patheditor/patheditorview.cpp \
-    ../patheditor/path.cpp \
-    ../patheditor/scalepoint.cpp \
-    ../patheditor/scalableimage.cpp
+    ../../src/patheditor/editablepath.cpp \
+    ../../src/patheditor/pathsettings.cpp \
+    ../../src/patheditor/pathitem.cpp \
+    ../../src/patheditor/cubicbezier.cpp \
+    ../../src/patheditor/patheditorwidget.cpp \
+    ../../src/patheditor/pointhandle.cpp \
+    ../../src/patheditor/line.cpp \
+    ../../src/patheditor/linerestrictor.cpp \
+    ../../src/patheditor/pointrestrictor.cpp \
+    ../../src/patheditor/pathpoint.cpp \
+    ../../src/patheditor/quadrantrestrictor.cpp \
+    ../../src/patheditor/controlpoint.cpp \
+    ../../src/patheditor/patheditorview.cpp \
+    ../../src/patheditor/path.cpp \
+    ../../src/patheditor/scalepoint.cpp \
+    ../../src/patheditor/scalableimage.cpp
 
 OTHER_FILES += \
-    ../patheditor/patheditorfwd/README
+    ../../src/patheditor/patheditorfwd/README

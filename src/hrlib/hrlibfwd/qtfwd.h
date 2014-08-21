@@ -48,6 +48,7 @@ class QLabel;
 class QFile;
 class QRectF;
 class QPainter;
+class QImage;
 
 QT_END_NAMESPACE
 

@@ -20,7 +20,7 @@ CONFIG( deps ) {
 
 CONFIG( unittests ) {
     message( "Tests enabled" )
-    SUBDIRS += src/unittest
+    SUBDIRS += tests/unittests
 } else{
     message( "Tests disabled" )
 }

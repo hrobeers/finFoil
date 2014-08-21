@@ -24,9 +24,11 @@
 #include "submodules/qtestrunner/qtestrunner.hpp"
 
 #include <memory>
-#include "patheditor/path.h"
-#include "patheditor/line.h"
-#include "patheditor/cubicbezier.h"
+#include "path.h"
+#include "line.h"
+#include "cubicbezier.h"
+#include "pathpoint.h"
+#include "controlpoint.h"
 
 using namespace patheditor;
 
