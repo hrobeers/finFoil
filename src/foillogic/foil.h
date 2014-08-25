@@ -44,6 +44,9 @@ namespace foillogic
         Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
         Q_PROPERTY(QStringList history READ history WRITE setHistory) // QStringList to omit class information (Compacter serialization)
 
+        // optional properties
+        Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
+
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
 
@@ -57,6 +60,7 @@ namespace foillogic
         ThicknessProfile* pThickness() { return thickness().get(); }
         QUuid uuid();
         QStringList history();
+        int layerCount() { return _layerCount; }
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
@@ -64,6 +68,9 @@ namespace foillogic
         void pSetThickness(ThicknessProfile *thickness);
         void setUuid(QUuid uuid);
         void setHistory(QStringList history);
+        void setLayerCount(int layerCount);
+
+        void resetLayerCount();
 
         virtual ~Foil() {}
 
@@ -79,6 +86,7 @@ namespace foillogic
         std::shared_ptr<foillogic::Outline> _outline;
         std::shared_ptr<foillogic::Profile> _profile;
         std::shared_ptr<foillogic::ThicknessProfile> _thickness;
+        int _layerCount;
 
         void initOutline();
         void initProfile();

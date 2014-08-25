@@ -27,18 +27,7 @@ FoilCalculator::FoilCalculator(Foil *foil) :
 {
     _foil = foil;
 
-    int numOfContours = 6;
-    qreal increment = qreal(1) / qreal(numOfContours);
-    qreal thickness = 0;
-    QList<qreal> thicknesses;
-    for (int i = 0; i < numOfContours - 1; i++)
-    {
-        thickness += increment;
-        thicknesses.append(thickness);
-    }
-
-    qSort(thicknesses);
-    setContourThicknesses(thicknesses);
+    setEquidistantContours(_foil->layerCount());
 
     connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()));
     connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()));
@@ -62,6 +51,7 @@ void FoilCalculator::setContourThicknesses(QList<qreal> thicknesses)
 
 void FoilCalculator::setEquidistantContours(int contourCount)
 {
+    _foil->setLayerCount(contourCount);
     qreal increment = qreal(1) / qreal(contourCount);
     qreal thickness = 0;
     QList<qreal> thicknesses;

@@ -45,6 +45,8 @@ Foil::Foil(QObject *parent) :
     initOutline();
     initProfile();
     initThickness();
+
+    resetLayerCount();
 }
 
 std::shared_ptr<Outline> Foil::outline()
@@ -109,6 +111,16 @@ void Foil::setHistory(QStringList history)
         if (!uuid.isNull())
             _history.append(uuid);
     }
+}
+
+void Foil::setLayerCount(int layerCount)
+{
+    _layerCount = layerCount;
+}
+
+void Foil::resetLayerCount()
+{
+    setLayerCount(6);
 }
 
 void Foil::initOutline()
