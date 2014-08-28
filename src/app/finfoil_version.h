@@ -23,7 +23,7 @@
 #ifndef FINFOIL_VERSION_H
 #define FINFOIL_VERSION_H
 
-#include "hrlib/version.h"
+#include "version.h"
 #include "../version_autogen.h"
 
 #define MAJOR_VERSION 1

@@ -23,6 +23,13 @@ Makefile
 *.Release
 *-build-*
 
+# CMake
+*.cmake
+*.user
+*_automoc.cpp
+*.cbp
+CMakeFiles
+
 # Visual Studio
 
 Backup*
