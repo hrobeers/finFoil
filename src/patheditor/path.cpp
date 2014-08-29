@@ -28,9 +28,9 @@
 #include <QPainter>
 #include "controlpoint.h"
 #include "pathitem.h"
-#include "patheditor/line.h"
-#include "patheditor/cubicbezier.h"
-#include "patheditor/pathsettings.h"
+#include "line.h"
+#include "cubicbezier.h"
+#include "pathsettings.h"
 
 CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 

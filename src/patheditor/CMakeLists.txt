@@ -48,9 +48,12 @@ set(patheditorHDR
 add_library(patheditor ${patheditorSRC} ${patheditorHDR})
 
 # hrlib
-add_subdirectory(../hrlib "${CMAKE_SOURCE_DIR}/src/hrlib")
 target_link_libraries(patheditor hrlib)
 target_include_directories(patheditor PRIVATE "${CMAKE_SOURCE_DIR}/src/hrlib")
+
+# JenSON
+target_link_libraries(patheditor jenson)
+target_include_directories(patheditor PRIVATE "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 
 target_link_libraries(patheditor Qt5::Widgets)
 

@@ -17,7 +17,7 @@
 #include <QPainterPath>
 #include <boost/math/tools/roots.hpp>
 #include "pathfunctors.hpp"
-#include "hrlib/math/spline.hpp"
+#include "math/spline.hpp"
 #include "foil.h"
 #include "profile.h"
 #include "thicknessprofile.h"

@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "foillogic/profile.h"
+#include "profile.h"
 
 #include "path.h"
 #include "controlpoint.h"

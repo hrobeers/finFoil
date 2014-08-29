@@ -95,10 +95,10 @@ namespace patheditor
         static void select(PathPoint *point, QGraphicsScene *scene);
 
         std::shared_ptr<Restrictor> _restrictor;
-        PathPoint* _toFollowPoint;
+        PathPoint* _toFollowPoint = 0;
         QList<std::weak_ptr<PathPoint> > _followingPoints;
 
-        PointHandle *_pointHandle;
+        PointHandle *_pointHandle = 0;
 
     };
 }

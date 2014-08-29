@@ -24,8 +24,15 @@ set(foillogicHDR
 
 add_library(foillogic ${foillogicSRC} ${foillogicHDR})
 
+# hrlib
+target_link_libraries(foillogic hrlib)
+target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/src/hrlib")
+
 # patheditor
-add_subdirectory(../patheditor "${CMAKE_SOURCE_DIR}/src/patheditor")
 target_link_libraries(foillogic patheditor)
 target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/src/patheditor")
+
+# JenSON
+target_link_libraries(foillogic jenson)
+target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 

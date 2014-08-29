@@ -33,9 +33,9 @@
 #include "path.h"
 #include "editablepath.h"
 #include "foilcalculator.h"
-#include "foillogic/foil.h"
-#include "foillogic/profile.h"
-#include "foillogic/outline.h"
+#include "foil.h"
+#include "profile.h"
+#include "outline.h"
 
 #include <QtUnits>
 
