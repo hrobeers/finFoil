@@ -36,3 +36,26 @@ set(CMAKE_AUTOMOC ON)
 
 # Include the subdirectories
 add_subdirectory(src/app)
+
+# Get the build number
+execute_process(
+    COMMAND git rev-list HEAD --count
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BUILD_NUMBER
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the commit hash
+execute_process(
+    COMMAND git rev-parse --verify HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+#if(GIT_BUILD_NUMBER and GIT_COMMIT_HASH)
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/src/version_template.h
+        ${CMAKE_SOURCE_DIR}/src/version_autogen.h
+    )
+#endif()
