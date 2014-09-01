@@ -35,7 +35,7 @@ add_executable(${BINARY_NAME} WIN32 ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${
 #
 
 #Qt modules
-target_link_libraries(finFoil Qt5::Core Qt5::Widgets)
+target_link_libraries(${BINARY_NAME} Qt5::Core Qt5::Widgets)
 
 add_subdirectory(../hrlib "${CMAKE_SOURCE_DIR}/src/hrlib")
 add_subdirectory(../patheditor "${CMAKE_SOURCE_DIR}/src/patheditor")
@@ -45,25 +45,25 @@ add_subdirectory(../../submodules/jenson "${CMAKE_SOURCE_DIR}/submodules/jenson"
 add_subdirectory(../../submodules/qtunits "${CMAKE_SOURCE_DIR}/submodules/qtunits")
 
 # hrlib
-target_link_libraries(finFoil hrlib)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/src/hrlib")
+target_link_libraries(${BINARY_NAME} hrlib)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/hrlib")
 
 # patheditor
-target_link_libraries(finFoil patheditor)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/src/patheditor")
+target_link_libraries(${BINARY_NAME} patheditor)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/patheditor")
 
 # foillogic
-target_link_libraries(finFoil foillogic)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/src/foillogic")
+target_link_libraries(${BINARY_NAME} foillogic)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/foillogic")
 
 #foileditors
-target_link_libraries(finFoil foileditors)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/src/foileditors")
+target_link_libraries(${BINARY_NAME} foileditors)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/foileditors")
 
 # JenSON
-target_link_libraries(finFoil jenson)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
+target_link_libraries(${BINARY_NAME} jenson)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 
 # QtUnits
-target_link_libraries(finFoil qtunits)
-target_include_directories(finFoil PRIVATE "${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
+target_link_libraries(${BINARY_NAME} qtunits)
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/submodules/qtunits/src")

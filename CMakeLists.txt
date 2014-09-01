@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(finFoil)
 set(BINARY_NAME "finFoil")
+set(TESTS_BINARY_NAME "finFoil-tests")
 
 # Version
 set(MAJOR_VERSION "1")
@@ -11,6 +12,7 @@ set(REVISION "0")
 # Define the Build options
 option(DebugBuild "Build debug binaries." OFF)
 option(CCache "Build using ccache." OFF)
+option(Tests "Build the tests executable" OFF)
 
 # Set the CMAKE_BUILD_TYPE (Only DEBUG and RELEASE are supported)
 if(DebugBuild)
@@ -39,7 +41,12 @@ find_package(Qt5Gui REQUIRED)
 set(CMAKE_AUTOMOC ON)
 
 # Include the subdirectories
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 add_subdirectory(src/app)
+if(Tests)
+    find_package(Qt5Test REQUIRED)
+    add_subdirectory(tests/unittests)
+endif()
 
 # Get the build number
 execute_process(
