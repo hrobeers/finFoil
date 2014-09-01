@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 project(finFoil)
-
 set(BINARY_NAME "finFoil")
+
+# Version
+set(MAJOR_VERSION "1")
+set(MINOR_VERSION "0")
+set(REVISION "0")
 
 # Define the Build options
 option(DebugBuild "Build debug binaries." OFF)

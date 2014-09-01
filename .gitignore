@@ -25,7 +25,8 @@ Makefile
 
 # CMake
 *.cmake
-*.user
+*txt.user
+*txt.user.*
 *_automoc.cpp
 *.cbp
 CMakeFiles

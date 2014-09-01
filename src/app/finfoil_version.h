@@ -26,9 +26,11 @@
 #include "version.h"
 #include "../version_autogen.h"
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 0
-#define REVISION 0
+#ifndef CMAKE_GENERATED_VERSION
+    #define MAJOR_VERSION 1
+    #define MINOR_VERSION 0
+    #define REVISION 0
+#endif
 
 #include <QString>
 

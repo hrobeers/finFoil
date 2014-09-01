@@ -15,6 +15,7 @@ set(HDR
     mainwindow.h
     finfoil_version.h
     ../version_autogen.h
+    ../version_template.h
     runinteractive.hpp
     main.h
     about.hpp
