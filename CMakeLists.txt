@@ -40,6 +40,13 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 set(CMAKE_AUTOMOC ON)
 
+# Boost
+find_package(Boost REQUIRED)
+if(Boost_FOUND)
+  message(STATUS "Including Boost from: ${Boost_INCLUDE_DIRS}")
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 # Include the subdirectories
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 add_subdirectory(src/app)
