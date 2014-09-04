@@ -104,9 +104,12 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-#if(GIT_BUILD_NUMBER and GIT_COMMIT_HASH)
+if(${GIT_BUILD_NUMBER})
     configure_file(
         ${CMAKE_SOURCE_DIR}/src/version_template.h
         ${CMAKE_SOURCE_DIR}/src/version_autogen.h
     )
-#endif()
+    message(STATUS "GIT_BUILD_NUMBER: ${GIT_BUILD_NUMBER} GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}")
+else()
+    message(WARNING "Not building from a git repository, the build number cannot be updated.")
+endif()
