@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 2.8.11)
 
+
+#
+# Project settings
+#
+
 project(finFoil)
 set(BINARY_NAME "finFoil")
 set(TESTS_BINARY_NAME "finFoil-tests")
@@ -9,7 +14,12 @@ set(MAJOR_VERSION "1")
 set(MINOR_VERSION "0")
 set(REVISION "0")
 
-# Define the Build options
+
+#
+# Build flags & compiler settings
+#
+
+# Define the Build flags
 option(DebugBuild "Build debug binaries." OFF)
 option(CCache "Build using ccache." OFF)
 option(Tests "Build the tests executable" OFF)
@@ -23,7 +33,7 @@ else()
     message(STATUS "CMAKE_BUILD_TYPE = RELEASE")
 endif()
 
-# Optionally set the compiler
+# Optionally enable ccache
 if(CCache)
     SET_PROPERTY(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
@@ -33,6 +43,11 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -Wno-reorder")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -fomit-frame-pointer -finline-functions -ffast-math")
+
+
+#
+# Find and include external dependencies
+#
 
 # Qt
 find_package(Qt5Core REQUIRED)
@@ -47,13 +62,31 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+
+#
+# Include subdirectories
+#
+
 # Include the subdirectories
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/app")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/hrlib")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/patheditor")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foillogic")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
+
 add_subdirectory(src/app)
 if(Tests)
     find_package(Qt5Test REQUIRED)
     add_subdirectory(tests/unittests)
 endif()
+
+
+#
+# Try to set build number and commit hash
+#
 
 # Get the build number
 execute_process(

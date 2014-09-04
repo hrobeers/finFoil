@@ -1,8 +1,5 @@
 project(foillogic)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/foillogicfwd")
-
 set(foillogicSRC
     foil.cpp
     foilcalculator.cpp
@@ -24,15 +21,4 @@ set(foillogicHDR
 
 add_library(foillogic ${foillogicSRC} ${foillogicHDR})
 
-# hrlib
-target_link_libraries(foillogic hrlib)
-target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/src/hrlib")
-
-# patheditor
 target_link_libraries(foillogic patheditor)
-target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/src/patheditor")
-
-# JenSON
-target_link_libraries(foillogic jenson)
-target_include_directories(foillogic PRIVATE "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
-
