@@ -268,7 +268,7 @@ static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
     return retVal;
 }
 
-std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const
+qunique_ptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const
 {
     if (!jsonValue->isArray())
     {
@@ -276,7 +276,7 @@ std::unique_ptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValu
         return nullptr;
     }
 
-    std::unique_ptr<Path> path(new Path());
+    qunique_ptr<Path> path(new Path());
 
     QJsonArray array = jsonValue->toArray();
 

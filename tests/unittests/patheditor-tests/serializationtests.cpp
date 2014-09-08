@@ -52,7 +52,7 @@ void SerializationTests::testPathSerialization()
 
     QJsonObject obj = jenson::JenSON::serialize(path.get());
 
-    std::unique_ptr<Path> deserialized = jenson::JenSON::deserialize<Path>(&obj);
+    qunique_ptr<Path> deserialized = jenson::JenSON::deserialize<Path>(&obj);
 
     // Test PathItem count
     QVERIFY(deserialized->pathItems().count() > 0);

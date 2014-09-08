@@ -36,8 +36,8 @@ add_subdirectory(../hrlib "${CMAKE_SOURCE_DIR}/src/hrlib")
 add_subdirectory(../patheditor "${CMAKE_SOURCE_DIR}/src/patheditor")
 add_subdirectory(../foillogic "${CMAKE_SOURCE_DIR}/src/foillogic")
 add_subdirectory(../foileditors "${CMAKE_SOURCE_DIR}/src/foileditors")
-add_subdirectory(../../submodules/jenson "${CMAKE_SOURCE_DIR}/submodules/jenson")
-add_subdirectory(../../submodules/qtunits "${CMAKE_SOURCE_DIR}/submodules/qtunits")
+add_subdirectory(../../submodules/jenson/src "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
+add_subdirectory(../../submodules/qtunits/src "${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
 
 
 #

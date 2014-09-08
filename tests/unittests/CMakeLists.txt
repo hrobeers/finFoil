@@ -14,6 +14,7 @@ set(SRC
 set(HDR
     patheditor-tests/quadrantrestrictortest.h
     patheditor-tests/serializationtests.h
+    ../../submodules/qtestrunner/qtestrunner.hpp
 )
 
 

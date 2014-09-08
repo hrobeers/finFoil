@@ -281,7 +281,7 @@ bool MainWindow::loadFile(const QString &path)
 
     QString errorMsg;
     QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
-    std::unique_ptr<Foil> deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
+    qunique_ptr<Foil> deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
 
     if (deserialized)
     {
