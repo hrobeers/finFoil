@@ -38,16 +38,16 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     _topProfile(std::unique_ptr<Path>(new Path())),
     _botProfile(std::unique_ptr<Path>(new Path()))
 {
-    std::shared_ptr<PathPoint> point0(new PathPoint(0,0));
+    qshared_ptr<PathPoint> point0(new PathPoint(0,0));
 
-    std::shared_ptr<PathPoint> point1(new PathPoint(0,-30));
-    std::shared_ptr<ControlPoint> point2(new ControlPoint(0,-30));
-    std::shared_ptr<ControlPoint> point3(new ControlPoint(300,-30));
-    std::shared_ptr<PathPoint> point4(new PathPoint(300,0));
+    qshared_ptr<PathPoint> point1(new PathPoint(0,-30));
+    qshared_ptr<ControlPoint> point2(new ControlPoint(0,-30));
+    qshared_ptr<ControlPoint> point3(new ControlPoint(300,-30));
+    qshared_ptr<PathPoint> point4(new PathPoint(300,0));
 
-    std::shared_ptr<PathPoint> point5(new PathPoint(0,30));
-    std::shared_ptr<ControlPoint> point6(new ControlPoint(0,30));
-    std::shared_ptr<ControlPoint> point7(new ControlPoint(300,30));
+    qshared_ptr<PathPoint> point5(new PathPoint(0,30));
+    qshared_ptr<ControlPoint> point6(new ControlPoint(0,30));
+    qshared_ptr<ControlPoint> point7(new ControlPoint(300,30));
 
     std::shared_ptr<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));

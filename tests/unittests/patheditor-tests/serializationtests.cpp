@@ -37,14 +37,14 @@ void SerializationTests::testPathSerialization()
     std::unique_ptr<Path> path(new Path());
 
     qreal m = 2;
-    std::shared_ptr<PathPoint> point1(new PathPoint(m*0, m*0));
-    std::shared_ptr<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
-    std::shared_ptr<ControlPoint> point3(new ControlPoint(m*70.39944295, m*-113.577872));
-    std::shared_ptr<PathPoint> point4(new PathPoint(m*134.750359, m*-114.484482));
-    std::shared_ptr<PathPoint> point7(new PathPoint(m*170.304549, m*-97.240702));
-    std::shared_ptr<ControlPoint> point8(new ControlPoint(m*171.482419, m*-88.650189));
-    std::shared_ptr<ControlPoint> point9(new ControlPoint(m*134.604629, m*-78.11541));
-    std::shared_ptr<PathPoint> point10(new PathPoint(m*123.550789, m*-62.04205));
+    qshared_ptr<PathPoint> point1(new PathPoint(m*0, m*0));
+    qshared_ptr<ControlPoint> point2(new ControlPoint(m*16.09549195, m*-31.53267));
+    qshared_ptr<ControlPoint> point3(new ControlPoint(m*70.39944295, m*-113.577872));
+    qshared_ptr<PathPoint> point4(new PathPoint(m*134.750359, m*-114.484482));
+    qshared_ptr<PathPoint> point7(new PathPoint(m*170.304549, m*-97.240702));
+    qshared_ptr<ControlPoint> point8(new ControlPoint(m*171.482419, m*-88.650189));
+    qshared_ptr<ControlPoint> point9(new ControlPoint(m*134.604629, m*-78.11541));
+    qshared_ptr<PathPoint> point10(new PathPoint(m*123.550789, m*-62.04205));
 
     path->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
     path->append(std::shared_ptr<PathItem>(new Line(point4, point7)));

@@ -30,15 +30,15 @@
 
 using namespace patheditor;
 
-Line::Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
+Line::Line(qshared_ptr<PathPoint> startPoint, qshared_ptr<PathPoint> endPoint)
 {
     setStartPoint(startPoint);
     setEndPoint(endPoint);
 }
 
-QList<std::shared_ptr<ControlPoint> > Line::controlPoints()
+QList<qshared_ptr<ControlPoint> > Line::controlPoints()
 {
-    return QList<std::shared_ptr<ControlPoint> >();
+    return QList<qshared_ptr<ControlPoint> >();
 }
 
 const QList<const ControlPoint *> Line::constControlPoints() const

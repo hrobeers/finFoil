@@ -185,21 +185,21 @@ void Profile::initProfile()
     _topProfile.reset(new Path());
     _botProfile.reset(new Path());
 
-    std::shared_ptr<PathPoint> point1(new PathPoint(0,0));
-    std::shared_ptr<PathPoint> point3(new PathPoint(300,0));
+    qshared_ptr<PathPoint> point1(new PathPoint(0,0));
+    qshared_ptr<PathPoint> point3(new PathPoint(300,0));
 
-    std::shared_ptr<PathPoint> tPoint(new PathPoint(90,-35));
-    std::shared_ptr<PathPoint> bPoint(new PathPoint(90,35));
+    qshared_ptr<PathPoint> tPoint(new PathPoint(90,-35));
+    qshared_ptr<PathPoint> bPoint(new PathPoint(90,35));
 
-    std::shared_ptr<ControlPoint> tcPoint1(new ControlPoint(0,0));
-    std::shared_ptr<ControlPoint> tcPoint2(new ControlPoint(0,-35));
-    std::shared_ptr<ControlPoint> tcPoint3(new ControlPoint(135,-35));
-    std::shared_ptr<ControlPoint> tcPoint4(new ControlPoint(300,0));
+    qshared_ptr<ControlPoint> tcPoint1(new ControlPoint(0,0));
+    qshared_ptr<ControlPoint> tcPoint2(new ControlPoint(0,-35));
+    qshared_ptr<ControlPoint> tcPoint3(new ControlPoint(135,-35));
+    qshared_ptr<ControlPoint> tcPoint4(new ControlPoint(300,0));
 
-    std::shared_ptr<ControlPoint> bcPoint1(new ControlPoint(0,0));
-    std::shared_ptr<ControlPoint> bcPoint2(new ControlPoint(0,35));
-    std::shared_ptr<ControlPoint> bcPoint3(new ControlPoint(135,35));
-    std::shared_ptr<ControlPoint> bcPoint4(new ControlPoint(300,0));
+    qshared_ptr<ControlPoint> bcPoint1(new ControlPoint(0,0));
+    qshared_ptr<ControlPoint> bcPoint2(new ControlPoint(0,35));
+    qshared_ptr<ControlPoint> bcPoint3(new ControlPoint(135,35));
+    qshared_ptr<ControlPoint> bcPoint4(new ControlPoint(300,0));
 
     std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));

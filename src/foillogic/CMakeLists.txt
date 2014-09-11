@@ -21,4 +21,6 @@ set(foillogicHDR
 
 add_library(foillogic ${foillogicSRC} ${foillogicHDR})
 
-target_link_libraries(foillogic patheditor)
+target_link_libraries(foillogic
+    patheditor
+)

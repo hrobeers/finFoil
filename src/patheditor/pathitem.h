@@ -28,6 +28,7 @@
 
 #include <memory>
 #include <QList>
+#include "qmemory.hpp"
 
 namespace patheditor
 {
@@ -37,12 +38,12 @@ namespace patheditor
         //
         // Functions needed by EditablePath
         //
-        std::shared_ptr<PathPoint> startPoint();
-        std::shared_ptr<PathPoint> endPoint();
-        void setStartPoint(std::shared_ptr<PathPoint> startPoint);
-        void setEndPoint(std::shared_ptr<PathPoint> endPoint);
+        qshared_ptr<PathPoint> startPoint();
+        qshared_ptr<PathPoint> endPoint();
+        void setStartPoint(qshared_ptr<PathPoint> startPoint);
+        void setEndPoint(qshared_ptr<PathPoint> endPoint);
 
-        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() = 0;
+        virtual QList<qshared_ptr<ControlPoint> > controlPoints() = 0;
 
         // const getters
         const PathPoint* constStartPoint() const;
@@ -71,8 +72,8 @@ namespace patheditor
         virtual ~PathItem() {}
 
     protected:
-        std::shared_ptr<PathPoint> _startPoint;
-        std::shared_ptr<PathPoint> _endPoint;
+        qshared_ptr<PathPoint> _startPoint;
+        qshared_ptr<PathPoint> _endPoint;
 
         virtual void paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
                                        bool editable, const PathSettings *settings) const = 0;

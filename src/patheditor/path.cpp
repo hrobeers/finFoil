@@ -222,9 +222,9 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
 }
 
 template <typename Tpnt>
-static std::shared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
+static qshared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
 {
-    std::shared_ptr<Tpnt> retVal;
+    qshared_ptr<Tpnt> retVal;
 
     QJsonValue xval = pntArray->takeAt(0), yval = pntArray->takeAt(0);
 
@@ -238,7 +238,7 @@ static std::shared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
 
 static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
 {
-    static thread_local std::shared_ptr<PathPoint> s_previousEndPoint;
+    static thread_local qshared_ptr<PathPoint> s_previousEndPoint;
 
     std::shared_ptr<PathItem> retVal;
 
@@ -250,16 +250,16 @@ static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
     }
     else if (typeId == QStringLiteral("L"))
     {
-        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        auto endPnt = ::takePoint<PathPoint>(&pathItemJson);
         if (s_previousEndPoint && endPnt)
             retVal.reset(new Line(s_previousEndPoint, endPnt));
         s_previousEndPoint = endPnt;
     }
     else if (typeId == QStringLiteral("C"))
     {
-        std::shared_ptr<ControlPoint> cPnt1 = ::takePoint<ControlPoint>(&pathItemJson);
-        std::shared_ptr<ControlPoint> cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
-        std::shared_ptr<PathPoint> endPnt = ::takePoint<PathPoint>(&pathItemJson);
+        auto cPnt1 = ::takePoint<ControlPoint>(&pathItemJson);
+        auto cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
+        auto endPnt = ::takePoint<PathPoint>(&pathItemJson);
         if (s_previousEndPoint && cPnt1 && cPnt2 && endPnt)
             retVal.reset(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
         s_previousEndPoint = endPnt;

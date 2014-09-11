@@ -20,5 +20,7 @@ set(foileditorsHDR
 
 add_library(foileditors ${foileditorsSRC} ${foileditorsHDR})
 
-target_link_libraries(foileditors foillogic)
-target_link_libraries(foileditors qtunits)
+target_link_libraries(foileditors
+    qtunits
+    foillogic
+)

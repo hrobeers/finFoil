@@ -44,6 +44,8 @@ set(patheditorHDR
 
 add_library(patheditor ${patheditorSRC} ${patheditorHDR})
 
-target_link_libraries(patheditor Qt5::Widgets)
-target_link_libraries(patheditor hrlib)
-target_link_libraries(patheditor jenson)
+target_link_libraries(patheditor
+    Qt5::Widgets
+    jenson
+    hrlib
+)
