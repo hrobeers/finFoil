@@ -77,7 +77,7 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
 
-add_definitions(-DQTUNITS_LIBRARY) # Definition needed for static linking
+add_definitions(-DJENSON_QPTR) # Definition to make jenson serialize to qunique_ptr
 
 add_subdirectory(src/app)
 if(Tests)
