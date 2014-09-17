@@ -49,17 +49,17 @@ Foil::Foil(QObject *parent) :
     resetLayerCount();
 }
 
-std::shared_ptr<Outline> Foil::outline()
+qshared_ptr<Outline> Foil::outline()
 {
     return _outline;
 }
 
-std::shared_ptr<Profile> Foil::profile()
+qshared_ptr<Profile> Foil::profile()
 {
     return _profile;
 }
 
-std::shared_ptr<ThicknessProfile> Foil::thickness()
+qshared_ptr<ThicknessProfile> Foil::thickness()
 {
     return _thickness;
 }

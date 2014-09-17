@@ -20,9 +20,20 @@ set(REVISION "0")
 #
 
 # Define the Build flags
+option(Shared "Build shared libararies where possible." OFF)
 option(DebugBuild "Build debug binaries." OFF)
 option(CCache "Build using ccache." OFF)
 option(Tests "Build the tests executable" OFF)
+
+# Linking and library options
+add_definitions(-DJENSON_QPTR) # Definition to make jenson serialize to qunique_ptr
+if(Shared)
+    set(JENSON_SHARED ON)
+    set(QTUNITS_SHARED ON)
+else()
+    add_definitions(-DJENSON_STATIC)
+    add_definitions(-DQTUNITS_STATIC)
+endif()
 
 # Set the CMAKE_BUILD_TYPE (Only DEBUG and RELEASE are supported)
 if(DebugBuild)
@@ -76,8 +87,6 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foillogic")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
-
-add_definitions(-DJENSON_QPTR) # Definition to make jenson serialize to qunique_ptr
 
 add_subdirectory(src/app)
 if(Tests)

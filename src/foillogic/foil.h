@@ -50,9 +50,9 @@ namespace foillogic
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
 
-        std::shared_ptr<Outline> outline();
-        std::shared_ptr<Profile> profile();
-        std::shared_ptr<ThicknessProfile> thickness();
+        qshared_ptr<Outline> outline();
+        qshared_ptr<Profile> profile();
+        qshared_ptr<ThicknessProfile> thickness();
 
         // Q_PROPERTY getters
         Outline* pOutline() { return outline().get(); }
@@ -83,9 +83,9 @@ namespace foillogic
     private:
         QUuid _uuid;
         QList<QUuid> _history;
-        std::shared_ptr<foillogic::Outline> _outline;
-        std::shared_ptr<foillogic::Profile> _profile;
-        std::shared_ptr<foillogic::ThicknessProfile> _thickness;
+        qshared_ptr<foillogic::Outline> _outline;
+        qshared_ptr<foillogic::Profile> _profile;
+        qshared_ptr<foillogic::ThicknessProfile> _thickness;
         int _layerCount;
 
         void initOutline();
