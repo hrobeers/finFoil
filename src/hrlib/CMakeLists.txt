@@ -11,6 +11,7 @@ set(hrlibHDR
     version.h
     hrlibfwd/qtfwd.h
     math/spline.hpp
+    mixin/identifiable.hpp
 )
 
 add_library(hrlib ${hrlibSRC} ${hrlibHDR})

@@ -29,11 +29,12 @@
 #include <QPointF>
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
+#include "mixin/identifiable.hpp"
 #include "jenson.h"
 
 namespace foillogic
 {
-    class Profile : public QObject
+    class Profile : public QObject, public hrlib::Identifiable
     {
         Q_OBJECT
 
@@ -45,6 +46,9 @@ namespace foillogic
         Q_PROPERTY(QString symmetry READ symmetryStr WRITE setSymmetryStr)
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
         Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile WRITE pSetBotProfile RESET pResetBotProfile)
+
+        // optional properties
+        Q_PROPERTY_UUID
 
         Q_ENUMS(Symmetry)
 

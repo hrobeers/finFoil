@@ -27,15 +27,20 @@
 
 #include <QObject>
 #include <memory>
+#include "mixin/identifiable.hpp"
 #include "jenson.h"
 
 namespace foillogic
 {
-    class ThicknessProfile : public QObject
+    class ThicknessProfile : public QObject, public hrlib::Identifiable
     {
         Q_OBJECT
 
+        // read-write properties
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+
+        // optional properties
+        Q_PROPERTY_UUID
 
     public:
         Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);

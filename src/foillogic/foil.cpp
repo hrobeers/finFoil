@@ -40,8 +40,6 @@ using namespace patheditor;
 Foil::Foil(QObject *parent) :
     QObject(parent)
 {
-    _uuid = QUuid::createUuid();
-
     initOutline();
     initProfile();
     initThickness();
@@ -62,11 +60,6 @@ qshared_ptr<Profile> Foil::profile()
 qshared_ptr<ThicknessProfile> Foil::thickness()
 {
     return _thickness;
-}
-
-QUuid Foil::uuid()
-{
-    return _uuid;
 }
 
 QStringList Foil::history()
@@ -95,11 +88,6 @@ void Foil::pSetThickness(ThicknessProfile *thickness)
 {
     _thickness.reset(thickness);
     connectThickness();
-}
-
-void Foil::setUuid(QUuid uuid)
-{
-    _uuid = uuid;
 }
 
 void Foil::setHistory(QStringList history)

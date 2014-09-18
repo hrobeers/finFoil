@@ -31,11 +31,12 @@
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/si/area.hpp"
 #include "boost/units/systems/si/plane_angle.hpp"
+#include "mixin/identifiable.hpp"
 #include "jenson.h"
 
 namespace foillogic
 {
-    class Outline : public QObject
+    class Outline : public QObject, public hrlib::Identifiable
     {
         Q_OBJECT
 
@@ -46,6 +47,9 @@ namespace foillogic
         // read-write properties
         Q_PROPERTY(patheditor::Path* path READ pPath WRITE pSetPath)
         Q_PROPERTY(qreal height READ pHeight WRITE pSetHeight)
+
+        // optional properties
+        Q_PROPERTY_UUID
 
     public:
         Q_INVOKABLE explicit Outline(QObject *parent = 0);
