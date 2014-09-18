@@ -3,24 +3,32 @@ This is the finFoil repository for the Qt/C++ remake (versions > 1.0).
 
 Compilation from source
 ========================
-Make sure that the dependencies are installed (see below).
-Execute the follwing commands in a terminal in the finfoil directory:
+Note: When compiling in a git clone, first read the section "Compiling in a git clone".
+Execute the following commands in a terminal in the finFoil directory:
 
-$ cd submodules/qtunits/
-$ qmake-qt5 qtunits.pro
+$ mkdir bin
+$ cd bin
+$ cmake ..
 $ make
-$ make install
-$ cd ../..
 
-$ qmake-qt5 finfoil.pro
-$ make
-$ make install
+After completing the commands listed above, a finFoil executable should be located in the bin (=current) directory.
+
+Compiling in a git clone
+========================
+When compiling in a git clone, the git submodules should be fetched first.
+Do this by executing the following commands in the finfoil directory:
+
+$ git submodule init
+$ git submodule update --recursive
+
+After fetching the submodules, continue with section "Compilation from source".
 
 Dependencies
 ============
-g++ >= 4.7
-Qt >= 5.0
-Boost >= 1.54
+C++11 compliant compiler (GCC >= 4.7, Clang >= 3.0, Intel C++ >= 12.1)
+cmake >= 2.8.11
+Qt >= 5.3
+Boost >= 1.55
 
 LICENSE
 =======
