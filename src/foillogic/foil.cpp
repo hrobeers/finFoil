@@ -62,16 +62,6 @@ qshared_ptr<ThicknessProfile> Foil::thickness()
     return _thickness;
 }
 
-QStringList Foil::history()
-{
-    QStringList retVal;
-
-    foreach (const QUuid &id, _history)
-        retVal.append(id.toString());
-
-    return retVal;
-}
-
 void Foil::pSetOutline(Outline *outline)
 {
     _outline.reset(outline);
@@ -88,17 +78,6 @@ void Foil::pSetThickness(ThicknessProfile *thickness)
 {
     _thickness.reset(thickness);
     connectThickness();
-}
-
-void Foil::setHistory(QStringList history)
-{
-    _history.clear();
-    foreach (const QString &id, history)
-    {
-        QUuid uuid(id);
-        if (!uuid.isNull())
-            _history.append(uuid);
-    }
 }
 
 void Foil::setLayerCount(int layerCount)

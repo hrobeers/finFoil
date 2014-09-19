@@ -28,8 +28,8 @@ OTHERWISE)
 
 ****************************************************************************/
 
-#ifndef IDENTIFIABLE_H
-#define IDENTIFIABLE_H
+#ifndef HRLIB_IDENTIFIABLE_H
+#define HRLIB_IDENTIFIABLE_H
 
 #include <QUuid>
 
@@ -51,4 +51,4 @@ namespace hrlib
     };
 }
 
-#endif // IDENTIFIABLE_H
+#endif // HRLIB_IDENTIFIABLE_H

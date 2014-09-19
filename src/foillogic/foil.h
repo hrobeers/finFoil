@@ -29,11 +29,12 @@
 #include <QObject>
 #include <memory>
 #include "mixin/identifiable.hpp"
+#include "mixin/historical.hpp"
 #include "jenson.h"
 
 namespace foillogic
 {
-    class Foil : public QObject, public hrlib::Identifiable
+    class Foil : public QObject, public hrlib::Identifiable, public hrlib::THistorical<5>
     {
         Q_OBJECT
 
@@ -41,11 +42,11 @@ namespace foillogic
         Q_PROPERTY(foillogic::Outline* outline READ pOutline WRITE pSetOutline)
         Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
-        Q_PROPERTY(QStringList history READ history WRITE setHistory) // QStringList to omit class information (Compacter serialization)
 
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
         Q_PROPERTY_UUID
+        Q_PROPERTY_HISTORY_STRLIST
 
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
@@ -58,14 +59,12 @@ namespace foillogic
         Outline* pOutline() { return outline().get(); }
         Profile* pProfile() { return profile().get(); }
         ThicknessProfile* pThickness() { return thickness().get(); }
-        QStringList history();
         int layerCount() { return _layerCount; }
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
         void pSetThickness(ThicknessProfile *thickness);
-        void setHistory(QStringList history);
         void setLayerCount(int layerCount);
 
         void resetLayerCount();
@@ -79,7 +78,6 @@ namespace foillogic
     public slots:
 
     private:
-        QList<QUuid> _history;
         qshared_ptr<foillogic::Outline> _outline;
         qshared_ptr<foillogic::Profile> _profile;
         qshared_ptr<foillogic::ThicknessProfile> _thickness;
