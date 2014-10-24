@@ -95,7 +95,7 @@ void ContourCalculator::run()
 
     QVarLengthArray<qreal, INITCNT> sectionHeightArray(_sectionCount);
     QVarLengthArray<qreal, INITCNT> thicknessArray(_sectionCount);
-    sampleThickess(sectionHeightArray.data(), thicknessArray.data());
+    sampleThickess(_thickness, _sectionCount, sectionHeightArray.data(), thicknessArray.data());
 
 
     //
@@ -217,15 +217,15 @@ void ContourCalculator::run()
     foreach (QPointF *point, trailingEdgePnts) if (point) delete point;
 }
 
-void ContourCalculator::sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[])
+void ContourCalculator::sampleThickess(Path *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[])
 {
-    qreal increment = qreal(1) / _sectionCount;
+    qreal increment = qreal(1) / sectionCount;
     qreal t = 0;
-    qreal height = _thickness->pointAtPercent(1).x();
-    qreal maxThickness = qMin(_thickness->minY(), _thickness->pointAtPercent(0).y());
-    for (int i=0; i<_sectionCount; i++)
+    qreal height = thicknessProfile->pointAtPercent(1).x();
+    qreal maxThickness = qMin(thicknessProfile->minY(), thicknessProfile->pointAtPercent(0).y());
+    for (int i=0; i<sectionCount; i++)
     {
-        QPointF p = _thickness->pointAtPercent(t);
+        QPointF p = thicknessProfile->pointAtPercent(t);
 
         sectionHeightArray[i] = p.x() / height;
         thicknessArray[i] = p.y() / maxThickness;

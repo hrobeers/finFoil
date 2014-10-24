@@ -46,9 +46,11 @@ namespace foillogic
         int _resolution;
         qreal _tTol;
 
-        void sampleThickess(qreal sectionHeightArray[], qreal thicknessArray[]);
         void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex);
         void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
+
+    public:
+        static void sampleThickess(patheditor::Path *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[]);
     };
 }
 
