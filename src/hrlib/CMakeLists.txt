@@ -2,17 +2,18 @@ project(hrlib)
 
 set(hrlibSRC
     exceptions.cpp
-    version.cpp
     math/spline.cpp
+    version.cpp
 )
 
 set(hrlibHDR
     exceptions.h
-    version.h
     hrlibfwd/qtfwd.h
     math/spline.hpp
-    mixin/identifiable.hpp
     mixin/historical.hpp
+    mixin/identifiable.hpp
+    patterns/decorator.hpp
+    version.h
 )
 
 add_library(hrlib ${hrlibSRC} ${hrlibHDR})

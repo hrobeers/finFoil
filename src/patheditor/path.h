@@ -29,12 +29,13 @@
 #include <QObject>
 #include <memory>
 #include "jenson.h"
+#include "ipath.hpp"
 
 #define PATH_AREARES 512
 
 namespace patheditor
 {
-    class Path : public QObject
+    class Path : public QObject, public IPath
     {
         Q_OBJECT
 
@@ -54,12 +55,12 @@ namespace patheditor
 
         QRectF controlPointRect() const;
 
-        QPointF pointAtPercent(qreal t) const;
+        virtual QPointF pointAtPercent(qreal t) const override;
 
-        qreal minX(qreal *t_top = 0) const;
-        qreal maxX(qreal *t_top = 0) const;
-        qreal minY(qreal *t_top = 0) const;
-        qreal maxY(qreal *t_top = 0) const;
+        virtual qreal minX(qreal *t_top = 0) const override;
+        virtual qreal maxX(qreal *t_top = 0) const override;
+        virtual qreal minY(qreal *t_top = 0) const override;
+        virtual qreal maxY(qreal *t_top = 0) const override;
 
         qreal area(int resolution = PATH_AREARES) const;
 

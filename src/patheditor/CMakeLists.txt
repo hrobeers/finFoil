@@ -15,6 +15,7 @@ set(patheditorSRC
     controlpoint.cpp
     patheditorview.cpp
     path.cpp
+    pathdecorators.cpp
     scalepoint.cpp
     scalableimage.cpp
 )
@@ -35,7 +36,9 @@ set(patheditorHDR
     quadrantrestrictor.h
     controlpoint.h
     patheditorview.h
+    ipath.hpp
     path.h
+    pathdecorators.hpp
     scalepoint.h
     scalableimage.h
     pathtemplates.hpp

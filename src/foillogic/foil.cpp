@@ -31,11 +31,13 @@
 #include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
+#include "pathdecorators.hpp"
 
 SERIALIZABLE(foillogic::Foil, foil)
 
 using namespace foillogic;
 using namespace patheditor;
+using namespace hrlib::patterns;
 
 Foil::Foil(QObject *parent) :
     QObject(parent)
@@ -141,4 +143,35 @@ void Foil::onFoilReleased()
 void Foil::onProfileChanged()
 {
     _thickness->setThicknessRatio(_profile->thicknessRatio());
+}
+
+
+std::unique_ptr<IPath> foillogic::Foil::oultineSI()
+{
+    // TODO scale
+    return decorate<PathScaleDecorator>(_outline->path(), 1, 1);
+}
+
+std::unique_ptr<IPath> Foil::topProfileSI()
+{
+    // TODO scale
+    return decorate<PathScaleDecorator>(_profile->topProfile(), 1, 1);
+}
+
+std::unique_ptr<IPath> Foil::botProfileSI()
+{
+    // TODO scale
+    return decorate<PathScaleDecorator>(_profile->botProfile(), 1, 1);
+}
+
+std::unique_ptr<IPath> Foil::topThicknessSI()
+{
+    // TODO scale
+    return decorate<PathScaleDecorator>(_thickness->topProfile(), 1, 1);
+}
+
+std::unique_ptr<IPath> Foil::botThicknessSI()
+{
+    // TODO scale
+    return decorate<PathScaleDecorator>(_thickness->botProfile(), 1, 1);
 }
