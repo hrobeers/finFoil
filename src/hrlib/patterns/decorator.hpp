@@ -25,6 +25,7 @@
 
 #include <memory>
 #include <type_traits>
+#include <boost/mpl/bool.hpp>
 
 namespace hrlib { namespace patterns
 {
@@ -32,29 +33,32 @@ namespace hrlib { namespace patterns
     template <typename T>
     class has_init
     {
-        typedef char yes[1];
-        typedef char no [2];
-        template<typename C> static yes& test(decltype(&C::init)); // selected if C has an init method
-        template<typename C> static no&  test(...);      // selected otherwise
+    private:
+        typedef char _yes[1];
+        typedef char _no [2];
+        template<typename C> static _yes& test(decltype(&C::init));  // selected if C has an init method
+        template<typename C> static _no&  test(...);                 // selected otherwise
 
     public:
-        enum { _true = sizeof(test<T>(0)) == sizeof(yes),
-               _false = sizeof(test<T>(0)) == sizeof(no) };
+        enum { yes = sizeof(test<T>(0)) == sizeof(_yes),
+               no  = sizeof(test<T>(0)) == sizeof(_no) };
     };
 
     // decoration method for decorators without init method
-    template<typename Decorator, typename... T>
-    typename std::enable_if<has_init<Decorator>::_false, std::unique_ptr<typename Decorator::interface>>::type
-        decorate(typename Decorator::interface *target, T&&... t)
-        { return std::unique_ptr<typename Decorator::interface>(new Decorator(target, std::forward<T>(t)...)); }
+    template<typename Decorator, typename T, typename... Args>
+    typename std::enable_if<has_init<Decorator>::no, std::unique_ptr<typename Decorator::interface>>::type
+        decorate(T target, Args&&... t)
+        {
+            return std::unique_ptr<typename Decorator::interface>(new Decorator(std::move(target), std::forward<Args>(t)...));
+        }
 
     // decoration method for decorators with init method
-    template<typename Decorator, typename... T>
-    typename std::enable_if<has_init<Decorator>::_true, std::unique_ptr<typename Decorator::interface>>::type
-        decorate(typename Decorator::interface *target, T&&... t)
+    template<typename Decorator, typename T, typename... Args>
+    typename std::enable_if<has_init<Decorator>::yes, std::unique_ptr<typename Decorator::interface>>::type
+        decorate(T target, Args&&... t)
         {
-            auto retVal = std::unique_ptr<typename Decorator::interface>(new Decorator(target));
-            ((Decorator*)retVal.get())->init(std::forward<T>(t)...);
+            auto retVal = std::unique_ptr<typename Decorator::interface>(new Decorator(std::move(target)));
+            ((Decorator*)retVal.get())->init(std::forward<Args>(t)...);
             return retVal;
         }
 
@@ -67,14 +71,14 @@ namespace hrlib { namespace patterns
         std::unique_ptr<Interface> _uPtr;
 
     protected:
-        Interface *_ptr;
+        Interface *_target;
 
     public:
         typedef Interface interface;
 
-        explicit Decorator(Interface *path) : _ptr(path) {}
-        explicit Decorator(std::shared_ptr<Interface> path) : _sPtr(std::move(path)), _ptr(_sPtr.get()) {}
-        explicit Decorator(std::unique_ptr<Interface> path) : _uPtr(std::move(path)), _ptr(_uPtr.get()) {}
+        explicit Decorator(Interface *target) : _target(target) {}
+        explicit Decorator(std::shared_ptr<Interface> target) : _sPtr(target), _target(_sPtr.get()) {}
+        explicit Decorator(std::unique_ptr<Interface>&& target) : _uPtr(std::move(target)), _target(_uPtr.get()) {}
     };
 } }
 

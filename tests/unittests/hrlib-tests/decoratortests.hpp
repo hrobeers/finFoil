@@ -20,38 +20,28 @@
 
 ****************************************************************************/
 
-#include "pathdecorators.hpp"
+#ifndef DECORATORTESTS_H
+#define DECORATORTESTS_H
 
-#include <QPointF>
+#include <QObject>
 
-using namespace patheditor;
-
-// TODO header only
-
-QPointF PathScaleDecorator::pointAtPercent(qreal t) const
+class DecoratorTests : public QObject
 {
-    auto pnt = _target->pointAtPercent(t);
-    pnt.rx() *= _sx;
-    pnt.ry() *= _sy;
-    return pnt;
-}
+    Q_OBJECT
 
-qreal PathScaleDecorator::minX(qreal *t_top) const
-{
-    return _target->minX(t_top) * _sx;
-}
+private slots:
+    // Construction tests
+    void testNoArgs();
+    void testContructorArgs();
+    void testInitArgs();
 
-qreal PathScaleDecorator::maxX(qreal *t_top) const
-{
-    return _target->maxX(t_top) * _sx;
-}
+    // Ownership tests
+    void testRawPointerOwnership();
+    void testUniquePointerOwnership();
+    void testSharedPointerOwnership();
 
-qreal PathScaleDecorator::minY(qreal *t_top) const
-{
-    return _target->minY(t_top) * _sy;
-}
+    // Extra tests
+    void testMultipleDecoration();
+};
 
-qreal PathScaleDecorator::maxY(qreal *t_top) const
-{
-    return _target->maxY(t_top) * _sy;
-}
+#endif // DECORATORTESTS_H

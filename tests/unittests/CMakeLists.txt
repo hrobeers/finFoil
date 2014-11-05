@@ -6,15 +6,17 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 # Sources
 set(SRC
     main.cpp
+    hrlib-tests/decoratortests.cpp
     patheditor-tests/quadrantrestrictortest.cpp
     patheditor-tests/serializationtests.cpp
 )
 
 # Headers
 set(HDR
+    ../../submodules/qtestrunner/qtestrunner.hpp
+    hrlib-tests/decoratortests.hpp
     patheditor-tests/quadrantrestrictortest.h
     patheditor-tests/serializationtests.h
-    ../../submodules/qtestrunner/qtestrunner.hpp
 )
 
 
