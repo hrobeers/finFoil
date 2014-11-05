@@ -25,7 +25,6 @@
 
 #include <memory>
 #include <type_traits>
-#include <boost/mpl/bool.hpp>
 
 namespace hrlib { namespace patterns
 {
