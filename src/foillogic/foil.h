@@ -56,7 +56,7 @@ namespace foillogic
         qshared_ptr<ThicknessProfile> thickness();
 
         // SI paths
-        std::unique_ptr<patheditor::IPath> oultineSI();
+        std::unique_ptr<patheditor::IPath> outlineSI();
         std::unique_ptr<patheditor::IPath> topProfileSI();
         std::unique_ptr<patheditor::IPath> botProfileSI();
         std::unique_ptr<patheditor::IPath> topThicknessSI();

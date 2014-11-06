@@ -38,6 +38,7 @@ SERIALIZABLE(foillogic::Foil, foil)
 using namespace foillogic;
 using namespace patheditor;
 using namespace hrlib::patterns;
+using namespace boost::units;
 
 Foil::Foil(QObject *parent) :
     QObject(parent)
@@ -146,32 +147,75 @@ void Foil::onProfileChanged()
 }
 
 
-std::unique_ptr<IPath> foillogic::Foil::oultineSI()
+std::unique_ptr<IPath> foillogic::Foil::outlineSI()
 {
-    // TODO scale
-    return decorate<PathScaleDecorator>(_outline->path(), 1, 1);
+    qreal t_top = 0.3;
+    quantity<si::length, qreal> height = _outline->height();
+    qreal s = height.value() / _outline->path()->minY(&t_top);
+    return decorate<PathScaleDecorator>(_outline->path(), s, s);
+}
+
+namespace {
+    qreal scaleFactorX(IPath *basePath, qreal xSI)
+    {
+        qreal baseLength = basePath->pointAtPercent(1).x() - basePath->pointAtPercent(0).x();
+        return xSI / baseLength;
+    }
+
+    std::pair<qreal, qreal> profileScaleFactors(Foil* self)
+    {
+        std::pair<qreal, qreal> retVal;
+
+        // determine the x scaling factor
+        auto pOutlineSI = self->outlineSI();
+        qreal baseLengthSI = pOutlineSI->pointAtPercent(1).x() - pOutlineSI->pointAtPercent(0).x();
+        retVal.first = scaleFactorX(self->pProfile()->topProfile(), baseLengthSI);
+
+        // determine the y scaling factor
+        quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
+        qreal t_top = 0.3;
+        retVal.second = thicknessSI.value() / (self->pProfile()->topProfileTop(&t_top).y() - self->pProfile()->bottomProfileTop(&t_top).y());
+
+        return retVal;
+    }
+
+    std::pair<qreal, qreal> thicknessScaleFactors(Foil* self)
+    {
+        std::pair<qreal, qreal> retVal;
+
+        // determine the x scaling factor
+        quantity<si::length, qreal> heightSI = self->pOutline()->height();
+        retVal.first = scaleFactorX(self->pThickness()->topProfile(), heightSI.value());
+
+        // determine the y scaling factor
+        quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
+        qreal t_top = 0;
+        retVal.second = thicknessSI.value() / (self->pThickness()->topProfile()->minY(&t_top) - self->pThickness()->botProfile()->maxY(&t_top));
+
+        return retVal;
+    }
 }
 
 std::unique_ptr<IPath> Foil::topProfileSI()
 {
-    // TODO scale
-    return decorate<PathScaleDecorator>(_profile->topProfile(), 1, 1);
+    auto s = profileScaleFactors(this);
+    return decorate<PathScaleDecorator>(_profile->topProfile(), s.first, s.second);
 }
 
 std::unique_ptr<IPath> Foil::botProfileSI()
 {
-    // TODO scale
-    return decorate<PathScaleDecorator>(_profile->botProfile(), 1, 1);
+    auto s = profileScaleFactors(this);
+    return decorate<PathScaleDecorator>(_profile->botProfile(), s.first, s.second);
 }
 
 std::unique_ptr<IPath> Foil::topThicknessSI()
 {
-    // TODO scale
-    return decorate<PathScaleDecorator>(_thickness->topProfile(), 1, 1);
+    auto s = thicknessScaleFactors(this);
+    return decorate<PathScaleDecorator>(_thickness->topProfile(), s.first, s.second);
 }
 
 std::unique_ptr<IPath> Foil::botThicknessSI()
 {
-    // TODO scale
-    return decorate<PathScaleDecorator>(_thickness->botProfile(), 1, 1);
+    auto s = thicknessScaleFactors(this);
+    return decorate<PathScaleDecorator>(_thickness->botProfile(), s.first, s.second);
 }
