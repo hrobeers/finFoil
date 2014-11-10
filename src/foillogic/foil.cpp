@@ -169,12 +169,12 @@ namespace {
         // determine the x scaling factor
         auto pOutlineSI = self->outlineSI();
         qreal baseLengthSI = pOutlineSI->pointAtPercent(1).x() - pOutlineSI->pointAtPercent(0).x();
-        retVal.first = scaleFactorX(self->pProfile()->topProfile(), baseLengthSI);
+        retVal.first = qAbs(scaleFactorX(self->pProfile()->topProfile(), baseLengthSI));
 
         // determine the y scaling factor
         quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
         qreal t_top = 0.3;
-        retVal.second = thicknessSI.value() / (self->pProfile()->topProfileTop(&t_top).y() - self->pProfile()->bottomProfileTop(&t_top).y());
+        retVal.second = qAbs(thicknessSI.value() / (self->pProfile()->topProfileTop(&t_top).y() - self->pProfile()->bottomProfileTop(&t_top).y()));
 
         return retVal;
     }
@@ -185,12 +185,12 @@ namespace {
 
         // determine the x scaling factor
         quantity<si::length, qreal> heightSI = self->pOutline()->height();
-        retVal.first = scaleFactorX(self->pThickness()->topProfile(), heightSI.value());
+        retVal.first = qAbs(scaleFactorX(self->pThickness()->topProfile(), heightSI.value()));
 
         // determine the y scaling factor
         quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
         qreal t_top = 0;
-        retVal.second = thicknessSI.value() / (self->pThickness()->topProfile()->minY(&t_top) - self->pThickness()->botProfile()->maxY(&t_top));
+        retVal.second = qAbs(thicknessSI.value() / (self->pThickness()->topProfile()->minY(&t_top) - self->pThickness()->botProfile()->maxY(&t_top)));
 
         return retVal;
     }

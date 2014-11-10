@@ -50,7 +50,7 @@ namespace foillogic
         void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction);
 
     public:
-        static void sampleThickess(patheditor::Path *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[]);
+        static void sampleThickess(patheditor::IPath *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[], bool normalize = false);
     };
 }
 

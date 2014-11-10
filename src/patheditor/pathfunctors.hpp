@@ -42,11 +42,11 @@ namespace patheditor
     class f_ValueAtPercentPathImpl<X, Multiplier>
     {
     private:
-        Path const *_path;
+        IPath const *_path;
         qreal _offset;
 
     public:
-        explicit f_ValueAtPercentPathImpl(Path const *path, qreal offset = 0) :
+        explicit f_ValueAtPercentPathImpl(IPath const *path, qreal offset = 0) :
             _path(path), _offset(offset) {}
 
         qreal operator ()(qreal t){
@@ -63,11 +63,11 @@ namespace patheditor
     class f_ValueAtPercentPathImpl<Y, Multiplier>
     {
     private:
-        Path const *_path;
+        IPath const *_path;
         qreal _offset;
 
     public:
-        explicit f_ValueAtPercentPathImpl(Path const *path, qreal offset = 0) :
+        explicit f_ValueAtPercentPathImpl(IPath const *path, qreal offset = 0) :
             _path(path), _offset(offset) {}
 
         qreal operator ()(qreal t){
@@ -84,7 +84,7 @@ namespace patheditor
     class f_ValueAtPercentPath : public f_ValueAtPercentPathImpl<Dimension, Multiplier>
     {
     public:
-        explicit f_ValueAtPercentPath(Path const *path, qreal offset = 0) :
+        explicit f_ValueAtPercentPath(IPath const *path, qreal offset = 0) :
             f_ValueAtPercentPathImpl<Dimension, Multiplier>(path, offset) {}
     };
 
