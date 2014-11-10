@@ -26,7 +26,7 @@
 #include "hrlibfwd/qtfwd.h"
 
 #include <QPointF>
-#include "path.h"
+#include "ipath.hpp"
 
 namespace patheditor
 {

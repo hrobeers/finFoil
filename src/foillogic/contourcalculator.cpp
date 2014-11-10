@@ -22,6 +22,7 @@
 #include "profile.h"
 #include "thicknessprofile.h"
 #include "outline.h"
+#include "path.h"
 
 #ifdef QT_DEBUG
     #define INITCNT 128

@@ -37,9 +37,9 @@ namespace foillogic
 
         Side::e _side;
         qreal _percContourHeight;
-        patheditor::Path* _profile;
-        patheditor::Path* _outline;
-        patheditor::Path* _thickness;
+        patheditor::IPath* _profile;
+        patheditor::IPath* _outline;
+        patheditor::IPath* _thickness;
         QPainterPath *_result;
 
         int _sectionCount;
