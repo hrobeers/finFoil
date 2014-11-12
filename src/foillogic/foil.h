@@ -50,6 +50,7 @@ namespace foillogic
 
     public:
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
+        Q_INVOKABLE void onDeserialized();
 
         qshared_ptr<Outline> outline();
         qshared_ptr<Profile> profile();

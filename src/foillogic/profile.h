@@ -56,6 +56,7 @@ namespace foillogic
         enum Symmetry { Symmetric, Asymmetric, Flat };
 
         Q_INVOKABLE explicit Profile(QObject *parent = 0);
+        Q_INVOKABLE void onDeserialized();
 
         patheditor::Path* topProfile();
         patheditor::Path* botProfile();

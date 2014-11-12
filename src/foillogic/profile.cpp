@@ -42,6 +42,11 @@ Profile::Profile(QObject *parent) :
     initProfile();
 }
 
+void Profile::onDeserialized()
+{
+    setSymmetry(_symmetry);
+}
+
 Path *Profile::topProfile()
 {
     return _topProfile.get();

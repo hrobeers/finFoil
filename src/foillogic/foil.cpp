@@ -50,6 +50,11 @@ Foil::Foil(QObject *parent) :
     resetLayerCount();
 }
 
+void Foil::onDeserialized()
+{
+    _thickness->setThicknessRatio(_profile->thicknessRatio());
+}
+
 qshared_ptr<Outline> Foil::outline()
 {
     return _outline;
