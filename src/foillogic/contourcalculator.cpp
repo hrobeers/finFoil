@@ -39,6 +39,18 @@ using namespace patheditor;
 using namespace boost::math;
 using namespace boost::math::tools;
 
+namespace
+{
+    bool isInRange(qreal x, qreal a, qreal b)
+    {
+        if (x > a && x < b)
+            return true;
+        if (x < a && x > b)
+            return true;
+        return false;
+    }
+}
+
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
     _side(side), _outline(foil->outline()->path()), _thickness(foil->thickness()->topProfile()), _percContourHeight(percContourHeight),
     _result(result), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
@@ -123,21 +135,28 @@ void ContourCalculator::run()
     QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts;
     QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts;
 
-    try {
-
     for (int i=0; i<_sectionCount; i++)
     {
         qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
-        // if Offset > 1, no intersection exists
-        if (thicknessOffsetPercent > 1)
+
+        qreal profileOffset = thicknessOffsetPercent * y_profileTop;
+        yProfile.setOffset(profileOffset);
+
+        // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
+        qreal y_profileBot = 0;
+        if (_percContourHeight < 0)
+        {
+            if (_side == Side::Bottom)
+                y_profileBot = _profile->minY(&t_profileTop);
+            else
+                y_profileBot = _profile->maxY(&t_profileTop);
+        }
+
+        if (!isInRange(profileOffset, y_profileBot, y_profileTop))
         {
             leadingEdgePnts.append(0);
             trailingEdgePnts.append(0);
             continue;
-        }
-        else if (thicknessOffsetPercent < 0)
-        {
-            thicknessOffsetPercent = 0;
         }
 
         yOutline.setOffset(sectionHeightArray[i] * y_top);
@@ -147,18 +166,6 @@ void ContourCalculator::run()
 
         QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
         QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
-
-        // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
-        if (_percContourHeight < 0)
-        {
-            if (_side == Side::Bottom)
-                _profile->minY(&t_profileTop);
-            else
-                _profile->maxY(&t_profileTop);
-        }
-
-        qreal profileOffset = thicknessOffsetPercent * y_profileTop;
-        yProfile.setOffset(profileOffset);
 
         qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
         qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
@@ -210,8 +217,6 @@ void ContourCalculator::run()
             }
         }
     }
-
-    } catch (evaluation_error /*unused*/) { /*bisect() can throw an evaluation_error.*/ }
 
     // cleanup
     foreach (QPointF *point, leadingEdgePnts) if (point) delete point;

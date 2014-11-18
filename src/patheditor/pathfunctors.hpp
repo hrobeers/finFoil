@@ -27,6 +27,7 @@
 
 #include <QPointF>
 #include "ipath.hpp"
+#include "math/brent.hpp"
 
 namespace patheditor
 {
@@ -39,7 +40,7 @@ namespace patheditor
 
     // Specific implementation for the X dimension
     template <int Multiplier>
-    class f_ValueAtPercentPathImpl<X, Multiplier>
+    class f_ValueAtPercentPathImpl<X, Multiplier> : public hrlib::func_base
     {
     private:
         IPath const *_path;
@@ -49,7 +50,7 @@ namespace patheditor
         explicit f_ValueAtPercentPathImpl(IPath const *path, qreal offset = 0) :
             _path(path), _offset(offset) {}
 
-        qreal operator ()(qreal t){
+        virtual qreal operator ()(qreal t) override {
             return (_path->pointAtPercent(t).x() - _offset) * Multiplier;
         }
 
@@ -60,7 +61,7 @@ namespace patheditor
 
     // Specific implementation for the Y dimension
     template <int Multiplier>
-    class f_ValueAtPercentPathImpl<Y, Multiplier>
+    class f_ValueAtPercentPathImpl<Y, Multiplier> : public hrlib::func_base
     {
     private:
         IPath const *_path;
@@ -70,7 +71,7 @@ namespace patheditor
         explicit f_ValueAtPercentPathImpl(IPath const *path, qreal offset = 0) :
             _path(path), _offset(offset) {}
 
-        qreal operator ()(qreal t){
+        virtual qreal operator ()(qreal t) override {
             return (_path->pointAtPercent(t).y() - _offset) * Multiplier;
         }
 

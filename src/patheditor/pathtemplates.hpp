@@ -25,6 +25,7 @@
 
 #include <memory>
 #include <boost/math/tools/minima.hpp>
+#include "math/brent.hpp"
 #include "path.h"
 #include "pathfunctors.hpp"
 
@@ -35,12 +36,13 @@ namespace patheditor
     {
         std::unique_ptr<f_ValueAtPercentPath<Dimension,Multiplier>> target(new f_ValueAtPercentPath<Dimension,Multiplier>(self));
 
-        std::pair<qreal, qreal> min = boost::math::tools::brent_find_minima(*target, 0.0, 1.0, 5);
+        qreal min_t = t_ext ? *t_ext : 0.5;
+        qreal min = hrlib::Brent::local_min(0.0, 1.0, 0.0001, *target, min_t);
 
         if (t_ext)
-            *t_ext = min.first;
+            *t_ext = min_t;
 
-        return min.second * Multiplier;
+        return min * Multiplier;
     }
 }
 
