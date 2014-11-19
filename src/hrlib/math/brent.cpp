@@ -8,6 +8,7 @@
 # include <iostream>
 # include <qmath.h>
 # include <ctime>
+# include <numeric>
 
 using namespace std;
 
@@ -15,6 +16,33 @@ using namespace std;
 
 namespace hrlib
 {
+
+//****************************************************************************80
+const qreal eps = std::numeric_limits<qreal>::epsilon();
+const qreal sqrt_eps = qSqrt(std::numeric_limits<qreal>::epsilon());
+//****************************************************************************80
+//
+//  Purpose:
+//
+//    Machine accuracy constants.
+//
+//  Discussion:
+//
+//    Replace the original r8_epsilon() function as it is to expensive to
+//    calculate at runtime.
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license.
+//
+//  Modified:
+//
+//    19 November 2014
+//
+//  Author:
+//
+//    Hans Robeers
+//
 
 //****************************************************************************80
 
@@ -87,7 +115,6 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
   qreal h;
   int k;
   qreal m2;
-  qreal macheps;
   qreal p;
   qreal q;
   qreal qs;
@@ -126,9 +153,7 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
     return y;
   }
 
-  macheps = r8_epsilon ( );
-
-  m2 = 0.5 * ( 1.0 + 16.0 * macheps ) * m;
+  m2 = 0.5 * ( 1.0 + 16.0 * eps ) * m;
 
   if ( c <= a || b <= c )
   {
@@ -270,7 +295,7 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
 
       p = 2.0 * ( y2 - y3 ) / ( m * d0 );
 
-      if ( ( 1.0 + 9.0 * macheps ) * d0 <= r8_abs ( p ) )
+      if ( ( 1.0 + 9.0 * eps ) * d0 <= r8_abs ( p ) )
       {
         break;
       }
@@ -369,7 +394,6 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
   qreal c;
   qreal d = 0;
   qreal e;
-  qreal eps;
   qreal fu;
   qreal fv;
   qreal fw;
@@ -390,8 +414,6 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
 //
   c = 0.5 * ( 3.0 - qSqrt ( 5.0 ) );
 
-  eps = qSqrt ( r8_epsilon ( ) );
-
   sa = a;
   sb = b;
   x = sa + c * ( b - a );
@@ -405,7 +427,7 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
   for ( ; ; )
   {
     m = 0.5 * ( sa + sb ) ;
-    tol = eps * r8_abs ( x ) + t;
+    tol = sqrt_eps * r8_abs ( x ) + t;
     t2 = 2.0 * tol;
 //
 //  Check the stopping criterion.
@@ -630,7 +652,6 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
   static qreal c;
   static qreal d;
   static qreal e;
-  static qreal eps;
   static qreal fu;
   static qreal fv;
   static qreal fw;
@@ -639,7 +660,6 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
   static qreal p;
   static qreal q;
   static qreal r;
-  static qreal tol;
   static qreal tol1;
   static qreal tol2;
   static qreal u;
@@ -662,9 +682,6 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
       exit ( 1 );
     }
     c = 0.5 * ( 3.0 - qSqrt ( 5.0 ) );
-
-    eps = qSqrt ( r8_epsilon ( ) );
-    tol = r8_epsilon ( );
 
     v = a + c * ( b - a );
     w = v;
@@ -738,7 +755,7 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
 //  Take the next step.
 //
   midpoint = 0.5 * ( a + b );
-  tol1 = eps * r8_abs ( x ) + tol / 3.0;
+  tol1 = sqrt_eps * r8_abs ( x ) + eps / 3.0;
   tol2 = 2.0 * tol1;
 //
 //  If the stopping criterion is satisfied, we can exit.
@@ -875,52 +892,6 @@ qreal Brent::r8_abs ( qreal x )
     value = - x;
   }
   return value;
-}
-//****************************************************************************80
-
-qreal Brent::r8_epsilon ( )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_EPSILON returns the R8 round off unit.
-//
-//  Discussion:
-//
-//    R8_EPSILON is a number R which is a power of 2 with the property that,
-//    to the precision of the computer's arithmetic,
-//      1 < 1 + R
-//    but
-//      1 = ( 1 + R / 2 )
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    08 May 2006
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Output, qreal R8_EPSILON, the qreal precision round-off unit.
-//
-{
-  qreal r;
-
-  r = 1.0;
-
-  while ( 1.0 < ( qreal ) ( 1.0 + r )  )
-  {
-    r = r / 2.0;
-  }
-
-  return ( 2.0 * r );
 }
 //****************************************************************************80
 
@@ -1115,7 +1086,6 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
   qreal fb;
   qreal fc;
   qreal m;
-  qreal macheps;
   qreal p;
   qreal q;
   qreal r;
@@ -1136,8 +1106,6 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
   e = sb - sa;
   d = e;
 
-  macheps = r8_epsilon ( );
-
   for ( ; ; )
   {
     if ( r8_abs ( fc ) < r8_abs ( fb ) )
@@ -1150,7 +1118,7 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
       fc = fa;
     }
 
-    tol = 2.0 * macheps * r8_abs ( sb ) + t;
+    tol = 2.0 * eps * r8_abs ( sb ) + t;
     m = 0.5 * ( c - sb );
 
     if ( r8_abs ( m ) <= tol || fb == 0.0 )
@@ -1308,7 +1276,6 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
   static qreal fb;
   static qreal fc;
   qreal m;
-  static qreal macheps;
   qreal p;
   qreal q;
   qreal r;
@@ -1322,8 +1289,6 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
 //
   if ( status == 0 )
   {
-    macheps = r8_epsilon ( );
-
     sa = a;
     sb = b;
     e = sb - sa;
@@ -1385,7 +1350,7 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
     fc = fa;
   }
 
-  tol = 2.0 * macheps * r8_abs ( sb ) + t;
+  tol = 2.0 * eps * r8_abs ( sb ) + t;
   m = 0.5 * ( c - sb );
 
   if ( r8_abs ( m ) <= tol || fb == 0.0 )
