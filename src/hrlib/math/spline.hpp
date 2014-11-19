@@ -57,9 +57,6 @@ qreal least_val_old ( qreal x, int ndeg, qreal b[], qreal c[], qreal d[] );
 void parabola_val2 ( int ndim, int ndata, qreal tdata[], qreal ydata[],
   int left, qreal tval, qreal yval[] );
 qreal pchst ( qreal arg1, qreal arg2 );
-qreal r8_abs ( qreal x );
-qreal r8_max ( qreal x, qreal y );
-qreal r8_min ( qreal x, qreal y );
 qreal r8_uniform_01 ( int *seed );
 void r8vec_bracket ( int n, qreal x[], qreal xval, int *left, int *right );
 void r8vec_bracket3 ( int n, qreal t[], qreal tval, int *left );
@@ -102,7 +99,6 @@ void spline_pchip_val ( int n, qreal x[], qreal f[], qreal d[], int ne,
   qreal xe[], qreal fe[] );
 void spline_quadratic_val ( int ndata, qreal tdata[], qreal ydata[],
   qreal tval, qreal *yval, qreal *ypval );
-void timestamp ( );
 
 }
 

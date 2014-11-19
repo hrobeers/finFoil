@@ -8,7 +8,6 @@
 # include <iostream>
 # include <iomanip>
 # include <qmath.h>
-# include <ctime>
 # include <cstring>
 # include <boost/math/special_functions/pow.hpp>
 
@@ -1637,8 +1636,8 @@ int chfev ( qreal x1, qreal x2, qreal f1, qreal f2, qreal d1, qreal d2,
   ierr = 0;
   next[0] = 0;
   next[1] = 0;
-  xmi = r8_min ( 0.0, h );
-  xma = r8_max ( 0.0, h );
+  xmi = std::min ( 0.0, h );
+  xma = std::max ( 0.0, h );
 //
 //  Compute cubic coefficients expanded about X1.
 //
@@ -3281,123 +3280,6 @@ qreal pchst ( qreal arg1, qreal arg2 )
   }
 
   return value;
-}
-//****************************************************************************80
-
-qreal r8_abs ( qreal x )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_ABS returns the absolute value of an R8.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    14 November 2006
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, the quantity whose absolute value is desired.
-//
-//    Output, qreal R8_ABS, the absolute value of X.
-//
-{
-  qreal value;
-
-  if ( 0.0 <= x )
-  {
-    value = + x;
-  }
-  else
-  {
-    value = - x;
-  }
-  return value;
-}
-//****************************************************************************80
-
-qreal r8_max ( qreal x, qreal y )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_MAX returns the maximum of two R8's.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    10 January 2002
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, Y, the quantities to compare.
-//
-//    Output, qreal R8_MAX, the maximum of X and Y.
-//
-{
-  if ( y < x )
-  {
-    return x;
-  }
-  else
-  {
-    return y;
-  }
-}
-//****************************************************************************80
-
-qreal r8_min ( qreal x, qreal y )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_MIN returns the minimum of two R8's.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    09 May 2003
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, Y, the quantities to compare.
-//
-//    Output, qreal R8_MIN, the minimum of X and Y.
-//
-{
-  if ( y < x )
-  {
-    return y;
-  }
-  else
-  {
-    return x;
-  }
 }
 //****************************************************************************80
 
@@ -5302,8 +5184,8 @@ qreal spline_linear_int ( int ndata, qreal tdata[], qreal ydata[],
     return int_val;
   }
 
-  a_copy = r8_min ( a, b );
-  b_copy = r8_max ( a, b );
+  a_copy = std::min ( a, b );
+  b_copy = std::max ( a, b );
 //
 //  Find the interval [ TDATA(A_LEFT), TDATA(A_RIGHT) ] that contains, or is
 //  nearest to, A.
@@ -6149,8 +6031,8 @@ void spline_pchip_set ( int n, qreal x[], qreal f[], qreal d[] )
       hsumt3 = 3.0 * hsum;
       w1 = ( hsum + h1 ) / hsumt3;
       w2 = ( hsum + h2 ) / hsumt3;
-      dmax = r8_max ( fabs ( del1 ), fabs ( del2 ) );
-      dmin = r8_min ( fabs ( del1 ), fabs ( del2 ) );
+      dmax = std::max ( fabs ( del1 ), fabs ( del2 ) );
+      dmin = std::min ( fabs ( del1 ), fabs ( del2 ) );
       drat1 = del1 / dmax;
       drat2 = del2 / dmax;
       d[i-1] = dmin / ( w1 * drat1 + w2 * drat2 );
@@ -6575,55 +6457,6 @@ void spline_quadratic_val ( int ndata, qreal tdata[], qreal ydata[],
   *ypval = dif1 + dif2 * ( 2.0 * tval - t1 - t2 );
 
   return;
-}
-//****************************************************************************80
-
-void timestamp ( )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    TIMESTAMP prints the current YMDHMS date as a time stamp.
-//
-//  Example:
-//
-//    31 May 2001 09:45:54 AM
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    08 July 2009
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    None
-//
-{
-# define TIME_SIZE 40
-
-  static char time_buffer[TIME_SIZE];
-  const struct std::tm *tm_ptr;
-//  size_t len;
-  std::time_t now;
-
-  now = std::time ( NULL );
-  tm_ptr = std::localtime ( &now );
-
-//  len = std::strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm_ptr );
-  std::strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm_ptr );
-
-  std::cout << time_buffer << "\n";
-
-  return;
-# undef TIME_SIZE
 }
 
 }

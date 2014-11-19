@@ -57,10 +57,6 @@ static qreal glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
 static qreal local_min ( qreal a, qreal b, qreal t, func_base& f,
   qreal &x );
 static qreal local_min_rc ( qreal &a, qreal &b, int &status, qreal value );
-static qreal r8_abs ( qreal x );
-static qreal r8_max ( qreal x, qreal y );
-static qreal r8_sign ( qreal x );
-static void timestamp ( );
 static qreal zero ( qreal a, qreal b, qreal t, func_base& f );
 static void zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
   qreal value );

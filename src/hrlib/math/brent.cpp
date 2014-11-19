@@ -4,10 +4,8 @@
 
 ****************************************************************************/
 
-# include <cstdlib>
 # include <iostream>
 # include <qmath.h>
-# include <ctime>
 # include <numeric>
 
 using namespace std;
@@ -17,9 +15,15 @@ using namespace std;
 namespace hrlib
 {
 
+template <typename T> int sign(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 //****************************************************************************80
+
 const qreal eps = std::numeric_limits<qreal>::epsilon();
 const qreal sqrt_eps = qSqrt(std::numeric_limits<qreal>::epsilon());
+
 //****************************************************************************80
 //
 //  Purpose:
@@ -268,7 +272,7 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
 
     for ( ; ; )
     {
-      a3 = r8_max ( a3, r );
+      a3 = std::max ( a3, r );
 
       if ( b <= a3 )
       {
@@ -295,7 +299,7 @@ qreal Brent::glomin ( qreal a, qreal b, qreal c, qreal m, qreal e, qreal t,
 
       p = 2.0 * ( y2 - y3 ) / ( m * d0 );
 
-      if ( ( 1.0 + 9.0 * eps ) * d0 <= r8_abs ( p ) )
+      if ( ( 1.0 + 9.0 * eps ) * d0 <= std::abs ( p ) )
       {
         break;
       }
@@ -427,12 +431,12 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
   for ( ; ; )
   {
     m = 0.5 * ( sa + sb ) ;
-    tol = sqrt_eps * r8_abs ( x ) + t;
+    tol = sqrt_eps * std::abs ( x ) + t;
     t2 = 2.0 * tol;
 //
 //  Check the stopping criterion.
 //
-    if ( r8_abs ( x - m ) <= t2 - 0.5 * ( sb - sa ) )
+    if ( std::abs ( x - m ) <= t2 - 0.5 * ( sb - sa ) )
     {
       break;
     }
@@ -443,7 +447,7 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
     q = r;
     p = q;
 
-    if ( tol < r8_abs ( e ) )
+    if ( tol < std::abs ( e ) )
     {
       r = ( x - w ) * ( fx - fv );
       q = ( x - v ) * ( fx - fw );
@@ -453,12 +457,12 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
       {
         p = - p;
       }
-      q = r8_abs ( q );
+      q = std::abs ( q );
       r = e;
       e = d;
     }
 
-    if ( r8_abs ( p ) < r8_abs ( 0.5 * q * r ) &&
+    if ( std::abs ( p ) < std::abs ( 0.5 * q * r ) &&
          q * ( sa - x ) < p &&
          p < q * ( sb - x ) )
     {
@@ -500,7 +504,7 @@ qreal Brent::local_min ( qreal a, qreal b, qreal t, func_base& f,
 //
 //  F must not be evaluated too close to X.
 //
-    if ( tol <= r8_abs ( d ) )
+    if ( tol <= std::abs ( d ) )
     {
       u = x + d;
     }
@@ -755,12 +759,12 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
 //  Take the next step.
 //
   midpoint = 0.5 * ( a + b );
-  tol1 = sqrt_eps * r8_abs ( x ) + eps / 3.0;
+  tol1 = sqrt_eps * std::abs ( x ) + eps / 3.0;
   tol2 = 2.0 * tol1;
 //
 //  If the stopping criterion is satisfied, we can exit.
 //
-  if ( r8_abs ( x - midpoint ) <= ( tol2 - 0.5 * ( b - a ) ) )
+  if ( std::abs ( x - midpoint ) <= ( tol2 - 0.5 * ( b - a ) ) )
   {
     status = 0;
     return arg;
@@ -768,7 +772,7 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
 //
 //  Is golden-section necessary?
 //
-  if ( r8_abs ( e ) <= tol1 )
+  if ( std::abs ( e ) <= tol1 )
   {
     if ( midpoint <= x )
     {
@@ -793,14 +797,14 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
     {
       p = - p;
     }
-    q = r8_abs ( q );
+    q = std::abs ( q );
     r = e;
     e = d;
 //
 //  Choose a golden-section step if the parabola is not advised.
 //
     if (
-      ( r8_abs ( 0.5 * q * r ) <= r8_abs ( p ) ) ||
+      ( std::abs ( 0.5 * q * r ) <= std::abs ( p ) ) ||
       ( p <= q * ( a - x ) ) ||
       ( q * ( b - x ) <= p ) )
     {
@@ -824,25 +828,25 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
 
       if ( ( u - a ) < tol2 )
       {
-        d = tol1 * r8_sign ( midpoint - x );
+        d = tol1 * sign ( midpoint - x );
       }
 
       if ( ( b - u ) < tol2 )
       {
-        d = tol1 * r8_sign ( midpoint - x );
+        d = tol1 * sign ( midpoint - x );
       }
     }
   }
 //
 //  F must not be evaluated too close to X.
 //
-  if ( tol1 <= r8_abs ( d ) )
+  if ( tol1 <= std::abs ( d ) )
   {
     u = x + d;
   }
-  if ( r8_abs ( d ) < tol1 )
+  if ( std::abs ( d ) < tol1 )
   {
-    u = x + tol1 * r8_sign ( d );
+    u = x + tol1 * sign ( d );
   }
 //
 //  Request value of F(U).
@@ -851,175 +855,6 @@ qreal Brent::local_min_rc ( qreal &a, qreal &b, int &status, qreal value )
   status = status + 1;
 
   return arg;
-}
-//****************************************************************************80
-
-qreal Brent::r8_abs ( qreal x )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_ABS returns the absolute value of an R8.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    07 May 2006
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, the quantity whose absolute value is desired.
-//
-//    Output, qreal R8_ABS, the absolute value of X.
-//
-{
-  qreal value;
-
-  if ( 0.0 <= x )
-  {
-    value = x;
-  }
-  else
-  {
-    value = - x;
-  }
-  return value;
-}
-//****************************************************************************80
-
-qreal Brent::r8_max ( qreal x, qreal y )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_MAX returns the maximum of two R8's.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    18 August 2004
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, Y, the quantities to compare.
-//
-//    Output, qreal R8_MAX, the maximum of X and Y.
-//
-{
-  qreal value;
-
-  if ( y < x )
-  {
-    value = x;
-  }
-  else
-  {
-    value = y;
-  }
-  return value;
-}
-//****************************************************************************80
-
-qreal Brent::r8_sign ( qreal x )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8_SIGN returns the sign of an R8.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    18 October 2004
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, qreal X, the number whose sign is desired.
-//
-//    Output, qreal R8_SIGN, the sign of X.
-//
-{
-  qreal value;
-
-  if ( x < 0.0 )
-  {
-    value = -1.0;
-  }
-  else
-  {
-    value = 1.0;
-  }
-  return value;
-}
-//****************************************************************************80
-
-void Brent::timestamp ( )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    TIMESTAMP prints the current YMDHMS date as a time stamp.
-//
-//  Example:
-//
-//    31 May 2001 09:45:54 AM
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    24 September 2003
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    None
-//
-{
-  const int TIME_SIZE(40);
-
-  static char time_buffer[TIME_SIZE];
-  const struct tm *tm;
-  time_t now;
-
-  now = time ( NULL );
-  tm = localtime ( &now );
-
-  strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm );
-
-  cout << time_buffer << "\n";
-
-  return;
 }
 //****************************************************************************80
 
@@ -1039,7 +874,7 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
 //    one value C between A and B for which F(C) = 0.
 //
 //    The location of the zero is determined to within an accuracy
-//    of 6 * MACHEPS * r8_abs ( C ) + 2 * T.
+//    of 6 * MACHEPS * std::abs ( C ) + 2 * T.
 //
 //    Thanks to Thomas Secretin for pointing out a transcription error in the
 //    setting of the value of P, 11 February 2013.
@@ -1108,7 +943,7 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
 
   for ( ; ; )
   {
-    if ( r8_abs ( fc ) < r8_abs ( fb ) )
+    if ( std::abs ( fc ) < std::abs ( fb ) )
     {
       sa = sb;
       sb = c;
@@ -1118,15 +953,15 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
       fc = fa;
     }
 
-    tol = 2.0 * eps * r8_abs ( sb ) + t;
+    tol = 2.0 * eps * std::abs ( sb ) + t;
     m = 0.5 * ( c - sb );
 
-    if ( r8_abs ( m ) <= tol || fb == 0.0 )
+    if ( std::abs ( m ) <= tol || fb == 0.0 )
     {
       break;
     }
 
-    if ( r8_abs ( e ) < tol || r8_abs ( fa ) <= r8_abs ( fb ) )
+    if ( std::abs ( e ) < tol || std::abs ( fa ) <= std::abs ( fb ) )
     {
       e = m;
       d = e;
@@ -1160,8 +995,8 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
       s = e;
       e = d;
 
-      if ( 2.0 * p < 3.0 * m * q - r8_abs ( tol * q ) &&
-        p < r8_abs ( 0.5 * s * q ) )
+      if ( 2.0 * p < 3.0 * m * q - std::abs ( tol * q ) &&
+        p < std::abs ( 0.5 * s * q ) )
       {
         d = p / q;
       }
@@ -1174,7 +1009,7 @@ qreal Brent::zero ( qreal a, qreal b, qreal t, func_base& f )
     sa = sb;
     fa = fb;
 
-    if ( tol < r8_abs ( d ) )
+    if ( tol < std::abs ( d ) )
     {
       sb = sb + d;
     }
@@ -1218,7 +1053,7 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
 //    one value C between A and B for which F(C) = 0.
 //
 //    The location of the zero is determined to within an accuracy
-//    of 6 * MACHEPS * r8_abs ( C ) + 2 * T.
+//    of 6 * MACHEPS * std::abs ( C ) + 2 * T.
 //
 //    The routine is a revised version of the Brent zero finder
 //    algorithm, using reverse communication.
@@ -1340,7 +1175,7 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
 //
 //  Compute the next point at which a function value is requested.
 //
-  if ( r8_abs ( fc ) < r8_abs ( fb ) )
+  if ( std::abs ( fc ) < std::abs ( fb ) )
   {
     sa = sb;
     sb = c;
@@ -1350,17 +1185,17 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
     fc = fa;
   }
 
-  tol = 2.0 * eps * r8_abs ( sb ) + t;
+  tol = 2.0 * eps * std::abs ( sb ) + t;
   m = 0.5 * ( c - sb );
 
-  if ( r8_abs ( m ) <= tol || fb == 0.0 )
+  if ( std::abs ( m ) <= tol || fb == 0.0 )
   {
     status = 0;
     arg = sb;
     return;
   }
 
-  if ( r8_abs ( e ) < tol || r8_abs ( fa ) <= r8_abs ( fb ) )
+  if ( std::abs ( e ) < tol || std::abs ( fa ) <= std::abs ( fb ) )
   {
     e = m;
     d = e;
@@ -1393,8 +1228,8 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
     s = e;
     e = d;
 
-    if ( 2.0 * p < 3.0 * m * q - r8_abs ( tol * q ) &&
-         p < r8_abs ( 0.5 * s * q ) )
+    if ( 2.0 * p < 3.0 * m * q - std::abs ( tol * q ) &&
+         p < std::abs ( 0.5 * s * q ) )
     {
       d = p / q;
     }
@@ -1408,7 +1243,7 @@ void Brent::zero_rc ( qreal a, qreal b, qreal t, qreal &arg, int &status,
   sa = sb;
   fa = fb;
 
-  if ( tol < r8_abs ( d ) )
+  if ( tol < std::abs ( d ) )
   {
     sb = sb + d;
   }
