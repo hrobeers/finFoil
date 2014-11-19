@@ -135,6 +135,8 @@ void ContourCalculator::run()
     QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts;
     QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts;
 
+    QPointF outlineLeadingEdge, outlineTrailingEdge;
+    qreal leadingEdgePerc, trailingEdgePerc;
     for (int i=0; i<_sectionCount; i++)
     {
         qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
@@ -159,19 +161,29 @@ void ContourCalculator::run()
             continue;
         }
 
-        yOutline.setOffset(sectionHeightArray[i] * y_top);
+        try
+        {
+            yOutline.setOffset(sectionHeightArray[i] * y_top);
 
-        qreal t_outlineLeadingEdge = bisect(yOutline, 0.0, t_top, tTolerance).first;
-        qreal t_outlineTrailingEdge = bisect(yOutline, t_top, 1.0, tTolerance).first;
+            qreal t_outlineLeadingEdge = bisect(yOutline, 0.0, t_top, tTolerance).first;
+            qreal t_outlineTrailingEdge = bisect(yOutline, t_top, 1.0, tTolerance).first;
 
-        QPointF outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
-        QPointF outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
+            outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
+            outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
 
-        qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
-        qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
+            qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
+            qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
 
-        qreal leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
-        qreal trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
+            leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
+            trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
+        }
+        catch (evaluation_error /*unused*/)
+        {
+            // no result when bisect fails
+            leadingEdgePnts.append(0);
+            trailingEdgePnts.append(0);
+            continue;
+        }
 
         qreal xLE = outlineLeadingEdge.x();
         qreal xTE = outlineTrailingEdge.x();
@@ -179,13 +191,7 @@ void ContourCalculator::run()
         std::unique_ptr<QPointF> leadingEdgePnt(new QPointF(xLE +(leadingEdgePerc * (xTE - xLE)), outlineLeadingEdge.y()));
         std::unique_ptr<QPointF> trailingEdgePnt(new QPointF(xLE +(trailingEdgePerc * (xTE - xLE)), outlineTrailingEdge.y()));
 
-        if ((*(leadingEdgePnt) - *(trailingEdgePnt)).manhattanLength() < 1)
-        {
-            // set nullptr when closer than 1 manhattan pixel
-            leadingEdgePnts.append(0);
-            trailingEdgePnts.append(0);
-        }
-        else if (i%5 == 0)
+        if (i%5 == 0)
         {
             // Make sure that at least one in 5 points is added for spline evaluation
             leadingEdgePnts.append(leadingEdgePnt.release());
