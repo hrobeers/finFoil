@@ -58,7 +58,6 @@ void parabola_val2 ( int ndim, int ndata, qreal tdata[], qreal ydata[],
   int left, qreal tval, qreal yval[] );
 qreal pchst ( qreal arg1, qreal arg2 );
 qreal r8_uniform_01 ( int *seed );
-void r8vec_bracket ( int n, qreal x[], qreal xval, int *left, int *right );
 void r8vec_bracket3 ( int n, qreal t[], qreal tval, int *left );
 qreal *r8vec_even_new ( int n, qreal alo, qreal ahi );
 qreal *r8vec_indicator_new ( int n );

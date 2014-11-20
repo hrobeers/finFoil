@@ -15,9 +15,77 @@ using namespace std;
 
 # include "spline.hpp"
 
+#include <algorithm>
+#include <vector>
+
 namespace hrlib
 {
 
+//****************************************************************************80
+
+void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
+  int *right )
+
+//****************************************************************************80
+//
+//  Purpose:
+//
+//    R8VEC_BRACKET searches a sorted array for successive brackets of a value.
+//
+//  Discussion:
+//
+//    If the values in the vector are thought of as defining intervals
+//    on the real line, then this routine searches for the interval
+//    nearest to or containing the given value.
+//
+//    It is always true that RIGHT = LEFT+1.
+//
+//    If XVAL < X[0], then LEFT = 1, RIGHT = 2, and
+//      XVAL   < X[0] < X[1];
+//    If X(1) <= XVAL < X[N-1], then
+//      X[LEFT-1] <= XVAL < X[RIGHT-1];
+//    If X[N-1] <= XVAL, then LEFT = N-1, RIGHT = N, and
+//      X[LEFT-1] <= X[RIGHT-1] <= XVAL.
+//
+//    For consistency, this routine computes indices RIGHT and LEFT
+//    that are 1-based, although it would be more natural in C and
+//    C++ to use 0-based values.
+//
+//    2014/11/20 Hans Robeers: Reimplemented using std::upper_bound O(log2(n))
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license.
+//
+//  Modified:
+//
+//    24 February 2004
+//    20 November 2014
+//
+//  Author:
+//
+//    John Burkardt
+//    Hans Robeers
+//
+//  Parameters:
+//
+//    Input, int N, length of input array.
+//
+//    Input, qreal X[N], an array that has been sorted into ascending order.
+//
+//    Input, qreal XVAL, a value to be bracketed.
+//
+//    Output, int *LEFT, *RIGHT, the results of the search.
+//
+{
+  std::vector<qreal> v(x,x+n);
+  auto it = std::upper_bound(v.begin(), v.end(), xval);
+  *left = it - v.begin();
+  if (xval / *left == 1.0) *left += 1;
+  if (*left == 0) *left = 1;
+  else if (*left == n) *left = n-1;
+  *right = *left + 1;
+}
 //****************************************************************************80
 
 qreal basis_function_b_val ( qreal tdata[], qreal tval )
@@ -3349,77 +3417,6 @@ qreal r8_uniform_01 ( int *seed )
   r = ( qreal ) ( *seed ) * 4.656612875E-10;
 
   return r;
-}
-//****************************************************************************80
-
-void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
-  int *right )
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    R8VEC_BRACKET searches a sorted array for successive brackets of a value.
-//
-//  Discussion:
-//
-//    If the values in the vector are thought of as defining intervals
-//    on the real line, then this routine searches for the interval
-//    nearest to or containing the given value.
-//
-//    It is always true that RIGHT = LEFT+1.
-//
-//    If XVAL < X[0], then LEFT = 1, RIGHT = 2, and
-//      XVAL   < X[0] < X[1];
-//    If X(1) <= XVAL < X[N-1], then
-//      X[LEFT-1] <= XVAL < X[RIGHT-1];
-//    If X[N-1] <= XVAL, then LEFT = N-1, RIGHT = N, and
-//      X[LEFT-1] <= X[RIGHT-1] <= XVAL.
-//
-//    For consistency, this routine computes indices RIGHT and LEFT
-//    that are 1-based, although it would be more natural in C and
-//    C++ to use 0-based values.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license.
-//
-//  Modified:
-//
-//    24 February 2004
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, int N, length of input array.
-//
-//    Input, qreal X[N], an array that has been sorted into ascending order.
-//
-//    Input, qreal XVAL, a value to be bracketed.
-//
-//    Output, int *LEFT, *RIGHT, the results of the search.
-//
-{
-  int i;
-
-  for ( i = 2; i <= n - 1; i++ )
-  {
-    if ( xval < x[i-1] )
-    {
-      *left = i - 1;
-      *right = i;
-      return;
-    }
-
-   }
-
-  *left = n - 1;
-  *right = n;
-
-  return;
 }
 //****************************************************************************80
 
