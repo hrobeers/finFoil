@@ -68,6 +68,7 @@ qreal *r8vec_uniform_new ( int n, qreal b, qreal c, int *seed );
 int r8vec_unique_count ( int n, qreal a[], qreal tol );
 void r8vec_zero ( int n, qreal a[] );
 qreal spline_b_val ( int ndata, qreal tdata[], qreal ydata[], qreal tval );
+qreal spline_b_val ( int ndata, qreal ydata[], qreal tval );
 qreal spline_beta_val ( qreal beta1, qreal beta2, int ndata, qreal tdata[],
   qreal ydata[], qreal tval );
 qreal spline_constant_val ( int ndata, qreal tdata[], qreal ydata[], qreal tval );

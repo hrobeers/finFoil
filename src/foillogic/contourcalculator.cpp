@@ -300,10 +300,6 @@ void ContourCalculator::createSplinePath(QPointF *leadingEdgePnts[], QPointF *tr
 
     int pointCount = points_x.count();
 
-    QVarLengthArray<qreal, INITCNT> t_data(pointCount);
-    for (int i = 0; i < t_data.count(); i++)
-        t_data[i] = i;
-
     qreal t_val = 0;
     qreal t_valStep;
     if (closing)
@@ -320,19 +316,23 @@ void ContourCalculator::createSplinePath(QPointF *leadingEdgePnts[], QPointF *tr
     switch(splineFunction)
     {
     case bSpline:
-        x = hrlib::spline_b_val(pointCount, t_data.data(), points_x.data(), t_val);
-        y = hrlib::spline_b_val(pointCount, t_data.data(), points_y.data(), t_val);
+        x = hrlib::spline_b_val(pointCount, points_x.data(), t_val);
+        y = hrlib::spline_b_val(pointCount, points_y.data(), t_val);
         _result->moveTo(x, y);
         for (int i = 1; i <= _resolution; i++)
         {
             t_val += t_valStep;
-            x = hrlib::spline_b_val(pointCount, t_data.data(), points_x.data(), t_val);
-            y = hrlib::spline_b_val(pointCount, t_data.data(), points_y.data(), t_val);
+            x = hrlib::spline_b_val(pointCount, points_x.data(), t_val);
+            y = hrlib::spline_b_val(pointCount, points_y.data(), t_val);
             _result->lineTo(x, y);
         }
         break;
 
     case overhauser:
+        QVarLengthArray<qreal, INITCNT> t_data(pointCount);
+        for (int i = 0; i < t_data.count(); i++)
+            t_data[i] = i;
+
         x = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_x.data(), t_val);
         y = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_y.data(), t_val);
         _result->moveTo(x, y);

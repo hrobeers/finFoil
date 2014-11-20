@@ -4152,6 +4152,102 @@ void r8vec_zero ( int n, qreal a[] )
 }
 //****************************************************************************80
 
+qreal spline_b_val_impl ( int ndata, qreal u, int idxLeft, int idxRight, qreal ydata[] )
+
+//****************************************************************************80
+//
+//  Purpose:
+//
+//    SPLINE_B_VAL_IMPL evaluates a cubic B spline approximant.
+//
+//  Discussion:
+//
+//    The cubic B spline will approximate the data, but is not
+//    designed to interpolate it.
+//
+//    In effect, two "phantom" data values are appended to the data,
+//    so that the spline will interpolate the first and last data values.
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license.
+//
+//  Modified:
+//
+//    24 February 2004
+//
+//  Author:
+//
+//    John Burkardt
+//
+//  Reference:
+//
+//    Carl deBoor,
+//    A Practical Guide to Splines,
+//    Springer, 2001,
+//    ISBN: 0387953663.
+//
+{
+  qreal bval;
+  qreal yval;
+
+  yval = 0.0;
+//
+//  B function associated with node LEFT - 1, (or "phantom node"),
+//  evaluated in its 4th interval.
+//
+  bval = ( ( (     - 1.0
+               * u + 3.0 )
+               * u - 3.0 )
+               * u + 1.0 ) / 6.0;
+
+  if ( 0 < idxLeft-1 )
+  {
+    yval = yval + ydata[idxLeft-2] * bval;
+  }
+  else
+  {
+    yval = yval + ( 2.0 * ydata[0] - ydata[1] ) * bval;
+  }
+//
+//  B function associated with node LEFT,
+//  evaluated in its third interval.
+//
+  bval = ( ( (       3.0
+               * u - 6.0 )
+               * u + 0.0 )
+               * u + 4.0 ) / 6.0;
+
+  yval = yval + ydata[idxLeft-1] * bval;
+//
+//  B function associated with node RIGHT,
+//  evaluated in its second interval.
+//
+  bval = ( ( (     - 3.0
+               * u + 3.0 )
+               * u + 3.0 )
+               * u + 1.0 ) / 6.0;
+
+  yval = yval + ydata[idxRight-1] * bval;
+//
+//  B function associated with node RIGHT+1, (or "phantom node"),
+//  evaluated in its first interval.
+//
+  bval = boost::math::pow<3>( u ) / 6.0;
+
+  if ( idxRight+1 <= ndata )
+  {
+    yval = yval + ydata[idxRight] * bval;
+  }
+  else
+  {
+    yval = yval + ( 2.0 * ydata[ndata-1] - ydata[ndata-2] ) * bval;
+  }
+
+  return yval;
+}
+//****************************************************************************80
+
 qreal spline_b_val ( int ndata, qreal tdata[], qreal ydata[], qreal tval )
 
 //****************************************************************************80
@@ -4200,74 +4296,79 @@ qreal spline_b_val ( int ndata, qreal tdata[], qreal ydata[], qreal tval )
 //    Output, qreal SPLINE_B_VAL, the value of the function at TVAL.
 //
 {
-  qreal bval;
   int left;
   int right;
   qreal u;
-  qreal yval;
-//
-//  Find the nearest interval [ TDATA(LEFT), TDATA(RIGHT) ] to TVAL.
-//
+  //
+  //  Find the nearest interval [ TDATA(LEFT), TDATA(RIGHT) ] to TVAL.
+  //
   r8vec_bracket ( ndata, tdata, tval, &left, &right );
-//
-//  Evaluate the 5 nonzero B spline basis functions in the interval,
-//  weighted by their corresponding data values.
-//
+  //
+  //  Evaluate the 5 nonzero B spline basis functions in the interval,
+  //  weighted by their corresponding data values.
+  //
   u = ( tval - tdata[left-1] ) / ( tdata[right-1] - tdata[left-1] );
-  yval = 0.0;
-//
-//  B function associated with node LEFT - 1, (or "phantom node"),
-//  evaluated in its 4th interval.
-//
-  bval = ( ( (     - 1.0
-               * u + 3.0 )
-               * u - 3.0 )
-               * u + 1.0 ) / 6.0;
 
-  if ( 0 < left-1 )
-  {
-    yval = yval + ydata[left-2] * bval;
-  }
-  else
-  {
-    yval = yval + ( 2.0 * ydata[0] - ydata[1] ) * bval;
-  }
-//
-//  B function associated with node LEFT,
-//  evaluated in its third interval.
-//
-  bval = ( ( (       3.0
-               * u - 6.0 )
-               * u + 0.0 )
-               * u + 4.0 ) / 6.0;
+  return spline_b_val_impl(ndata, u, left, right, ydata);
+}
+//****************************************************************************80
 
-  yval = yval + ydata[left-1] * bval;
-//
-//  B function associated with node RIGHT,
-//  evaluated in its second interval.
-//
-  bval = ( ( (     - 3.0
-               * u + 3.0 )
-               * u + 3.0 )
-               * u + 1.0 ) / 6.0;
+qreal spline_b_val ( int ndata, qreal ydata[], qreal tval )
 
-  yval = yval + ydata[right-1] * bval;
+//****************************************************************************80
 //
-//  B function associated with node RIGHT+1, (or "phantom node"),
-//  evaluated in its first interval.
+//  Purpose:
 //
-  bval = boost::math::pow<3>( u ) / 6.0;
+//    SPLINE_B_VAL evaluates a cubic B spline approximant.
+//
+//  Discussion:
+//
+//    The cubic B spline will approximate the data, but is not
+//    designed to interpolate it.
+//
+//    In effect, two "phantom" data values are appended to the data,
+//    so that the spline will interpolate the first and last data values.
+//
+//  Licensing:
+//
+//    This code is distributed under the GNU LGPL license.
+//
+//  Modified:
+//
+//    20 November 2014
+//
+//  Author:
+//
+//    Hans Robeers
+//
+//  Parameters:
+//
+//    Input, int NDATA, the number of data values.
+//
+//    Input, qreal YDATA[NDATA], the data values.
+//
+//    Input, qreal TVAL, a point at which the spline is to be evaluated 0 <= TVAL <= ndata.
+//
+//    Output, qreal SPLINE_B_VAL, the value of the function at TVAL.
+//
+{
+  int left;
+  int right;
+  qreal u;
+  //
+  //  Find the nearest interval to TVAL.
+  //
+  if (tval < 0) left = 1;
+  else if (tval >= ndata - 1) left = ndata - 1;
+  else left = std::floor(tval) + 1;
+  right = left + 1;
+  //
+  //  Evaluate the 5 nonzero B spline basis functions in the interval,
+  //  weighted by their corresponding data values.
+  //
+  u = ( tval+1 - left ) / ( right - left );
 
-  if ( right+1 <= ndata )
-  {
-    yval = yval + ydata[right] * bval;
-  }
-  else
-  {
-    yval = yval + ( 2.0 * ydata[ndata-1] - ydata[ndata-2] ) * bval;
-  }
-
-  return yval;
+  return spline_b_val_impl(ndata, u, left, right, ydata);
 }
 //****************************************************************************80
 
