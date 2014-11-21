@@ -21,6 +21,21 @@ using namespace std;
 namespace hrlib
 {
 
+template<typename T>
+class ArrayIterator : public std::iterator<std::random_access_iterator_tag, T>
+{
+  T* p;
+public:
+  ArrayIterator(T* x) :p(x) {}
+  ArrayIterator(const ArrayIterator& mit) : p(mit.p) {}
+  ArrayIterator& operator++() {++p;return *this;}
+  ArrayIterator& operator+=(int i) {p+=i;return *this;}
+  bool operator==(const ArrayIterator& rhs) {return p==rhs.p;}
+  bool operator!=(const ArrayIterator& rhs) {return p!=rhs.p;}
+  int operator-(const ArrayIterator& rhs) {return p-rhs.p;}
+  T& operator*() {return *p;}
+};
+
 //****************************************************************************80
 
 void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
@@ -78,9 +93,9 @@ void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
 //    Output, int *LEFT, *RIGHT, the results of the search.
 //
 {
-  std::vector<qreal> v(x,x+n);
-  auto it = std::upper_bound(v.begin(), v.end(), xval);
-  *left = it - v.begin();
+  ArrayIterator<qreal> begin(x), end(x+n);
+  auto it = std::upper_bound(begin, end, xval);
+  *left = it - begin;
   if (xval / *left == 1.0) *left += 1;
   if (*left == 0) *left = 1;
   else if (*left == n) *left = n-1;
