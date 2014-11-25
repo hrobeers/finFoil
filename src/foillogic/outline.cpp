@@ -114,7 +114,7 @@ void Outline::initPath()
     qshared_ptr<ControlPoint> point9 = make_qshared(new ControlPoint(m*134.604629, m*-78.11541));
     qshared_ptr<PathPoint> point10 = make_qshared(new PathPoint(m*123.550789, m*-62.04205));
     qshared_ptr<ControlPoint> point11 = make_qshared(new ControlPoint(m*99.87859895, m*-27.6204));
-    qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*116.439959, m*0));
+    qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*113.439959, m*-6.5));
     qshared_ptr<PathPoint> point13 = make_qshared(new PathPoint(m*116.439959, m*0));
 
     std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
