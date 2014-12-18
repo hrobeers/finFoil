@@ -27,8 +27,8 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QMainWindow>
-#include <memory>
 #include <QFileInfo>
+#include "jenson.h"
 #include "version.h"
 
 namespace Ui {
@@ -66,7 +66,7 @@ private:
     const hrlib::Version _version;
     Ui::MainWindow *ui;
 
-    std::unique_ptr<foillogic::Foil> _fin;
+    sptr<foillogic::Foil> _fin;
 
     foileditors::OutlineEditor* _outlineEditor;
     foileditors::ProfileEditor* _profileEditor;
