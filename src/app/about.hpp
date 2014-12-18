@@ -39,7 +39,7 @@ QString buildAbout(QString paragraphDelimiter)
                       "Meaning that you can reuse these parts of the code under the conditions of the 2-clause BSD license. "
                       "However, since some source files are licensed under the GNU LGPL version 2.1, the entire application inherits this license.") +
                    paragraphDelimiter +
-                   QCoreApplication::tr("Copyright 2011-2014 Hans Robeers (hrobeers). All rights reserved."));
+                   QCoreApplication::tr("Copyright 2014 Hans Robeers (hrobeers). All rights reserved."));
 }
 
 QString about()
