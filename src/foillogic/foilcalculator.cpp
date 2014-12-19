@@ -151,7 +151,7 @@ void FoilCalculator::recalculateArea()
 
 bool FoilCalculator::inProfileSide(qreal thicknessPercent, Side::e side)
 {
-    Profile* profile = _foil->profile().get();
+    Profile* profile = _foil->profile();
 
     switch (side) {
     case Side::Bottom:

@@ -40,7 +40,9 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit FoilDataWidget(foillogic::FoilCalculator* foilCalculator, QWidget *parent = 0);
+        explicit FoilDataWidget(QWidget *parent = 0);
+
+        void setFoilCalculator(foillogic::FoilCalculator* foilCalculator);
 
         virtual ~FoilDataWidget() {}
 

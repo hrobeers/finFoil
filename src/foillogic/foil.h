@@ -39,9 +39,9 @@ namespace foillogic
         Q_OBJECT
 
         // read-write properties
-        Q_PROPERTY(foillogic::Outline* outline READ pOutline WRITE pSetOutline)
-        Q_PROPERTY(foillogic::Profile* profile READ pProfile WRITE pSetProfile)
-        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ pThickness WRITE pSetThickness)
+        Q_PROPERTY(foillogic::Outline* outline READ outline WRITE pSetOutline)
+        Q_PROPERTY(foillogic::Profile* profile READ profile WRITE pSetProfile)
+        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ thickness WRITE pSetThickness)
 
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
@@ -52,10 +52,6 @@ namespace foillogic
         Q_INVOKABLE explicit Foil(QObject *parent = 0);
         Q_INVOKABLE void onDeserialized();
 
-        qshared_ptr<Outline> outline();
-        qshared_ptr<Profile> profile();
-        qshared_ptr<ThicknessProfile> thickness();
-
         // SI paths
         std::unique_ptr<patheditor::IPath> outlineSI();
         std::unique_ptr<patheditor::IPath> topProfileSI();
@@ -64,9 +60,9 @@ namespace foillogic
         std::unique_ptr<patheditor::IPath> botThicknessSI();
 
         // Q_PROPERTY getters
-        Outline* pOutline() { return outline().get(); }
-        Profile* pProfile() { return profile().get(); }
-        ThicknessProfile* pThickness() { return thickness().get(); }
+        Outline* outline() { return _outline.get(); }
+        Profile* profile() { return _profile.get(); }
+        ThicknessProfile* thickness() { return _thickness.get(); }
         int layerCount() { return _layerCount; }
 
         // Q_PROPERTY setters
@@ -77,7 +73,7 @@ namespace foillogic
 
         void resetLayerCount();
 
-        virtual ~Foil() {}
+        virtual ~Foil();
 
     signals:
         void foilChanged(Foil* sender);
@@ -86,9 +82,9 @@ namespace foillogic
     public slots:
 
     private:
-        qshared_ptr<foillogic::Outline> _outline;
-        qshared_ptr<foillogic::Profile> _profile;
-        qshared_ptr<foillogic::ThicknessProfile> _thickness;
+        std::unique_ptr<foillogic::Outline> _outline;
+        std::unique_ptr<foillogic::Profile> _profile;
+        std::unique_ptr<foillogic::ThicknessProfile> _thickness;
         int _layerCount;
 
         void initOutline();

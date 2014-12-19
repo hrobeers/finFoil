@@ -36,7 +36,7 @@
 using namespace foileditors;
 using namespace foillogic;
 
-OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
+OutlineEditor::OutlineEditor(QWidget *parent) :
     QWidget(parent)
 {
     //
@@ -70,12 +70,6 @@ OutlineEditor::OutlineEditor(Foil *foil, QWidget *parent) :
     QVBoxLayout* _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(splitter);
     this->setLayout(_mainLayout);
-
-
-    //
-    // Set foil
-    //
-    setFoil(foil);
 }
 
 void OutlineEditor::setFoil(Foil *foil)

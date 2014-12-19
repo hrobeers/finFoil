@@ -33,7 +33,7 @@
 using namespace foileditors;
 using namespace foillogic;
 
-ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
+ThicknessEditor::ThicknessEditor(QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget();
@@ -48,8 +48,6 @@ ThicknessEditor::ThicknessEditor(Foil *foil, QWidget *parent) :
     _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
-
-    setFoil(foil);
 }
 
 void ThicknessEditor::setFoil(Foil *foil)
@@ -58,7 +56,7 @@ void ThicknessEditor::setFoil(Foil *foil)
 
     EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
     botPath->setEditable(false);
-    connect(foil->thickness().get(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    connect(foil->thickness(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
     EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
 
     _pathEditor->addPath(topPath);

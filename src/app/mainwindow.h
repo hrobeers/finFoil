@@ -27,8 +27,8 @@
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QMainWindow>
-#include <memory>
 #include <QFileInfo>
+#include "jenson.h"
 #include "version.h"
 
 namespace Ui {
@@ -66,11 +66,12 @@ private:
     const hrlib::Version _version;
     Ui::MainWindow *ui;
 
-    std::unique_ptr<foillogic::Foil> _fin;
+    sptr<foillogic::Foil> _fin;
 
     foileditors::OutlineEditor* _outlineEditor;
     foileditors::ProfileEditor* _profileEditor;
     foileditors::ThicknessEditor* _thicknessEditor;
+    foileditors::FoilDataWidget* _foilDataWidget;
 
     bool _dirty;
     QFileInfo _currentFile;
@@ -87,7 +88,8 @@ private:
     QAction *aboutAct;
     QAction *aboutQtAct;
 
-    void setFoilEditors(foillogic::Foil* foil);
+    void setFoil(foillogic::Foil* foil);
+    void initFoilEditors();
     void createActions();
     void createMenus();
 
