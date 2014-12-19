@@ -28,6 +28,7 @@ namespace foileditors
     class OutlineEditor;
     class ProfileEditor;
     class ThicknessEditor;
+    class FoilDataWidget;
 }
 
 #endif // FOILEDITORSFWD_H

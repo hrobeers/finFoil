@@ -34,7 +34,7 @@
 using namespace foileditors;
 using namespace foillogic;
 
-ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
+ProfileEditor::ProfileEditor(QWidget *parent) :
     QWidget(parent)
 {
     _pathEditor = new patheditor::PathEditorWidget();
@@ -56,9 +56,7 @@ ProfileEditor::ProfileEditor(Foil* foil, QWidget *parent) :
     _mainLayout->addWidget(gb);
     this->setLayout(_mainLayout);
 
-    setFoil(foil);
-
-    symmetryCombo->setCurrentIndex(foil->profile()->symmetry());
+//    symmetryCombo->setCurrentIndex(foil->profile()->symmetry());
 }
 
 void ProfileEditor::setFoil(Foil *foil)

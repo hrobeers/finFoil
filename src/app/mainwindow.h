@@ -71,6 +71,7 @@ private:
     foileditors::OutlineEditor* _outlineEditor;
     foileditors::ProfileEditor* _profileEditor;
     foileditors::ThicknessEditor* _thicknessEditor;
+    foileditors::FoilDataWidget* _foilDataWidget;
 
     bool _dirty;
     QFileInfo _currentFile;
@@ -87,7 +88,8 @@ private:
     QAction *aboutAct;
     QAction *aboutQtAct;
 
-    void setFoilEditors(foillogic::Foil* foil);
+    void setFoil(foillogic::Foil* foil);
+    void initFoilEditors();
     void createActions();
     void createMenus();
 

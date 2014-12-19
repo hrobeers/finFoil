@@ -50,6 +50,7 @@ MainWindow::MainWindow(const hrlib::Version version, QWidget *parent) :
     createActions();
     createMenus();
 
+    initFoilEditors();
     newFile();
 }
 
@@ -77,7 +78,7 @@ void MainWindow::newFile()
     {
         QFileInfo empty;
         _currentFile = empty;
-        setFoilEditors(new Foil());
+        setFoil(new Foil());
         setClean();
     }
 }
@@ -161,21 +162,34 @@ void MainWindow::setClean()
     this->setWindowTitle(_currentFile.fileName() + " -- finFoil v" + _version.toString());
 }
 
-void MainWindow::setFoilEditors(Foil *foil)
+void MainWindow::setFoil(Foil *foil)
 {
+    _outlineEditor->setFoil(foil);
+    _profileEditor->setFoil(foil);
+    _thicknessEditor->setFoil(foil);
+    _foilDataWidget->setFoilCalculator(_outlineEditor->foilCalculator());
     _fin.reset(foil);
 
-    _outlineEditor = new OutlineEditor(_fin.get());
-    _profileEditor = new ProfileEditor(_fin.get());
-    _thicknessEditor = new ThicknessEditor(_fin.get());
-    FoilDataWidget* foilDataWidget = new FoilDataWidget(_outlineEditor->foilCalculator());
-    connect(foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
-    connect(foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_foilDataWidget, SIGNAL(pxPerUnitOutlineChanged(qreal)), _outlineEditor, SLOT(setGridUnitSize(qreal)));
+    connect(_foilDataWidget, SIGNAL(pxPerUnitProfileChanged(qreal)), _profileEditor, SLOT(setGridUnitSize(qreal)));
+
+    // connect dirty flagging
+    connect(_outlineEditor->foilCalculator()->foil(), SIGNAL(foilChanged(Foil*)), this, SLOT(setDirty()));
+    connect(_foilDataWidget, SIGNAL(depthChanged(qt::units::Length*)), this, SLOT(setDirty()));
+    connect(_foilDataWidget, SIGNAL(thicknessChanged(qt::units::Length*)), this, SLOT(setDirty()));
+}
+
+void MainWindow::initFoilEditors()
+{
+    _outlineEditor = new OutlineEditor(this);
+    _profileEditor = new ProfileEditor(this);
+    _thicknessEditor = new ThicknessEditor(this);
+    _foilDataWidget = new FoilDataWidget(this);
 
     QSplitter* ptSplitter = new QSplitter(Qt::Vertical);
     ptSplitter->addWidget(_thicknessEditor);
     ptSplitter->addWidget(_profileEditor);
-    ptSplitter->addWidget(foilDataWidget);
+    ptSplitter->addWidget(_foilDataWidget);
 
     QSplitter* mainSplitter = new QSplitter(Qt::Horizontal);
     mainSplitter->addWidget(_outlineEditor);
@@ -184,11 +198,6 @@ void MainWindow::setFoilEditors(Foil *foil)
     mainSplitter->setSizes(sizes);
 
     setCentralWidget(mainSplitter);
-
-    // connect dirty flagging
-    connect(_outlineEditor->foilCalculator()->foil(), SIGNAL(foilChanged(Foil*)), this, SLOT(setDirty()));
-    connect(foilDataWidget, SIGNAL(depthChanged(qt::units::Length*)), this, SLOT(setDirty()));
-    connect(foilDataWidget, SIGNAL(thicknessChanged(qt::units::Length*)), this, SLOT(setDirty()));
 }
 
 void MainWindow::createActions()
@@ -285,7 +294,7 @@ bool MainWindow::loadFile(const QString &path)
 
     if (deserialized)
     {
-        setFoilEditors(deserialized.release());
+        setFoil(deserialized.release());
         _currentFile = path;
 
         return true;

@@ -41,7 +41,7 @@ namespace foileditors
     {
         Q_OBJECT
     public:
-        explicit OutlineEditor(foillogic::Foil *foil, QWidget *parent = 0);
+        explicit OutlineEditor(QWidget *parent = 0);
 
         void setFoil(foillogic::Foil *foil);
         foillogic::FoilCalculator* foilCalculator();

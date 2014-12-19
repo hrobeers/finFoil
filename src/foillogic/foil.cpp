@@ -55,21 +55,6 @@ void Foil::onDeserialized()
     _thickness->setThicknessRatio(_profile->thicknessRatio());
 }
 
-qshared_ptr<Outline> Foil::outline()
-{
-    return _outline;
-}
-
-qshared_ptr<Profile> Foil::profile()
-{
-    return _profile;
-}
-
-qshared_ptr<ThicknessProfile> Foil::thickness()
-{
-    return _thickness;
-}
-
 void Foil::pSetOutline(Outline *outline)
 {
     _outline.reset(outline);
@@ -97,6 +82,8 @@ void Foil::resetLayerCount()
 {
     setLayerCount(6);
 }
+
+foillogic::Foil::~Foil() { }
 
 void Foil::initOutline()
 {
@@ -148,7 +135,8 @@ void Foil::onFoilReleased()
 
 void Foil::onProfileChanged()
 {
-    _thickness->setThicknessRatio(_profile->thicknessRatio());
+    if (_thickness)
+        _thickness->setThicknessRatio(_profile->thicknessRatio());
 }
 
 
@@ -174,12 +162,12 @@ namespace {
         // determine the x scaling factor
         auto pOutlineSI = self->outlineSI();
         qreal baseLengthSI = pOutlineSI->pointAtPercent(1).x() - pOutlineSI->pointAtPercent(0).x();
-        retVal.first = qAbs(scaleFactorX(self->pProfile()->topProfile(), baseLengthSI));
+        retVal.first = qAbs(scaleFactorX(self->profile()->topProfile(), baseLengthSI));
 
         // determine the y scaling factor
-        quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
+        quantity<si::length, qreal> thicknessSI = self->profile()->thickness();
         qreal t_top = 0.3;
-        retVal.second = qAbs(thicknessSI.value() / (self->pProfile()->topProfileTop(&t_top).y() - self->pProfile()->bottomProfileTop(&t_top).y()));
+        retVal.second = qAbs(thicknessSI.value() / (self->profile()->topProfileTop(&t_top).y() - self->profile()->bottomProfileTop(&t_top).y()));
 
         return retVal;
     }
@@ -189,13 +177,13 @@ namespace {
         std::pair<qreal, qreal> retVal;
 
         // determine the x scaling factor
-        quantity<si::length, qreal> heightSI = self->pOutline()->height();
-        retVal.first = qAbs(scaleFactorX(self->pThickness()->topProfile(), heightSI.value()));
+        quantity<si::length, qreal> heightSI = self->outline()->height();
+        retVal.first = qAbs(scaleFactorX(self->thickness()->topProfile(), heightSI.value()));
 
         // determine the y scaling factor
-        quantity<si::length, qreal> thicknessSI = self->pProfile()->thickness();
+        quantity<si::length, qreal> thicknessSI = self->profile()->thickness();
         qreal t_top = 0;
-        retVal.second = qAbs(thicknessSI.value() / (self->pThickness()->topProfile()->minY(&t_top) - self->pThickness()->botProfile()->maxY(&t_top)));
+        retVal.second = qAbs(thicknessSI.value() / (self->thickness()->topProfile()->minY(&t_top) - self->thickness()->botProfile()->maxY(&t_top)));
 
         return retVal;
     }
