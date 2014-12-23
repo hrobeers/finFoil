@@ -32,8 +32,6 @@
 #include "cubicbezier.h"
 #include "pathsettings.h"
 
-CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
-
 using namespace patheditor;
 
 Path::Path(QObject *parent) :
@@ -176,11 +174,44 @@ void Path::onPathReleased()
 }
 
 
-static void appendPntToJsonArray(const PathPoint *pnt, QJsonArray *array)
-{
-    array->append(pnt->x());
-    array->append(pnt->y());
+//
+// PathSerializer
+//
+
+namespace patheditor {
+    class PathSerializer : public jenson::JenSON::CustomSerializer<Path>
+    {
+    protected:
+        virtual QJsonValue serializeImpl(const Path *object) const override;
+        virtual sptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
+
+    private:
+        std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson, std::shared_ptr<PathPoint> &previousEndPoint) const;
+
+        void appendPntToJsonArray(const PathPoint *pnt, QJsonArray *array) const
+        {
+            array->append(pnt->x());
+            array->append(pnt->y());
+        }
+
+        template <typename Tpnt>
+        std::shared_ptr<Tpnt> takePoint(QJsonArray *pntArray) const
+        {
+            std::shared_ptr<Tpnt> retVal;
+
+            QJsonValue xval = pntArray->takeAt(0), yval = pntArray->takeAt(0);
+
+            if(xval.isDouble() && yval.isDouble())
+            {
+                retVal.reset(new Tpnt(xval.toDouble(), yval.toDouble()));
+            }
+
+            return retVal;
+        }
+    };
 }
+
+CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 
 QJsonValue PathSerializer::serializeImpl(const Path *object) const
 {
@@ -189,7 +220,7 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
     // Move to first point
     QJsonArray moveToStart;
     moveToStart.append(QStringLiteral("M"));
-    ::appendPntToJsonArray(object->constPathItems().first()->constStartPoint(), &moveToStart);
+    appendPntToJsonArray(object->constPathItems().first()->constStartPoint(), &moveToStart);
     retVal.append(moveToStart);
 
     foreach (const PathItem *pathItem, object->constPathItems())
@@ -214,9 +245,9 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
         }
 
         foreach (const ControlPoint *pnt, pathItem->constControlPoints())
-            ::appendPntToJsonArray(pnt, &nestedArr);
+            appendPntToJsonArray(pnt, &nestedArr);
 
-        ::appendPntToJsonArray(pathItem->constEndPoint(), &nestedArr);
+        appendPntToJsonArray(pathItem->constEndPoint(), &nestedArr);
 
         retVal.append(nestedArr);
     }
@@ -224,48 +255,31 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
     return retVal;
 }
 
-template <typename Tpnt>
-static qshared_ptr<Tpnt> takePoint(QJsonArray *pntArray)
+std::shared_ptr<PathItem> PathSerializer::toPathItem(QJsonArray pathItemJson, std::shared_ptr<PathPoint> &previousEndPoint) const
 {
-    qshared_ptr<Tpnt> retVal;
-
-    QJsonValue xval = pntArray->takeAt(0), yval = pntArray->takeAt(0);
-
-    if(xval.isDouble() && yval.isDouble())
-    {
-        retVal.reset(new Tpnt(xval.toDouble(), yval.toDouble()));
-    }
-
-    return retVal;
-}
-
-static std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson)
-{
-    static thread_local qshared_ptr<PathPoint> s_previousEndPoint;
-
     std::shared_ptr<PathItem> retVal;
 
     QString typeId = pathItemJson.takeAt(0).toString();
 
     if (typeId == QStringLiteral("M"))
     {
-        s_previousEndPoint = ::takePoint<PathPoint>(&pathItemJson);
+        previousEndPoint = takePoint<PathPoint>(&pathItemJson);
     }
     else if (typeId == QStringLiteral("L"))
     {
-        auto endPnt = ::takePoint<PathPoint>(&pathItemJson);
-        if (s_previousEndPoint && endPnt)
-            retVal.reset(new Line(s_previousEndPoint, endPnt));
-        s_previousEndPoint = endPnt;
+        auto endPnt = takePoint<PathPoint>(&pathItemJson);
+        if (previousEndPoint && endPnt)
+            retVal.reset(new Line(previousEndPoint, endPnt));
+        previousEndPoint = endPnt;
     }
     else if (typeId == QStringLiteral("C"))
     {
-        auto cPnt1 = ::takePoint<ControlPoint>(&pathItemJson);
-        auto cPnt2 = ::takePoint<ControlPoint>(&pathItemJson);
-        auto endPnt = ::takePoint<PathPoint>(&pathItemJson);
-        if (s_previousEndPoint && cPnt1 && cPnt2 && endPnt)
-            retVal.reset(new CubicBezier(s_previousEndPoint, cPnt1, cPnt2, endPnt));
-        s_previousEndPoint = endPnt;
+        auto cPnt1 = takePoint<ControlPoint>(&pathItemJson);
+        auto cPnt2 = takePoint<ControlPoint>(&pathItemJson);
+        auto endPnt = takePoint<PathPoint>(&pathItemJson);
+        if (previousEndPoint && cPnt1 && cPnt2 && endPnt)
+            retVal.reset(new CubicBezier(previousEndPoint, cPnt1, cPnt2, endPnt));
+        previousEndPoint = endPnt;
     }
 
     return retVal;
@@ -283,11 +297,12 @@ sptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString 
 
     QJsonArray array = jsonValue->toArray();
 
+    std::shared_ptr<PathPoint> previousEndPoint(nullptr);
     foreach (QJsonValue value, array)
     {
         if (value.isArray())
         {
-            std::shared_ptr<PathItem> pathItem = ::toPathItem(value.toArray());
+            std::shared_ptr<PathItem> pathItem = toPathItem(value.toArray(), previousEndPoint);
 
             if (pathItem)
                 path->append(pathItem);
