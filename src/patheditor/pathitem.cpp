@@ -28,17 +28,17 @@
 
 using namespace patheditor;
 
-qshared_ptr<PathPoint> PathItem::startPoint()
+std::shared_ptr<PathPoint> PathItem::startPoint()
 {
     return _startPoint;
 }
 
-qshared_ptr<PathPoint> PathItem::endPoint()
+std::shared_ptr<PathPoint> PathItem::endPoint()
 {
     return _endPoint;
 }
 
-void PathItem::setStartPoint(qshared_ptr<PathPoint> startPoint)
+void PathItem::setStartPoint(std::shared_ptr<PathPoint> startPoint)
 {
     _startPoint = startPoint;
 
@@ -49,7 +49,7 @@ void PathItem::setStartPoint(qshared_ptr<PathPoint> startPoint)
     }
 }
 
-void PathItem::setEndPoint(qshared_ptr<PathPoint> endPoint)
+void PathItem::setEndPoint(std::shared_ptr<PathPoint> endPoint)
 {
     _endPoint = endPoint;
 

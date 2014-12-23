@@ -35,16 +35,16 @@ namespace patheditor
     class CubicBezier : public PathItem
     {
     public:
-        explicit CubicBezier(qshared_ptr<PathPoint> startPoint, qshared_ptr<PathPoint> endPoint);
+        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
-        explicit CubicBezier(qshared_ptr<PathPoint> startPoint, qshared_ptr<ControlPoint> controlPoint1,
-                             qshared_ptr<ControlPoint> controlPoint2, qshared_ptr<PathPoint> endPoint);
+        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
+                             std::shared_ptr<ControlPoint> controlPoint2, std::shared_ptr<PathPoint> endPoint);
 
-        qshared_ptr<ControlPoint> controlPoint1();
-        qshared_ptr<ControlPoint> controlPoint2();
+        std::shared_ptr<ControlPoint> controlPoint1();
+        std::shared_ptr<ControlPoint> controlPoint2();
 
         // implementing PathItem
-        virtual QList<qshared_ptr<ControlPoint> > controlPoints() override;
+        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
         virtual const QList<const ControlPoint*> constControlPoints() const override;
         virtual QPointF pointAtPercent(qreal t) const override;
         virtual QRectF controlPointRect() const override;
@@ -56,10 +56,10 @@ namespace patheditor
                                        bool editable, const PathSettings *settings) const override;
 
     private:
-        qshared_ptr<ControlPoint> _cPoint1;
-        qshared_ptr<ControlPoint> _cPoint2;
+        std::shared_ptr<ControlPoint> _cPoint1;
+        std::shared_ptr<ControlPoint> _cPoint2;
 
-        QList<qshared_ptr<ControlPoint> > _controlPoints;
+        QList<std::shared_ptr<ControlPoint> > _controlPoints;
     };
 }
 

@@ -80,13 +80,6 @@ namespace patheditor
     private:
         QList<std::shared_ptr<PathItem> > _pathItemList;
     };
-
-    class PathSerializer : public jenson::JenSON::CustomSerializer<Path>
-    {
-    protected:
-        virtual QJsonValue serializeImpl(const Path *object) const override;
-        virtual sptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
-    };
 }
 
 #endif // PATH_H
