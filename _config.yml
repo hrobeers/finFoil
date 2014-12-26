@@ -1,5 +1,5 @@
 name: finFoil
 markdown: redcarpet
-pygments: true
+highlighter: pygments
 encoding: UTF-8
 baseurl: /finFoil
