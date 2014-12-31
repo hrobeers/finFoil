@@ -22,8 +22,6 @@
 
 #include "editablepath.h"
 
-#include <QPainter>
-#include <QGraphicsItem>
 #include <QGraphicsScene>
 #include "path.h"
 #include "pathitem.h"

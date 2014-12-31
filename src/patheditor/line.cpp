@@ -22,11 +22,9 @@
 
 #include "line.h"
 
-#include <QPainter>
-#include <QGraphicsItem>
+#include <QPainterPath>
 #include <QRectF>
 #include "pathpoint.h"
-#include "pathsettings.h"
 
 using namespace patheditor;
 

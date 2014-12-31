@@ -28,7 +28,6 @@
 
 #include <QWidget>
 #include <memory>
-#include <QFlags>
 
 namespace patheditor
 {

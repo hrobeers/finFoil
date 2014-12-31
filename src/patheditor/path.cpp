@@ -31,6 +31,7 @@
 #include "line.h"
 #include "cubicbezier.h"
 #include "pathsettings.h"
+#include "jenson.h"
 
 using namespace patheditor;
 

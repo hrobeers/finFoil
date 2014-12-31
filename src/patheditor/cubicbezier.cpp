@@ -22,10 +22,9 @@
 
 #include "cubicbezier.h"
 
-#include <QPainter>
+#include <QPainterPath>
 #include <QRectF>
 #include <boost/math/special_functions/pow.hpp>
-#include "pathsettings.h"
 #include "controlpoint.h"
 #include "jenson.h"
 

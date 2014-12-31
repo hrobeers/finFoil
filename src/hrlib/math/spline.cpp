@@ -4,19 +4,15 @@
 
 ****************************************************************************/
 
-# include <cstdlib>
-# include <iostream>
-# include <iomanip>
-# include <qmath.h>
-# include <cstring>
-# include <boost/math/special_functions/pow.hpp>
-
 using namespace std;
 
 # include "spline.hpp"
 
 #include <algorithm>
-#include <vector>
+#include <cstdlib>
+#include <iostream>
+#include <iomanip>
+#include <boost/math/special_functions/pow.hpp>
 
 namespace hrlib
 {

@@ -22,10 +22,6 @@
 
 #include "pointhandle.h"
 
-#include <QGraphicsItem>
-#include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
-#include <QPainter>
 #include "pathpoint.h"
 
 using namespace patheditor;

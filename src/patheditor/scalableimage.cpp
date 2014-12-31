@@ -23,7 +23,6 @@
 #include "scalableimage.h"
 #include <QPainter>
 #include <QGraphicsScene>
-#include "qmath.h"
 #include "pathsettings.h"
 #include "linerestrictor.h"
 #include "pointhandle.h"

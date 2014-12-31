@@ -23,7 +23,8 @@
 #ifndef HRLIB_EXCEPTIONS_H
 #define HRLIB_EXCEPTIONS_H
 
-#include <QObject>
+class QObject;
+
 #include <QString>
 #include <exception>
 

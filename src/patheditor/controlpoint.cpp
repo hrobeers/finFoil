@@ -22,7 +22,6 @@
 
 #include "controlpoint.h"
 
-#include <QGraphicsScene>
 #include "pathsettings.h"
 #include "pointhandle.h"
 

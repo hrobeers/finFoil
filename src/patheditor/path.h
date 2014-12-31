@@ -28,7 +28,6 @@
 
 #include <QObject>
 #include <memory>
-#include "jenson.h"
 #include "ipath.hpp"
 
 #define PATH_AREARES 512
