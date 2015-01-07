@@ -25,8 +25,7 @@ set(HDR
 #
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-add_executable(${BINARY_NAME} WIN32 ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
-
+add_executable(${BINARY_NAME} WIN32 MACOSX_BUNDLE ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
 
 #
 # Subdirectories
