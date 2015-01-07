@@ -5,6 +5,7 @@
 ****************************************************************************/
 
 # include <iostream>
+# include <cmath>
 # include <qmath.h>
 # include <numeric>
 

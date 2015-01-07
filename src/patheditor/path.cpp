@@ -181,6 +181,9 @@ void Path::onPathReleased()
 namespace patheditor {
     class PathSerializer : public jenson::JenSON::CustomSerializer<Path>
     {
+    public:
+      PathSerializer(void) {}
+
     protected:
         virtual QJsonValue serializeImpl(const Path *object) const override;
         virtual sptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
