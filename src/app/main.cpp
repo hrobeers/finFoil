@@ -26,6 +26,8 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
+#include <QDir>
+
 QTextStream out(stdout);
 QTextStream err(stderr);
 
@@ -36,6 +38,14 @@ int main(int argc, char *argv[])
 {
     try
     {
+#ifdef EXECUTE_WITHIN_APP_BUNDLE
+        // restricting library-path to bundle
+        QDir dir(argv[0]);          // e.g. appdir/Contents/MacOS/appname
+        assert(dir.cdUp());
+        assert(dir.cdUp());
+        assert(dir.cd("PlugIns"));  // e.g. appdir/Contents/PlugIns
+        QCoreApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+#endif
         QApplication app(argc, argv);
         QApplication::setApplicationName("finFoil");
         QApplication::setApplicationVersion(version.toString());

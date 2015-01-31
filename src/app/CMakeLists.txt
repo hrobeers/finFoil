@@ -25,8 +25,7 @@ set(HDR
 #
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-add_executable(${BINARY_NAME} WIN32 ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
-
+add_executable(${BINARY_NAME} WIN32 MACOSX_BUNDLE ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
 
 #
 # Subdirectories
@@ -45,3 +44,56 @@ add_subdirectory(../../submodules/qtunits/src "${CMAKE_SOURCE_DIR}/submodules/qt
 #
 
 target_link_libraries(${BINARY_NAME} foileditors)
+
+# add enough libraries to the app bundle to allow stand-alone execution
+if (APPLE)
+  find_program(MACDEPLOYQT NAMES macdeployqt PATHS ${qt_base_dir}/bin)
+  if(NOT MACDEPLOYQT)
+      message(FATAL_ERROR "The utility 'macdeployqt' is required to create an App Bundle!")
+  endif()
+
+  # populate the app bundle with Qt(5) support using macdeployqt
+  add_custom_command(
+    TARGET ${BINARY_NAME}
+    POST_BUILD
+    COMMAND ${MACDEPLOYQT} ${BINARY_NAME}.app
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
+
+  # find out the location of libqcocoa.dylib
+  # current paths include: location via MacPort installation
+  # TODO: add more possible paths
+  set(libqcocoa_search_path
+    /opt/local/share/qt5/plugins/platforms  # MacPorts
+    /usr/local/share/qt5/plugins/platforms  # Homebrew (unverified)
+  )
+  find_library(LIBCOCOA NAMES libqcocoa.dylib PATHS ${libqcocoa_search_path})
+  if(NOT LIBCOCOA)
+      message(FATAL_ERROR "libqcocoa.dylib is required to create an App Bundle!")
+  endif()
+
+  # find out the location of the Frameworks
+  # current paths include: location via MacPort installation
+  # TODO: add more possible paths
+  set(frameworks_search_path
+    /opt/local/Library/Frameworks           # MacPorts
+    /usr/local/Library/Frameworks           # Homebrew (unverified)
+  )
+  find_library(QTPRINTSUPPORT_FW NAMES QtPrintSupport PATHS ${frameworks_search_path})
+  if(NOT QTPRINTSUPPORT_FW)
+      message(FATAL_ERROR "QtPrintSupport.framework is required to create an App Bundle!")
+  endif()
+  get_filename_component(FRAMEWORKS ${QTPRINTSUPPORT_FW} DIRECTORY)
+
+  # add dynamically loaded plugins, missing from the app bundle after prev cmd
+  add_custom_command(
+    TARGET ${BINARY_NAME}
+    POST_BUILD
+    COMMAND ../../scripts/fix-plugins.sh ${LIBCOCOA} ${FRAMEWORKS}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${BINARY_NAME}.app
+  )
+
+  # export compile-time variable for conditional compilation in main.cpp of code
+  # to fix the library path, restricting it to the app bundle
+  add_definitions(-DEXECUTE_WITHIN_APP_BUNDLE)
+endif()
