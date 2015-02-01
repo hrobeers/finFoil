@@ -111,6 +111,14 @@ if (APPLE)
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${BINARY_NAME}.app
   )
 
+  # create DMG
+  add_custom_command(
+    TARGET ${BINARY_NAME}
+    POST_BUILD
+    COMMAND ../scripts/create-dmg.sh ${BINARY_NAME}.app ${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION} ${ICNS}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
+
   # export compile-time variable for conditional compilation in main.cpp of code
   # to fix the library path, restricting it to the app bundle
   add_definitions(-DEXECUTE_WITHIN_APP_BUNDLE)
