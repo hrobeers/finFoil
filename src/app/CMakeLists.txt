@@ -24,6 +24,8 @@ set(HDR
 if (APPLE)
   set(MACOSX_BUNDLE_ICON_FILE ${BINARY_NAME}.icns)
   set(ICNS ${CMAKE_BINARY_DIR}/${BINARY_NAME}.icns)
+  # TODO: this seems to copy the icns file to the .app bundle AFTER the DMG
+  # is constructed. for now, the copying is done by the DMG creation
   set_source_files_properties(${ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
   # custom command to generate iconset when its source is needed

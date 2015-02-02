@@ -4,6 +4,7 @@
 
 APP=$1
 VERSION=$2
+ICNS=$3
 
 BUNDLE=$(basename ${APP})
 NAME=${BUNDLE%.*}-${VERSION}
@@ -21,6 +22,9 @@ cd stage/
 ln -s /Applications .
 mkdir .background
 cp ../../src/resources/background.png .background/background.png
+# TODO: temp fix for bad order of copying icns file to app bundle
+mkdir -p ${BUNDLE}/Contents/Resources/
+cp ${ICNS} ${BUNDLE}/Contents/Resources/
 cd ..
 
 # step 3: create new disk image
