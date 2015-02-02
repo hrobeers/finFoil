@@ -115,7 +115,7 @@ if (APPLE)
   add_custom_command(
     TARGET ${BINARY_NAME}
     POST_BUILD
-    COMMAND ../scripts/create-dmg.sh ${BINARY_NAME}.app ${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION} ${ICNS}
+    COMMAND ../scripts/create-dmg.sh ${BINARY_NAME}.app ${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION}-${GIT_BUILD_NUMBER} ${ICNS}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
 
