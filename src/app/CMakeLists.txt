@@ -80,21 +80,22 @@ if (APPLE)
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
 
-  # find out the location of libqcocoa.dylib
+  # find out the location of qt5 plugins
   # current paths include: location via MacPort installation
-  # TODO: add more possible paths
-  set(libqcocoa_search_path
-    /opt/local/share/qt5/plugins/platforms  # MacPorts
-    /usr/local/share/qt5/plugins/platforms  # Homebrew (unverified)
+  # TODO: add more possible paths + allow for envrionment variable to override
+  set(plugins_search_path
+    /opt/local/share/qt5/  # MacPorts
+    /usr/local/share/qt5/  # Homebrew (unverified)
   )
-  find_library(LIBCOCOA NAMES libqcocoa.dylib PATHS ${libqcocoa_search_path})
-  if(NOT LIBCOCOA)
-      message(FATAL_ERROR "libqcocoa.dylib is required to create an App Bundle!")
+  find_path(QT5SHARE NAMES plugins PATHS ${plugins_search_path})
+  if(NOT QT5SHARE)
+      message(FATAL_ERROR "Could not determine qt5/plugins base directory.")
   endif()
+  set(QT5PLUGINS "${QT5SHARE}/plugins")
 
   # find out the location of the Frameworks
   # current paths include: location via MacPort installation
-  # TODO: add more possible paths
+  # TODO: add more possible paths + allow for envrionment variable to override
   set(frameworks_search_path
     /opt/local/Library/Frameworks           # MacPorts
     /usr/local/Library/Frameworks           # Homebrew (unverified)
@@ -109,7 +110,7 @@ if (APPLE)
   add_custom_command(
     TARGET ${BINARY_NAME}
     POST_BUILD
-    COMMAND ../../scripts/fix-plugins.sh ${LIBCOCOA} ${FRAMEWORKS}
+    COMMAND ../../scripts/fix-plugins.sh ${QT5PLUGINS} ${FRAMEWORKS}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${BINARY_NAME}.app
   )
 
