@@ -16,6 +16,13 @@ install_name_tool -change ${FRAMEWORKS_PATH}/QtWidgets.framework/Versions/5/QtWi
 install_name_tool -change ${FRAMEWORKS_PATH}/QtGui.framework/Versions/5/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/5/QtGui Contents/PlugIns/platforms/libqcocoa.dylib
 install_name_tool -change ${FRAMEWORKS_PATH}/QtCore.framework/Versions/5/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/5/QtCore Contents/PlugIns/platforms/libqcocoa.dylib
 
+# fix for issue #28, macports seems to override the system version
+# TODO: check other situations, e.g. without MacPorts, with Homebrew,...
+install_name_tool -change /opt/local/lib/libz.1.dylib @executable_path/../Frameworks/libz.1.dylib Contents/PlugIns/platforms/libqcocoa.dylib
+install_name_tool -change /opt/local/lib/libgthread-2.0.0.dylib @executable_path/../Frameworks/libgthread-2.0.0.dylib Contents/PlugIns/platforms/libqcocoa.dylib
+install_name_tool -change /opt/local/lib/libglib-2.0.0.dylib @executable_path/../Frameworks/libglib-2.0.0.dylib Contents/PlugIns/platforms/libqcocoa.dylib
+install_name_tool -change /opt/local/lib/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib Contents/PlugIns/platforms/libqcocoa.dylib
+
 # install QtPrintSupport framework
 cp -r ${FRAMEWORKS_PATH}/QtPrintSupport.framework Contents/Frameworks
 
