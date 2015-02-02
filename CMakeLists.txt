@@ -75,27 +75,6 @@ endif()
 
 
 #
-# Include subdirectories
-#
-
-# Include the subdirectories
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/app")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/hrlib")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/patheditor")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foillogic")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
-
-add_subdirectory(src/app)
-if(Tests)
-    find_package(Qt5Test REQUIRED)
-    add_subdirectory(tests/unittests)
-endif()
-
-
-#
 # Try to set build number and commit hash
 #
 
@@ -123,4 +102,24 @@ if(${GIT_BUILD_NUMBER})
     message(STATUS "GIT_BUILD_NUMBER: ${GIT_BUILD_NUMBER} GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}")
 else()
     message(WARNING "Not building from a git repository, the build number cannot be updated.")
+endif()
+
+#
+# Include subdirectories
+#
+
+# Include the subdirectories
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/app")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/hrlib")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/patheditor")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foillogic")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
+
+add_subdirectory(src/app)
+if(Tests)
+    find_package(Qt5Test REQUIRED)
+    add_subdirectory(tests/unittests)
 endif()
