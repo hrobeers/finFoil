@@ -47,3 +47,10 @@ src/app/debug
 src/app/release
 src/unittest/debug
 src/unittest/release
+
+# Mac OS X
+.DS_Store
+
+# default build dir
+bin
+
