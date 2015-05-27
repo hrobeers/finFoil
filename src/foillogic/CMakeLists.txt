@@ -19,7 +19,7 @@ set(foillogicHDR
     outline.h
 )
 
-add_library(foillogic ${foillogicSRC} ${foillogicHDR})
+add_library(foillogic ${FINFOIL_LIB_TYPE} ${foillogicSRC} ${foillogicHDR})
 
 target_link_libraries(foillogic
     patheditor

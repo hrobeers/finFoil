@@ -18,6 +18,6 @@ set(hrlibHDR
     version.h
 )
 
-add_library(hrlib ${hrlibSRC} ${hrlibHDR})
+add_library(hrlib ${FINFOIL_LIB_TYPE} ${hrlibSRC} ${hrlibHDR})
 
 target_link_libraries(hrlib Qt5::Core)

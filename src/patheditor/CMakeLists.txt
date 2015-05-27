@@ -45,7 +45,7 @@ set(patheditorHDR
     pathfunctors.hpp
 )
 
-add_library(patheditor ${patheditorSRC} ${patheditorHDR})
+add_library(patheditor ${FINFOIL_LIB_TYPE} ${patheditorSRC} ${patheditorHDR})
 
 target_link_libraries(patheditor
     Qt5::Widgets

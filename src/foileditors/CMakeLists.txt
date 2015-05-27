@@ -18,7 +18,7 @@ set(foileditorsHDR
     foileditorsfwd/foileditorsfwd.h
 )
 
-add_library(foileditors ${foileditorsSRC} ${foileditorsHDR})
+add_library(foileditors ${FINFOIL_LIB_TYPE} ${foileditorsSRC} ${foileditorsHDR})
 
 target_link_libraries(foileditors
     qtunits

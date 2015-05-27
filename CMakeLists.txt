@@ -11,7 +11,7 @@ set(TESTS_BINARY_NAME "finFoil-tests")
 
 # Version
 set(MAJOR_VERSION "1")
-set(MINOR_VERSION "0")
+set(MINOR_VERSION "1")
 set(REVISION "0")
 
 
@@ -26,11 +26,14 @@ option(CCache "Build using ccache." OFF)
 option(Tests "Build the tests executable" OFF)
 
 # Linking and library options
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 add_definitions(-DJENSON_QPTR) # Definition to make jenson serialize to qunique_ptr
 if(Shared)
+    set(FINFOIL_LIB_TYPE SHARED)
     set(JENSON_SHARED ON)
     set(QTUNITS_SHARED ON)
 else()
+    set(FINFOIL_LIB_TYPE STATIC)
     add_definitions(-DJENSON_STATIC)
     add_definitions(-DQTUNITS_STATIC)
 endif()
