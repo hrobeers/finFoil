@@ -91,6 +91,7 @@ namespace foillogic
     signals:
         void profileChanged(Profile* sender);
         void profileReleased(Profile* sender);
+        void symmetryChanged(int symmetry);
 
     public slots:
 

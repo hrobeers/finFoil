@@ -40,15 +40,15 @@ ProfileEditor::ProfileEditor(QWidget *parent) :
     _pathEditor = new patheditor::PathEditorWidget();
     _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::DragImageHereText));
 
-    QComboBox* symmetryCombo = new QComboBox();
-    symmetryCombo->addItem(tr("Symmetric"));
-    symmetryCombo->addItem(tr("Asymmetric"));
-    symmetryCombo->addItem(tr("Flat"));
-    connect(symmetryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(symmetryChanged(int)));
+    _symmetryCombo = new QComboBox();
+    _symmetryCombo->addItem(tr("Symmetric"));
+    _symmetryCombo->addItem(tr("Asymmetric"));
+    _symmetryCombo->addItem(tr("Flat"));
+    connect(_symmetryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(symmetryChanged(int)));
 
     QGroupBox* gb = new QGroupBox(tr("Profile"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
-    gbLayout->addWidget(symmetryCombo);
+    gbLayout->addWidget(_symmetryCombo);
     gbLayout->addWidget(_pathEditor);
     gb->setLayout(gbLayout);
 
@@ -64,6 +64,7 @@ void ProfileEditor::setFoil(Foil *foil)
     _pathEditor->clear();
 
     _foil = foil;
+    connect(_foil->profile(), SIGNAL(symmetryChanged(int)), _symmetryCombo, SLOT(setCurrentIndex(int)));
 
     _topProfile = new EditablePath(_foil->profile()->topProfile());
     _botProfile = new EditablePath(_foil->profile()->botProfile());

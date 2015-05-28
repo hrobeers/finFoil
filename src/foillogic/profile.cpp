@@ -78,8 +78,8 @@ void Profile::setSymmetry(Symmetry symmetry)
     }
 
     onProfileChanged(_topProfile.get());
-
     onProfileReleased();
+    emit symmetryChanged(_symmetry);
 }
 
 boost::units::quantity<boost::units::si::length, qreal> Profile::thickness() const

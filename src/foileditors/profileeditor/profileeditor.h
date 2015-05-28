@@ -55,6 +55,7 @@ namespace foileditors
 
         QVBoxLayout* _mainLayout;
         PathEditorWidget* _pathEditor;
+        QComboBox* _symmetryCombo;
 
     private slots:
         void symmetryChanged(int sym);
