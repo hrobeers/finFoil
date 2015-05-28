@@ -262,9 +262,8 @@ bool MainWindow::saveFile(const QString &path)
         return false;
     }
 
-    QTextStream out(&file);
     QJsonDocument json(JenSON::serialize(_fin.get()));
-    out << json.toJson(QJsonDocument::Compact);
+    file.write(json.toJson(QJsonDocument::Compact));
 
     setCurrentFilePath(path);
     statusBar()->showMessage(tr("Fin saved"), 2000);
@@ -285,11 +284,8 @@ bool MainWindow::loadFile(const QString &path)
         return false;
     }
 
-    QTextStream in(&file);
-    QString jsonStr = in.readAll();
-
     QString errorMsg;
-    QJsonObject jObj = QJsonDocument::fromJson(jsonStr.toUtf8()).object();
+    QJsonObject jObj = QJsonDocument::fromJson(file.readAll()).object();
     sptr<Foil> deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
 
     if (deserialized)
