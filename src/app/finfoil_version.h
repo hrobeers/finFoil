@@ -37,7 +37,7 @@
 namespace finfoil
 {
     const hrlib::Version version(MAJOR_VERSION, MINOR_VERSION, REVISION, BUILD_NUMBER,
-                                 COMMIT_HASH, hrlib::ReleaseType::Release);
+                                 COMMIT_HASH, hrlib::ReleaseType::Dev);
 }
 
 #endif // FINFOIL_VERSION_H
