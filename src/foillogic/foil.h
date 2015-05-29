@@ -45,7 +45,6 @@ namespace foillogic
 
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
-        Q_PROPERTY(qreal minThick READ minThickness WRITE setMinThickness RESET resetMinThickness)
         Q_PROPERTY_UUID
         Q_PROPERTY_HISTORY_STRLIST
 
@@ -65,17 +64,14 @@ namespace foillogic
         Profile* profile() { return _profile.get(); }
         ThicknessProfile* thickness() { return _thickness.get(); }
         int layerCount() { return _layerCount; }
-        qreal minThickness() { return _minThickness; }
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
         void pSetThickness(ThicknessProfile *thickness);
         void setLayerCount(int layerCount);
-        void setMinThickness(qreal minThickness);
 
         void resetLayerCount();
-        void resetMinThickness();
 
         virtual ~Foil();
 
@@ -90,7 +86,6 @@ namespace foillogic
         std::unique_ptr<foillogic::Profile> _profile;
         std::unique_ptr<foillogic::ThicknessProfile> _thickness;
         int _layerCount;
-        qreal _minThickness = 0;
 
         void initOutline();
         void initProfile();

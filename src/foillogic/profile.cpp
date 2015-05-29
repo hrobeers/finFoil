@@ -92,6 +92,16 @@ void Profile::setThickness(boost::units::quantity<boost::units::si::length, qrea
     _thickness = thickness;
 }
 
+boost::units::quantity<si::length, qreal> foillogic::Profile::minThickness() const
+{
+    return _minThickness;
+}
+
+void foillogic::Profile::setMinThickness(boost::units::quantity<si::length, qreal> minThickness)
+{
+    _minThickness = minThickness;
+}
+
 QPointF Profile::topProfileTop(qreal *t_top) const
 {
     if (t_top) *t_top = t_topProfileTop;
@@ -181,6 +191,11 @@ void Profile::pSetBotProfile(Path *botProfile)
 void Profile::pResetBotProfile()
 {
     // Do nothing, initialized in ctor
+}
+
+void foillogic::Profile::pResetMinThickness()
+{
+    _minThickness = 0;
 }
 
 Profile::~Profile() {}

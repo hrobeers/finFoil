@@ -78,19 +78,9 @@ void Foil::setLayerCount(int layerCount)
     _layerCount = layerCount;
 }
 
-void foillogic::Foil::setMinThickness(qreal minThickness)
-{
-    _minThickness = minThickness;
-}
-
 void Foil::resetLayerCount()
 {
     setLayerCount(6);
-}
-
-void foillogic::Foil::resetMinThickness()
-{
-    _minThickness = 0;
 }
 
 foillogic::Foil::~Foil() { }
