@@ -26,6 +26,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QMenu>
 #include "pathpoint.h"
 
 using namespace patheditor;
@@ -74,9 +75,33 @@ void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsEllipseItem::mouseMoveEvent(event);
 }
 
+void ShowMenu(const QPoint &pos)
+{
+    // Continuity, Duplicate/split, remove
+    QMenu menu;
+    QAction *contAct = new QAction("Continuous", &menu);
+    contAct->setCheckable(true);
+    menu.addAction(contAct);
+    menu.addAction(new QAction("Split", &menu));
+    menu.addAction(new QAction("Remove", &menu));
+    menu.exec(pos);
+}
+
 void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     setCenter(_point);
+
+    switch (event->button())
+    {
+    case Qt::RightButton:
+        // TODO show dropdown (same action on double click?)
+        ShowMenu(event->buttonDownScreenPos(Qt::RightButton));
+        break;
+
+    default:
+        break;
+    }
+
     _point->onPointRelease(event);
     QGraphicsEllipseItem::mouseReleaseEvent(event);
 }
