@@ -147,13 +147,6 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
     _pointHandle = pointHandle;
 }
 
-void PathPoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings)
-{
-    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->pointBrush(), parent);
-    newPointHandle->setZValue(1);
-    replaceCurrentPointHandle(newPointHandle);
-}
-
 void PathPoint::setPos(qreal xpos, qreal ypos)
 {
     this->setX(xpos);

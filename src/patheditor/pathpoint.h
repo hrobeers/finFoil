@@ -69,6 +69,8 @@ namespace patheditor
 
         PointHandle *handle();
 
+        virtual bool continuous() { return false; }
+
         virtual ~PathPoint() {}
 
     signals:
@@ -86,7 +88,7 @@ namespace patheditor
          * @param pointHandle PointHandle to replace the current handle with
          */
         virtual void replaceCurrentPointHandle(PointHandle *pointHandle);
-        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings);
+        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) = 0;
 
     private:
         void setPos(qreal xpos, qreal ypos);

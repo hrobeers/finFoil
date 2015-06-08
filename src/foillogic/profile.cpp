@@ -24,6 +24,7 @@
 
 #include "path.h"
 #include "controlpoint.h"
+#include "curvepoint.hpp"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
 #include "cubicbezier.h"
@@ -205,11 +206,11 @@ void Profile::initProfile()
     _topProfile.reset(new Path());
     _botProfile.reset(new Path());
 
-    qshared_ptr<PathPoint> point1(new PathPoint(0,0));
-    qshared_ptr<PathPoint> point3(new PathPoint(300,0));
+    qshared_ptr<PathPoint> point1(new CurvePoint(0,0));
+    qshared_ptr<PathPoint> point3(new CurvePoint(300,0));
 
-    qshared_ptr<PathPoint> tPoint(new PathPoint(90,-35));
-    qshared_ptr<PathPoint> bPoint(new PathPoint(90,35));
+    qshared_ptr<PathPoint> tPoint(new CurvePoint(90,-35));
+    qshared_ptr<PathPoint> bPoint(new CurvePoint(90,35));
 
     qshared_ptr<ControlPoint> tcPoint1(new ControlPoint(0,0));
     qshared_ptr<ControlPoint> tcPoint2(new ControlPoint(0,-35));

@@ -27,6 +27,7 @@
 #include <QJsonArray>
 #include <QPainter>
 #include "controlpoint.h"
+#include "curvepoint.hpp"
 #include "pathitem.h"
 #include "line.h"
 #include "cubicbezier.h"
@@ -266,11 +267,11 @@ std::shared_ptr<PathItem> PathSerializer::toPathItem(QJsonArray pathItemJson, st
 
     if (typeId == QStringLiteral("M"))
     {
-        previousEndPoint = takePoint<PathPoint>(&pathItemJson);
+        previousEndPoint = takePoint<CurvePoint>(&pathItemJson);
     }
     else if (typeId == QStringLiteral("L"))
     {
-        auto endPnt = takePoint<PathPoint>(&pathItemJson);
+        auto endPnt = takePoint<CurvePoint>(&pathItemJson);
         if (previousEndPoint && endPnt)
             retVal.reset(new Line(previousEndPoint, endPnt));
         previousEndPoint = endPnt;
@@ -279,7 +280,7 @@ std::shared_ptr<PathItem> PathSerializer::toPathItem(QJsonArray pathItemJson, st
     {
         auto cPnt1 = takePoint<ControlPoint>(&pathItemJson);
         auto cPnt2 = takePoint<ControlPoint>(&pathItemJson);
-        auto endPnt = takePoint<PathPoint>(&pathItemJson);
+        auto endPnt = takePoint<CurvePoint>(&pathItemJson);
         if (previousEndPoint && cPnt1 && cPnt2 && endPnt)
             retVal.reset(new CubicBezier(previousEndPoint, cPnt1, cPnt2, endPnt));
         previousEndPoint = endPnt;

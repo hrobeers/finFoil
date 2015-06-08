@@ -24,6 +24,7 @@
 
 #include "path.h"
 #include "controlpoint.h"
+#include "curvepoint.hpp"
 #include "cubicbezier.h"
 #include "pointrestrictor.h"
 #include "linerestrictor.h"
@@ -103,19 +104,19 @@ void Outline::initPath()
     _path.reset(new Path());
 
     qreal m = 2;
-    qshared_ptr<PathPoint> point1 = make_qshared(new PathPoint(m*0, m*0));
+    qshared_ptr<CurvePoint> point1 = make_qshared(new CurvePoint(m*0, m*0));
     qshared_ptr<ControlPoint> point2 = make_qshared(new ControlPoint(m*16.09549195, m*-31.53267));
     qshared_ptr<ControlPoint> point3 = make_qshared(new ControlPoint(m*70.39944295, m*-113.577872));
-    qshared_ptr<PathPoint> point4 = make_qshared(new PathPoint(m*134.750359, m*-114.484482));
+    qshared_ptr<CurvePoint> point4 = make_qshared(new CurvePoint(m*134.750359, m*-114.484482));
     qshared_ptr<ControlPoint> point5 = make_qshared(new ControlPoint(m*148.079229, m*-114.672267));
     qshared_ptr<ControlPoint> point6 = make_qshared(new ControlPoint(m*168.493739, m*-110.447322));
-    qshared_ptr<PathPoint> point7 = make_qshared(new PathPoint(m*170.304549, m*-97.240702));
+    qshared_ptr<CurvePoint> point7 = make_qshared(new CurvePoint(m*170.304549, m*-97.240702));
     qshared_ptr<ControlPoint> point8 = make_qshared(new ControlPoint(m*171.482419, m*-88.650189));
     qshared_ptr<ControlPoint> point9 = make_qshared(new ControlPoint(m*134.604629, m*-78.11541));
-    qshared_ptr<PathPoint> point10 = make_qshared(new PathPoint(m*123.550789, m*-62.04205));
+    qshared_ptr<CurvePoint> point10 = make_qshared(new CurvePoint(m*123.550789, m*-62.04205));
     qshared_ptr<ControlPoint> point11 = make_qshared(new ControlPoint(m*99.87859895, m*-27.6204));
     qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*113.439959, m*-6.5));
-    qshared_ptr<PathPoint> point13 = make_qshared(new PathPoint(m*116.439959, m*0));
+    qshared_ptr<CurvePoint> point13 = make_qshared(new CurvePoint(m*116.439959, m*0));
 
     std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));

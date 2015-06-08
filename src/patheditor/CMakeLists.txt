@@ -1,48 +1,50 @@
 project(patheditor)
 
 set(patheditorSRC
-    editablepath.cpp
-    pathsettings.cpp
-    pathitem.cpp
+    controlpoint.cpp
     cubicbezier.cpp
-    patheditorwidget.cpp
-    pointhandle.cpp
+    curvepoint.cpp
+    editablepath.cpp
     line.cpp
     linerestrictor.cpp
-    pointrestrictor.cpp
-    pathpoint.cpp
-    quadrantrestrictor.cpp
-    controlpoint.cpp
-    patheditorview.cpp
     path.cpp
     pathdecorators.cpp
-    scalepoint.cpp
+    patheditorview.cpp
+    patheditorwidget.cpp
+    pathitem.cpp
+    pathpoint.cpp
+    pathsettings.cpp
+    pointhandle.cpp
+    pointrestrictor.cpp
+    quadrantrestrictor.cpp
     scalableimage.cpp
+    scalepoint.cpp
 )
 
 set(patheditorHDR
-    editablepath.h
-    pathsettings.h
-    pathitem.h
-    cubicbezier.h
-    patheditorwidget.h
-    pointhandle.h
-    line.h
-    restrictor.h
-    linerestrictor.h
-    pointrestrictor.h
-    pathpoint.h
-    patheditorfwd/patheditorfwd.h
-    quadrantrestrictor.h
     controlpoint.h
-    patheditorview.h
+    cubicbezier.h
+    curvepoint.hpp
+    editablepath.h
     ipath.hpp
-    path.h
+    line.h
+    linerestrictor.h
     pathdecorators.hpp
-    scalepoint.h
-    scalableimage.h
-    pathtemplates.hpp
+    patheditorfwd/patheditorfwd.h
+    patheditorview.h
+    patheditorwidget.h
     pathfunctors.hpp
+    path.h
+    pathitem.h
+    pathpoint.h
+    pathsettings.h
+    pathtemplates.hpp
+    pointhandle.h
+    pointrestrictor.h
+    quadrantrestrictor.h
+    restrictor.h
+    scalableimage.h
+    scalepoint.h
 )
 
 add_library(patheditor ${FINFOIL_LIB_TYPE} ${patheditorSRC} ${patheditorHDR})

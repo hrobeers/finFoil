@@ -75,18 +75,6 @@ void PointHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsEllipseItem::mouseMoveEvent(event);
 }
 
-void ShowMenu(const QPoint &pos)
-{
-    // Continuity, Duplicate/split, remove
-    QMenu menu;
-    QAction *contAct = new QAction("Continuous", &menu);
-    contAct->setCheckable(true);
-    menu.addAction(contAct);
-    menu.addAction(new QAction("Split", &menu));
-    menu.addAction(new QAction("Remove", &menu));
-    menu.exec(pos);
-}
-
 void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     setCenter(_point);
@@ -104,4 +92,24 @@ void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     _point->onPointRelease(event);
     QGraphicsEllipseItem::mouseReleaseEvent(event);
+}
+
+void PointHandle::ShowMenu(const QPoint &pos)
+{
+    // TODO refactor into PointHandleContextMenu & only on PathPoints
+    // Continuity, Duplicate/split, remove
+    QMenu menu;
+
+    QAction *contAct = new QAction("Continuous", &menu);
+    contAct->setCheckable(true);
+    contAct->setChecked(_point->continuous());
+    menu.addAction(contAct);
+
+    QAction *splitAct = new QAction("Split", &menu);
+    menu.addAction(splitAct);
+
+    QAction *removeAct = new QAction("Remove", &menu);
+    menu.addAction(removeAct);
+
+    menu.exec(pos);
 }

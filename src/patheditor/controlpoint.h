@@ -36,6 +36,8 @@ namespace patheditor
 
         virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;
 
+        virtual bool continuous() override { return false; }
+
         virtual ~ControlPoint() {}
     };
 }
