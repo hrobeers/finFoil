@@ -27,9 +27,14 @@
 
 using namespace patheditor;
 
+namespace { const std::string curvePoint = "patheditor::CurvePoint"; }
+
 void PointContextMenu::Show(const QPoint &pos)
 {
-    // TODO refactor into PointHandleContextMenu & only on PathPoints
+    // Only show the menu for a CurvePoint
+    if (curvePoint.compare(_point->metaObject()->className()))
+        return;
+
     // Continuity, Duplicate/split, remove
     QMenu menu;
 
