@@ -31,6 +31,7 @@ namespace patheditor
 {
     class ControlPoint;
     class CubicBezier;
+    class CurvePoint;
     class EditablePath;
     class IPath;
     class Line;

@@ -55,8 +55,6 @@ namespace patheditor
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-
-        void ShowMenu(const QPoint &pos);
     };
 }
 

@@ -14,6 +14,7 @@ set(patheditorSRC
     pathitem.cpp
     pathpoint.cpp
     pathsettings.cpp
+    pointcontextmenu.cpp
     pointhandle.cpp
     pointrestrictor.cpp
     quadrantrestrictor.cpp
@@ -39,6 +40,7 @@ set(patheditorHDR
     pathpoint.h
     pathsettings.h
     pathtemplates.hpp
+    pointcontextmenu.hpp
     pointhandle.h
     pointrestrictor.h
     quadrantrestrictor.h
