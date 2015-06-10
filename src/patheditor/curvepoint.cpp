@@ -39,3 +39,13 @@ void CurvePoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
 }
+
+bool CurvePoint::continuous()
+{
+    return _continuous;
+}
+
+void CurvePoint::setContinuous(bool continuous)
+{
+    _continuous = continuous;
+}

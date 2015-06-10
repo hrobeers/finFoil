@@ -41,6 +41,7 @@ void PointContextMenu::Show(const QPoint &pos)
     QAction *contAct = new QAction("Continuous", &menu);
     contAct->setCheckable(true);
     contAct->setChecked(_point->continuous());
+    connect(contAct, SIGNAL(toggled(bool)), this, SLOT(setContinuous(bool)));
     menu.addAction(contAct);
 
     QAction *splitAct = new QAction("Split", &menu);
@@ -50,4 +51,9 @@ void PointContextMenu::Show(const QPoint &pos)
     menu.addAction(removeAct);
 
     menu.exec(pos);
+}
+
+void PointContextMenu::setContinuous(bool continuous)
+{
+    _point->setContinuous(continuous);
 }

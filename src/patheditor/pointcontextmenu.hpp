@@ -26,10 +26,14 @@
 #include "hrlibfwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
+#include <QObject>
+
 namespace patheditor
 {
-    class PointContextMenu
+    class PointContextMenu : public QObject
     {
+        Q_OBJECT
+
     public:
         explicit PointContextMenu(PathPoint *point) : _point(point) {}
 
@@ -37,6 +41,9 @@ namespace patheditor
 
     private:
         PathPoint* _point;
+
+    private slots:
+        void setContinuous(bool continuous);
     };
 }
 

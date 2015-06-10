@@ -70,6 +70,7 @@ namespace patheditor
         PointHandle *handle();
 
         virtual bool continuous() { return false; }
+        virtual void setContinuous(bool /*continuous*/) {}
 
         virtual ~PathPoint() {}
 
