@@ -36,7 +36,7 @@ namespace patheditor
 
         virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;
 
-        virtual bool continuous() override;
+        virtual bool continuous() const override;
         virtual void setContinuous(bool continuous) override;
 
         virtual ~CurvePoint() {}

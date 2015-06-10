@@ -190,6 +190,12 @@ namespace patheditor {
         virtual sptr<Path> deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const override;
 
     private:
+        QJsonValue serializePath(const Path *object) const;
+        QJsonValue serializeContinuity(const Path *object) const;
+
+        void deserializePath(const QJsonArray *jsonPath, Path *path) const;
+        void deserializeContinuity(const QJsonArray *continuity, Path *path) const;
+
         std::shared_ptr<PathItem> toPathItem(QJsonArray pathItemJson, std::shared_ptr<PathPoint> &previousEndPoint) const;
 
         void appendPntToJsonArray(const PathPoint *pnt, QJsonArray *array) const
@@ -218,6 +224,16 @@ namespace patheditor {
 CUSTOMSERIALIZABLE(patheditor::Path, patheditor::PathSerializer, path)
 
 QJsonValue PathSerializer::serializeImpl(const Path *object) const
+{
+    QJsonObject retVal;
+
+    retVal.insert("path", serializePath(object));
+    retVal.insert("cont", serializeContinuity(object));
+
+    return retVal;
+}
+
+QJsonValue PathSerializer::serializePath(const Path *object) const
 {
     QJsonArray retVal;
 
@@ -259,6 +275,21 @@ QJsonValue PathSerializer::serializeImpl(const Path *object) const
     return retVal;
 }
 
+QJsonValue PathSerializer::serializeContinuity(const Path *object) const
+{
+    QJsonArray retVal;
+
+    // Move to first point
+    retVal.append((int)object->constPathItems().first()->constStartPoint()->continuous());
+
+    foreach (const PathItem *pathItem, object->constPathItems())
+    {
+        retVal.append((int)pathItem->constEndPoint()->continuous());
+    }
+
+    return retVal;
+}
+
 std::shared_ptr<PathItem> PathSerializer::toPathItem(QJsonArray pathItemJson, std::shared_ptr<PathPoint> &previousEndPoint) const
 {
     std::shared_ptr<PathItem> retVal;
@@ -291,18 +322,53 @@ std::shared_ptr<PathItem> PathSerializer::toPathItem(QJsonArray pathItemJson, st
 
 sptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString *errorMsg) const
 {
-    if (!jsonValue->isArray())
+    sptr<Path> path(new Path());
+    QJsonArray array;
+    QJsonArray continuity;
+
+    // finFoil v1.0 serializes Path into a JsonArray without continuity property
+    if (jsonValue->isArray())
     {
-        if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl -> path is not a json array");
+        array = jsonValue->toArray();
+    }
+
+    // from finFoil v1.1, a path is serialized as a JsonObject with continuity property
+    else if (jsonValue->isObject())
+    {
+        QJsonObject obj = jsonValue->toObject();
+        QJsonValue jsonPath = obj.take("path");
+        QJsonValue jsonCont = obj.take("cont");
+
+        if (jsonPath.isArray())
+            array = jsonPath.toArray();
+
+        if (jsonCont.isArray())
+            continuity = jsonCont.toArray();
+    }
+
+    else
+    {
+        if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl -> path format is not supported");
         return nullptr;
     }
 
-    sptr<Path> path(new Path());
+    deserializePath(&array, path.get());
 
-    QJsonArray array = jsonValue->toArray();
+    if (path->constPathItems().count() == 0)
+    {
+        if (errorMsg) errorMsg->append("\n PathSerializer::deserializeImpl -> invalid or empty path");
+        return nullptr;
+    }
 
+    deserializeContinuity(&continuity, path.get());
+
+    return path;
+}
+
+void PathSerializer::deserializePath(const QJsonArray *jsonPath, Path *path) const
+{
     std::shared_ptr<PathPoint> previousEndPoint(nullptr);
-    foreach (QJsonValue value, array)
+    foreach (QJsonValue value, *jsonPath)
     {
         if (value.isArray())
         {
@@ -312,6 +378,15 @@ sptr<Path> PathSerializer::deserializeImpl(const QJsonValue *jsonValue, QString 
                 path->append(pathItem);
         }
     }
+}
 
-    return path;
+void PathSerializer::deserializeContinuity(const QJsonArray *continuity, Path *path) const
+{
+    int i = 0;
+    path->pathItems().first()->startPoint()->setContinuous(continuity->first().toInt());
+    foreach (std::shared_ptr<PathItem> item, path->pathItems())
+    {
+        i++;
+        item->endPoint()->setContinuous(continuity->at(i).toInt());
+    }
 }

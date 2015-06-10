@@ -40,7 +40,7 @@ void CurvePoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings
     replaceCurrentPointHandle(newPointHandle);
 }
 
-bool CurvePoint::continuous()
+bool CurvePoint::continuous() const
 {
     return _continuous;
 }
