@@ -38,5 +38,6 @@ target_link_libraries(${TESTS_BINARY_NAME}
     Qt5::Test
     hrlib
     patheditor
+    foillogic
     jenson
 )
