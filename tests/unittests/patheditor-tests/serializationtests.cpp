@@ -57,6 +57,8 @@ void SerializationTests::testPathSerialization()
     path->append(std::shared_ptr<PathItem>(new Line(point4, point7)));
     path->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
 
+    point4->setContinuous(true);
+
     QJsonObject obj = jenson::JenSON::serialize(path.get());
 
     qunique_ptr<Path> deserialized = jenson::JenSON::deserialize<Path>(&obj);
@@ -68,6 +70,11 @@ void SerializationTests::testPathSerialization()
     QCOMPARE(*deserialized->pathItems().last()->constStartPoint(), *path->pathItems().last()->constStartPoint());
     // Make sure that point to different objects
     QVERIFY(deserialized->pathItems().last()->constStartPoint() != path->pathItems().last()->constStartPoint());
+
+    // Test continuity serialization (only point4 is set continuous)
+    QVERIFY(!deserialized->pathItems().first()->constStartPoint()->continuous());
+    QVERIFY( deserialized->pathItems().first()->constEndPoint()->continuous());
+    QVERIFY(!deserialized->pathItems().last()->constStartPoint()->continuous());
 }
 
 void SerializationTests::testDeserializing_v_1_0()

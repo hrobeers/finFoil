@@ -29,7 +29,7 @@
 using namespace patheditor;
 
 CurvePoint::CurvePoint(qreal xpos, qreal ypos)
-    : PathPoint(xpos, ypos)
+    : PathPoint(xpos, ypos), _continuous(false)
 {
 }
 
