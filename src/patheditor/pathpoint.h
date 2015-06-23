@@ -60,6 +60,7 @@ namespace patheditor
 
         PathPoint* toFollowPoint();
         void addFollowingPoint(std::shared_ptr<PathPoint> point);
+        QList<std::weak_ptr<PathPoint> > followingPoints();
 
         bool visible();
 

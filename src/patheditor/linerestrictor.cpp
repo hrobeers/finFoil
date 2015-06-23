@@ -24,7 +24,7 @@
 
 using namespace patheditor;
 
-LineRestrictor::LineRestrictor(QPointF &point1, QPointF &point2)
+LineRestrictor::LineRestrictor(const QPointF &point1, const QPointF &point2)
 {
     _point1 = point1;
     _point2 = point2;
@@ -32,10 +32,17 @@ LineRestrictor::LineRestrictor(QPointF &point1, QPointF &point2)
 
 void LineRestrictor::restrictCoordinate(qreal *x, qreal *y)
 {
-    qreal r_numerator = (*x-_point1.rx())*(_point2.rx()-_point1.rx()) + (*y-_point1.ry())*(_point2.ry()-_point1.ry());
-    qreal r_denomenator = (_point2.rx()-_point1.rx())*(_point2.rx()-_point1.rx()) + (_point2.ry()-_point1.ry())*(_point2.ry()-_point1.ry());
+    QPointF newPoint = closestPoint(QPointF(*x,*y), _point1, _point2);
+    *x = newPoint.x();
+    *y = newPoint.y();
+}
+
+QPointF LineRestrictor::closestPoint(const QPointF point, const QPointF &line_point1, const QPointF &line_point2)
+{
+    qreal r_numerator = (point.x()-line_point1.x())*(line_point2.x()-line_point1.x()) + (point.y()-line_point1.y())*(line_point2.y()-line_point1.y());
+    qreal r_denomenator = (line_point2.x()-line_point1.x())*(line_point2.x()-line_point1.x()) + (line_point2.y()-line_point1.y())*(line_point2.y()-line_point1.y());
     qreal r = r_numerator / r_denomenator;
 
-    *x = _point1.rx() + r*(_point2.rx()-_point1.rx());
-    *y = _point1.ry() + r*(_point2.ry()-_point1.ry());
+    return QPointF(line_point1.x() + r*(line_point2.x()-line_point1.x()),
+                   line_point1.y() + r*(line_point2.y()-line_point1.y()));
 }

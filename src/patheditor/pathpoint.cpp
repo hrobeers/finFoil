@@ -103,6 +103,11 @@ void PathPoint::addFollowingPoint(std::shared_ptr<PathPoint> point)
     _followingPoints.append(point);
 }
 
+QList<std::weak_ptr<PathPoint> > PathPoint::followingPoints()
+{
+    return _followingPoints;
+}
+
 bool PathPoint::visible()
 {
     if (_toFollowPoint)

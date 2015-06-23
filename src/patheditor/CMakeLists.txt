@@ -1,6 +1,7 @@
 project(patheditor)
 
 set(patheditorSRC
+    continuitylever.cpp
     controlpoint.cpp
     cubicbezier.cpp
     curvepoint.cpp
@@ -23,6 +24,7 @@ set(patheditorSRC
 )
 
 set(patheditorHDR
+    continuitylever.hpp
     controlpoint.h
     cubicbezier.h
     curvepoint.hpp

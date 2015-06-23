@@ -7,6 +7,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 set(SRC
     main.cpp
     hrlib-tests/decoratortests.cpp
+    patheditor-tests/continuitylevertest.cpp
     patheditor-tests/quadrantrestrictortest.cpp
     patheditor-tests/serializationtests.cpp
 )
@@ -15,6 +16,7 @@ set(SRC
 set(HDR
     ../../submodules/qtestrunner/qtestrunner.hpp
     hrlib-tests/decoratortests.hpp
+    patheditor-tests/continuitylevertest.hpp
     patheditor-tests/quadrantrestrictortest.h
     patheditor-tests/serializationtests.h
 )
