@@ -47,6 +47,7 @@ namespace patheditor
 
         std::shared_ptr<Restrictor> restrictor();
         void setRestrictor(std::shared_ptr<Restrictor> restrictor);
+        void removeRestrictor();
 
         /**
          * Creates a PointHandle and adds it to the passed scene.

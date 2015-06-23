@@ -25,6 +25,7 @@
 #include <QGraphicsScene>
 #include "pathsettings.h"
 #include "pointhandle.h"
+#include "continuitylever.hpp"
 
 using namespace patheditor;
 
@@ -47,5 +48,29 @@ bool CurvePoint::continuous() const
 
 void CurvePoint::setContinuous(bool continuous)
 {
-    _continuous = continuous;
+    if (continuous == _continuous)
+        return;
+
+    if(continuous)
+    {
+        std::shared_ptr<ContinuityLever> lever(new ContinuityLever(this));
+
+        foreach(std::weak_ptr<PathPoint> followingPoint, this->followingPoints())
+        {
+            std::shared_ptr<PathPoint> fPnt = followingPoint.lock();
+            fPnt->setRestrictor(lever);
+        }
+
+        _continuous = true;
+    }
+    else
+    {
+        foreach(std::weak_ptr<PathPoint> followingPoint, this->followingPoints())
+        {
+            std::shared_ptr<PathPoint> fPnt = followingPoint.lock();
+            fPnt->removeRestrictor();
+        }
+
+        _continuous = false;
+    }
 }

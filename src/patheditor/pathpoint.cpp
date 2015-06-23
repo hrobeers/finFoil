@@ -86,6 +86,11 @@ void PathPoint::setRestrictor(std::shared_ptr<Restrictor> restrictor)
     setRestrictedPos(this->rx(), this->ry());
 }
 
+void PathPoint::removeRestrictor()
+{
+    _restrictor.reset();
+}
+
 void PathPoint::createPointHandle(QGraphicsItem *parent, const PathSettings *settings)
 {
     if (!settings) settings = PathSettings::Default();
