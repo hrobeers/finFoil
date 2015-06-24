@@ -55,7 +55,6 @@ void ContinuityLever::restrictCoordinate(qreal *x, qreal *y)
         QPointF scaled = newDiff * factor;
         QPointF newPos = scaled + *_leverPoint;
 
-        fPnt->setX(newPos.x());
-        fPnt->setY(newPos.y());
+        fPnt->setPos(newPos.x(), newPos.y());
     }
 }

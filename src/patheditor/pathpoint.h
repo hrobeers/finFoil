@@ -41,6 +41,8 @@ namespace patheditor
 
         virtual void setParent(QObject *object);
 
+        void setPos(qreal xpos, qreal ypos);
+
         void setRestrictedX(qreal xpos);
         void setRestrictedY(qreal ypos);
         void setRestrictedPos(qreal xpos, qreal ypos);
@@ -94,8 +96,6 @@ namespace patheditor
         virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) = 0;
 
     private:
-        void setPos(qreal xpos, qreal ypos);
-
         bool _selected;
         static void select(PathPoint *point, QGraphicsScene *scene);
 
