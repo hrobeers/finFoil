@@ -42,14 +42,15 @@ namespace foillogic
         Q_PROPERTY(qreal thicknessRatio READ thicknessRatio)
 
         // read-write properties
-        Q_PROPERTY(qreal thickness READ pThickness WRITE pSetThickness)
         Q_PROPERTY(QString symmetry READ symmetryStr WRITE setSymmetryStr)
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
         Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile WRITE pSetBotProfile RESET pResetBotProfile)
 
         // optional properties
-        Q_PROPERTY(qreal minThick READ pMinThickness WRITE pSetMinThickness RESET pResetMinThickness)
         Q_PROPERTY_UUID
+
+        // moved properties
+        Q_PROPERTY(qreal thickness WRITE pSetThickness_legacy)
 
         Q_ENUMS(Symmetry)
 
@@ -65,12 +66,6 @@ namespace foillogic
         Symmetry symmetry() const;
         void setSymmetry(Symmetry symmetry);
 
-        boost::units::quantity<boost::units::si::length, qreal> thickness() const;
-        void setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness);
-
-        boost::units::quantity<boost::units::si::length, qreal> minThickness() const;
-        void setMinThickness(boost::units::quantity<boost::units::si::length, qreal> minThickness);
-
         QPointF topProfileTop(qreal* t_top = 0) const;
         QPointF bottomProfileTop(qreal* t_top = 0) const;
         qreal pxThickness() const;
@@ -78,20 +73,16 @@ namespace foillogic
 
         // Q_PROPERTY getters
         QString symmetryStr() const;
-        qreal pThickness() const { return thickness().value(); }
-        qreal pMinThickness() const { return minThickness().value(); }
         patheditor::Path* pTopProfile();
         patheditor::Path* pBotProfile();
 
         // Q_PROPERTY setters
         void setSymmetryStr(QString symmetry);
-        void pSetThickness(qreal thickness) { setThickness(thickness * boost::units::si::meter); }
-        void pSetMinThickness(qreal minThickness) { setMinThickness(minThickness * boost::units::si::meter); }
         void pSetTopProfile(patheditor::Path *topProfile);
         void pSetBotProfile(patheditor::Path *botProfile);
+        void pSetThickness_legacy(qreal thickness) { _thickness_legacy = thickness; }
 
         void pResetBotProfile();
-        void pResetMinThickness();
 
         virtual ~Profile();
 
@@ -104,8 +95,6 @@ namespace foillogic
 
     private:
         Symmetry _symmetry;
-        boost::units::quantity<boost::units::si::length, qreal> _thickness;
-        boost::units::quantity<boost::units::si::length, qreal> _minThickness;
 
         std::unique_ptr<patheditor::Path> _topProfile;
         std::unique_ptr<patheditor::Path> _botProfile;
@@ -117,6 +106,10 @@ namespace foillogic
         void attachSignals(patheditor::Path* path);
 
         void mirror(const patheditor::PathItem *source, patheditor::PathItem* destination);
+
+    // Support for the v1.0 thickness property on Profile
+    public:
+        qreal _thickness_legacy = 0.0;
 
     private slots:
         void onProfileChanged(patheditor::Path *path);

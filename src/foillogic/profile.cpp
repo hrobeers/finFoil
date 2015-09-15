@@ -37,8 +37,7 @@ using namespace boost::units;
 
 Profile::Profile(QObject *parent) :
     QObject(parent), _symmetry(Symmetry::Symmetric),
-    t_topProfileTop(0.3), t_botProfileTop(0.3),
-    _thickness(0.01 * si::meter) // 1cm
+    t_topProfileTop(0.3), t_botProfileTop(0.3)
 {
     initProfile();
 }
@@ -81,26 +80,6 @@ void Profile::setSymmetry(Symmetry symmetry)
     onProfileChanged(_topProfile.get());
     onProfileReleased();
     emit symmetryChanged(_symmetry);
-}
-
-boost::units::quantity<boost::units::si::length, qreal> Profile::thickness() const
-{
-    return _thickness;
-}
-
-void Profile::setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness)
-{
-    _thickness = thickness;
-}
-
-boost::units::quantity<si::length, qreal> foillogic::Profile::minThickness() const
-{
-    return _minThickness;
-}
-
-void foillogic::Profile::setMinThickness(boost::units::quantity<si::length, qreal> minThickness)
-{
-    _minThickness = minThickness;
 }
 
 QPointF Profile::topProfileTop(qreal *t_top) const
@@ -192,11 +171,6 @@ void Profile::pSetBotProfile(Path *botProfile)
 void Profile::pResetBotProfile()
 {
     // Do nothing, initialized in ctor
-}
-
-void foillogic::Profile::pResetMinThickness()
-{
-    _minThickness = 0;
 }
 
 Profile::~Profile() {}

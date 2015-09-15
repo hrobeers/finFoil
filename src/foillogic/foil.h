@@ -28,6 +28,8 @@
 
 #include <QObject>
 #include <memory>
+#include "boost/units/quantity.hpp"
+#include "boost/units/systems/si/length.hpp"
 #include "mixin/identifiable.hpp"
 #include "mixin/historical.hpp"
 #include "jenson.h"
@@ -41,10 +43,12 @@ namespace foillogic
         // read-write properties
         Q_PROPERTY(foillogic::Outline* outline READ outline WRITE pSetOutline)
         Q_PROPERTY(foillogic::Profile* profile READ profile WRITE pSetProfile)
-        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ thickness WRITE pSetThickness)
+        Q_PROPERTY(foillogic::ThicknessProfile* thickness READ thicknessProfile WRITE pSetThicknessProfile)
+        Q_PROPERTY(qreal thick READ pThickness WRITE pSetThickness RESET pResetThickness)
 
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
+        Q_PROPERTY(qreal minThick READ pMinThickness WRITE pSetMinThickness RESET pResetMinThickness)
         Q_PROPERTY_UUID
         Q_PROPERTY_HISTORY_STRLIST
 
@@ -59,19 +63,31 @@ namespace foillogic
         std::unique_ptr<patheditor::IPath> topThicknessSI();
         std::unique_ptr<patheditor::IPath> botThicknessSI();
 
+
+        boost::units::quantity<boost::units::si::length, qreal> thickness() const;
+        void setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness);
+        boost::units::quantity<boost::units::si::length, qreal> minThickness() const;
+        void setMinThickness(boost::units::quantity<boost::units::si::length, qreal> minThickness);
+
         // Q_PROPERTY getters
         Outline* outline() { return _outline.get(); }
         Profile* profile() { return _profile.get(); }
-        ThicknessProfile* thickness() { return _thickness.get(); }
+        ThicknessProfile* thicknessProfile() { return _thicknessProfile.get(); }
         int layerCount() { return _layerCount; }
+        qreal pThickness() const { return thickness().value(); }
+        qreal pMinThickness() const { return minThickness().value(); }
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
-        void pSetThickness(ThicknessProfile *thickness);
+        void pSetThicknessProfile(ThicknessProfile *thicknessProfile); // TODO read thickness from object if it exists
         void setLayerCount(int layerCount);
+        void pSetThickness(qreal thickness) { setThickness(thickness * boost::units::si::meter); }
+        void pSetMinThickness(qreal minThickness) { setMinThickness(minThickness * boost::units::si::meter); }
 
         void resetLayerCount();
+        void pResetThickness();
+        void pResetMinThickness();
 
         virtual ~Foil();
 
@@ -84,8 +100,10 @@ namespace foillogic
     private:
         std::unique_ptr<foillogic::Outline> _outline;
         std::unique_ptr<foillogic::Profile> _profile;
-        std::unique_ptr<foillogic::ThicknessProfile> _thickness;
+        std::unique_ptr<foillogic::ThicknessProfile> _thicknessProfile;
         int _layerCount;
+        boost::units::quantity<boost::units::si::length, qreal> _thickness;
+        boost::units::quantity<boost::units::si::length, qreal> _minThickness;
 
         void initOutline();
         void initProfile();

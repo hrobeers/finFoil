@@ -136,7 +136,7 @@ void FoilDataWidget::setFoilCalculator(FoilCalculator *foilCalculator)
     _depth.setInternalValue(_foilCalculator->foil()->outline()->height());
     _depthEdit->setValue(_depth);
 
-    _thickness.setInternalValue(_foilCalculator->foil()->profile()->thickness());
+    _thickness.setInternalValue(_foilCalculator->foil()->thickness());
     _thicknessEdit->setValue(_thickness);
 
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
@@ -234,7 +234,7 @@ void FoilDataWidget::onThicknessChange(IQuantity *thickness)
 {
     Length* lthickness = static_cast<Length*>(thickness);
     _thickness.setInternalValue(lthickness->internalValue());
-    _foilCalculator->foil()->profile()->setThickness(_thickness.internalValue());
+    _foilCalculator->foil()->setThickness(_thickness.internalValue());
     updatePxPerUnit();
     emit thicknessChanged(&_thickness);
 }

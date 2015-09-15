@@ -52,7 +52,7 @@ namespace
 }
 
 ContourCalculator::ContourCalculator(qreal percContourHeight, Foil *foil, QPainterPath *result, Side::e side, bool fast) :
-    _side(side), _outline(foil->outline()->path()), _thickness(foil->thickness()->topProfile()), _percContourHeight(percContourHeight),
+    _side(side), _outline(foil->outline()->path()), _thickness(foil->thicknessProfile()->topProfile()), _percContourHeight(percContourHeight),
     _result(result), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
 {
     switch (_side) {

@@ -54,10 +54,10 @@ void ThicknessEditor::setFoil(Foil *foil)
 {
     _pathEditor->clear();
 
-    EditablePath* botPath = new EditablePath(foil->thickness()->botProfile());
+    EditablePath* botPath = new EditablePath(foil->thicknessProfile()->botProfile());
     botPath->setEditable(false);
-    connect(foil->thickness(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
-    EditablePath* topPath = new EditablePath(foil->thickness()->topProfile());
+    connect(foil->thicknessProfile(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    EditablePath* topPath = new EditablePath(foil->thicknessProfile()->topProfile());
 
     _pathEditor->addPath(topPath);
     _pathEditor->addPath(botPath);

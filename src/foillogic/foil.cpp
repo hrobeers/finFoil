@@ -1,3 +1,4 @@
+
 /****************************************************************************
   
  Copyright (c) 2013, Hans Robeers
@@ -41,7 +42,8 @@ using namespace hrlib::patterns;
 using namespace boost::units;
 
 Foil::Foil(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    _thickness(0.01 * si::meter) // 1cm
 {
     initOutline();
     initProfile();
@@ -52,7 +54,7 @@ Foil::Foil(QObject *parent) :
 
 void Foil::onDeserialized()
 {
-    _thickness->setThicknessRatio(_profile->thicknessRatio());
+    _thicknessProfile->setThicknessRatio(_profile->thicknessRatio());
 }
 
 void Foil::pSetOutline(Outline *outline)
@@ -67,9 +69,9 @@ void Foil::pSetProfile(Profile *profile)
     connectProfile();
 }
 
-void Foil::pSetThickness(ThicknessProfile *thickness)
+void Foil::pSetThicknessProfile(ThicknessProfile *thickness)
 {
-    _thickness.reset(thickness);
+    _thicknessProfile.reset(thickness);
     connectThickness();
 }
 
@@ -81,6 +83,16 @@ void Foil::setLayerCount(int layerCount)
 void Foil::resetLayerCount()
 {
     setLayerCount(6);
+}
+
+void Foil::pResetThickness()
+{
+    pSetThickness(_profile->_thickness_legacy);
+}
+
+void Foil::pResetMinThickness()
+{
+    _minThickness = 0;
 }
 
 foillogic::Foil::~Foil() { }
@@ -99,7 +111,7 @@ void Foil::initProfile()
 
 void Foil::initThickness()
 {
-    _thickness.reset(new ThicknessProfile());
+    _thicknessProfile.reset(new ThicknessProfile());
     connectThickness();
 }
 
@@ -119,8 +131,8 @@ void Foil::connectProfile()
 
 void Foil::connectThickness()
 {
-    connect(_thickness.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
-    connect(_thickness.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
+    connect(_thicknessProfile.get(), SIGNAL(profileChanged(ThicknessProfile*)), this, SLOT(onFoilChanged()));
+    connect(_thicknessProfile.get(), SIGNAL(profileReleased(ThicknessProfile*)), this, SLOT(onFoilReleased()));
 }
 
 void Foil::onFoilChanged()
@@ -135,8 +147,8 @@ void Foil::onFoilReleased()
 
 void Foil::onProfileChanged()
 {
-    if (_thickness)
-        _thickness->setThicknessRatio(_profile->thicknessRatio());
+    if (_thicknessProfile)
+        _thicknessProfile->setThicknessRatio(_profile->thicknessRatio());
 }
 
 
@@ -165,7 +177,7 @@ namespace {
         retVal.first = qAbs(scaleFactorX(self->profile()->topProfile(), baseLengthSI));
 
         // determine the y scaling factor
-        quantity<si::length, qreal> thicknessSI = self->profile()->thickness();
+        quantity<si::length, qreal> thicknessSI = self->thickness();
         qreal t_top = 0.3;
         retVal.second = qAbs(thicknessSI.value() / (self->profile()->topProfileTop(&t_top).y() - self->profile()->bottomProfileTop(&t_top).y()));
 
@@ -178,12 +190,12 @@ namespace {
 
         // determine the x scaling factor
         quantity<si::length, qreal> heightSI = self->outline()->height();
-        retVal.first = qAbs(scaleFactorX(self->thickness()->topProfile(), heightSI.value()));
+        retVal.first = qAbs(scaleFactorX(self->thicknessProfile()->topProfile(), heightSI.value()));
 
         // determine the y scaling factor
-        quantity<si::length, qreal> thicknessSI = self->profile()->thickness();
+        quantity<si::length, qreal> thicknessSI = self->thickness();
         qreal t_top = 0;
-        retVal.second = qAbs(thicknessSI.value() / (self->thickness()->topProfile()->minY(&t_top) - self->thickness()->botProfile()->maxY(&t_top)));
+        retVal.second = qAbs(thicknessSI.value() / (self->thicknessProfile()->topProfile()->minY(&t_top) - self->thicknessProfile()->botProfile()->maxY(&t_top)));
 
         return retVal;
     }
@@ -204,11 +216,31 @@ std::unique_ptr<IPath> Foil::botProfileSI()
 std::unique_ptr<IPath> Foil::topThicknessSI()
 {
     auto s = thicknessScaleFactors(this);
-    return decorate<PathScaleDecorator>(_thickness->topProfile(), s.first, s.second);
+    return decorate<PathScaleDecorator>(_thicknessProfile->topProfile(), s.first, s.second);
 }
 
 std::unique_ptr<IPath> Foil::botThicknessSI()
 {
     auto s = thicknessScaleFactors(this);
-    return decorate<PathScaleDecorator>(_thickness->botProfile(), s.first, s.second);
+    return decorate<PathScaleDecorator>(_thicknessProfile->botProfile(), s.first, s.second);
+}
+
+boost::units::quantity<boost::units::si::length, qreal> Foil::thickness() const
+{
+    return _thickness;
+}
+
+void Foil::setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness)
+{
+    _thickness = thickness;
+}
+
+boost::units::quantity<si::length, qreal> Foil::minThickness() const
+{
+    return _minThickness;
+}
+
+void Foil::setMinThickness(boost::units::quantity<si::length, qreal> minThickness)
+{
+    _minThickness = minThickness;
 }

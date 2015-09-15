@@ -91,10 +91,15 @@ void SerializationTests::testDeserializing_v_1_0()
 
     // Check if path properties match
     QCOMPARE(deserialized->outline()->path()->pathItems().count(), 4);
-    QCOMPARE(deserialized->thickness()->pTopProfile()->pathItems().count(), 1);
+    QCOMPARE(deserialized->thicknessProfile()->pTopProfile()->pathItems().count(), 1);
     QCOMPARE(deserialized->profile()->pTopProfile()->pathItems().count(), 2);
     QCOMPARE(deserialized->profile()->pBotProfile()->pathItems().count(), 2);
     QCOMPARE(deserialized->profile()->symmetry(), Profile::Asymmetric);
+    QCOMPARE(deserialized->pThickness(), 0.01);
+
+    // Verify that the v1.0 thickness property is not present in the current serialization
+    QByteArray serialized = QJsonDocument(jenson::JenSON::serialize(deserialized.get())).toJson(QJsonDocument::Compact);
+    QVERIFY(!serialized.contains("\"thickness\":0"));
 }
 
 QTR_ADD_TEST(SerializationTests)
