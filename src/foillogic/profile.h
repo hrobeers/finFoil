@@ -50,7 +50,7 @@ namespace foillogic
         Q_PROPERTY_UUID
 
         // moved properties
-        Q_PROPERTY(qreal thickness WRITE pSetThickness_legacy)
+        Q_PROPERTY(qreal thickness WRITE pSetThickness_legacy RESET pResetThickness_legacy)
 
         Q_ENUMS(Symmetry)
 
@@ -80,7 +80,9 @@ namespace foillogic
         void setSymmetryStr(QString symmetry);
         void pSetTopProfile(patheditor::Path *topProfile);
         void pSetBotProfile(patheditor::Path *botProfile);
+
         void pSetThickness_legacy(qreal thickness) { _thickness_legacy = thickness; }
+        void pResetThickness_legacy() { _thickness_legacy = NAN; }
 
         void pResetBotProfile();
 
@@ -109,7 +111,7 @@ namespace foillogic
 
     // Support for the v1.0 thickness property on Profile
     public:
-        qreal _thickness_legacy = 0.0;
+        qreal _thickness_legacy = NAN;
 
     private slots:
         void onProfileChanged(patheditor::Path *path);

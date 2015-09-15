@@ -38,6 +38,19 @@
 
 using namespace patheditor;
 using namespace foillogic;
+using namespace jenson;
+
+void SerializationTests::testFoilSerialization()
+{
+    QString errorMsg;
+    std::unique_ptr<Foil> foil(new Foil());
+
+    QJsonObject serialized = JenSON::serialize(foil.get());
+    auto deserialized = JenSON::deserialize<Foil>(&serialized, &errorMsg);
+
+    if (!deserialized)
+        QFAIL(errorMsg.toStdString().c_str());
+}
 
 void SerializationTests::testPathSerialization()
 {
@@ -59,9 +72,9 @@ void SerializationTests::testPathSerialization()
 
     point4->setContinuous(true);
 
-    QJsonObject obj = jenson::JenSON::serialize(path.get());
+    QJsonObject obj = JenSON::serialize(path.get());
 
-    qunique_ptr<Path> deserialized = jenson::JenSON::deserialize<Path>(&obj);
+    qunique_ptr<Path> deserialized = JenSON::deserialize<Path>(&obj);
 
     // Test PathItem count
     QVERIFY(deserialized->pathItems().count() > 0);
@@ -83,7 +96,7 @@ void SerializationTests::testDeserializing_v_1_0()
     QByteArray foil("{\"foil\":{\"history\":[],\"layerCount\":7,\"outline\":{\"area\":0.007457491099408858,\"height\":0.10000000000000001,\"path\":[[\"M\",0,0],[\"C\",32.190983899999999,-63.065339999999999,140.79888589999999,-227.155744,269.50071800000001,-228.968964],[\"C\",296.158458,-229.34453400000001,336.98747800000001,-220.894644,340.60909800000002,-194.481404],[\"C\",342.96483799999999,-177.30037799999999,238.20925799999998,-115.23081999999999,216.10157799999999,-83.084100000000007],[\"C\",168.75719790000002,-14.240800000000007,226.879918,-13,232.879918,0]],\"sweep\":0.72127218250220537,\"uuid\":\"{a181c1db-311c-4cee-a715-d30eb0ea0f2e}\"},\"profile\":{\"botProfile\":[[\"M\",0,0],[\"C\",0,0,-6,15,84,15],[\"C\",128,16,300,0,300,0]],\"minThick\":0.001,\"symmetry\":\"Asymmetric\",\"thickness\":0.01,\"thicknessRatio\":2.3263550082302116,\"topProfile\":[[\"M\",0,0],[\"C\",0,0,0,-35,90,-35],[\"C\",135,-35,300,0,300,0]],\"uuid\":\"{698a3768-a4d9-4e01-8a4b-710c4ea86d74}\"},\"thickness\":{\"topProfile\":[[\"M\",0,-30],[\"C\",0,-30,300,-30,300,0]],\"uuid\":\"{2d5cced3-5411-4b0a-93a3-494251844f66}\"},\"uuid\":\"{d4ad1241-0712-4931-beb5-31c231108348}\"}}");
 
     QJsonObject obj = QJsonDocument::fromJson(foil).object();
-    qunique_ptr<Foil> deserialized = jenson::JenSON::deserialize<Foil>(&obj, &errorMsg);
+    qunique_ptr<Foil> deserialized = JenSON::deserialize<Foil>(&obj, &errorMsg);
 
     // Check if deserialization succeeded
     if (!deserialized)
@@ -98,7 +111,7 @@ void SerializationTests::testDeserializing_v_1_0()
     QCOMPARE(deserialized->pThickness(), 0.01);
 
     // Verify that the v1.0 thickness property is not present in the current serialization
-    QByteArray serialized = QJsonDocument(jenson::JenSON::serialize(deserialized.get())).toJson(QJsonDocument::Compact);
+    QByteArray serialized = QJsonDocument(JenSON::serialize(deserialized.get())).toJson(QJsonDocument::Compact);
     QVERIFY(!serialized.contains("\"thickness\":0"));
 }
 
