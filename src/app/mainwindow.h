@@ -55,6 +55,11 @@ private slots:
     bool saveAs();
     void open();
 
+    bool saveProfile();
+    void loadProfile();
+    bool saveThickness();
+    void loadThickness();
+
     void about();
 
     bool maybeSave();
@@ -83,6 +88,12 @@ private:
     QAction *openAct;
     QAction *saveAct;
     QAction *saveAsAct;
+
+    QAction *loadProfAct;
+    QAction *saveProfAct;
+    QAction *loadThickAct;
+    QAction *saveThickAct;
+
     QAction *quitAct;
 
     QAction *aboutAct;
@@ -93,7 +104,12 @@ private:
     void createActions();
     void createMenus();
 
+    bool loadFileToJson(const QString &path, QJsonObject &jObj);
+
     void setCurrentFilePath(const QString &path);
+    QString askSaveFileName(const QString &extension, const QString &fileFilter, const QString &title = tr("Save As"));
+    QString askOpenFileName(const QString &fileFilter, const QString &title = tr("Open File"));
+    bool saveObjectToFile(const QObject *obj, const QString &path);
 };
 
 #endif // MAINWINDOW_H

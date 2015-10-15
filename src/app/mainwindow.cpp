@@ -34,6 +34,8 @@
 #include "jenson.h"
 #include "foil.h"
 #include "foilcalculator.h"
+#include "profile.h"
+#include "thicknessprofile.h"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -93,13 +95,8 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    QString suggestedPath = "untitled.foil";
-    if (_currentFile.isFile())
-        suggestedPath = _currentFile.absoluteFilePath();
+    QString filePath = askSaveFileName(".foil", tr("Foils (*.foil)"));
 
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Fin"),
-                                                    suggestedPath,
-                                                    tr("Foils (*.foil)"));
     if (filePath.isEmpty())
         return false;
 
@@ -110,19 +107,78 @@ void MainWindow::open()
 {
     if (maybeSave())
     {
-        QString currentDir;
-        if (_currentFile.isFile())
-            currentDir = _currentFile.canonicalPath();
+        QString filePath = askOpenFileName(tr("Foils (*.foil);;All files (*)"));
 
-        QString filePath = QFileDialog::getOpenFileName(this, tr("Open Fin"),
-                                                        currentDir,
-                                                        tr("Foils (*.foil);;All files (*)"));
         if (!filePath.isEmpty())
         {
             if (loadFile(filePath))
                 setClean();
         }
     }
+}
+
+bool MainWindow::saveProfile()
+{
+  QString filePath = askSaveFileName(".fprof", tr("Profiles (*.fprof)"), tr("Export Profile"));
+
+  if (filePath.isEmpty())
+      return false;
+
+  return saveObjectToFile(_fin->profile(), filePath);
+}
+
+void MainWindow::loadProfile()
+{
+  QString filePath = askOpenFileName(tr("Profiles (*.fprof);;All files (*)")); // TODO support: Foils (*.foil)
+
+  QString errorMsg;
+  QJsonObject jObj;
+  if (!loadFileToJson(filePath, jObj)) return;
+  auto deserialized = JenSON::deserialize<Profile>(&jObj, &errorMsg);
+
+  if (!deserialized)
+    {
+      errorMsg.prepend(tr("Failed to open profile: "));
+      statusBar()->showMessage(errorMsg, 5000);
+      qCritical(errorMsg.toStdString().c_str());
+      return;
+    }
+
+  _fin->pSetProfile(deserialized.release());
+  _profileEditor->setFoil(_fin.get());
+  _fin->onDeserialized();
+}
+
+bool MainWindow::saveThickness()
+{
+  QString filePath = askSaveFileName(".fthick", tr("Thickness Profiles (*.fthick)"), tr("Export Thickness Profile"));
+
+  if (filePath.isEmpty())
+    return false;
+
+  return saveObjectToFile(_fin->thicknessProfile(), filePath);
+}
+
+void MainWindow::loadThickness()
+{
+  QString filePath = askOpenFileName(tr("Thickness Profiles (*.fthick);;All files (*)")); // TODO support: Foils (*.foil)
+
+  QString errorMsg;
+  QJsonObject jObj;
+  if (!loadFileToJson(filePath, jObj)) return;
+  auto deserialized = JenSON::deserialize<ThicknessProfile>(&jObj, &errorMsg);
+
+  if (!deserialized)
+    {
+      errorMsg.prepend(tr("Failed to open thickness profile: "));
+      statusBar()->showMessage(errorMsg, 5000);
+      qCritical(errorMsg.toStdString().c_str());
+      return;
+    }
+
+  _fin->pSetThicknessProfile(deserialized.release());
+  _thicknessEditor->setFoil(_fin.get());
+  _fin->onDeserialized();
 }
 
 void MainWindow::about()
@@ -222,11 +278,26 @@ void MainWindow::createActions()
     saveAsAct->setStatusTip(tr("Save the fin to a different file"));
     connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
+    loadProfAct = new QAction(QIcon(), tr("Import Profile"), this);
+    loadProfAct->setStatusTip(tr("Import profile from file"));
+    connect(loadProfAct, SIGNAL(triggered()), this, SLOT(loadProfile()));
+
+    saveProfAct = new QAction(QIcon(), tr("Export Profile"), this);
+    saveProfAct->setStatusTip(tr("Export profile to file"));
+    connect(saveProfAct, SIGNAL(triggered()), this, SLOT(saveProfile()));
+
+    loadThickAct = new QAction(QIcon(), tr("Import Thickness"), this);
+    loadThickAct->setStatusTip(tr("Import thickness profile from file"));
+    connect(loadThickAct, SIGNAL(triggered()), this, SLOT(loadThickness()));
+
+    saveThickAct = new QAction(QIcon(), tr("Export Thickness"), this);
+    saveThickAct->setStatusTip(tr("Export thickness profile to file"));
+    connect(saveThickAct, SIGNAL(triggered()), this, SLOT(saveThickness()));
+
     quitAct = new QAction(QIcon(), tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit finFoil"));
     connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
-
 
     aboutAct = new QAction(QIcon(), tr("About f&inFoil"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -243,6 +314,11 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
+    fileMenu->addAction(loadProfAct);
+    fileMenu->addAction(saveProfAct);
+    fileMenu->addAction(loadThickAct);
+    fileMenu->addAction(saveThickAct);
+    fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
 
     aboutMenu = menuBar()->addMenu(tr("&About"));
@@ -252,18 +328,8 @@ void MainWindow::createMenus()
 
 bool MainWindow::saveFile(const QString &path)
 {
-    QFile file(path);
-    if (!file.open(QFile::WriteOnly | QFile::Text))
-    {
-        QMessageBox::warning(this, tr("Cannot save fin"),
-                             tr("Cannot write to file %1:\n%2.")
-                             .arg(path)
-                             .arg(file.errorString()));
-        return false;
-    }
-
-    QJsonDocument json(JenSON::serialize(_fin.get()));
-    file.write(json.toJson(QJsonDocument::Compact));
+    if (!saveObjectToFile(_fin.get(), path))
+      return false;
 
     setCurrentFilePath(path);
     statusBar()->showMessage(tr("Fin saved"), 2000);
@@ -272,21 +338,28 @@ bool MainWindow::saveFile(const QString &path)
     return true;
 }
 
-bool MainWindow::loadFile(const QString &path)
+bool MainWindow::loadFileToJson(const QString &path, QJsonObject &jObj)
 {
     QFile file(path);
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        QMessageBox::warning(this, tr("Cannot read fin"),
+      QMessageBox::warning(this, tr("Cannot read file"),
                              tr("Cannot read file %1:\n%2.")
                              .arg(path)
                              .arg(file.errorString()));
         return false;
     }
 
+    jObj = QJsonDocument::fromJson(file.readAll()).object();
+    return true;
+}
+
+bool MainWindow::loadFile(const QString &path)
+{
     QString errorMsg;
-    QJsonObject jObj = QJsonDocument::fromJson(file.readAll()).object();
-    sptr<Foil> deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
+    QJsonObject jObj;
+    if (!loadFileToJson(path, jObj)) return false;
+    auto deserialized = JenSON::deserialize<Foil>(&jObj, &errorMsg);
 
     if (deserialized)
     {
@@ -308,4 +381,44 @@ bool MainWindow::loadFile(const QString &path)
 void MainWindow::setCurrentFilePath(const QString &path)
 {
     _currentFile = path;
+}
+
+QString MainWindow::askSaveFileName(const QString &extension, const QString &fileFilter, const QString &title)
+{
+  QString suggestedPath = tr("untitled") + extension;
+  if (_currentFile.isFile())
+    suggestedPath = _currentFile.absoluteDir().absoluteFilePath(_currentFile.baseName() + extension);
+
+  return QFileDialog::getSaveFileName(this, title,
+                                      suggestedPath,
+                                      fileFilter);
+}
+
+QString MainWindow::askOpenFileName(const QString &fileFilter, const QString &title)
+{
+  QString currentDir;
+  if (_currentFile.isFile())
+    currentDir = _currentFile.canonicalPath();
+
+  return QFileDialog::getOpenFileName(this, title,
+                                      currentDir,
+                                      fileFilter);
+}
+
+bool MainWindow::saveObjectToFile(const QObject *obj, const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+    {
+        QMessageBox::warning(this, tr("Cannot save fin"),
+                             tr("Cannot write to file %1:\n%2.")
+                             .arg(path)
+                             .arg(file.errorString()));
+        return false;
+    }
+
+    QJsonDocument json(JenSON::serialize(obj));
+    file.write(json.toJson(QJsonDocument::Compact));
+
+    return true;
 }

@@ -44,11 +44,12 @@ void PointContextMenu::Show(const QPoint &pos)
     connect(contAct, SIGNAL(toggled(bool)), this, SLOT(setContinuous(bool)));
     menu.addAction(contAct);
 
-    QAction *splitAct = new QAction("Split", &menu);
-    menu.addAction(splitAct);
+    // TODO implement split & remove
+//    QAction *splitAct = new QAction("Split", &menu);
+//    menu.addAction(splitAct);
 
-    QAction *removeAct = new QAction("Remove", &menu);
-    menu.addAction(removeAct);
+//    QAction *removeAct = new QAction("Remove", &menu);
+//    menu.addAction(removeAct);
 
     menu.exec(pos);
 }

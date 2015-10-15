@@ -99,8 +99,8 @@ namespace foillogic
 
     private:
         std::unique_ptr<foillogic::Outline> _outline;
-        std::unique_ptr<foillogic::Profile> _profile;
-        std::unique_ptr<foillogic::ThicknessProfile> _thicknessProfile;
+        qunique_ptr<foillogic::Profile> _profile;
+        qunique_ptr<foillogic::ThicknessProfile> _thicknessProfile;
         int _layerCount;
         boost::units::quantity<boost::units::si::length, qreal> _thickness;
         boost::units::quantity<boost::units::si::length, qreal> _minThickness;

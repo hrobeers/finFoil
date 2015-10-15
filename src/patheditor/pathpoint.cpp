@@ -147,6 +147,9 @@ PointHandle *PathPoint::handle()
 
 void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
 {
+    if (_pointHandle == pointHandle)
+        return;
+
     if (_pointHandle)
     {
         if (_pointHandle->scene())
