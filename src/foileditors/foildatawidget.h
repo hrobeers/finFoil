@@ -85,7 +85,7 @@ namespace foileditors
     private slots:
         void onFoilCalculated();
         void onLayerChange(int layerCount);
-        void onUnitSystemChange(const QString &system);
+        void onUnitSystemChange(const QString &system, bool showEvent = false);
         void onDepthChange(qt::units::IQuantity *depth);
         void onThicknessChange(qt::units::IQuantity *thickness);
         void onMinThickChange(qt::units::IQuantity *minThick);

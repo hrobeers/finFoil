@@ -155,7 +155,7 @@ void FoilDataWidget::setFoilCalculator(FoilCalculator *foilCalculator)
 
 void FoilDataWidget::showEvent(QShowEvent *)
 {
-    onUnitSystemChange(_unitSelector->currentText());
+    onUnitSystemChange(_unitSelector->currentText(), true);
 }
 
 void FoilDataWidget::updatePxPerUnit()
@@ -204,7 +204,7 @@ void FoilDataWidget::onLayerChange(int layerCount)
     _foilCalculator->setEquidistantContours(layerCount);
 }
 
-void FoilDataWidget::onUnitSystemChange(const QString &system)
+void FoilDataWidget::onUnitSystemChange(const QString &system, bool showEvent)
 {
     if (system == "m")
     {
@@ -228,9 +228,9 @@ void FoilDataWidget::onUnitSystemChange(const QString &system)
     }
 
     updateArea();
-    _depthEdit->setValue(_depth);
-    _thicknessEdit->setValue(_thickness);
-    _minThickEdit->setValue(_minThick);
+    _depthEdit->setValue(_depth, !showEvent);
+    _thicknessEdit->setValue(_thickness, !showEvent);
+    _minThickEdit->setValue(_minThick, !showEvent);
 }
 
 void FoilDataWidget::onDepthChange(IQuantity *depth)
