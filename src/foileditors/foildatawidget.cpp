@@ -90,6 +90,14 @@ FoilDataWidget::FoilDataWidget(QWidget *parent) :
 
 
     //
+    // Minimum thickness section
+    //
+    _minThickEdit = new UnitDoubleSpinbox<Length>();
+    formLayoutRight->addRow(tr("Min thickness:"), _minThickEdit);
+    connect(_minThickEdit, SIGNAL(valueChanged(qt::units::IQuantity*)), this, SLOT(onMinThickChange(qt::units::IQuantity*)));
+
+
+    //
     // Area section
     //
     _areaEdit = new UnitLineEdit<Area>();
@@ -139,6 +147,9 @@ void FoilDataWidget::setFoilCalculator(FoilCalculator *foilCalculator)
     _thickness.setInternalValue(_foilCalculator->foil()->thickness());
     _thicknessEdit->setValue(_thickness);
 
+    _minThick.setInternalValue(_foilCalculator->foil()->minThickness());
+    _minThickEdit->setValue(_minThick);
+
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));
 }
 
@@ -176,6 +187,7 @@ void FoilDataWidget::setLengthUnits(LengthUnit lengthUnit)
 {
     _depth.setUnit(lengthUnit);
     _thickness.setUnit(lengthUnit);
+    _minThick.setUnit(lengthUnit);
 }
 
 void FoilDataWidget::onFoilCalculated()
@@ -218,6 +230,7 @@ void FoilDataWidget::onUnitSystemChange(const QString &system)
     updateArea();
     _depthEdit->setValue(_depth);
     _thicknessEdit->setValue(_thickness);
+    _minThickEdit->setValue(_minThick);
 }
 
 void FoilDataWidget::onDepthChange(IQuantity *depth)
@@ -237,4 +250,11 @@ void FoilDataWidget::onThicknessChange(IQuantity *thickness)
     _foilCalculator->foil()->setThickness(_thickness.internalValue());
     updatePxPerUnit();
     emit thicknessChanged(&_thickness);
+}
+
+void FoilDataWidget::onMinThickChange(qt::units::IQuantity *minThick)
+{
+  Length* lminThick = static_cast<Length*>(minThick);
+  _minThick.setInternalValue(lminThick->internalValue());
+  _foilCalculator->foil()->setMinThickness(_minThick.internalValue());
 }

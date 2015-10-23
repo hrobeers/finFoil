@@ -59,6 +59,7 @@ namespace foileditors
     private:
         qt::units::Length _depth;
         qt::units::Length _thickness;
+        qt::units::Length _minThick;
         qt::units::Area _area;
         qt::units::Angle _sweep;
 
@@ -70,6 +71,7 @@ namespace foileditors
         QSpinBox* _layerEdit;
         qt::units::UnitDoubleSpinbox<qt::units::Length>* _depthEdit;
         qt::units::UnitDoubleSpinbox<qt::units::Length>* _thicknessEdit;
+        qt::units::UnitDoubleSpinbox<qt::units::Length>* _minThickEdit;
         qt::units::UnitLineEdit<qt::units::Area>* _areaEdit;
         qt::units::UnitLineEdit<qt::units::Angle>* _sweepEdit;
         QLineEdit* _thicknessRatioEdit;
@@ -86,6 +88,7 @@ namespace foileditors
         void onUnitSystemChange(const QString &system);
         void onDepthChange(qt::units::IQuantity *depth);
         void onThicknessChange(qt::units::IQuantity *thickness);
+        void onMinThickChange(qt::units::IQuantity *minThick);
     };
 }
 
