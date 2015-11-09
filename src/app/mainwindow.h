@@ -60,6 +60,8 @@ private slots:
     bool saveThickness();
     void loadThickness();
 
+    void stlExport();
+
     void about();
 
     bool maybeSave();
@@ -82,6 +84,7 @@ private:
     QFileInfo _currentFile;
 
     QMenu *fileMenu;
+    QMenu *importExportMenu;
     QMenu *aboutMenu;
 
     QAction *newAct;
@@ -93,6 +96,8 @@ private:
     QAction *saveProfAct;
     QAction *loadThickAct;
     QAction *saveThickAct;
+
+    QAction *stlExportAct;
 
     QAction *quitAct;
 

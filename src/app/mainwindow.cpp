@@ -131,6 +131,9 @@ void MainWindow::loadProfile()
 {
   QString filePath = askOpenFileName(tr("Profiles (*.fprof);;All files (*)")); // TODO support: Foils (*.foil)
 
+  if (filePath.isEmpty())
+      return;
+
   QString errorMsg;
   QJsonObject jObj;
   if (!loadFileToJson(filePath, jObj)) return;
@@ -163,6 +166,9 @@ void MainWindow::loadThickness()
 {
   QString filePath = askOpenFileName(tr("Thickness Profiles (*.fthick);;All files (*)")); // TODO support: Foils (*.foil)
 
+  if (filePath.isEmpty())
+      return;
+
   QString errorMsg;
   QJsonObject jObj;
   if (!loadFileToJson(filePath, jObj)) return;
@@ -179,6 +185,11 @@ void MainWindow::loadThickness()
   _fin->pSetThicknessProfile(deserialized.release());
   _thicknessEditor->setFoil(_fin.get());
   _fin->onDeserialized();
+}
+
+void MainWindow::stlExport()
+{
+    // TODO
 }
 
 void MainWindow::about()
@@ -294,6 +305,10 @@ void MainWindow::createActions()
     saveThickAct->setStatusTip(tr("Export thickness profile to file"));
     connect(saveThickAct, SIGNAL(triggered()), this, SLOT(saveThickness()));
 
+    stlExportAct = new QAction(QIcon(), tr("Export STL file"), this);
+    stlExportAct->setStatusTip(tr("Export to STL file (internet connection required)"));
+    connect(stlExportAct, SIGNAL(triggered()), this, SLOT(stlExport()));
+
     quitAct = new QAction(QIcon(), tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit finFoil"));
@@ -314,12 +329,15 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
-    fileMenu->addAction(loadProfAct);
-    fileMenu->addAction(saveProfAct);
-    fileMenu->addAction(loadThickAct);
-    fileMenu->addAction(saveThickAct);
-    fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
+
+    importExportMenu = menuBar()->addMenu(tr("&Import/Export"));
+    importExportMenu->addAction(loadProfAct);
+    importExportMenu->addAction(saveProfAct);
+    importExportMenu->addAction(loadThickAct);
+    importExportMenu->addAction(saveThickAct);
+    importExportMenu->addSeparator();
+    importExportMenu->addAction(stlExportAct);
 
     aboutMenu = menuBar()->addMenu(tr("&About"));
     aboutMenu->addAction(aboutAct);
