@@ -4,6 +4,7 @@ set(hrlibSRC
     exceptions.cpp
     math/brent.cpp
     math/spline.cpp
+    string/json_utils.cpp
     version.cpp
 )
 
@@ -15,6 +16,7 @@ set(hrlibHDR
     mixin/historical.hpp
     mixin/identifiable.hpp
     patterns/decorator.hpp
+    string/json_utils.hpp
     version.h
 )
 

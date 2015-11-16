@@ -36,6 +36,7 @@
 #include "foilcalculator.h"
 #include "profile.h"
 #include "thicknessprofile.h"
+#include "string/json_utils.hpp"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -436,7 +437,11 @@ bool MainWindow::saveObjectToFile(const QObject *obj, const QString &path)
     }
 
     QJsonDocument json(JenSON::serialize(obj));
-    file.write(json.toJson(QJsonDocument::Compact));
+
+    std::string long_utf8 = json.toJson(QJsonDocument::Compact).toStdString();
+    std::string short_utf8 = hrlib::trim_json_floats(long_utf8);
+
+    file.write(QByteArray(short_utf8.c_str()));
 
     return true;
 }
