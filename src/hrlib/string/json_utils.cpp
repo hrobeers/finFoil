@@ -24,13 +24,15 @@
 
 #include <regex>
 
+namespace {
+    const std::regex re_float("[-]*\\d+[.]\\d*[09]{5,}\\d");
+    const std::regex re_zeros("[0]{5,}\\d");
+    const std::regex re_nines("[9]{5,}\\d");
+}
+
 std::string hrlib::trim_json_floats(const std::string &json_utf8)
 {
     std::string retVal;
-
-    std::regex re_float("[-]*\\d+[.]\\d+");
-    std::regex re_zeros("[0]{6,}\\d");
-    std::regex re_nines("[9]{6,}\\d");
 
     std::sregex_iterator next(json_utf8.begin(), json_utf8.end(), re_float);
     std::sregex_iterator end;
