@@ -160,8 +160,20 @@ void PathPoint::replaceCurrentPointHandle(PointHandle *pointHandle)
     _pointHandle = pointHandle;
 }
 
+template<int Precision>
+void precisionRound(qreal &toRound)
+{
+    if (toRound == 0.0) return;
+
+    qreal factor = qMax(ceil(Precision - log10(qAbs(toRound))), 1.0);
+    toRound = round(toRound * factor) / factor;
+}
+
 void PathPoint::setPos(qreal xpos, qreal ypos)
 {
+//    precisionRound<5>(xpos);
+//    precisionRound<5>(ypos);
+
     this->setX(xpos);
     this->setY(ypos);
 

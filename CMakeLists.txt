@@ -67,6 +67,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -fomit-frame-pointer -finlin
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5WebKitWidgets REQUIRED)
 set(CMAKE_AUTOMOC ON)
 
 # Boost
@@ -118,6 +120,7 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/hrlib")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/patheditor")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foillogic")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/foileditors")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/web")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
 

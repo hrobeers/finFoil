@@ -1,6 +1,7 @@
+
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2015, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -20,47 +21,59 @@
  
 ****************************************************************************/
 
+#include "stlexport.hpp"
+
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QJsonDocument>
+
+#include "jenson.h"
+#include "foil.h"
+#include "string/json_utils.hpp"
 #include "version.h"
 
+#include <future>
+
+using namespace web;
+using namespace foillogic;
+using namespace jenson;
 using namespace hrlib;
 
-Version::Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType)
+StlExport::StlExport(const Version *version, QObject *parent) :
+  QObject(parent),
+  _manager(new QNetworkAccessManager()),
+  _fileName("finfoil_")
 {
-    _major = major;
-    _minor = minor;
-    _revision = revision;
-    _build = build;
-    _commit = commit;
-    _releaseType = releaseType;
-
-    // Create string
-    _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.')
-            .append(QString::number(_revision)).append('.').append(QString::number(_build));
-
-    switch (_releaseType)
-    {
-    case ReleaseType::Dev:
-        _string.append(" development preview");
-        break;
-
-    case ReleaseType::Aplha:
-        _string.append(" alpha");
-        break;
-
-    case ReleaseType::Beta:
-        _string.append(" beta");
-        break;
-
-    case ReleaseType::Nightly:
-        _string.append(" nightly");
-        break;
-
-    case ReleaseType::Release:
-        break;
-    }
+    _fileName.append(QString::number(version->Major()));
+    _fileName.append("_");
+    _fileName.append(QString::number(version->Minor()));
+    _fileName.append(".foil");
 }
 
-QString hrlib::Version::toString() const
+QString StlExport::generateSTL(const Foil *foil)
 {
-    return _string;
+    QUrl url("http://127.0.0.1:4000/stl/" + _fileName);
+    QNetworkRequest request(url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/foil");
+
+    QObject::connect(_manager.get(), SIGNAL(finished(QNetworkReply *)), this, SLOT(stlExportFinished(QNetworkReply *)));
+
+    // Serialize foil object
+    QJsonDocument json(JenSON::serialize(foil));
+    // Trim json floats
+    std::string long_utf8 = json.toJson(QJsonDocument::Compact).toStdString();
+    std::string short_utf8 = trim_json_floats(long_utf8);
+
+    _manager->post(request, QByteArray(short_utf8.c_str()));
+
+    return "";
+}
+
+StlExport::~StlExport() { }
+
+void StlExport::stlExportFinished(QNetworkReply *reply)
+{
+    auto r = reply->readAll();
+    qDebug() << r;
 }

@@ -37,6 +37,7 @@
 #include "profile.h"
 #include "thicknessprofile.h"
 #include "string/json_utils.hpp"
+#include "exportdialog.hpp"
 
 using namespace foileditors;
 using namespace foillogic;
@@ -190,7 +191,8 @@ void MainWindow::loadThickness()
 
 void MainWindow::stlExport()
 {
-    // TODO
+    web::ExportDialog* exp = new web::ExportDialog(_fin.get(), &_version, this);
+    exp->show();
 }
 
 void MainWindow::about()

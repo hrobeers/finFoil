@@ -1,6 +1,6 @@
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2015, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -20,47 +20,41 @@
  
 ****************************************************************************/
 
-#include "version.h"
+#ifndef STLEXPORT_HPP
+#define STLEXPORT_HPP
 
-using namespace hrlib;
+#include "foillogicfwd/foillogicfwd.h"
+class QNetworkAccessManager;
+class QNetworkReply;
+namespace hrlib { class Version; }
 
-Version::Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType)
+#include <QObject>
+#include <memory>
+
+namespace web
 {
-    _major = major;
-    _minor = minor;
-    _revision = revision;
-    _build = build;
-    _commit = commit;
-    _releaseType = releaseType;
-
-    // Create string
-    _string.append(QString::number(_major)).append('.').append(QString::number(_minor)).append('.')
-            .append(QString::number(_revision)).append('.').append(QString::number(_build));
-
-    switch (_releaseType)
+    class StlExport : public QObject
     {
-    case ReleaseType::Dev:
-        _string.append(" development preview");
-        break;
+        Q_OBJECT
 
-    case ReleaseType::Aplha:
-        _string.append(" alpha");
-        break;
+    public:
+        explicit StlExport(const hrlib::Version *version, QObject *parent = 0);
 
-    case ReleaseType::Beta:
-        _string.append(" beta");
-        break;
+        QString generateSTL(const foillogic::Foil *foil);
 
-    case ReleaseType::Nightly:
-        _string.append(" nightly");
-        break;
+        virtual ~StlExport();
 
-    case ReleaseType::Release:
-        break;
-    }
+    signals:
+
+    public slots:
+
+    private:
+        std::unique_ptr<QNetworkAccessManager> _manager;
+        QString _fileName;
+
+    private slots:
+        void stlExportFinished(QNetworkReply *reply);
+    };
 }
 
-QString hrlib::Version::toString() const
-{
-    return _string;
-}
+#endif // STLEXPORT_HPP
