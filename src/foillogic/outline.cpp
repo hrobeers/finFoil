@@ -105,18 +105,18 @@ void Outline::initPath()
 
     qreal m = 2;
     qshared_ptr<CurvePoint> point1 = make_qshared(new CurvePoint(m*0, m*0));
-    qshared_ptr<ControlPoint> point2 = make_qshared(new ControlPoint(m*16.09549195, m*-31.53267));
-    qshared_ptr<ControlPoint> point3 = make_qshared(new ControlPoint(m*70.39944295, m*-113.577872));
-    qshared_ptr<CurvePoint> point4 = make_qshared(new CurvePoint(m*134.750359, m*-114.484482));
-    qshared_ptr<ControlPoint> point5 = make_qshared(new ControlPoint(m*148.079229, m*-114.672267));
-    qshared_ptr<ControlPoint> point6 = make_qshared(new ControlPoint(m*168.493739, m*-110.447322));
-    qshared_ptr<CurvePoint> point7 = make_qshared(new CurvePoint(m*170.304549, m*-97.240702));
-    qshared_ptr<ControlPoint> point8 = make_qshared(new ControlPoint(m*171.482419, m*-88.650189));
-    qshared_ptr<ControlPoint> point9 = make_qshared(new ControlPoint(m*134.604629, m*-78.11541));
-    qshared_ptr<CurvePoint> point10 = make_qshared(new CurvePoint(m*123.550789, m*-62.04205));
-    qshared_ptr<ControlPoint> point11 = make_qshared(new ControlPoint(m*99.87859895, m*-27.6204));
-    qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*113.439959, m*-6.5));
-    qshared_ptr<CurvePoint> point13 = make_qshared(new CurvePoint(m*116.439959, m*0));
+    qshared_ptr<ControlPoint> point2 = make_qshared(new ControlPoint(m*16.095, m*-31.532));
+    qshared_ptr<ControlPoint> point3 = make_qshared(new ControlPoint(m*70.399, m*-113.57));
+    qshared_ptr<CurvePoint> point4 = make_qshared(new CurvePoint(m*134.75, m*-114.48));
+    qshared_ptr<ControlPoint> point5 = make_qshared(new ControlPoint(m*148.07, m*-114.67));
+    qshared_ptr<ControlPoint> point6 = make_qshared(new ControlPoint(m*168.49, m*-110.44));
+    qshared_ptr<CurvePoint> point7 = make_qshared(new CurvePoint(m*170.30, m*-97.24));
+    qshared_ptr<ControlPoint> point8 = make_qshared(new ControlPoint(m*171.48, m*-88.650));
+    qshared_ptr<ControlPoint> point9 = make_qshared(new ControlPoint(m*134.60, m*-78.115));
+    qshared_ptr<CurvePoint> point10 = make_qshared(new CurvePoint(m*123.55, m*-62.042));
+    qshared_ptr<ControlPoint> point11 = make_qshared(new ControlPoint(m*99.878, m*-27.620));
+    qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*113.43, m*-6.5));
+    qshared_ptr<CurvePoint> point13 = make_qshared(new CurvePoint(m*116.43, m*0));
 
     std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
