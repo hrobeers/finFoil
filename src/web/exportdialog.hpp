@@ -26,6 +26,7 @@
 #include <QDialog>
 #include <memory>
 #include "stlexport.hpp"
+#include "qmemory.hpp"
 
 namespace Ui {
 class ExportDialog;
@@ -45,9 +46,12 @@ namespace web {
         std::unique_ptr<StlExport> _stlExport;
         const foillogic::Foil* _toExport;
 
+        qunique_ptr<QNetworkReply> _msgReply, _stlReply;
+
     private slots:
         void exportClicked();
-        void cancelClicked();
+        void closeClicked();
+        void exportFinished(QNetworkReply *reply);
     };
 }
 

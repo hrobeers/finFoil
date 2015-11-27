@@ -40,20 +40,19 @@ namespace web
     public:
         explicit StlExport(const hrlib::Version *version, QObject *parent = 0);
 
-        QString generateSTL(const foillogic::Foil *foil);
+        QNetworkReply* getMessage();
+        QNetworkReply* generateSTL(const foillogic::Foil *foil);
 
         virtual ~StlExport();
 
     signals:
+        void finished(QNetworkReply* reply);
 
     public slots:
 
     private:
         std::unique_ptr<QNetworkAccessManager> _manager;
-        QString _fileName;
-
-    private slots:
-        void stlExportFinished(QNetworkReply *reply);
+        QString _fileName, _messageName;
     };
 }
 

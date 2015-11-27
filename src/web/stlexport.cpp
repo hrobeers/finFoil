@@ -42,22 +42,38 @@ using namespace hrlib;
 StlExport::StlExport(const Version *version, QObject *parent) :
   QObject(parent),
   _manager(new QNetworkAccessManager()),
-  _fileName("finfoil_")
+  _fileName("finfoil_"), // TODO use real fileName if possible
+  _messageName("finfoil_v")
 {
     _fileName.append(QString::number(version->Major()));
     _fileName.append("_");
     _fileName.append(QString::number(version->Minor()));
     _fileName.append(".foil");
+
+    _messageName.append(QString::number(version->Major()));
+    _messageName.append(".");
+    _messageName.append(QString::number(version->Minor()));
+    _messageName.append(".html");
 }
 
-QString StlExport::generateSTL(const Foil *foil)
+QNetworkReply* StlExport::getMessage()
+{
+    QUrl url("http://127.0.0.1:4000/messages/" + _messageName);
+    QNetworkRequest request(url);
+
+    connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
+
+    return _manager->get(request);
+}
+
+QNetworkReply* StlExport::generateSTL(const Foil *foil)
 {
     QUrl url("http://127.0.0.1:4000/stl/" + _fileName);
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/foil");
 
-    QObject::connect(_manager.get(), SIGNAL(finished(QNetworkReply *)), this, SLOT(stlExportFinished(QNetworkReply *)));
+    connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
 
     // Serialize foil object
     QJsonDocument json(JenSON::serialize(foil));
@@ -65,15 +81,7 @@ QString StlExport::generateSTL(const Foil *foil)
     std::string long_utf8 = json.toJson(QJsonDocument::Compact).toStdString();
     std::string short_utf8 = trim_json_floats(long_utf8);
 
-    _manager->post(request, QByteArray(short_utf8.c_str()));
-
-    return "";
+    return _manager->post(request, QByteArray(short_utf8.c_str()));
 }
 
 StlExport::~StlExport() { }
-
-void StlExport::stlExportFinished(QNetworkReply *reply)
-{
-    auto r = reply->readAll();
-    qDebug() << r;
-}

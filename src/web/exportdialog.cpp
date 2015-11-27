@@ -23,13 +23,16 @@
 #include "exportdialog.hpp"
 #include "ui_exportdialog.h"
 
+#include <QNetworkReply>
+
 using namespace web;
 
 ExportDialog::ExportDialog(const foillogic::Foil *toExport, const hrlib::Version *version, QWidget *parent) :
     QDialog(parent),
     _ui(new Ui::ExportDialog),
     _toExport(toExport),
-    _stlExport(new StlExport(version))
+    _stlExport(new StlExport(version)),
+    _msgReply(nullptr), _stlReply(nullptr)
 {
     _ui->setupUi(this);
 
@@ -38,30 +41,44 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const hrlib::Version
     _ui->progressBar->setMaximum(0);
 
     connect(_ui->exportButton, &QPushButton::clicked, this, &ExportDialog::exportClicked);
-    connect(_ui->cancelButton, &QPushButton::clicked, this, &ExportDialog::cancelClicked);
+    connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
     _ui->webView->setHtml("<h2>Connection to the internet is required for this functionality</h2>");
+
+    connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
+
+    _msgReply.reset(_stlExport->getMessage());
 }
 
 ExportDialog::~ExportDialog() {}
 
-bool clicked = false;
 void ExportDialog::exportClicked()
 {
-    if (clicked)
-    {
-        clicked = false;
-        close();
-    }
-    else
-    {
-        _ui->progressBar->show();
-        _stlExport->generateSTL(_toExport);
-        clicked = true;
-    }
+    // TODO choose file to save to
+    _stlReply.reset(_stlExport->generateSTL(_toExport));
+    _ui->progressBar->show();
 }
 
-void ExportDialog::cancelClicked()
+void ExportDialog::closeClicked()
 {
     close();
+}
+
+void ExportDialog::exportFinished(QNetworkReply *reply)
+{
+    if (_msgReply.get() == reply)
+    {
+        _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+
+        if (reply->error() == QNetworkReply::NoError)
+            _ui->exportButton->setDisabled(false);
+        _msgReply.reset();
+    }
+    else if (_stlReply.get() == reply)
+    {
+        // TODO download (progressbar) & save
+        _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+        _stlReply.reset();
+//        close();
+    }
 }
