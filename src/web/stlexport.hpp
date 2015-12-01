@@ -42,6 +42,7 @@ namespace web
 
         QNetworkReply* getMessage();
         QNetworkReply* generateSTL(const foillogic::Foil *foil);
+        QNetworkReply* getSTL(const QByteArray &stlReply);
 
         virtual ~StlExport();
 

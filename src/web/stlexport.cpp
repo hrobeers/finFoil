@@ -42,17 +42,18 @@ using namespace hrlib;
 StlExport::StlExport(const Version *version, QObject *parent) :
   QObject(parent),
   _manager(new QNetworkAccessManager()),
-  _fileName("finfoil_"), // TODO use real fileName if possible
-  _messageName("finfoil_v")
+  _fileName("finfoil"), // TODO use real fileName if possible
+  _messageName("finfoil")
 {
-    _fileName.append(QString::number(version->Major()));
-    _fileName.append("_");
-    _fileName.append(QString::number(version->Minor()));
+    QString versionSuffix = "_v";
+    versionSuffix.append(QString::number(version->Major()));
+    versionSuffix.append(".");
+    versionSuffix.append(QString::number(version->Minor()));
+
+    _fileName.append(versionSuffix);
     _fileName.append(".foil");
 
-    _messageName.append(QString::number(version->Major()));
-    _messageName.append(".");
-    _messageName.append(QString::number(version->Minor()));
+    _messageName.append(versionSuffix);
     _messageName.append(".html");
 }
 
@@ -82,6 +83,16 @@ QNetworkReply* StlExport::generateSTL(const Foil *foil)
     std::string short_utf8 = trim_json_floats(long_utf8);
 
     return _manager->post(request, QByteArray(short_utf8.c_str()));
+}
+
+QNetworkReply *StlExport::getSTL(const QByteArray &stlReply)
+{
+    QUrl url("http://127.0.0.1:4000/" + QString::fromUtf8(stlReply));
+    QNetworkRequest request(url);
+
+    connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
+
+    return _manager->get(request);
 }
 
 StlExport::~StlExport() { }

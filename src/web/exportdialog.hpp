@@ -46,12 +46,14 @@ namespace web {
         std::unique_ptr<StlExport> _stlExport;
         const foillogic::Foil* _toExport;
 
-        qunique_ptr<QNetworkReply> _msgReply, _stlReply;
+        qunique_ptr<QNetworkReply> _msgReply, _postFoilReply, _getStlReply;
+        QString _exportFileName;
 
     private slots:
         void exportClicked();
         void closeClicked();
         void exportFinished(QNetworkReply *reply);
+        void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     };
 }
 

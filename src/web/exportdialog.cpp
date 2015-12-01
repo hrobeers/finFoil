@@ -24,6 +24,8 @@
 #include "ui_exportdialog.h"
 
 #include <QNetworkReply>
+#include <QFileDialog>
+#include <QMessageBox>
 
 using namespace web;
 
@@ -32,7 +34,7 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const hrlib::Version
     _ui(new Ui::ExportDialog),
     _toExport(toExport),
     _stlExport(new StlExport(version)),
-    _msgReply(nullptr), _stlReply(nullptr)
+    _msgReply(nullptr), _postFoilReply(nullptr)
 {
     _ui->setupUi(this);
 
@@ -54,8 +56,10 @@ ExportDialog::~ExportDialog() {}
 
 void ExportDialog::exportClicked()
 {
-    // TODO choose file to save to
-    _stlReply.reset(_stlExport->generateSTL(_toExport));
+    _exportFileName = QFileDialog::getSaveFileName(this, tr("Save file"),
+                                                   "/tmp/export.stl",
+                                                   tr("STL (*.stl);;All files (*)"));
+    _postFoilReply.reset(_stlExport->generateSTL(_toExport));
     _ui->progressBar->show();
 }
 
@@ -66,19 +70,66 @@ void ExportDialog::closeClicked()
 
 void ExportDialog::exportFinished(QNetworkReply *reply)
 {
+    //
+    // Handle message reply (to show in QWebView component)
+    //
     if (_msgReply.get() == reply)
     {
         _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
 
         if (reply->error() == QNetworkReply::NoError)
             _ui->exportButton->setDisabled(false);
+
         _msgReply.reset();
     }
-    else if (_stlReply.get() == reply)
+
+    //
+    // Handle postFoil reply (returns the .stl URL)
+    //
+    else if (_postFoilReply.get() == reply)
     {
-        // TODO download (progressbar) & save
-        _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
-        _stlReply.reset();
-//        close();
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            connect(reply, &QNetworkReply::downloadProgress, this, &ExportDialog::downloadProgress);
+            _getStlReply.reset(_stlExport->getSTL(reply->readAll()));
+        }
+        else
+        {
+            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+        }
+        _postFoilReply.reset();
     }
+
+    //
+    // Handle the getSTL reply (write to file)
+    //
+    else if (_getStlReply.get() == reply)
+    {
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            QFile file(_exportFileName);
+            if (!file.open(QFile::WriteOnly | QFile::Text))
+            {
+                QMessageBox::warning(this, tr("Cannot save fin"),
+                                     tr("Cannot write to file %1:\n%2.")
+                                     .arg(_exportFileName)
+                                     .arg(file.errorString()));
+            }
+
+            file.write(reply->readAll());
+            close();
+        }
+        else
+        {
+            _ui->webView->setHtml(QString::number(reply->size()));
+        }
+        _getStlReply.reset();
+        _ui->progressBar->hide();
+    }
+}
+
+void ExportDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    _ui->progressBar->setMaximum(bytesTotal);
+    _ui->progressBar->setValue(bytesReceived);
 }
