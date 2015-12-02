@@ -75,7 +75,8 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     //
     if (_msgReply.get() == reply)
     {
-        _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+        if (reply->size())
+            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
 
         if (reply->error() == QNetworkReply::NoError)
             _ui->exportButton->setDisabled(false);
