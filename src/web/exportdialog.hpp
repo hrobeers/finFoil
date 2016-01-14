@@ -38,7 +38,7 @@ namespace web {
         Q_OBJECT
 
     public:
-        explicit ExportDialog(const foillogic::Foil *toExport, const hrlib::Version *version, QWidget *parent = 0);
+        explicit ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const hrlib::Version &version, QWidget *parent = 0);
         ~ExportDialog();
 
     private:

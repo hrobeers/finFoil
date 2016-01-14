@@ -43,9 +43,10 @@ using namespace foileditors;
 using namespace foillogic;
 using namespace jenson;
 
-MainWindow::MainWindow(const hrlib::Version version, QWidget *parent) :
+MainWindow::MainWindow(const QUrl &baseUrl, const hrlib::Version version, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    _baseUrl(baseUrl),
     _version(version),
     _dirty(false)
 {
@@ -191,7 +192,7 @@ void MainWindow::loadThickness()
 
 void MainWindow::stlExport()
 {
-    web::ExportDialog* exp = new web::ExportDialog(_fin.get(), &_version, this);
+    web::ExportDialog* exp = new web::ExportDialog(_fin.get(), _baseUrl, _version, this);
     exp->show();
 }
 

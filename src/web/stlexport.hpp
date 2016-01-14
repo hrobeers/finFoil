@@ -30,6 +30,7 @@ namespace hrlib { class Version; }
 
 #include <QObject>
 #include <memory>
+#include <QUrl>
 
 namespace web
 {
@@ -38,7 +39,7 @@ namespace web
         Q_OBJECT
 
     public:
-        explicit StlExport(const hrlib::Version *version, QObject *parent = 0);
+        explicit StlExport(const QUrl &baseUrl, const hrlib::Version &version, QObject *parent = 0);
 
         QNetworkReply* getMessage();
         QNetworkReply* generateSTL(const foillogic::Foil *foil);
@@ -54,6 +55,7 @@ namespace web
     private:
         std::unique_ptr<QNetworkAccessManager> _manager;
         QString _fileName, _messageName;
+        QUrl _baseUrl;
     };
 }
 

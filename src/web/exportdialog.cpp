@@ -29,11 +29,11 @@
 
 using namespace web;
 
-ExportDialog::ExportDialog(const foillogic::Foil *toExport, const hrlib::Version *version, QWidget *parent) :
+ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const hrlib::Version &version, QWidget *parent) :
     QDialog(parent),
     _ui(new Ui::ExportDialog),
     _toExport(toExport),
-    _stlExport(new StlExport(version)),
+    _stlExport(new StlExport(baseUrl, version)),
     _msgReply(nullptr), _postFoilReply(nullptr)
 {
     _ui->setupUi(this);

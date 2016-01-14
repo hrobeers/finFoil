@@ -28,6 +28,7 @@
 
 #include <QMainWindow>
 #include <QFileInfo>
+#include <QUrl>
 #include "jenson.h"
 #include "version.h"
 
@@ -40,7 +41,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(const hrlib::Version version, QWidget *parent = 0);
+    explicit MainWindow(const QUrl &baseUrl, const hrlib::Version version, QWidget *parent = 0);
     ~MainWindow();
 
     bool saveFile(const QString &path);
@@ -70,6 +71,7 @@ private slots:
     void setClean();
 
 private:
+    const QUrl _baseUrl;
     const hrlib::Version _version;
     Ui::MainWindow *ui;
 

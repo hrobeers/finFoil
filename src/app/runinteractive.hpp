@@ -29,12 +29,12 @@
 QTextStream out(stdout);
 #endif
 
-int runInteractive(QApplication &app, const QString &filePath)
+int runInteractive(QApplication &app, const QUrl &baseUrl, const QString &filePath)
 {
     out << "Starting finFoil " << version.toString() << endl
         << "git-hash " << version.commit() << endl;
 
-    MainWindow w(version);
+    MainWindow w(baseUrl, version);
 
     w.show();
 

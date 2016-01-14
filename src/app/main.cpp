@@ -55,7 +55,12 @@ int main(int argc, char *argv[])
         parser.addHelpOption();
         parser.addVersionOption();
 
-        parser.addPositionalArgument("file", QApplication::tr("File to open."));
+        QCommandLineOption serverUrl(QStringLiteral("server-url"),
+                                     QApplication::tr("Base URL of the finFoil server."),
+                                     QStringLiteral("URL"));
+        parser.addOption(serverUrl);
+
+        parser.addPositionalArgument(QStringLiteral("file"), QApplication::tr("File to open."));
 
         // Process the actual command line arguments given by the user
         parser.process(app);
@@ -66,7 +71,13 @@ int main(int argc, char *argv[])
         if (!args.isEmpty())
             filePath = args.first();
 
-        return runInteractive(app, filePath);
+        QUrl baseUrl;
+        if (parser.isSet(serverUrl))
+            baseUrl = QUrl::fromUserInput(parser.value(serverUrl));
+        if (!baseUrl.isValid())
+            baseUrl = QStringLiteral("http://finfoil.io/s");
+
+        return runInteractive(app, baseUrl, filePath);
     }
     catch (std::exception &ex)
     {

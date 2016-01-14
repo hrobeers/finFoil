@@ -39,16 +39,17 @@ using namespace foillogic;
 using namespace jenson;
 using namespace hrlib;
 
-StlExport::StlExport(const Version *version, QObject *parent) :
+StlExport::StlExport(const QUrl &baseUrl, const Version &version, QObject *parent) :
   QObject(parent),
   _manager(new QNetworkAccessManager()),
   _fileName("finfoil"), // TODO use real fileName if possible
-  _messageName("finfoil")
+  _messageName("finfoil"),
+  _baseUrl(baseUrl)
 {
     QString versionSuffix = "_v";
-    versionSuffix.append(QString::number(version->Major()));
+    versionSuffix.append(QString::number(version.Major()));
     versionSuffix.append(".");
-    versionSuffix.append(QString::number(version->Minor()));
+    versionSuffix.append(QString::number(version.Minor()));
 
     _fileName.append(versionSuffix);
     _fileName.append(".foil");
@@ -59,7 +60,7 @@ StlExport::StlExport(const Version *version, QObject *parent) :
 
 QNetworkReply* StlExport::getMessage()
 {
-    QUrl url("http://127.0.0.1:4000/messages/" + _messageName);
+    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + "/messages/" + _messageName);
     QNetworkRequest request(url);
 
     connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
@@ -69,7 +70,7 @@ QNetworkReply* StlExport::getMessage()
 
 QNetworkReply* StlExport::generateSTL(const Foil *foil)
 {
-    QUrl url("http://127.0.0.1:4000/stl/" + _fileName);
+    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + "/stl/" + _fileName);
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/foil");
@@ -87,7 +88,7 @@ QNetworkReply* StlExport::generateSTL(const Foil *foil)
 
 QNetworkReply *StlExport::getSTL(const QByteArray &stlReply)
 {
-    QUrl url("http://127.0.0.1:4000/" + QString::fromUtf8(stlReply));
+    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + QString::fromUtf8(stlReply));
     QNetworkRequest request(url);
 
     connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
