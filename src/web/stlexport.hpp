@@ -42,7 +42,7 @@ namespace web
         explicit StlExport(const QUrl &baseUrl, const hrlib::Version &version, QObject *parent = 0);
 
         QNetworkReply* getMessage();
-        QNetworkReply* generateSTL(const foillogic::Foil *foil);
+        QNetworkReply* generateSTL(const foillogic::Foil *foil, QString fileName);
         QNetworkReply* getSTL(const QByteArray &stlReply);
 
         virtual ~StlExport();
@@ -55,7 +55,7 @@ namespace web
     private:
         std::unique_ptr<QNetworkAccessManager> _manager;
         std::unique_ptr<QNetworkAccessManager> _manager2;
-        QString _fileName, _messageName;
+        QString _messageName, _versionSuffix;
         QUrl _baseUrl;
     };
 }

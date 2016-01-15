@@ -29,10 +29,11 @@
 
 using namespace web;
 
-ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const hrlib::Version &version, QWidget *parent) :
+ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const QFileInfo &currentFile,
+                           const hrlib::Version &version, QWidget *parent) :
     QDialog(parent),
     _ui(new Ui::ExportDialog),
-    _toExport(toExport),
+    _toExport(toExport), _fileName(currentFile),
     _stlExport(new StlExport(baseUrl, version)),
     _msgReply(nullptr), _postFoilReply(nullptr)
 {
@@ -56,10 +57,11 @@ ExportDialog::~ExportDialog() {}
 
 void ExportDialog::exportClicked()
 {
-    _exportFileName = QFileDialog::getSaveFileName(this, tr("Save file"),
-                                                   "/tmp/export.stl",
-                                                   tr("STL (*.stl);;All files (*)"));
-    _postFoilReply.reset(_stlExport->generateSTL(_toExport));
+    _fileName = QFileDialog::getSaveFileName(this, tr("Save file"),
+                                             _fileName.absolutePath() + "/" + _fileName.baseName() + ".stl",
+                                             tr("STL (*.stl);;All files (*)"));
+    QFileInfo stlFile(_fileName);
+    _postFoilReply.reset(_stlExport->generateSTL(_toExport, stlFile.baseName()));
     _ui->progressBar->show();
 }
 
@@ -108,12 +110,12 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     {
         if (reply->error() == QNetworkReply::NoError)
         {
-            QFile file(_exportFileName);
+            QFile file(_fileName.absoluteFilePath());
             if (!file.open(QFile::WriteOnly | QFile::Text))
             {
                 QMessageBox::warning(this, tr("Cannot save fin"),
                                      tr("Cannot write to file %1:\n%2.")
-                                     .arg(_exportFileName)
+                                     .arg(_fileName.absoluteFilePath())
                                      .arg(file.errorString()));
             }
 

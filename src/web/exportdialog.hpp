@@ -25,6 +25,7 @@
 
 #include <QDialog>
 #include <memory>
+#include <QFileInfo>
 #include "stlexport.hpp"
 #include "qmemory.hpp"
 
@@ -38,7 +39,8 @@ namespace web {
         Q_OBJECT
 
     public:
-        explicit ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const hrlib::Version &version, QWidget *parent = 0);
+        explicit ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const QFileInfo &currentFile,
+                              const hrlib::Version &version, QWidget *parent = 0);
         ~ExportDialog();
 
     private:
@@ -47,7 +49,7 @@ namespace web {
         const foillogic::Foil* _toExport;
 
         qunique_ptr<QNetworkReply> _msgReply, _postFoilReply, _getStlReply;
-        QString _exportFileName;
+        QFileInfo _fileName;
 
     private slots:
         void exportClicked();

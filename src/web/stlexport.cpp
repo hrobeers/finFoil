@@ -41,19 +41,11 @@ StlExport::StlExport(const QUrl &baseUrl, const Version &version, QObject *paren
   QObject(parent),
   _manager(new QNetworkAccessManager()),
   _manager2(new QNetworkAccessManager()),
-  _fileName("finfoil"), // TODO use real fileName if possible
   _messageName("finfoil"),
-  _baseUrl(baseUrl)
+  _baseUrl(baseUrl),
+  _versionSuffix("_v" + QString::number(version.Major()) + "." + QString::number(version.Minor()))
 {
-    QString versionSuffix = "_v";
-    versionSuffix.append(QString::number(version.Major()));
-    versionSuffix.append(".");
-    versionSuffix.append(QString::number(version.Minor()));
-
-    _fileName.append(versionSuffix);
-    _fileName.append(".foil");
-
-    _messageName.append(versionSuffix);
+    _messageName.append(_versionSuffix);
     _messageName.append(".html");
 }
 
@@ -67,9 +59,12 @@ QNetworkReply* StlExport::getMessage()
     return _manager->get(request);
 }
 
-QNetworkReply* StlExport::generateSTL(const Foil *foil)
+QNetworkReply* StlExport::generateSTL(const Foil *foil, QString fileName)
 {
-    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + "/stl/" + _fileName);
+    fileName.append(_versionSuffix);
+    fileName.append(".foil");
+
+    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + "/stl/" + fileName);
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/foil");
