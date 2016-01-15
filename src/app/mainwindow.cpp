@@ -407,7 +407,7 @@ void MainWindow::setCurrentFilePath(const QString &path)
 
 QString MainWindow::askSaveFileName(const QString &extension, const QString &fileFilter, const QString &title)
 {
-  QString suggestedPath = tr("untitled") + extension;
+  QString suggestedPath = QDir::homePath() + "/" + tr("untitled") + extension;
   if (_currentFile.isFile())
     suggestedPath = _currentFile.absoluteDir().absoluteFilePath(_currentFile.baseName() + extension);
 
@@ -418,7 +418,7 @@ QString MainWindow::askSaveFileName(const QString &extension, const QString &fil
 
 QString MainWindow::askOpenFileName(const QString &fileFilter, const QString &title)
 {
-  QString currentDir;
+  QString currentDir = QDir::homePath();
   if (_currentFile.isFile())
     currentDir = _currentFile.canonicalPath();
 

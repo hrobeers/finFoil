@@ -32,8 +32,6 @@
 #include "string/json_utils.hpp"
 #include "version.h"
 
-#include <future>
-
 using namespace web;
 using namespace foillogic;
 using namespace jenson;
