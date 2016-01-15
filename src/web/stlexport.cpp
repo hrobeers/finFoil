@@ -42,6 +42,7 @@ using namespace hrlib;
 StlExport::StlExport(const QUrl &baseUrl, const Version &version, QObject *parent) :
   QObject(parent),
   _manager(new QNetworkAccessManager()),
+  _manager2(new QNetworkAccessManager()),
   _fileName("finfoil"), // TODO use real fileName if possible
   _messageName("finfoil"),
   _baseUrl(baseUrl)
@@ -91,9 +92,9 @@ QNetworkReply *StlExport::getSTL(const QByteArray &stlReply)
     QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + QString::fromUtf8(stlReply));
     QNetworkRequest request(url);
 
-    connect(_manager.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
+    connect(_manager2.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);
 
-    return _manager->get(request);
+    return _manager2->get(request);
 }
 
 StlExport::~StlExport() { }

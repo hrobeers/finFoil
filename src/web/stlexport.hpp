@@ -54,6 +54,7 @@ namespace web
 
     private:
         std::unique_ptr<QNetworkAccessManager> _manager;
+        std::unique_ptr<QNetworkAccessManager> _manager2;
         QString _fileName, _messageName;
         QUrl _baseUrl;
     };
