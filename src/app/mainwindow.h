@@ -56,6 +56,8 @@ private slots:
     bool saveAs();
     void open();
 
+    bool saveOutline();
+    void loadOutline();
     bool saveProfile();
     void loadProfile();
     bool saveThickness();
@@ -94,6 +96,8 @@ private:
     QAction *saveAct;
     QAction *saveAsAct;
 
+    QAction *loadOutlAct;
+    QAction *saveOutlAct;
     QAction *loadProfAct;
     QAction *saveProfAct;
     QAction *loadThickAct;

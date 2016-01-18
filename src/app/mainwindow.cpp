@@ -34,6 +34,7 @@
 #include "jenson.h"
 #include "foil.h"
 #include "foilcalculator.h"
+#include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
 #include "string/json_utils.hpp"
@@ -119,6 +120,41 @@ void MainWindow::open()
     }
 }
 
+bool MainWindow::saveOutline()
+{
+    QString filePath = askSaveFileName(".foutl", tr("Outlines (*.foutl)"), tr("Export Outline"));
+
+    if (filePath.isEmpty())
+        return false;
+
+    return saveObjectToFile(_fin->outline(), filePath);
+}
+
+void MainWindow::loadOutline()
+{
+    QString filePath = askOpenFileName(tr("Outlines (*.foutl);;All files (*)")); // TODO support: Foils (*.foil)
+
+    if (filePath.isEmpty())
+        return;
+
+    QString errorMsg;
+    QJsonObject jObj;
+    if (!loadFileToJson(filePath, jObj)) return;
+    auto deserialized = JenSON::deserialize<Outline>(&jObj, &errorMsg);
+
+    if (!deserialized)
+      {
+        errorMsg.prepend(tr("Failed to load outline: "));
+        statusBar()->showMessage(errorMsg, 5000);
+        qCritical(errorMsg.toUtf8().constData());
+        return;
+      }
+
+    _fin->pSetOutline(deserialized.release());
+    _outlineEditor->setFoil(_fin.get());
+    _fin->onDeserialized();
+}
+
 bool MainWindow::saveProfile()
 {
   QString filePath = askSaveFileName(".fprof", tr("Profiles (*.fprof)"), tr("Export Profile"));
@@ -143,7 +179,7 @@ void MainWindow::loadProfile()
 
   if (!deserialized)
     {
-      errorMsg.prepend(tr("Failed to open profile: "));
+      errorMsg.prepend(tr("Failed to load profile: "));
       statusBar()->showMessage(errorMsg, 5000);
       qCritical(errorMsg.toUtf8().constData());
       return;
@@ -178,7 +214,7 @@ void MainWindow::loadThickness()
 
   if (!deserialized)
     {
-      errorMsg.prepend(tr("Failed to open thickness profile: "));
+      errorMsg.prepend(tr("Failed to load thickness profile: "));
       statusBar()->showMessage(errorMsg, 5000);
       qCritical(errorMsg.toUtf8().constData());
       return;
@@ -292,6 +328,14 @@ void MainWindow::createActions()
     saveAsAct->setStatusTip(tr("Save the fin to a different file"));
     connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
+    loadOutlAct = new QAction(QIcon(), tr("Import Outline"), this);
+    loadOutlAct->setStatusTip(tr("Import outline from file"));
+    connect(loadOutlAct, SIGNAL(triggered()), this, SLOT(loadOutline()));
+
+    saveOutlAct = new QAction(QIcon(), tr("Export Outline"), this);
+    saveOutlAct->setStatusTip(tr("Export outline to file"));
+    connect(saveOutlAct, SIGNAL(triggered()), this, SLOT(saveOutline()));
+
     loadProfAct = new QAction(QIcon(), tr("Import Profile"), this);
     loadProfAct->setStatusTip(tr("Import profile from file"));
     connect(loadProfAct, SIGNAL(triggered()), this, SLOT(loadProfile()));
@@ -335,9 +379,12 @@ void MainWindow::createMenus()
     fileMenu->addAction(quitAct);
 
     importExportMenu = menuBar()->addMenu(tr("&Import/Export"));
+    importExportMenu->addAction(loadOutlAct);
     importExportMenu->addAction(loadProfAct);
-    importExportMenu->addAction(saveProfAct);
     importExportMenu->addAction(loadThickAct);
+    importExportMenu->addSeparator();
+    importExportMenu->addAction(saveOutlAct);
+    importExportMenu->addAction(saveProfAct);
     importExportMenu->addAction(saveThickAct);
     importExportMenu->addSeparator();
     importExportMenu->addAction(stlExportAct);
