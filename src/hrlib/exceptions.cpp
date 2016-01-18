@@ -50,7 +50,7 @@ Exception::Exception(QString &message, exception &innerException, QObject *throw
 
 const char *Exception::what() const throw()
 {
-    return message().toStdString().c_str();
+    return message().toUtf8().constData();
 }
 
 void Exception::setMessage(QString &message, QObject *thrower) throw()

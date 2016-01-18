@@ -145,7 +145,7 @@ void MainWindow::loadProfile()
     {
       errorMsg.prepend(tr("Failed to open profile: "));
       statusBar()->showMessage(errorMsg, 5000);
-      qCritical(errorMsg.toStdString().c_str());
+      qCritical(errorMsg.toUtf8().constData());
       return;
     }
 
@@ -180,7 +180,7 @@ void MainWindow::loadThickness()
     {
       errorMsg.prepend(tr("Failed to open thickness profile: "));
       statusBar()->showMessage(errorMsg, 5000);
-      qCritical(errorMsg.toStdString().c_str());
+      qCritical(errorMsg.toUtf8().constData());
       return;
     }
 
@@ -393,7 +393,7 @@ bool MainWindow::loadFile(const QString &path)
     {
         errorMsg.prepend(tr("Failed to open fin: "));
         statusBar()->showMessage(errorMsg, 5000);
-        qCritical(errorMsg.toStdString().c_str());
+        qCritical(errorMsg.toUtf8().constData());
 
         return false;
     }

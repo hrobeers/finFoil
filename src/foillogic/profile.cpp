@@ -131,7 +131,7 @@ void Profile::setSymmetryStr(QString symmetry)
 {
     QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
     bool ok;
-    _symmetry = (Symmetry)symmetryEnum.keyToValue(symmetry.toStdString().c_str(), &ok);
+    _symmetry = (Symmetry)symmetryEnum.keyToValue(symmetry.toUtf8().constData(), &ok);
     if (!ok)
         _symmetry = Symmetry::Symmetric;
 }

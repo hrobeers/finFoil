@@ -49,7 +49,7 @@ void SerializationTests::testFoilSerialization()
     auto deserialized = JenSON::deserialize<Foil>(&serialized, &errorMsg);
 
     if (!deserialized)
-        QFAIL(errorMsg.toStdString().c_str());
+        QFAIL(errorMsg.toUtf8().constData());
 }
 
 void SerializationTests::testPathSerialization()
@@ -100,7 +100,7 @@ void SerializationTests::testDeserializing_v_1_0()
 
     // Check if deserialization succeeded
     if (!deserialized)
-        QFAIL(errorMsg.toStdString().c_str());
+        QFAIL(errorMsg.toUtf8().constData());
 
     // Check if path properties match
     QCOMPARE(deserialized->outline()->path()->pathItems().count(), 4);
