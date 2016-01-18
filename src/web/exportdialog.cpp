@@ -46,7 +46,7 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     connect(_ui->exportButton, &QPushButton::clicked, this, &ExportDialog::exportClicked);
     connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
-    _ui->webView->setHtml("<h2>Connection to the internet is required for this functionality</h2>");
+    _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Internet connection is required for this functionality</h2>");
 
     connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
 
