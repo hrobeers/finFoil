@@ -93,8 +93,8 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     {
         if (reply->error() == QNetworkReply::NoError)
         {
-            connect(reply, &QNetworkReply::downloadProgress, this, &ExportDialog::downloadProgress);
             _getStlReply.reset(_stlExport->getSTL(reply->readAll()));
+            connect(_getStlReply.get(), &QNetworkReply::downloadProgress, this, &ExportDialog::downloadProgress);
         }
         else
         {
