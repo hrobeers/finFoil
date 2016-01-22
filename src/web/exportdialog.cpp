@@ -124,7 +124,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         }
         else
         {
-            _ui->webView->setHtml(QString::number(reply->size()));
+            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
         }
         _getStlReply.reset();
         _ui->progressBar->hide();
