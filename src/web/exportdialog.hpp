@@ -51,11 +51,14 @@ namespace web {
         qunique_ptr<QNetworkReply> _msgReply, _postFoilReply, _getStlReply;
         QFileInfo _fileName;
 
+        void setLinkDelegation();
+
     private slots:
         void exportClicked();
         void closeClicked();
         void exportFinished(QNetworkReply *reply);
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+        void linkClicked (const QUrl & url);
     };
 }
 

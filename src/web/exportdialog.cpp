@@ -26,6 +26,7 @@
 #include <QNetworkReply>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 using namespace web;
 
@@ -46,7 +47,9 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     connect(_ui->exportButton, &QPushButton::clicked, this, &ExportDialog::exportClicked);
     connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
+    connect(_ui->webView, &QWebView::linkClicked, this, &ExportDialog::linkClicked);
     _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact finfoil.io</p>");
+    setLinkDelegation();
 
     connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
 
@@ -54,6 +57,11 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
 }
 
 ExportDialog::~ExportDialog() {}
+
+void ExportDialog::setLinkDelegation()
+{
+    _ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+}
 
 void ExportDialog::exportClicked()
 {
@@ -78,7 +86,10 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     if (_msgReply.get() == reply)
     {
         if (reply->size())
+        {
             _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+            setLinkDelegation();
+        }
 
         if (reply->error() == QNetworkReply::NoError)
             _ui->exportButton->setDisabled(false);
@@ -99,6 +110,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         else
         {
             _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+            setLinkDelegation();
         }
         _postFoilReply.reset();
     }
@@ -125,6 +137,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         else
         {
             _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+            setLinkDelegation();
         }
         _getStlReply.reset();
         _ui->progressBar->hide();
@@ -135,4 +148,9 @@ void ExportDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     _ui->progressBar->setMaximum(bytesTotal);
     _ui->progressBar->setValue(bytesReceived);
+}
+
+void ExportDialog::linkClicked(const QUrl &url)
+{
+    QDesktopServices::openUrl(url);
 }
