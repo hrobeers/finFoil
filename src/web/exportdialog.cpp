@@ -46,7 +46,7 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     connect(_ui->exportButton, &QPushButton::clicked, this, &ExportDialog::exportClicked);
     connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
-    _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Internet connection is required for this functionality</h2>");
+    _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact finfoil.io</p>");
 
     connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
 
