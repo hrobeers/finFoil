@@ -82,7 +82,7 @@ void MainWindow::newFile()
 {
     if (maybeSave())
     {
-        _currentFile = QFileInfo(QDir::homePath() + "/" + tr("untitled.foil"));
+        _currentFile = QFileInfo();
         setFoil(new Foil());
         setClean();
     }
@@ -227,7 +227,8 @@ void MainWindow::loadThickness()
 
 void MainWindow::stlExport()
 {
-    web::ExportDialog* exp = new web::ExportDialog(_fin.get(), _baseUrl, _currentFile, _version, this);
+    QFileInfo file = _currentFile.isFile() ? _currentFile : QFileInfo(QDir::homePath() + "/" + tr("untitled.foil"));
+    web::ExportDialog* exp = new web::ExportDialog(_fin.get(), _baseUrl, file, _version, this);
     exp->show();
 }
 
