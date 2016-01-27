@@ -50,6 +50,7 @@ Foil::Foil(QObject *parent) :
     initThickness();
 
     resetLayerCount();
+    pSetMinThickness(0.0008);
 }
 
 void Foil::onDeserialized()
