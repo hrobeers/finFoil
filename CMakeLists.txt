@@ -24,6 +24,7 @@ option(Shared "Build shared libararies where possible." OFF)
 option(DebugBuild "Build debug binaries." OFF)
 option(CCache "Build using ccache." OFF)
 option(Tests "Build the tests executable" OFF)
+option(Web "Include the web components" ON)
 
 # Linking and library options
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
@@ -52,6 +53,12 @@ if(CCache)
     SET_PROPERTY(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
 
+# Optionally enable Web
+if(Web)
+else()
+    add_definitions(-DWEB_DISABLED)
+endif()
+
 # Set the compilation flags
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -Wno-multichar -Wno-reorder")
@@ -67,8 +74,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -fomit-frame-pointer -finlin
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(Qt5WebKitWidgets REQUIRED)
+if(Web)
+    find_package(Qt5Network REQUIRED)
+    find_package(Qt5WebKitWidgets REQUIRED)
+endif()
 set(CMAKE_AUTOMOC ON)
 
 # Boost

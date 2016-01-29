@@ -38,7 +38,10 @@
 #include "profile.h"
 #include "thicknessprofile.h"
 #include "string/json_utils.hpp"
+
+#ifndef WEB_DISABLED
 #include "exportdialog.hpp"
+#endif
 
 using namespace foileditors;
 using namespace foillogic;
@@ -227,9 +230,11 @@ void MainWindow::loadThickness()
 
 void MainWindow::stlExport()
 {
+#ifndef WEB_DISABLED
     QFileInfo file = _currentFile.isFile() ? _currentFile : QFileInfo(QDir::homePath() + "/" + tr("untitled.foil"));
     web::ExportDialog* exp = new web::ExportDialog(_fin.get(), _baseUrl, file, _version, this);
     exp->show();
+#endif
 }
 
 void MainWindow::about()
@@ -387,8 +392,11 @@ void MainWindow::createMenus()
     importExportMenu->addAction(saveOutlAct);
     importExportMenu->addAction(saveProfAct);
     importExportMenu->addAction(saveThickAct);
+
+#ifndef WEB_DISABLED
     importExportMenu->addSeparator();
     importExportMenu->addAction(stlExportAct);
+#endif
 
     aboutMenu = menuBar()->addMenu(tr("&About"));
     aboutMenu->addAction(aboutAct);
