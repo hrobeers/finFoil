@@ -55,16 +55,24 @@ add_subdirectory(../hrlib "${CMAKE_SOURCE_DIR}/src/hrlib")
 add_subdirectory(../patheditor "${CMAKE_SOURCE_DIR}/src/patheditor")
 add_subdirectory(../foillogic "${CMAKE_SOURCE_DIR}/src/foillogic")
 add_subdirectory(../foileditors "${CMAKE_SOURCE_DIR}/src/foileditors")
-add_subdirectory(../web "${CMAKE_SOURCE_DIR}/src/web")
 add_subdirectory(../../submodules/jenson/src "${CMAKE_SOURCE_DIR}/submodules/jenson/src")
 add_subdirectory(../../submodules/qtunits/src "${CMAKE_SOURCE_DIR}/submodules/qtunits/src")
+if (Web)
+    add_subdirectory(../web "${CMAKE_SOURCE_DIR}/src/web")
+endif()
 
 
 #
 # Linking
 #
 
-target_link_libraries(${BINARY_NAME} foileditors web)
+target_link_libraries(${BINARY_NAME}
+    foileditors
+)
+if (Web)
+target_link_libraries(${BINARY_NAME} web)
+endif()
+
 
 # add enough libraries to the app bundle to allow stand-alone execution
 if (APPLE)

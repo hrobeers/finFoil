@@ -55,10 +55,12 @@ int main(int argc, char *argv[])
         parser.addHelpOption();
         parser.addVersionOption();
 
+#ifndef WEB_DISABLED
         QCommandLineOption serverUrl(QStringLiteral("server-url"),
                                      QApplication::tr("Base URL of the finFoil server."),
                                      QStringLiteral("URL"));
         parser.addOption(serverUrl);
+#endif
 
         parser.addPositionalArgument(QStringLiteral("file"), QApplication::tr("File to open."));
 
@@ -72,8 +74,10 @@ int main(int argc, char *argv[])
             filePath = args.first();
 
         QUrl baseUrl;
+#ifndef WEB_DISABLED
         if (parser.isSet(serverUrl))
             baseUrl = QUrl::fromUserInput(parser.value(serverUrl));
+#endif
         if (!baseUrl.isValid())
             baseUrl = QStringLiteral("http://finfoil.io/s");
 
