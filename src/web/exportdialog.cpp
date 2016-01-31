@@ -123,7 +123,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         if (reply->error() == QNetworkReply::NoError)
         {
             QFile file(_fileName.absoluteFilePath());
-            if (!file.open(QFile::WriteOnly | QFile::Text))
+            if (!file.open(QFile::WriteOnly))
             {
                 QMessageBox::warning(this, tr("Cannot save fin"),
                                      tr("Cannot write to file %1:\n%2.")

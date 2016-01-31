@@ -9,9 +9,9 @@
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 1
-#define REVISION 0
+#define REVISION 1
 
-#define BUILD_NUMBER 482
-#define COMMIT_HASH "4b6614a2764c9d4bbca76225e17a5200e0cdef2d"
+#define BUILD_NUMBER 483
+#define COMMIT_HASH "d4f46f4c375fdafb6496b0df75033547d3c932b4"
 
 #endif // VERSION_AUTOGEN_H

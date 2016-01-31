@@ -12,7 +12,7 @@ set(TESTS_BINARY_NAME "finFoil-tests")
 # Version
 set(MAJOR_VERSION "1")
 set(MINOR_VERSION "1")
-set(REVISION "0")
+set(REVISION "1")
 
 
 #
