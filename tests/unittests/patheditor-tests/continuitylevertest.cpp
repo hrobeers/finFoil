@@ -23,6 +23,7 @@
 #include "continuitylevertest.hpp"
 #include "submodules/qtestrunner/qtestrunner.hpp"
 
+#include <math.h>
 #include "continuitylever.hpp"
 #include "curvepoint.hpp"
 #include "controlpoint.h"

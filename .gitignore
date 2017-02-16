@@ -30,6 +30,11 @@ Makefile
 *_automoc.cpp
 *.cbp
 CMakeFiles
+build/
+
+# Emacs
+*~
+.dir-locals.el*
 
 # Visual Studio
 

@@ -22,6 +22,7 @@
 
 #include "pathpoint.h"
 
+#include <math.h>
 #include <QGraphicsScene>
 #include "pointhandle.h"
 #include "pathsettings.h"
