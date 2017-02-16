@@ -31,7 +31,7 @@
 #include "boost/units/systems/si/length.hpp"
 #include "boost/units/systems/si/area.hpp"
 #include "boost/units/systems/si/plane_angle.hpp"
-#include "mixin/identifiable.hpp"
+#include "hrlib/mixin/identifiable.hpp"
 #include "jenson.h"
 
 namespace foillogic

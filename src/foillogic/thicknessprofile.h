@@ -27,7 +27,7 @@
 
 #include <QObject>
 #include <memory>
-#include "mixin/identifiable.hpp"
+#include "hrlib/mixin/identifiable.hpp"
 #include "jenson.h"
 
 namespace foillogic

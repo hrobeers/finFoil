@@ -23,7 +23,7 @@
 #ifndef FOILDATAWIDGET_H
 #define FOILDATAWIDGET_H
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 #include "foillogicfwd/foillogicfwd.h"
 

@@ -24,7 +24,7 @@
 #define PATHEDITORWIDGET_H
 
 #include "patheditorfwd/patheditorfwd.h"
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 
 #include <QWidget>
 #include <memory>

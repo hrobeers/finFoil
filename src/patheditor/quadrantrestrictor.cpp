@@ -22,7 +22,7 @@
 
 #include "quadrantrestrictor.h"
 
-#include "exceptions.h"
+#include "hrlib/exceptions.h"
 
 #define notIn(x) !(_quadrants & x)
 

@@ -23,7 +23,7 @@
 #ifndef PATHITEM_H
 #define PATHITEM_H
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <memory>

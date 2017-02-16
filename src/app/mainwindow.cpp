@@ -37,7 +37,7 @@
 #include "outline.h"
 #include "profile.h"
 #include "thicknessprofile.h"
-#include "string/json_utils.hpp"
+#include "hrlib/string/json_utils.hpp"
 
 #ifndef WEB_DISABLED
 #include "exportdialog.hpp"

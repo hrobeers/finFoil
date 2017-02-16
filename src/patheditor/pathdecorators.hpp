@@ -23,9 +23,9 @@
 #ifndef PATHDECORATORS_HPP
 #define PATHDECORATORS_HPP
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 
-#include "patterns/decorator.hpp"
+#include "hrlib/patterns/decorator.hpp"
 #include "ipath.hpp"
 
 namespace patheditor

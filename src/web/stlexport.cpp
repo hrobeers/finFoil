@@ -29,8 +29,8 @@
 
 #include "jenson.h"
 #include "foil.h"
-#include "string/json_utils.hpp"
-#include "version.h"
+#include "hrlib/string/json_utils.hpp"
+#include "hrlib/version.h"
 
 using namespace web;
 using namespace foillogic;

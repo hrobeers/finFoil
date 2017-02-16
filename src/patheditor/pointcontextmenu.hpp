@@ -23,7 +23,7 @@
 #ifndef POINTCONTEXTMENU_HPP
 #define POINTCONTEXTMENU_HPP
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <QObject>

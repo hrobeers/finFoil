@@ -26,7 +26,7 @@
 #include <QGraphicsScene>
 #include "pointhandle.h"
 #include "pathsettings.h"
-#include "exceptions.h"
+#include "hrlib/exceptions.h"
 #include "restrictor.h"
 
 using namespace patheditor;

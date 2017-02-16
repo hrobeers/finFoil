@@ -122,6 +122,8 @@ endif()
 # Include subdirectories
 #
 
+# Include header files
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 # Include the subdirectories
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/src/app")

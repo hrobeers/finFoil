@@ -23,7 +23,7 @@
 #ifndef PATHPOINT_H
 #define PATHPOINT_H
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 #include <memory>

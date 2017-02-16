@@ -25,7 +25,7 @@
 
 #include <memory>
 #include <boost/math/tools/minima.hpp>
-#include "math/brent.hpp"
+#include "hrlib/math/brent.hpp"
 #include "path.h"
 #include "pathfunctors.hpp"
 

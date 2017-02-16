@@ -23,11 +23,11 @@
 #ifndef PATHFUNCTORS_HPP
 #define PATHFUNCTORS_HPP
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 
 #include <QPointF>
 #include "ipath.hpp"
-#include "math/brent.hpp"
+#include "hrlib/math/brent.hpp"
 
 namespace patheditor
 {

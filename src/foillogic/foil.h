@@ -30,8 +30,8 @@
 #include <memory>
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
-#include "mixin/identifiable.hpp"
-#include "mixin/historical.hpp"
+#include "hrlib/mixin/identifiable.hpp"
+#include "hrlib/mixin/historical.hpp"
 #include "jenson.h"
 
 namespace foillogic

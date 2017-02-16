@@ -30,7 +30,7 @@
 #include <QFileInfo>
 #include <QUrl>
 #include "jenson.h"
-#include "version.h"
+#include "hrlib/version.h"
 
 namespace Ui {
     class MainWindow;

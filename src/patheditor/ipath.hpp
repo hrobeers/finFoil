@@ -23,7 +23,7 @@
 #ifndef IPATH_HPP
 #define IPATH_HPP
 
-#include "hrlibfwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.h"
 #include "patheditorfwd/patheditorfwd.h"
 
 namespace patheditor
