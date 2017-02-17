@@ -2,21 +2,13 @@ set(CMAKE_AUTOUIC ON)
 qt5_wrap_ui(FORMS_HEADERS mainwindow.ui)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}) # the auto generated ui_*.h files
 
+# Headers
+file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/app/*.hpp)
+
 # Sources
 set(SRC
     main.cpp
     mainwindow.cpp
-)
-
-# Headers
-set(HDR
-    mainwindow.h
-    finfoil_version.h
-    ../version_autogen.h
-    ../version_template.h
-    runinteractive.hpp
-    main.h
-    about.hpp
 )
 
 # prepare (generated) icon support for .app bundle

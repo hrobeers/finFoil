@@ -24,7 +24,7 @@
 #define MAIN_H
 
 #include <QTextStream>
-#include "finfoil_version.h"
+#include "app/finfoil_version.hpp"
 
 using namespace finfoil;
 

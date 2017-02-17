@@ -23,7 +23,7 @@
 #ifndef RUNINTERACTIVE_HPP
 #define RUNINTERACTIVE_HPP
 
-#include "mainwindow.h"
+#include "app/mainwindow.hpp"
 
 #ifndef MAIN_CPP
 QTextStream out(stdout);

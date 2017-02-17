@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "mainwindow.h"
+#include "app/mainwindow.hpp"
 #include "ui_mainwindow.h"
 
 #include <QSplitter>
@@ -29,7 +29,7 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QCloseEvent>
-#include "main.h"
+#include "app/main.hpp"
 #include "foileditors/foileditors.hpp"
 #include "jenson.h"
 #include "foillogic/foil.hpp"
