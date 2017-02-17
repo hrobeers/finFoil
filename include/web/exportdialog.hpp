@@ -26,7 +26,7 @@
 #include <QDialog>
 #include <memory>
 #include <QFileInfo>
-#include "stlexport.hpp"
+#include "web/stlexport.hpp"
 #include "qmemory.hpp"
 
 namespace Ui {

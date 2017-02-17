@@ -40,7 +40,7 @@
 #include "hrlib/string/json_utils.hpp"
 
 #ifndef WEB_DISABLED
-#include "exportdialog.hpp"
+#include "web/exportdialog.hpp"
 #endif
 
 using namespace foileditors;

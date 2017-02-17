@@ -21,7 +21,7 @@
  
 ****************************************************************************/
 
-#include "stlexport.hpp"
+#include "web/stlexport.hpp"
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
