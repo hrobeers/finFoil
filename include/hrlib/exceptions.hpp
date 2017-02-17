@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef HRLIB_EXCEPTIONS_H
-#define HRLIB_EXCEPTIONS_H
+#ifndef HRLIB_EXCEPTIONS_HPP
+#define HRLIB_EXCEPTIONS_HPP
 
 #include <QObject>
 #include <QString>
@@ -88,4 +88,4 @@ namespace hrlib
     };
 }
 
-#endif // HRLIB_EXCEPTIONS_H
+#endif // HRLIB_EXCEPTIONS_HPP

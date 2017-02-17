@@ -20,8 +20,8 @@
 
 ****************************************************************************/
 
-#ifndef HR_JSON_UTILS_H
-#define HR_JSON_UTILS_H
+#ifndef HR_JSON_UTILS_HPP
+#define HR_JSON_UTILS_HPP
 
 #include <string>
 
@@ -30,4 +30,4 @@ namespace hrlib
     std::string trim_json_floats(const std::string &json_utf8);
 }
 
-#endif // HR_JSON_UTILS_H
+#endif // HR_JSON_UTILS_HPP

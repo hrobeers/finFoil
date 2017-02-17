@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "hrlib/exceptions.h"
+#include "hrlib/exceptions.hpp"
 
 #include <QObject>
 

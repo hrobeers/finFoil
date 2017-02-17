@@ -23,7 +23,7 @@
 #ifndef PROFILEEDITOR_HPP
 #define PROFILEEDITOR_HPP
 
-#include "hrlib/fwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 #include "foillogic/fwd/foillogicfwd.hpp"
 

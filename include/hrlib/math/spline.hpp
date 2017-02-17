@@ -4,8 +4,8 @@
 
 ****************************************************************************/
 
-#ifndef SPLINE_H
-#define SPLINE_H
+#ifndef SPLINE_HPP
+#define SPLINE_HPP
 
 #include <QtGlobal>
 #include <string>
@@ -102,4 +102,4 @@ void spline_quadratic_val ( int ndata, qreal tdata[], qreal ydata[],
 
 }
 
-#endif // SPLINE_H
+#endif // SPLINE_HPP

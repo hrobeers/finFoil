@@ -20,41 +20,37 @@
  
 ****************************************************************************/
 
-#ifndef HR_VERSION_H
-#define HR_VERSION_H
+#ifndef QTFWD_HPP
+#define QTFWD_HPP
 
-#include <QString>
+#include <QtGlobal>
 
-namespace hrlib
-{
-    struct ReleaseType
-    {
-        enum e { Dev, Aplha, Beta, Nightly, Release };
-    };
+QT_BEGIN_NAMESPACE
 
-    class Version
-    {
-    public:
-        explicit Version(int major, int minor, int revision, int build, QString commit, ReleaseType::e releaseType);
+class QObject;
+class QGraphicsView;
+class QGraphicsScene;
+class QGraphicsSceneMouseEvent;
+class QGraphicsItem;
+class QVBoxLayout;
+class QHBoxLayout;
+class QFormLayout;
+class QGraphicsLineItem;
+class QPoint;
+class QPointF;
+class QString;
+class QPainterPath;
+class QAbstractSpinBox;
+class QSpinBox;
+class QDoubleSpinBox;
+class QComboBox;
+class QLineEdit;
+class QLabel;
+class QFile;
+class QRectF;
+class QPainter;
+class QImage;
 
-        int Major() const { return _major; }
-        int Minor() const { return _minor; }
-        int Revision() const { return _revision; }
-        int Build() const { return _build; }
-        QString commit() const { return _commit; }
-//        ReleaseType::e ReleaseType() const { return _releaseType; }
+QT_END_NAMESPACE
 
-        QString toString() const;
-
-    private:
-        int _major;
-        int _minor;
-        int _revision;
-        int _build;
-        QString _commit;
-        QString _string;
-        ReleaseType::e _releaseType;
-    };
-}
-
-#endif // HR_VERSION_H
+#endif // QTFWD_HPP

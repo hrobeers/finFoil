@@ -23,7 +23,7 @@
 #ifndef PATHFUNCTORS_HPP
 #define PATHFUNCTORS_HPP
 
-#include "hrlib/fwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.hpp"
 
 #include <QPointF>
 #include "patheditor/ipath.hpp"

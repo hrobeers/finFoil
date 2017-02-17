@@ -11,7 +11,7 @@
 
 using namespace std;
 
-# include "brent.hpp"
+# include "hrlib/math/brent.hpp"
 
 namespace hrlib
 {

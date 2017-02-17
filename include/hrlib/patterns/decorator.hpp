@@ -20,8 +20,8 @@
 
 ****************************************************************************/
 
-#ifndef HRLIB_DECORATOR_H
-#define HRLIB_DECORATOR_H
+#ifndef HRLIB_DECORATOR_HPP
+#define HRLIB_DECORATOR_HPP
 
 #include <memory>
 #include <type_traits>
@@ -81,4 +81,4 @@ namespace hrlib { namespace patterns
     };
 } }
 
-#endif // HRLIB_DECORATOR_H
+#endif // HRLIB_DECORATOR_HPP

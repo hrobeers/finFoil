@@ -28,8 +28,8 @@ OTHERWISE)
 
 ****************************************************************************/
 
-#ifndef HRLIB_HISTORICAL_H
-#define HRLIB_HISTORICAL_H
+#ifndef HRLIB_HPPISTORICAL_HPP
+#define HRLIB_HPPISTORICAL_HPP
 
 #include <QList>
 #include <QStringList>
@@ -94,4 +94,4 @@ namespace hrlib
     };
 }
 
-#endif // HRLIB_HISTORICAL_H
+#endif // HRLIB_HPPISTORICAL_HPP

@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "json_utils.hpp"
+#include "hrlib/string/json_utils.hpp"
 
 #include <regex>
 

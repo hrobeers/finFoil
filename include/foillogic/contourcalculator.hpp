@@ -15,7 +15,7 @@
 #define CONTOURCALCULATOR_HPP
 
 #include "foillogic/fwd/foillogicfwd.hpp"
-#include "hrlib/fwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QRunnable>

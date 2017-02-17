@@ -30,7 +30,7 @@
 #include "jenson.h"
 #include "foillogic/foil.hpp"
 #include "hrlib/string/json_utils.hpp"
-#include "hrlib/version.h"
+#include "hrlib/version.hpp"
 
 using namespace web;
 using namespace foillogic;

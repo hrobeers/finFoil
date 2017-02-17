@@ -23,7 +23,7 @@
 #ifndef FINFOIL_VERSION_H
 #define FINFOIL_VERSION_H
 
-#include "hrlib/version.h"
+#include "hrlib/version.hpp"
 #include "../version_autogen.h"
 
 #include <QString>

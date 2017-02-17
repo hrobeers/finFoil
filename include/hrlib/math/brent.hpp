@@ -4,8 +4,8 @@
  
 ****************************************************************************/
 
-#ifndef BRENT_H
-#define BRENT_H
+#ifndef BRENT_HPP
+#define BRENT_HPP
 
 #include <vector>
 #include <QtGlobal>
@@ -71,4 +71,4 @@ static qreal zero ( qreal a, qreal b, qreal t, qreal f ( qreal x ) );
 };
 
 }
-#endif // BRENT_H
+#endif // BRENT_HPP

@@ -23,7 +23,7 @@
 #ifndef THICKNESSEDITOR_HPP
 #define THICKNESSEDITOR_HPP
 
-#include "hrlib/fwd/qtfwd.h"
+#include "hrlib/fwd/qtfwd.hpp"
 #include "foillogic/fwd/foillogicfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
