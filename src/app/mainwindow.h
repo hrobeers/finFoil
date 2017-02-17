@@ -23,7 +23,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "foileditorsfwd/foileditorsfwd.h"
+#include "foileditors/fwd/foileditorsfwd.hpp"
 #include "foillogic/fwd/foillogicfwd.hpp"
 
 #include <QMainWindow>

@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "thicknesscontours.h"
+#include "foileditors/outlineeditor/thicknesscontours.hpp"
 
 #include <QPainter>
 #include <QtAlgorithms>

@@ -1,6 +1,6 @@
 project(foillogic)
 
-file(GLOB HDR ${CMAKE_SOURCE_DIR}/include/foillogic/*.hpp)
+file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/foillogic/*.hpp)
 
 set(SRC
     foil.cpp

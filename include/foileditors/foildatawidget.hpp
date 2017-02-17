@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef FOILDATAWIDGET_H
-#define FOILDATAWIDGET_H
+#ifndef FOILDATAWIDGET_HPP
+#define FOILDATAWIDGET_HPP
 
 #include "hrlib/fwd/qtfwd.h"
 #include "patheditor/fwd/patheditorfwd.hpp"
@@ -92,4 +92,4 @@ namespace foileditors
     };
 }
 
-#endif // FOILDATAWIDGET_H
+#endif // FOILDATAWIDGET_HPP

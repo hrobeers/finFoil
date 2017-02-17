@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "outlineeditor.h"
+#include "foileditors/outlineeditor/outlineeditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -30,7 +30,7 @@
 #include "patheditor/patheditorwidget.hpp"
 #include "foillogic/foil.hpp"
 #include "patheditor/editablepath.hpp"
-#include "thicknesscontours.h"
+#include "foileditors/outlineeditor/thicknesscontours.hpp"
 #include "foillogic/outline.hpp"
 
 using namespace foileditors;

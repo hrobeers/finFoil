@@ -20,45 +20,12 @@
  
 ****************************************************************************/
 
-#ifndef OUTLINEEDITOR_H
-#define OUTLINEEDITOR_H
+#ifndef FOILEDITORS_HPP
+#define FOILEDITORS_HPP
 
-#include "patheditor/fwd/patheditorfwd.hpp"
-#include "foillogic/fwd/foillogicfwd.hpp"
+#include "foileditors/outlineeditor/outlineeditor.hpp"
+#include "foileditors/profileeditor/profileeditor.hpp"
+#include "foileditors/thicknesseditor/thicknesseditor.hpp"
+#include "foileditors/foildatawidget.hpp"
 
-#include <QWidget>
-#include <memory>
-
-using namespace patheditor;
-
-namespace foileditors
-{
-    /**
-     * Editor to edit the foil's outline.
-     * This editor can display the thickness contours while editing.
-     */
-    class OutlineEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit OutlineEditor(QWidget *parent = 0);
-
-        void setFoil(foillogic::Foil *foil);
-        foillogic::FoilCalculator* foilCalculator();
-
-        virtual ~OutlineEditor();
-
-    signals:
-
-    public slots:
-        void setGridUnitSize(qreal pxPerUnit);
-
-    private:
-        std::unique_ptr<foillogic::FoilCalculator> _foilCalculator;
-
-        PathEditorWidget* _topPathEditor;
-        PathEditorWidget* _botPathEditor;
-    };
-}
-
-#endif // OUTLINEEDITOR_H
+#endif // FOILEDITORS_HPP

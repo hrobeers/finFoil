@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#include "foileditors/thicknesseditor/thicknesseditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>

@@ -1,6 +1,6 @@
 project(patheditor)
 
-file(GLOB HDR ${CMAKE_SOURCE_DIR}/include/patheditor/*.hpp)
+file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/patheditor/*.hpp)
 
 set(SRC
     continuitylever.cpp

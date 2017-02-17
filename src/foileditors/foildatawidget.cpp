@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "foildatawidget.h"
+#include "foileditors/foildatawidget.hpp"
 
 #include <qmath.h>
 #include <QFormLayout>

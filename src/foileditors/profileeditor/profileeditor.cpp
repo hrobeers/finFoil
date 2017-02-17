@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "profileeditor.h"
+#include "foileditors/profileeditor/profileeditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>

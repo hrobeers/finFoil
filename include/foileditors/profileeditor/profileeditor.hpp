@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef PROFILEEDITOR_H
-#define PROFILEEDITOR_H
+#ifndef PROFILEEDITOR_HPP
+#define PROFILEEDITOR_HPP
 
 #include "hrlib/fwd/qtfwd.h"
 #include "patheditor/fwd/patheditorfwd.hpp"
@@ -62,4 +62,4 @@ namespace foileditors
     };
 }
 
-#endif // PROFILEEDITOR_H
+#endif // PROFILEEDITOR_HPP

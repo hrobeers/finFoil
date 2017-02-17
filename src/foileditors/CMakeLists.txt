@@ -1,6 +1,8 @@
 project(foileditors)
 
-set(foileditorsSRC
+file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/foileditors/*.hpp)
+
+set(SRC
     profileeditor/profileeditor.cpp
     thicknesseditor/thicknesseditor.cpp
     outlineeditor/thicknesscontours.cpp
@@ -8,17 +10,7 @@ set(foileditorsSRC
     foildatawidget.cpp
 )
 
-set(foileditorsHDR
-    profileeditor/profileeditor.h
-    thicknesseditor/thicknesseditor.h
-    foileditors.h
-    outlineeditor/thicknesscontours.h
-    outlineeditor/outlineeditor.h
-    foildatawidget.h
-    foileditorsfwd/foileditorsfwd.h
-)
-
-add_library(foileditors ${FINFOIL_LIB_TYPE} ${foileditorsSRC} ${foileditorsHDR})
+add_library(foileditors ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
 target_link_libraries(foileditors
     qtunits

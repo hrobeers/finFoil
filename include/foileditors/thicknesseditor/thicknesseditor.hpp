@@ -20,12 +20,40 @@
  
 ****************************************************************************/
 
-#ifndef FOILEDITORS_H
-#define FOILEDITORS_H
+#ifndef THICKNESSEDITOR_HPP
+#define THICKNESSEDITOR_HPP
 
-#include "outlineeditor/outlineeditor.h"
-#include "profileeditor/profileeditor.h"
-#include "thicknesseditor/thicknesseditor.h"
-#include "foildatawidget.h"
+#include "hrlib/fwd/qtfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
-#endif // FOILEDITORS_H
+#include <QWidget>
+
+using namespace patheditor;
+
+namespace foileditors
+{
+    class ThicknessEditor : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit ThicknessEditor(QWidget *parent = 0);
+
+        void setFoil(foillogic::Foil* foil);
+
+        virtual ~ThicknessEditor() {}
+
+    signals:
+
+    public slots:
+
+    private:
+        QVBoxLayout* _mainLayout;
+        patheditor::PathEditorWidget* _pathEditor;
+
+    private slots:
+        void update();
+    };
+}
+
+#endif // THICKNESSEDITOR_HPP
