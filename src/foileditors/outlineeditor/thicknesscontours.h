@@ -24,7 +24,7 @@
 #define THICKNESSCONTOURS_H
 
 #include "patheditor/fwd/patheditorfwd.hpp"
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 
 #include <QGraphicsObject>
 #include <QThreadPool>

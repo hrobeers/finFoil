@@ -11,13 +11,13 @@
 
 ****************************************************************************/
 
-#include "foilcalculator.h"
+#include "foillogic/foilcalculator.hpp"
 
 #include <QtMath>
 #include "patheditor/path.hpp"
-#include "foil.h"
-#include "profile.h"
-#include "outline.h"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/outline.hpp"
 
 using namespace foillogic;
 using namespace boost::units;

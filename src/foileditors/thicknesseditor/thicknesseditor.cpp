@@ -27,8 +27,8 @@
 #include <QGraphicsScene>
 #include "patheditor/patheditorwidget.hpp"
 #include "patheditor/editablepath.hpp"
-#include "foil.h"
-#include "thicknessprofile.h"
+#include "foillogic/foil.hpp"
+#include "foillogic/thicknessprofile.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

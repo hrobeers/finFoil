@@ -11,10 +11,10 @@
  
 ****************************************************************************/
 
-#ifndef FOILCALCULATOR_H
-#define FOILCALCULATOR_H
+#ifndef FOILCALCULATOR_HPP
+#define FOILCALCULATOR_HPP
 
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 
 #include <QObject>
 #include <QThreadPool>
@@ -22,7 +22,7 @@
 #include <QPainterPath>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/area.hpp>
-#include "contourcalculator.h"
+#include "foillogic/contourcalculator.hpp"
 
 namespace foillogic
 {
@@ -91,4 +91,4 @@ namespace foillogic
     };
 }
 
-#endif // FOILCALCULATOR_H
+#endif // FOILCALCULATOR_HPP

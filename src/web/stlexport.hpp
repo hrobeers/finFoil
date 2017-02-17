@@ -23,7 +23,7 @@
 #ifndef STLEXPORT_HPP
 #define STLEXPORT_HPP
 
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 class QNetworkAccessManager;
 class QNetworkReply;
 namespace hrlib { class Version; }

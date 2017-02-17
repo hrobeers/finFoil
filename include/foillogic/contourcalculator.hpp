@@ -11,10 +11,10 @@
 
 ****************************************************************************/
 
-#ifndef CONTOURCALCULATOR_H
-#define CONTOURCALCULATOR_H
+#ifndef CONTOURCALCULATOR_HPP
+#define CONTOURCALCULATOR_HPP
 
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 #include "hrlib/fwd/qtfwd.h"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
@@ -54,4 +54,4 @@ namespace foillogic
     };
 }
 
-#endif // CONTOURCALCULATOR_H
+#endif // CONTOURCALCULATOR_HPP

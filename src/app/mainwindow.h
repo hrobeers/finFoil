@@ -24,7 +24,7 @@
 #define MAINWINDOW_H
 
 #include "foileditorsfwd/foileditorsfwd.h"
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 
 #include <QMainWindow>
 #include <QFileInfo>

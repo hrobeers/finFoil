@@ -28,7 +28,7 @@
 #include <QJsonDocument>
 
 #include "jenson.h"
-#include "foil.h"
+#include "foillogic/foil.hpp"
 #include "hrlib/string/json_utils.hpp"
 #include "hrlib/version.h"
 

@@ -20,8 +20,8 @@
  
 ****************************************************************************/
 
-#ifndef PROFILE_H
-#define PROFILE_H
+#ifndef PROFILE_HPP
+#define PROFILE_HPP
 
 #include "patheditor/fwd/patheditorfwd.hpp"
 
@@ -119,4 +119,4 @@ namespace foillogic
     };
 }
 
-#endif // PROFILE_H
+#endif // PROFILE_HPP

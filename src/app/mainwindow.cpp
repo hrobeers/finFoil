@@ -32,11 +32,11 @@
 #include "main.h"
 #include "foileditors.h"
 #include "jenson.h"
-#include "foil.h"
-#include "foilcalculator.h"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
+#include "foillogic/foil.hpp"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
 #include "hrlib/string/json_utils.hpp"
 
 #ifndef WEB_DISABLED

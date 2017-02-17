@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "outline.h"
+#include "foillogic/outline.hpp"
 
 #include "patheditor/path.hpp"
 #include "patheditor/controlpoint.hpp"

@@ -26,12 +26,12 @@
 #include <QGroupBox>
 #include <QGraphicsScene>
 #include <QSplitter>
-#include "foilcalculator.h"
+#include "foillogic/foilcalculator.hpp"
 #include "patheditor/patheditorwidget.hpp"
-#include "foil.h"
+#include "foillogic/foil.hpp"
 #include "patheditor/editablepath.hpp"
 #include "thicknesscontours.h"
-#include "outline.h"
+#include "foillogic/outline.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

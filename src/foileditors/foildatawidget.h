@@ -25,7 +25,7 @@
 
 #include "hrlib/fwd/qtfwd.h"
 #include "patheditor/fwd/patheditorfwd.hpp"
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 
 #include <QWidget>
 #include <boost/units/quantity.hpp>

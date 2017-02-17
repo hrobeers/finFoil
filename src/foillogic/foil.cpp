@@ -21,7 +21,7 @@
  
 ****************************************************************************/
 
-#include "foil.h"
+#include "foillogic/foil.hpp"
 
 #include "patheditor/path.hpp"
 #include "patheditor/pathpoint.hpp"
@@ -29,9 +29,9 @@
 #include "patheditor/linerestrictor.hpp"
 #include "patheditor/quadrantrestrictor.hpp"
 #include "patheditor/cubicbezier.hpp"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
 #include "patheditor/pathdecorators.hpp"
 
 SERIALIZABLE(foillogic::Foil, foil)

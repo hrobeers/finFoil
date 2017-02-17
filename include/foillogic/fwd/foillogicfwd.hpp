@@ -20,65 +20,25 @@
  
 ****************************************************************************/
 
-#ifndef THICKNESSPROFILE_H
-#define THICKNESSPROFILE_H
+#ifndef FOILLOGICFWD_HPP
+#define FOILLOGICFWD_HPP
 
-#include "patheditor/fwd/patheditorfwd.hpp"
-
-#include <QObject>
-#include <memory>
-#include "hrlib/mixin/identifiable.hpp"
-#include "jenson.h"
+/*
+    Forward declarations for all foillogic classes.
+ */
 
 namespace foillogic
 {
-    class ThicknessProfile : public QObject, public hrlib::Identifiable
+    class Outline;
+    class Profile;
+    class ThicknessProfile;
+    class Foil;
+    class FoilCalculator;
+
+    struct Side
     {
-        Q_OBJECT
-
-        // read-write properties
-        Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
-
-        // optional properties
-        Q_PROPERTY_UUID
-
-    public:
-        Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);
-
-        patheditor::Path* topProfile();
-        patheditor::Path* botProfile();
-
-        // Q_PROPERTY getters
-        patheditor::Path* pTopProfile();
-
-        // Q_PROPERTY setters
-        void pSetTopProfile(patheditor::Path *topProfile);
-
-        virtual ~ThicknessProfile();
-
-    signals:
-        void profileChanged(ThicknessProfile* sender);
-        void profileReleased(ThicknessProfile* sender);
-
-        void mirrored();
-
-    public slots:
-        void setThicknessRatio(qreal profileRatio);
-
-    private:
-        qreal _thicknessRatio;
-
-        std::unique_ptr<patheditor::Path> _topProfile;
-        std::unique_ptr<patheditor::Path> _botProfile;
-
-        void attachSignals(patheditor::Path* path);
-
-        void mirror();
-
-    private slots:
-        void onProfileChanged(patheditor::Path *path);
-        void onProfileReleased();
+        enum e { Top, Bottom };
     };
 }
 
-#endif // THICKNESSPROFILE_H
+#endif // FOILLOGICFWD_HPP

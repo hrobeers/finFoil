@@ -28,8 +28,8 @@
 #include <QGraphicsScene>
 #include "patheditor/patheditorwidget.hpp"
 #include "patheditor/editablepath.hpp"
-#include "foil.h"
-#include "profile.h"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

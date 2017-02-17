@@ -1,6 +1,8 @@
 project(foillogic)
 
-set(foillogicSRC
+file(GLOB HDR ${CMAKE_SOURCE_DIR}/include/foillogic/*.hpp)
+
+set(SRC
     foil.cpp
     foilcalculator.cpp
     contourcalculator.cpp
@@ -9,17 +11,7 @@ set(foillogicSRC
     outline.cpp
 )
 
-set(foillogicHDR
-    foil.h
-    foillogicfwd/foillogicfwd.h
-    foilcalculator.h
-    contourcalculator.h
-    profile.h
-    thicknessprofile.h
-    outline.h
-)
-
-add_library(foillogic ${FINFOIL_LIB_TYPE} ${foillogicSRC} ${foillogicHDR})
+add_library(foillogic ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
 target_link_libraries(foillogic
     patheditor

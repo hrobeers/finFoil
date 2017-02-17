@@ -20,8 +20,8 @@
 
 ****************************************************************************/
 
-#ifndef OUTLINE_H
-#define OUTLINE_H
+#ifndef OUTLINE_HPP
+#define OUTLINE_HPP
 
 #include "patheditor/fwd/patheditorfwd.hpp"
 
@@ -98,4 +98,4 @@ namespace foillogic
     };
 }
 
-#endif // OUTLINE_H
+#endif // OUTLINE_HPP

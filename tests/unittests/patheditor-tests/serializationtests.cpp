@@ -25,10 +25,10 @@
 
 #include <memory>
 #include <QJsonDocument>
-#include "foil.h"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
+#include "foillogic/foil.hpp"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
 #include "patheditor/path.hpp"
 #include "patheditor/line.hpp"
 #include "patheditor/cubicbezier.hpp"

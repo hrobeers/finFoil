@@ -32,10 +32,10 @@
 
 #include "patheditor/path.hpp"
 #include "patheditor/editablepath.hpp"
-#include "foilcalculator.h"
-#include "foil.h"
-#include "profile.h"
-#include "outline.h"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/outline.hpp"
 
 #include <QtUnits>
 

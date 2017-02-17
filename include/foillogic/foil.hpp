@@ -20,10 +20,10 @@
  
 ****************************************************************************/
 
-#ifndef FOIL_H
-#define FOIL_H
+#ifndef FOIL_HPP
+#define FOIL_HPP
 
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QObject>
@@ -121,4 +121,4 @@ namespace foillogic
     };
 }
 
-#endif // FOIL_H
+#endif // FOIL_HPP

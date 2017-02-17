@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "thicknessprofile.h"
+#include "foillogic/thicknessprofile.hpp"
 
 #include "patheditor/path.hpp"
 #include "patheditor/pathpoint.hpp"

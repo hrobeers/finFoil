@@ -26,9 +26,9 @@
 #include <QtAlgorithms>
 #include <QGraphicsScene>
 #include "patheditor/path.hpp"
-#include "foilcalculator.h"
-#include "foil.h"
-#include "outline.h"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/outline.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

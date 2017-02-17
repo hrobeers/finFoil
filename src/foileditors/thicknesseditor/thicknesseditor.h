@@ -24,7 +24,7 @@
 #define THICKNESSEDITOR_H
 
 #include "hrlib/fwd/qtfwd.h"
-#include "foillogicfwd/foillogicfwd.h"
+#include "foillogic/fwd/foillogicfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QWidget>
