@@ -20,31 +20,24 @@
  
 ****************************************************************************/
 
-#ifndef LINERESTRICTOR_H
-#define LINERESTRICTOR_H
+#ifndef CONTROLPOINT_HPP
+#define CONTROLPOINT_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
-
-#include <QPointF>
-#include "restrictor.h"
+#include "patheditor/pathpoint.hpp"
 
 namespace patheditor
 {
-    class LineRestrictor : public Restrictor
+    class ControlPoint : public PathPoint
     {
+        Q_OBJECT
+
     public:
-        explicit LineRestrictor(const QPointF &point1, const QPointF &point2);
+        explicit ControlPoint(qreal xpos, qreal ypos);
 
-        virtual void restrictCoordinate(qreal *x, qreal *y);
+        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;
 
-        static QPointF closestPoint(const QPointF point, const QPointF &line_point1, const QPointF &line_point2);
-
-        virtual ~LineRestrictor() {}
-
-    private:
-        QPointF _point1;
-        QPointF _point2;
+        virtual ~ControlPoint() {}
     };
 }
 
-#endif // LINERESTRICTOR_H
+#endif // CONTROLPOINT_HPP

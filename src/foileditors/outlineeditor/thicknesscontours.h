@@ -23,7 +23,7 @@
 #ifndef THICKNESSCONTOURS_H
 #define THICKNESSCONTOURS_H
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QGraphicsObject>

@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "quadrantrestrictor.h"
+#include "patheditor/quadrantrestrictor.hpp"
 
 #include "hrlib/exceptions.h"
 

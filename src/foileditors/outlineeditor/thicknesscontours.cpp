@@ -25,7 +25,7 @@
 #include <QPainter>
 #include <QtAlgorithms>
 #include <QGraphicsScene>
-#include "path.h"
+#include "patheditor/path.hpp"
 #include "foilcalculator.h"
 #include "foil.h"
 #include "outline.h"

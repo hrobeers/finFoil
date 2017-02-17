@@ -1,6 +1,8 @@
 project(patheditor)
 
-set(patheditorSRC
+file(GLOB HDR ${CMAKE_SOURCE_DIR}/include/patheditor/*.hpp)
+
+set(SRC
     continuitylever.cpp
     controlpoint.cpp
     cubicbezier.cpp
@@ -23,35 +25,7 @@ set(patheditorSRC
     scalepoint.cpp
 )
 
-set(patheditorHDR
-    continuitylever.hpp
-    controlpoint.h
-    cubicbezier.h
-    curvepoint.hpp
-    editablepath.h
-    ipath.hpp
-    line.h
-    linerestrictor.h
-    pathdecorators.hpp
-    patheditorfwd/patheditorfwd.h
-    patheditorview.h
-    patheditorwidget.h
-    pathfunctors.hpp
-    path.h
-    pathitem.h
-    pathpoint.h
-    pathsettings.h
-    pathtemplates.hpp
-    pointcontextmenu.hpp
-    pointhandle.h
-    pointrestrictor.h
-    quadrantrestrictor.h
-    restrictor.h
-    scalableimage.h
-    scalepoint.h
-)
-
-add_library(patheditor ${FINFOIL_LIB_TYPE} ${patheditorSRC} ${patheditorHDR})
+add_library(patheditor ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
 target_link_libraries(patheditor
     Qt5::Widgets

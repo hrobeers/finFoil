@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "pathdecorators.hpp"
+#include "patheditor/pathdecorators.hpp"
 
 #include <QPointF>
 

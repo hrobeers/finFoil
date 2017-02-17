@@ -20,11 +20,11 @@
 
 ****************************************************************************/
 
-#include "continuitylever.hpp"
+#include "patheditor/continuitylever.hpp"
 
 #include <cmath>
-#include "pathpoint.h"
-#include "linerestrictor.h"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/linerestrictor.hpp"
 
 using namespace std;
 using namespace patheditor;

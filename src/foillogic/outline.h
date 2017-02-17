@@ -23,7 +23,7 @@
 #ifndef OUTLINE_H
 #define OUTLINE_H
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QObject>
 #include <memory>

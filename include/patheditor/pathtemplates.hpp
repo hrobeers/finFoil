@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2015, Hans Robeers
+ Copyright (c) 2014, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,30 +20,30 @@
 
 ****************************************************************************/
 
-#ifndef CURVEPOINT_H
-#define CURVEPOINT_H
+#ifndef PATHTEMPLATES_HPP
+#define PATHTEMPLATES_HPP
 
-#include "pathpoint.h"
+#include <memory>
+#include <boost/math/tools/minima.hpp>
+#include "hrlib/math/brent.hpp"
+#include "patheditor/path.hpp"
+#include "patheditor/pathfunctors.hpp"
 
 namespace patheditor
 {
-    class CurvePoint : public PathPoint
+    template <int Dimension, int Multiplier>
+    static qreal extreme(const Path *self, qreal *t_ext)
     {
-        Q_OBJECT
+        std::unique_ptr<f_ValueAtPercentPath<Dimension,Multiplier>> target(new f_ValueAtPercentPath<Dimension,Multiplier>(self));
 
-    public:
-        explicit CurvePoint(qreal xpos, qreal ypos);
+        qreal min_t = t_ext ? *t_ext : 0.5;
+        qreal min = hrlib::Brent::local_min(0.0, 1.0, 0.0001, *target, min_t);
 
-        virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;
+        if (t_ext)
+            *t_ext = min_t;
 
-        virtual bool continuous() const override;
-        virtual void setContinuous(bool continuous) override;
-
-        virtual ~CurvePoint() {}
-
-    private:
-        bool _continuous;
-    };
+        return min * Multiplier;
+    }
 }
 
-#endif // CURVEPOINT_H
+#endif // PATHTEMPLATES_HPP

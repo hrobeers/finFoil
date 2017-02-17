@@ -27,9 +27,9 @@
 #include <QGraphicsScene>
 #include <QSplitter>
 #include "foilcalculator.h"
-#include "patheditorwidget.h"
+#include "patheditor/patheditorwidget.hpp"
 #include "foil.h"
-#include "editablepath.h"
+#include "patheditor/editablepath.hpp"
 #include "thicknesscontours.h"
 #include "outline.h"
 

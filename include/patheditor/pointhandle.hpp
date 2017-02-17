@@ -20,47 +20,42 @@
  
 ****************************************************************************/
 
-#ifndef CUBICBEZIER_H
-#define CUBICBEZIER_H
+#ifndef POINTHANDLE_HPP
+#define POINTHANDLE_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
-#include "pathitem.h"
+#include <QGraphicsEllipseItem>
+#include <memory>
 
 namespace patheditor
 {
     /**
-     * @brief The CubicBezier PathItem
+     * @brief The handle object used by EditablePath to move control points
      */
-    class CubicBezier : public PathItem
+    class PointHandle : public QGraphicsEllipseItem
     {
     public:
-        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
+        explicit PointHandle(PathPoint *point, int size, const QBrush &brush,
+                             QGraphicsItem *parent = 0);
 
-        explicit CubicBezier(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<ControlPoint> controlPoint1,
-                             std::shared_ptr<ControlPoint> controlPoint2, std::shared_ptr<PathPoint> endPoint);
+        void setCenter(QPointF *point);
+        void setCenter(qreal &xpos, qreal &ypos);
 
-        std::shared_ptr<ControlPoint> controlPoint1();
-        std::shared_ptr<ControlPoint> controlPoint2();
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        // implementing PathItem
-        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
-        virtual const QList<const ControlPoint*> constControlPoints() const override;
-        virtual QPointF pointAtPercent(qreal t) const override;
-        virtual QRectF controlPointRect() const override;
-
-        virtual ~CubicBezier() {}
-
-    protected:
-        virtual void paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
-                                       bool editable, const PathSettings *settings) const override;
+        virtual ~PointHandle() {}
 
     private:
-        std::shared_ptr<ControlPoint> _cPoint1;
-        std::shared_ptr<ControlPoint> _cPoint2;
+        std::shared_ptr<QPen> _pen;
 
-        QList<std::shared_ptr<ControlPoint> > _controlPoints;
+        PathPoint *_point;
+        QPointF _originToCenter;
+
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     };
 }
 
-#endif // CUBICBEZIER_H
+#endif // POINTHANDLE_HPP

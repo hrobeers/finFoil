@@ -20,11 +20,11 @@
  
 ****************************************************************************/
 
-#ifndef PATHPOINT_H
-#define PATHPOINT_H
+#ifndef PATHPOINT_HPP
+#define PATHPOINT_HPP
 
 #include "hrlib/fwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <memory>
 #include <QObject>
@@ -108,4 +108,4 @@ namespace patheditor
     };
 }
 
-#endif // PATHPOINT_H
+#endif // PATHPOINT_HPP

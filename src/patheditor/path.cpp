@@ -20,18 +20,18 @@
  
 ****************************************************************************/
 
-#include "path.h"
-#include "pathtemplates.hpp"
+#include "patheditor/path.hpp"
+#include "patheditor/pathtemplates.hpp"
 
 #include <QVarLengthArray>
 #include <QJsonArray>
 #include <QPainter>
-#include "controlpoint.h"
-#include "curvepoint.hpp"
-#include "pathitem.h"
-#include "line.h"
-#include "cubicbezier.h"
-#include "pathsettings.h"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/curvepoint.hpp"
+#include "patheditor/pathitem.hpp"
+#include "patheditor/line.hpp"
+#include "patheditor/cubicbezier.hpp"
+#include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 
@@ -163,6 +163,8 @@ void Path::paint(QPainter *painter, bool editable, const PathSettings *settings)
         painter->drawPath(painterPath);
     }
 }
+
+Path::~Path() {}
 
 void Path::onPathChanged()
 {

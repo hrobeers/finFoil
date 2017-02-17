@@ -14,7 +14,7 @@
 #include "foilcalculator.h"
 
 #include <QtMath>
-#include "path.h"
+#include "patheditor/path.hpp"
 #include "foil.h"
 #include "profile.h"
 #include "outline.h"

@@ -23,7 +23,7 @@
 #ifndef OUTLINEEDITOR_H
 #define OUTLINEEDITOR_H
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>

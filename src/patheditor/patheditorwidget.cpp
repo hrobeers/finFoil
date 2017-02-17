@@ -20,13 +20,13 @@
  
 ****************************************************************************/
 
-#include "patheditorwidget.h"
+#include "patheditor/patheditorwidget.hpp"
 
 #include <QLayout>
-#include "patheditorview.h"
-#include "linerestrictor.h"
-#include "pointrestrictor.h"
-#include "editablepath.h"
+#include "patheditor/patheditorview.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/pointrestrictor.hpp"
+#include "patheditor/editablepath.hpp"
 
 #define featureEnabled(feat) (_enabledFeatures & feat)
 

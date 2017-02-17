@@ -22,12 +22,12 @@
 
 #include "profile.h"
 
-#include "path.h"
-#include "controlpoint.h"
-#include "curvepoint.hpp"
-#include "pointrestrictor.h"
-#include "linerestrictor.h"
-#include "cubicbezier.h"
+#include "patheditor/path.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/curvepoint.hpp"
+#include "patheditor/pointrestrictor.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/cubicbezier.hpp"
 
 SERIALIZABLE(foillogic::Profile, profile)
 

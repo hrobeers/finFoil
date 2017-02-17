@@ -20,14 +20,14 @@
  
 ****************************************************************************/
 
-#include "scalableimage.h"
+#include "patheditor/scalableimage.hpp"
 #include <QPainter>
 #include <QGraphicsScene>
 #include "qmath.h"
-#include "pathsettings.h"
-#include "linerestrictor.h"
-#include "pointhandle.h"
-#include "scalepoint.h"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/pointhandle.hpp"
+#include "patheditor/scalepoint.hpp"
 
 using namespace patheditor;
 

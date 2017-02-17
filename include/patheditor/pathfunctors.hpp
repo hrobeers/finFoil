@@ -26,7 +26,7 @@
 #include "hrlib/fwd/qtfwd.h"
 
 #include <QPointF>
-#include "ipath.hpp"
+#include "patheditor/ipath.hpp"
 #include "hrlib/math/brent.hpp"
 
 namespace patheditor

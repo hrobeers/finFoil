@@ -20,11 +20,11 @@
  
 ****************************************************************************/
 
-#include "controlpoint.h"
+#include "patheditor/controlpoint.hpp"
 
 #include <QGraphicsScene>
-#include "pathsettings.h"
-#include "pointhandle.h"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/pointhandle.hpp"
 
 using namespace patheditor;
 

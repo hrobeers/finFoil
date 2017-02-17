@@ -20,66 +20,28 @@
  
 ****************************************************************************/
 
-#ifndef PATH_H
-#define PATH_H
+#ifndef POINTRESTRICTOR_HPP
+#define POINTRESTRICTOR_HPP
 
-#include "hrlib/fwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
-#include <QObject>
-#include <memory>
-#include "jenson.h"
-#include "ipath.hpp"
-
-#define PATH_AREARES 512
+#include <QPointF>
+#include "patheditor/restrictor.hpp"
 
 namespace patheditor
 {
-    class Path : public QObject, public IPath
+    class PointRestrictor : public Restrictor
     {
-        Q_OBJECT
-
     public:
-        explicit Path(QObject *parent = 0);
+        explicit PointRestrictor(QPointF &point);
 
-        /**
-         * @brief append Append a new path item to the path
-         * @param pathItem PathItem to append
-         */
-        virtual void append(std::shared_ptr<PathItem> pathItem);
+        virtual void restrictCoordinate(qreal *x, qreal *y);
 
-        QList<std::shared_ptr<PathItem> > pathItems();
-        QList<const PathItem *> constPathItems() const;
-
-        // TODO unittest methods below
-
-        QRectF controlPointRect() const;
-
-        virtual QPointF pointAtPercent(qreal t) const override;
-
-        virtual qreal minX(qreal *t_top = 0) const override;
-        virtual qreal maxX(qreal *t_top = 0) const override;
-        virtual qreal minY(qreal *t_top = 0) const override;
-        virtual qreal maxY(qreal *t_top = 0) const override;
-
-        qreal area(int resolution = PATH_AREARES) const;
-
-        void paint(QPainter *painter, bool editable = false, const PathSettings *settings = 0);
-
-        virtual ~Path() {}
-
-    signals:
-        void onAppend(patheditor::PathItem *pathItem);
-        void pathChanged(patheditor::Path *sender);
-        void pathReleased(patheditor::Path *sender);
-
-    public slots:
-        void onPathChanged();
-        void onPathReleased();
+        virtual ~PointRestrictor() {}
 
     private:
-        QList<std::shared_ptr<PathItem> > _pathItemList;
+        QPointF _point;
     };
 }
 
-#endif // PATH_H
+#endif // POINTRESTRICTOR_HPP

@@ -20,9 +20,9 @@
  
 ****************************************************************************/
 
-#include "scalepoint.h"
-#include "pathsettings.h"
-#include "pointhandle.h"
+#include "patheditor/scalepoint.hpp"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/pointhandle.hpp"
 
 using namespace patheditor;
 

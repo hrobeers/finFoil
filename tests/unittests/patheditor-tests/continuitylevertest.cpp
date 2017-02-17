@@ -24,9 +24,9 @@
 #include "submodules/qtestrunner/qtestrunner.hpp"
 
 #include <math.h>
-#include "continuitylever.hpp"
-#include "curvepoint.hpp"
-#include "controlpoint.h"
+#include "patheditor/continuitylever.hpp"
+#include "patheditor/curvepoint.hpp"
+#include "patheditor/controlpoint.hpp"
 
 using namespace std;
 using namespace patheditor;

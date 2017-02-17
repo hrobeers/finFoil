@@ -20,10 +20,10 @@
  
 ****************************************************************************/
 
-#ifndef SCALEPOINT_H
-#define SCALEPOINT_H
+#ifndef SCALEPOINT_HPP
+#define SCALEPOINT_HPP
 
-#include "pathpoint.h"
+#include "patheditor/pathpoint.hpp"
 
 namespace patheditor
 {
@@ -38,4 +38,4 @@ namespace patheditor
     };
 }
 
-#endif // SCALEPOINT_H
+#endif // SCALEPOINT_HPP

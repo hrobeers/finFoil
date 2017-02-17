@@ -20,10 +20,10 @@
 
 ****************************************************************************/
 
-#include "pointcontextmenu.hpp"
+#include "patheditor/pointcontextmenu.hpp"
 
 #include <QMenu>
-#include "pathpoint.h"
+#include "patheditor/pathpoint.hpp"
 
 using namespace patheditor;
 

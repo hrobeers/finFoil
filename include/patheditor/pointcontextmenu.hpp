@@ -20,28 +20,31 @@
 
 ****************************************************************************/
 
-#ifndef CONTINUITYLEVER_HPP
-#define CONTINUITYLEVER_HPP
+#ifndef POINTCONTEXTMENU_HPP
+#define POINTCONTEXTMENU_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "hrlib/fwd/qtfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
-#include "restrictor.h"
+#include <QObject>
 
 namespace patheditor
 {
-    class ContinuityLever : public Restrictor
+    class PointContextMenu : public QObject
     {
+        Q_OBJECT
+
     public:
-        explicit ContinuityLever(PathPoint *leverPoint)
-            : _leverPoint(leverPoint) {}
+        explicit PointContextMenu(PathPoint *point) : _point(point) {}
 
-        virtual void restrictCoordinate(qreal *x, qreal *y) override;
-
-        virtual ~ContinuityLever() {}
+        void Show(const QPoint &pos);
 
     private:
-        PathPoint *_leverPoint;
+        PathPoint* _point;
+
+    private slots:
+        void setContinuous(bool continuous);
     };
 }
 
-#endif // CONTINUITYLEVER_HPP
+#endif // POINTCONTEXTMENU_HPP

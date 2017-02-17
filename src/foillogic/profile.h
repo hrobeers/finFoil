@@ -23,7 +23,7 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QObject>
 #include <QPointF>

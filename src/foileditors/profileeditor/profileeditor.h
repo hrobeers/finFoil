@@ -24,7 +24,7 @@
 #define PROFILEEDITOR_H
 
 #include "hrlib/fwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 #include "foillogicfwd/foillogicfwd.h"
 
 #include <QWidget>

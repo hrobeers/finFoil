@@ -20,10 +20,10 @@
 
 ****************************************************************************/
 
-#ifndef PATHSETTINGS_H
-#define PATHSETTINGS_H
+#ifndef PATHSETTINGS_HPP
+#define PATHSETTINGS_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QPen>
 
@@ -61,4 +61,4 @@ namespace patheditor
     };
 }
 
-#endif // PATHSETTINGS_H
+#endif // PATHSETTINGS_HPP

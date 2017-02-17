@@ -30,8 +30,8 @@
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 
-#include "path.h"
-#include "editablepath.h"
+#include "patheditor/path.hpp"
+#include "patheditor/editablepath.hpp"
 #include "foilcalculator.h"
 #include "foil.h"
 #include "profile.h"

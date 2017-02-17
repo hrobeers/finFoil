@@ -26,8 +26,8 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QGraphicsScene>
-#include "patheditorwidget.h"
-#include "editablepath.h"
+#include "patheditor/patheditorwidget.hpp"
+#include "patheditor/editablepath.hpp"
 #include "foil.h"
 #include "profile.h"
 

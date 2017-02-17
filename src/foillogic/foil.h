@@ -24,7 +24,7 @@
 #define FOIL_H
 
 #include "foillogicfwd/foillogicfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QObject>
 #include <memory>

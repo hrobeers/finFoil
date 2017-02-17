@@ -20,42 +20,39 @@
  
 ****************************************************************************/
 
-#ifndef POINTHANDLE_H
-#define POINTHANDLE_H
+#ifndef SCALABLEIMAGE_HPP
+#define SCALABLEIMAGE_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
-#include <QGraphicsEllipseItem>
+#include <QGraphicsObject>
 #include <memory>
 
 namespace patheditor
 {
-    /**
-     * @brief The handle object used by EditablePath to move control points
-     */
-    class PointHandle : public QGraphicsEllipseItem
+    class ScalableImage : public QGraphicsObject
     {
+        Q_OBJECT
     public:
-        explicit PointHandle(PathPoint *point, int size, const QBrush &brush,
-                             QGraphicsItem *parent = 0);
-
-        void setCenter(QPointF *point);
-        void setCenter(qreal &xpos, qreal &ypos);
+        explicit ScalableImage(const QPixmap &pixmap, const QRect &initialRect, QGraphicsItem *parent = 0);
 
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual QRectF boundingRect() const;
 
-        virtual ~PointHandle() {}
+        virtual ~ScalableImage();
+
+    signals:
+
+    public slots:
 
     private:
-        std::shared_ptr<QPen> _pen;
+        QPixmap _pixmap;
+        QRect _rect;
+        std::unique_ptr<ScalePoint> _scalePoint;
 
-        PathPoint *_point;
-        QPointF _originToCenter;
-
-        virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    private slots:
+        void onScaleMove(PathPoint *point);
     };
 }
 
-#endif // POINTHANDLE_H
+#endif // SCALABLEIMAGE_HPP

@@ -20,13 +20,13 @@
  
 ****************************************************************************/
 
-#ifndef QUADRANTRESTRICTOR_H
-#define QUADRANTRESTRICTOR_H
+#ifndef QUADRANTRESTRICTOR_HPP
+#define QUADRANTRESTRICTOR_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QPointF>
-#include "restrictor.h"
+#include "patheditor/restrictor.hpp"
 
 namespace patheditor
 {
@@ -58,4 +58,4 @@ namespace patheditor
     };
 }
 
-#endif // QUADRANTRESTRICTOR_H
+#endif // QUADRANTRESTRICTOR_HPP

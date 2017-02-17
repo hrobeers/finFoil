@@ -25,8 +25,8 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
-#include "patheditorwidget.h"
-#include "editablepath.h"
+#include "patheditor/patheditorwidget.hpp"
+#include "patheditor/editablepath.hpp"
 #include "foil.h"
 #include "thicknessprofile.h"
 

@@ -20,11 +20,11 @@
 
 ****************************************************************************/
 
-#ifndef PATHITEM_H
-#define PATHITEM_H
+#ifndef PATHITEM_HPP
+#define PATHITEM_HPP
 
 #include "hrlib/fwd/qtfwd.h"
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <memory>
 #include <QList>
@@ -83,4 +83,4 @@ namespace patheditor
     };
 }
 
-#endif // PATHITEM_H
+#endif // PATHITEM_HPP

@@ -20,10 +20,10 @@
  
 ****************************************************************************/
 
-#ifndef PATHEDITORWIDGET_H
-#define PATHEDITORWIDGET_H
+#ifndef PATHEDITORWIDGET_HPP
+#define PATHEDITORWIDGET_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 #include "hrlib/fwd/qtfwd.h"
 
 #include <QWidget>
@@ -112,4 +112,4 @@ namespace patheditor
     };
 }
 
-#endif // PATHEDITORWIDGET_H
+#endif // PATHEDITORWIDGET_HPP

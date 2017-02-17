@@ -20,13 +20,13 @@
  
 ****************************************************************************/
 
-#include "cubicbezier.h"
+#include "patheditor/cubicbezier.hpp"
 
 #include <QPainter>
 #include <QRectF>
 #include <boost/math/special_functions/pow.hpp>
-#include "pathsettings.h"
-#include "controlpoint.h"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/controlpoint.hpp"
 #include "jenson.h"
 
 using namespace patheditor;

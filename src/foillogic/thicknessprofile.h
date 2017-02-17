@@ -23,7 +23,7 @@
 #ifndef THICKNESSPROFILE_H
 #define THICKNESSPROFILE_H
 
-#include "patheditorfwd/patheditorfwd.h"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QObject>
 #include <memory>

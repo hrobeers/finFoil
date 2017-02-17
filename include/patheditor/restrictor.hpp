@@ -20,35 +20,20 @@
  
 ****************************************************************************/
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef RESTRICTOR_HPP
+#define RESTRICTOR_HPP
 
-#include "patheditorfwd/patheditorfwd.h"
-
-#include "pathitem.h"
+#include <QtGlobal>
 
 namespace patheditor
 {
-    /**
-     * @brief The Line PathItem
-     */
-    class Line : public PathItem
+    class Restrictor
     {
     public:
-        explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
+        virtual void restrictCoordinate(qreal* x, qreal* y) = 0;
 
-        // implementing PathItem
-        virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
-        virtual const QList<const ControlPoint*> constControlPoints() const override;
-        virtual QPointF pointAtPercent(qreal t) const override;
-        virtual QRectF controlPointRect() const override;
-
-        virtual ~Line() {}
-
-    protected:
-        virtual void paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *painter,
-                                       bool editable, const PathSettings *settings) const override;
+        virtual ~Restrictor() {}
     };
 }
 
-#endif // LINE_H
+#endif // RESTRICTOR_HPP

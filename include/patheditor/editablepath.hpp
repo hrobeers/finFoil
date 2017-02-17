@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2014, Hans Robeers
+ Copyright (c) 2013, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,30 +20,60 @@
 
 ****************************************************************************/
 
-#ifndef PATHTEMPLATES_HPP
-#define PATHTEMPLATES_HPP
+#ifndef EDITABLEPATH_HPP
+#define EDITABLEPATH_HPP
 
-#include <memory>
-#include <boost/math/tools/minima.hpp>
-#include "hrlib/math/brent.hpp"
-#include "path.h"
-#include "pathfunctors.hpp"
+#include "patheditor/fwd/patheditorfwd.hpp"
+
+#include <QGraphicsObject>
 
 namespace patheditor
 {
-    template <int Dimension, int Multiplier>
-    static qreal extreme(const Path *self, qreal *t_ext)
+    /**
+     * @brief A compound path, build by PathItems, that can be edited by dragging control points
+     */
+    class EditablePath : public QGraphicsObject
     {
-        std::unique_ptr<f_ValueAtPercentPath<Dimension,Multiplier>> target(new f_ValueAtPercentPath<Dimension,Multiplier>(self));
+        Q_OBJECT
+    public:
+        explicit EditablePath(Path* path, QGraphicsItem * parent = 0);
 
-        qreal min_t = t_ext ? *t_ext : 0.5;
-        qreal min = hrlib::Brent::local_min(0.0, 1.0, 0.0001, *target, min_t);
+        // Implementing QGraphicsItem
+        virtual QRectF boundingRect() const;
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                        QWidget *widget);
 
-        if (t_ext)
-            *t_ext = min_t;
+        Path* path();
 
-        return min * Multiplier;
-    }
+        QPointF pointAtPercent(qreal t);
+
+        bool released();
+
+        void setEditable(bool editable);
+        bool editable();
+
+        virtual ~EditablePath() {}
+
+    signals:
+        void pathChanged(EditablePath *sender);
+        void pathReleased(EditablePath *sender);
+
+    private slots:
+        void onAppend(patheditor::PathItem *pathItem);
+        void onPointDrag(PathPoint *sender);
+        void onPointRelease(PathPoint *sender);
+
+    private:
+        bool _editable = true;
+        bool _firstPaint = true;
+        bool _released = true;
+        Path* _path = 0;
+        const PathSettings* _settings = 0;
+
+        void connectPoints(PathItem *pathItem);
+        void emitPathChanged();
+        void emitPathReleased();
+    };
 }
 
-#endif // PATHTEMPLATES_HPP
+#endif // EDITABLEPATH_HPP

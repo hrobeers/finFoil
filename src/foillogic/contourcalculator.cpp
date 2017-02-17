@@ -16,13 +16,13 @@
 #include <QVarLengthArray>
 #include <QPainterPath>
 #include <boost/math/tools/roots.hpp>
-#include "pathfunctors.hpp"
+#include "patheditor/pathfunctors.hpp"
 #include "hrlib/math/spline.hpp"
 #include "foil.h"
 #include "profile.h"
 #include "thicknessprofile.h"
 #include "outline.h"
-#include "path.h"
+#include "patheditor/path.hpp"
 
 #ifdef QT_DEBUG
     #define INITCNT 128

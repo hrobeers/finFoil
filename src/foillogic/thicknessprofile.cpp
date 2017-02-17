@@ -22,12 +22,12 @@
 
 #include "thicknessprofile.h"
 
-#include "path.h"
-#include "pathpoint.h"
-#include "controlpoint.h"
-#include "curvepoint.hpp"
-#include "linerestrictor.h"
-#include "cubicbezier.h"
+#include "patheditor/path.hpp"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/curvepoint.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/cubicbezier.hpp"
 
 SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
 
