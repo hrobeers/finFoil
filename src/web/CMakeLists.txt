@@ -1,4 +1,5 @@
-project(web)
+set(LIB_NAME "finfoil_web")
+project(${LIB_NAME})
 
 set(CMAKE_AUTOUIC ON)
 qt5_wrap_ui(FORMS_HEADERS exportdialog.ui)
@@ -11,11 +12,15 @@ set(SRC
     stlexport.cpp
 )
 
-add_library(web ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
-target_link_libraries(web
+target_link_libraries(${LIB_NAME}
     Qt5::Core
     Qt5::Network
     Qt5::Widgets
     Qt5::WebKitWidgets
+)
+
+install(TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION lib
 )

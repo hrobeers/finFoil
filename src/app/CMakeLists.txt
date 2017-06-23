@@ -1,3 +1,6 @@
+
+set(BINARY_NAME "finFoil")
+
 set(CMAKE_AUTOUIC ON)
 qt5_wrap_ui(FORMS_HEADERS mainwindow.ui)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}) # the auto generated ui_*.h files
@@ -32,7 +35,6 @@ endif()
 # The executable
 #
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 if (APPLE)
   add_executable(${BINARY_NAME} WIN32 MACOSX_BUNDLE ${ICNS} ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
 else (APPLE)
@@ -59,12 +61,15 @@ endif()
 #
 
 target_link_libraries(${BINARY_NAME}
-    foileditors
+    finfoil_editors
 )
 if (Web)
-target_link_libraries(${BINARY_NAME} web)
+target_link_libraries(${BINARY_NAME} finfoil_web)
 endif()
 
+install(TARGETS ${BINARY_NAME}
+  RUNTIME DESTINATION bin
+)
 
 # add enough libraries to the app bundle to allow stand-alone execution
 if (APPLE)

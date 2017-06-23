@@ -1,4 +1,5 @@
-project(foileditors)
+set(LIB_NAME "finfoil_editors")
+project(${LIB_NAME})
 
 file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/foileditors/*.hpp)
 
@@ -10,9 +11,13 @@ set(SRC
     foildatawidget.cpp
 )
 
-add_library(foileditors ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
-target_link_libraries(foileditors
+target_link_libraries(${LIB_NAME}
     qtunits
-    foillogic
+    finfoil_logic
+)
+
+install(TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION lib
 )

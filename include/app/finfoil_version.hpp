@@ -24,7 +24,7 @@
 #define FINFOIL_VERSION_H
 
 #include "hrlib/version.hpp"
-#include "../version_autogen.h"
+#include "../version_autogen.hpp"
 
 #include <QString>
 

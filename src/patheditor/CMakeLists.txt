@@ -1,4 +1,5 @@
-project(patheditor)
+set(LIB_NAME "finfoil_patheditor")
+project(${LIB_NAME})
 
 file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/patheditor/*.hpp)
 
@@ -25,10 +26,14 @@ set(SRC
     scalepoint.cpp
 )
 
-add_library(patheditor ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
-target_link_libraries(patheditor
+target_link_libraries(${LIB_NAME}
     Qt5::Widgets
     jenson
     hrlib
+)
+
+install(TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION lib
 )
