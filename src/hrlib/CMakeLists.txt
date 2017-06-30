@@ -3,15 +3,10 @@ project(${LIB_NAME})
 
 file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/${LIB_NAME}/*.hpp)
 
-set(SRC
-    exceptions.cpp
-    math/brent.cpp
-    math/spline.cpp
-    string/json_utils.cpp
-    version.cpp
-)
+file(GLOB_RECURSE SRC *.cpp)
+file(GLOB_RECURSE SRC_C *.c *.h)
 
-add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${SRC_C} ${HDR})
 
 target_link_libraries(${LIB_NAME} Qt5::Core)
 

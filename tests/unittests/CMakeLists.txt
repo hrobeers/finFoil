@@ -8,22 +8,10 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
 # Sources
-set(SRC
-    main.cpp
-    hrlib-tests/decoratortests.cpp
-    patheditor-tests/continuitylevertest.cpp
-    patheditor-tests/quadrantrestrictortest.cpp
-    patheditor-tests/serializationtests.cpp
-)
+file(GLOB_RECURSE SRC *.cpp)
 
 # Headers
-set(HDR
-    ../../submodules/qtestrunner/qtestrunner.hpp
-    hrlib-tests/decoratortests.hpp
-    patheditor-tests/continuitylevertest.hpp
-    patheditor-tests/quadrantrestrictortest.h
-    patheditor-tests/serializationtests.h
-)
+file(GLOB_RECURSE HDR *.hpp)
 
 
 #
