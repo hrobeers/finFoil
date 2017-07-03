@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2014, Hans Robeers
+ Copyright (c) 2017, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,18 +20,14 @@
 
 ****************************************************************************/
 
-#ifndef CUREVFITTESTS_H
-#define CUREVFITTESTS_H
+#ifndef HRLIB_VERTREX_HPP
+#define HRLIB_VERTREX_HPP
 
-#include <QObject>
+#include <array>
 
-class CurveFitTests : public QObject
-{
-    Q_OBJECT
+namespace hrlib {
+  template <int Dim>
+  using vertex = std::array<double, Dim>;
+}
 
-private slots:
-    void testVertexReading();
-    void testSingle2D();
-};
-
-#endif // CUREVFITTESTS_H
+#endif // HRLIB_VERTREX_HPP

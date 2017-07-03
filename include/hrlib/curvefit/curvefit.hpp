@@ -29,14 +29,13 @@
 #include <boost/math/special_functions/pow.hpp>
 #include <boost/utility/value_init.hpp>
 
+#include "hrlib/curvefit/vertex.hpp"
+
 extern "C" {
   #include "curve_fit_nd.h"
 }
 
 namespace hrlib {
-  template <int Dim>
-  using vertex = std::array<double, Dim>;
-
   template <int Dim>
   struct curve_fit
   {

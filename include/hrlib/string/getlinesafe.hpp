@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2014, Hans Robeers
+ Copyright (c) 2017, Hans Robeers
  All rights reserved.
 
  BSD 2-Clause License
@@ -20,18 +20,46 @@
 
 ****************************************************************************/
 
-#ifndef CUREVFITTESTS_H
-#define CUREVFITTESTS_H
+#ifndef HRLIB_GETLINESAFE_HPP
+#define HRLIB_GETLINESAFE_HPP
 
-#include <QObject>
+#include <string>
 
-class CurveFitTests : public QObject
+namespace hrlib
 {
-    Q_OBJECT
+  std::istream& getline_safe(std::istream& is, std::string& t) {
+    t.clear();
 
-private slots:
-    void testVertexReading();
-    void testSingle2D();
-};
+    // The characters in the stream are read one-by-one using a std::streambuf.
+    // That is faster than reading them one-by-one using the std::istream.
+    // Code that uses streambuf this way must be guarded by a sentry object.
+    // The sentry object performs various tasks,
+    // such as thread synchronization and updating the stream state.
 
-#endif // CUREVFITTESTS_H
+    std::istream::sentry se(is, true);
+    std::streambuf* sb = is.rdbuf();
+
+    for (;;) {
+      int c = sb->sbumpc();
+      switch (c) {
+        case '\n':
+                return is;
+        case '\r':
+                if (sb->sgetc() == '\n') {
+                        sb->sbumpc();
+                }
+                return is;
+        case EOF:
+                // Also handle the case when the last line has no line ending
+                if (t.empty()) {
+                        is.setstate(std::ios::eofbit);
+                }
+                return is;
+        default:
+                t += (char)c;
+      }
+    }
+  }
+}
+
+#endif // HRLIB_GETLINESAFE_HPP

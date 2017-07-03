@@ -22,13 +22,33 @@
 
 #include "curvefittests.hpp"
 
-#include <iostream>
+#include <boost/filesystem.hpp>
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "hrlib/curvefit/curvefit.hpp"
+#include "hrlib/curvefit/vertexio.hpp"
 
 using namespace hrlib;
 using namespace std;
+
+void CurveFitTests::testVertexReading()
+{
+  std::string path = "testdata/profiles/";
+  for (auto & p : boost::filesystem::directory_iterator(path))
+  {
+    std::ifstream ifs;
+    ifs.open(p.path().string(), std::ifstream::in);
+
+    std::vector<vertex<2>> curve;
+    vertex<2> point;
+    while(utf8::read_next_vertex<2>(ifs, point))
+      curve.push_back(point);
+
+    if (std::all_of(curve.cbegin(), curve.cend(), [curve](const vertex<2> &p){return p[1] == curve[0][1];}))
+      QFAIL(std::string("Failed reading: " + p.path().string()).c_str());
+  }
+
+}
 
 void CurveFitTests::testSingle2D()
 {
