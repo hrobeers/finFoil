@@ -23,6 +23,7 @@
 #include "app/mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+#include <fstream>
 #include <QSplitter>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -36,6 +37,7 @@
 #include "foillogic/foilcalculator.hpp"
 #include "foillogic/outline.hpp"
 #include "foillogic/profile.hpp"
+#include "foillogic/profileloader.hpp"
 #include "foillogic/thicknessprofile.hpp"
 #include "hrlib/string/json_utils.hpp"
 
@@ -170,10 +172,22 @@ bool MainWindow::saveProfile()
 
 void MainWindow::loadProfile()
 {
-  QString filePath = askOpenFileName(tr("Profiles (*.fprof);;All files (*)")); // TODO support: Foils (*.foil)
+  QString filePath = askOpenFileName(tr("All supported (*.fprof *.dat);;Profiles (*.fprof);;UIUC Airfoils (*.dat);;All files (*)")); // TODO support: Foils (*.foil)
 
   if (filePath.isEmpty())
       return;
+
+  if (filePath.endsWith(".dat", Qt::CaseInsensitive))
+    {
+      std::ifstream ifs;
+      ifs.open(filePath.toStdString(), std::ifstream::in);
+
+      _fin->pSetProfile(ProfileLoader::loadDatStream(ifs));
+      _profileEditor->setFoil(_fin.get());
+      _profileEditor->setEditable(false);
+      _fin->onDeserialized();
+      return;
+    }
 
   QString errorMsg;
   QJsonObject jObj;

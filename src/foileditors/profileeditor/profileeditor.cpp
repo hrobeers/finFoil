@@ -74,6 +74,13 @@ void ProfileEditor::setFoil(Foil *foil)
     _pathEditor->addPath(_topProfile);
 }
 
+void ProfileEditor::setEditable(bool editable)
+{
+  _topProfile->setEditable(editable);
+  _botProfile->setEditable(editable);
+  // TODO disable symmetry combobox
+}
+
 void ProfileEditor::setGridUnitSize(qreal pxPerUnit)
 {
     _pathEditor->setGridUnitSize(pxPerUnit);
