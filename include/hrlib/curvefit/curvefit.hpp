@@ -49,7 +49,7 @@ namespace hrlib {
       // Determine lengths between points
       std::vector<double> lengths;
       lengths.push_back(0);
-      for (int i=1; i<npts; i++)
+      for (size_t i=1; i<npts; i++)
         lengths.push_back(sqrt(boost::math::pow<2>(points[i][0]-points[i-1][0]) + boost::math::pow<2>(points[i][1]-points[i-1][1])));
 
       // Determine tangents based on first and last two points if not provided
