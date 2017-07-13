@@ -20,12 +20,12 @@
 
 ****************************************************************************/
 
-#include "curvepoint.hpp"
+#include "patheditor/curvepoint.hpp"
 
 #include <QGraphicsScene>
-#include "pathsettings.h"
-#include "pointhandle.h"
-#include "continuitylever.hpp"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/pointhandle.hpp"
+#include "patheditor/continuitylever.hpp"
 
 using namespace patheditor;
 

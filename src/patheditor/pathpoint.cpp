@@ -20,14 +20,14 @@
  
 ****************************************************************************/
 
-#include "pathpoint.h"
+#include "patheditor/pathpoint.hpp"
 
 #include <math.h>
 #include <QGraphicsScene>
-#include "pointhandle.h"
-#include "pathsettings.h"
-#include "exceptions.h"
-#include "restrictor.h"
+#include "patheditor/pointhandle.hpp"
+#include "patheditor/pathsettings.hpp"
+#include "hrlib/exceptions.hpp"
+#include "patheditor/restrictor.hpp"
 
 using namespace patheditor;
 

@@ -20,15 +20,15 @@
  
 ****************************************************************************/
 
-#include "thicknesscontours.h"
+#include "foileditors/outlineeditor/thicknesscontours.hpp"
 
 #include <QPainter>
 #include <QtAlgorithms>
 #include <QGraphicsScene>
-#include "path.h"
-#include "foilcalculator.h"
-#include "foil.h"
-#include "outline.h"
+#include "patheditor/path.hpp"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/outline.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

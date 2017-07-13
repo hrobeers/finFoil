@@ -20,11 +20,11 @@
 
 ****************************************************************************/
 
-#include "pathitem.h"
+#include "patheditor/pathitem.hpp"
 
 #include <QPainter>
-#include "pathsettings.h"
-#include "controlpoint.h"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/controlpoint.hpp"
 
 using namespace patheditor;
 

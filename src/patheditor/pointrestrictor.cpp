@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "pointrestrictor.h"
+#include "patheditor/pointrestrictor.hpp"
 
 using namespace patheditor;
 

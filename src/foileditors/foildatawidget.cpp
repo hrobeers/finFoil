@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "foildatawidget.h"
+#include "foileditors/foildatawidget.hpp"
 
 #include <qmath.h>
 #include <QFormLayout>
@@ -30,12 +30,12 @@
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 
-#include "path.h"
-#include "editablepath.h"
-#include "foilcalculator.h"
-#include "foil.h"
-#include "profile.h"
-#include "outline.h"
+#include "patheditor/path.hpp"
+#include "patheditor/editablepath.hpp"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/outline.hpp"
 
 #include <QtUnits>
 

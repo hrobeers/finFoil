@@ -20,15 +20,15 @@
 
 ****************************************************************************/
 
-#include "outline.h"
+#include "foillogic/outline.hpp"
 
-#include "path.h"
-#include "controlpoint.h"
-#include "curvepoint.hpp"
-#include "cubicbezier.h"
-#include "pointrestrictor.h"
-#include "linerestrictor.h"
-#include "quadrantrestrictor.h"
+#include "patheditor/path.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/curvepoint.hpp"
+#include "patheditor/cubicbezier.hpp"
+#include "patheditor/pointrestrictor.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/quadrantrestrictor.hpp"
 
 SERIALIZABLE(foillogic::Outline, outline)
 

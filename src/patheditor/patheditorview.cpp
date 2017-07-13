@@ -20,11 +20,12 @@
  
 ****************************************************************************/
 
-#include "patheditorview.h"
+#include "patheditor/patheditorview.hpp"
+
 #include <QDragMoveEvent>
 #include <QUrl>
 #include <QMimeData>
-#include "scalableimage.h"
+#include "patheditor/scalableimage.hpp"
 
 #define MIN_UNIT_SIZE 5
 

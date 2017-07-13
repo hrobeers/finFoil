@@ -13,7 +13,7 @@
 
 using namespace std;
 
-# include "spline.hpp"
+# include "hrlib/math/spline.hpp"
 
 #include <algorithm>
 #include <vector>

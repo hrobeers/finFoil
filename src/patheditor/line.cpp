@@ -20,13 +20,13 @@
  
 ****************************************************************************/
 
-#include "line.h"
+#include "patheditor/line.hpp"
 
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QRectF>
-#include "pathpoint.h"
-#include "pathsettings.h"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 

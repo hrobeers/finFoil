@@ -11,18 +11,18 @@
 
 ****************************************************************************/
 
-#include "contourcalculator.h"
+#include "foillogic/contourcalculator.hpp"
 
 #include <QVarLengthArray>
 #include <QPainterPath>
 #include <boost/math/tools/roots.hpp>
-#include "pathfunctors.hpp"
-#include "math/spline.hpp"
-#include "foil.h"
-#include "profile.h"
-#include "thicknessprofile.h"
-#include "outline.h"
-#include "path.h"
+#include "patheditor/pathfunctors.hpp"
+#include "hrlib/math/spline.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
+#include "foillogic/outline.hpp"
+#include "patheditor/path.hpp"
 
 #ifdef QT_DEBUG
     #define INITCNT 128

@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "linerestrictor.h"
+#include "patheditor/linerestrictor.hpp"
 
 using namespace patheditor;
 

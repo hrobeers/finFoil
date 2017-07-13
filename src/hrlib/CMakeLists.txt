@@ -1,6 +1,9 @@
-project(hrlib)
+set(LIB_NAME "hrlib")
+project(${LIB_NAME})
 
-set(hrlibSRC
+file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/${LIB_NAME}/*.hpp)
+
+set(SRC
     exceptions.cpp
     math/brent.cpp
     math/spline.cpp
@@ -8,18 +11,10 @@ set(hrlibSRC
     version.cpp
 )
 
-set(hrlibHDR
-    exceptions.h
-    hrlibfwd/qtfwd.h
-    math/brent.hpp
-    math/spline.hpp
-    mixin/historical.hpp
-    mixin/identifiable.hpp
-    patterns/decorator.hpp
-    string/json_utils.hpp
-    version.h
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+
+target_link_libraries(${LIB_NAME} Qt5::Core)
+
+install(TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION lib
 )
-
-add_library(hrlib ${FINFOIL_LIB_TYPE} ${hrlibSRC} ${hrlibHDR})
-
-target_link_libraries(hrlib Qt5::Core)

@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "exportdialog.hpp"
+#include "web/exportdialog.hpp"
 #include "ui_exportdialog.h"
 
 #include <QNetworkReply>

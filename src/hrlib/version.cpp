@@ -20,7 +20,7 @@
  
 ****************************************************************************/
 
-#include "version.h"
+#include "hrlib/version.hpp"
 
 using namespace hrlib;
 

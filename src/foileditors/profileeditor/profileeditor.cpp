@@ -20,16 +20,16 @@
  
 ****************************************************************************/
 
-#include "profileeditor.h"
+#include "foileditors/profileeditor/profileeditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QComboBox>
 #include <QGraphicsScene>
-#include "patheditorwidget.h"
-#include "editablepath.h"
-#include "foil.h"
-#include "profile.h"
+#include "patheditor/patheditorwidget.hpp"
+#include "patheditor/editablepath.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/profile.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

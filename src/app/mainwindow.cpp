@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "mainwindow.h"
+#include "app/mainwindow.hpp"
 #include "ui_mainwindow.h"
 
 #include <QSplitter>
@@ -29,18 +29,18 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QCloseEvent>
-#include "main.h"
-#include "foileditors.h"
+#include "app/main.hpp"
+#include "foileditors/foileditors.hpp"
 #include "jenson.h"
-#include "foil.h"
-#include "foilcalculator.h"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
-#include "string/json_utils.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/foilcalculator.hpp"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
+#include "hrlib/string/json_utils.hpp"
 
 #ifndef WEB_DISABLED
-#include "exportdialog.hpp"
+#include "web/exportdialog.hpp"
 #endif
 
 using namespace foileditors;

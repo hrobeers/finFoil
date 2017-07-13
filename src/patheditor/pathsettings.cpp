@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "pathsettings.h"
+#include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 

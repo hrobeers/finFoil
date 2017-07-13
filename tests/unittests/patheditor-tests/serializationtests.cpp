@@ -25,16 +25,16 @@
 
 #include <memory>
 #include <QJsonDocument>
-#include "foil.h"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
-#include "path.h"
-#include "line.h"
-#include "cubicbezier.h"
-#include "pathpoint.h"
-#include "controlpoint.h"
-#include "curvepoint.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
+#include "patheditor/path.hpp"
+#include "patheditor/line.hpp"
+#include "patheditor/cubicbezier.hpp"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/curvepoint.hpp"
 
 using namespace patheditor;
 using namespace foillogic;

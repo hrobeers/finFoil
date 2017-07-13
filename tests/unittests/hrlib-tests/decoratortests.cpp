@@ -23,7 +23,7 @@
 #include "decoratortests.hpp"
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
-#include "patterns/decorator.hpp"
+#include "hrlib/patterns/decorator.hpp"
 
 using namespace hrlib::patterns;
 

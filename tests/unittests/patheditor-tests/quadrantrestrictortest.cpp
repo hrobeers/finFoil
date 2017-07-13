@@ -21,9 +21,9 @@
 ****************************************************************************/
 
 #include "quadrantrestrictortest.h"
-#include "quadrantrestrictor.h"
+#include "patheditor/quadrantrestrictor.hpp"
 #include "submodules/qtestrunner/qtestrunner.hpp"
-#include "exceptions.h"
+#include "hrlib/exceptions.hpp"
 
 void QuadrantRestrictorTest::testException()
 {

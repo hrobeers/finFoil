@@ -20,14 +20,14 @@
  
 ****************************************************************************/
 
-#include "pointhandle.h"
+#include "patheditor/pointhandle.hpp"
 
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include "pathpoint.h"
-#include "pointcontextmenu.hpp"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/pointcontextmenu.hpp"
 
 using namespace patheditor;
 

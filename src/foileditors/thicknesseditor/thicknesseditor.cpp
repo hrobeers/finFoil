@@ -20,15 +20,15 @@
  
 ****************************************************************************/
 
-#include "thicknesseditor.h"
+#include "foileditors/thicknesseditor/thicknesseditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
-#include "patheditorwidget.h"
-#include "editablepath.h"
-#include "foil.h"
-#include "thicknessprofile.h"
+#include "patheditor/patheditorwidget.hpp"
+#include "patheditor/editablepath.hpp"
+#include "foillogic/foil.hpp"
+#include "foillogic/thicknessprofile.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

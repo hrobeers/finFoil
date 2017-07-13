@@ -20,18 +20,18 @@
  
 ****************************************************************************/
 
-#include "outlineeditor.h"
+#include "foileditors/outlineeditor/outlineeditor.hpp"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QGraphicsScene>
 #include <QSplitter>
-#include "foilcalculator.h"
-#include "patheditorwidget.h"
-#include "foil.h"
-#include "editablepath.h"
-#include "thicknesscontours.h"
-#include "outline.h"
+#include "foillogic/foilcalculator.hpp"
+#include "patheditor/patheditorwidget.hpp"
+#include "foillogic/foil.hpp"
+#include "patheditor/editablepath.hpp"
+#include "foileditors/outlineeditor/thicknesscontours.hpp"
+#include "foillogic/outline.hpp"
 
 using namespace foileditors;
 using namespace foillogic;

@@ -20,17 +20,17 @@
 
 ****************************************************************************/
 
-#include "editablepath.h"
+#include "patheditor/editablepath.hpp"
 
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
-#include "path.h"
-#include "pathitem.h"
-#include "pathpoint.h"
-#include "controlpoint.h"
-#include "pathsettings.h"
-#include "pointhandle.h"
+#include "patheditor/path.hpp"
+#include "patheditor/pathitem.hpp"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/pathsettings.hpp"
+#include "patheditor/pointhandle.hpp"
 
 using namespace patheditor;
 

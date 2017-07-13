@@ -21,7 +21,7 @@
 ****************************************************************************/
 
 #define MAIN_CPP
-#include "main.h"
+#include "app/main.hpp"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -31,8 +31,8 @@
 QTextStream out(stdout);
 QTextStream err(stderr);
 
-#include "about.hpp"
-#include "runinteractive.hpp"
+#include "app/about.hpp"
+#include "app/runinteractive.hpp"
 
 int main(int argc, char *argv[])
 {

@@ -21,18 +21,18 @@
  
 ****************************************************************************/
 
-#include "foil.h"
+#include "foillogic/foil.hpp"
 
-#include "path.h"
-#include "pathpoint.h"
-#include "editablepath.h"
-#include "linerestrictor.h"
-#include "quadrantrestrictor.h"
-#include "cubicbezier.h"
-#include "outline.h"
-#include "profile.h"
-#include "thicknessprofile.h"
-#include "pathdecorators.hpp"
+#include "patheditor/path.hpp"
+#include "patheditor/pathpoint.hpp"
+#include "patheditor/editablepath.hpp"
+#include "patheditor/linerestrictor.hpp"
+#include "patheditor/quadrantrestrictor.hpp"
+#include "patheditor/cubicbezier.hpp"
+#include "foillogic/outline.hpp"
+#include "foillogic/profile.hpp"
+#include "foillogic/thicknessprofile.hpp"
+#include "patheditor/pathdecorators.hpp"
 
 SERIALIZABLE(foillogic::Foil, foil)
 

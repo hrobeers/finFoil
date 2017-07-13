@@ -21,16 +21,16 @@
  
 ****************************************************************************/
 
-#include "stlexport.hpp"
+#include "web/stlexport.hpp"
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QJsonDocument>
 
 #include "jenson.h"
-#include "foil.h"
-#include "string/json_utils.hpp"
-#include "version.h"
+#include "foillogic/foil.hpp"
+#include "hrlib/string/json_utils.hpp"
+#include "hrlib/version.hpp"
 
 using namespace web;
 using namespace foillogic;

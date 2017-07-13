@@ -20,9 +20,9 @@
  
 ****************************************************************************/
 
-#include "quadrantrestrictor.h"
+#include "patheditor/quadrantrestrictor.hpp"
 
-#include "exceptions.h"
+#include "hrlib/exceptions.hpp"
 
 #define notIn(x) !(_quadrants & x)
 
