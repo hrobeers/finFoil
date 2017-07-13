@@ -1,66 +1,38 @@
 /****************************************************************************
-  
- Copyright (c) 2013, Hans Robeers
+
+ Copyright (c) 2017, Hans Robeers
  All rights reserved.
- 
+
  BSD 2-Clause License
- 
+
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
+
    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-   
+
    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-   
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
  COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
 ****************************************************************************/
 
-#ifndef PROFILEEDITOR_HPP
-#define PROFILEEDITOR_HPP
+#ifndef PROFILELOADER_HPP
+#define PROFILELOADER_HPP
 
-#include "hrlib/fwd/qtfwd.hpp"
-#include "patheditor/fwd/patheditorfwd.hpp"
 #include "foillogic/fwd/foillogicfwd.hpp"
 
-#include <QWidget>
+#include <iostream>
 
-using namespace patheditor;
-
-namespace foileditors
+namespace foillogic
 {
-    class ProfileEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit ProfileEditor(QWidget *parent = 0);
-
-        void setFoil(foillogic::Foil* foil);
-        void setEditable(bool editable);
-
-        virtual ~ProfileEditor() {}
-
-    signals:
-
-    public slots:
-        void setGridUnitSize(qreal pxPerUnit);
-
-    private:
-        foillogic::Foil* _foil;
-        EditablePath* _topProfile;
-        EditablePath* _botProfile;
-
-        QVBoxLayout* _mainLayout;
-        PathEditorWidget* _pathEditor;
-        QComboBox* _symmetryCombo;
-
-    private slots:
-        void symmetryChanged(int sym);
-    };
+  struct ProfileLoader
+  {
+    static Profile* loadDatStream(std::istream &stream);
+  };
 }
 
-#endif // PROFILEEDITOR_HPP
+#endif // PROFILELOADER_HPP

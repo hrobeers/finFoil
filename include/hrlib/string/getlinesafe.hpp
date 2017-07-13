@@ -1,66 +1,65 @@
 /****************************************************************************
-  
- Copyright (c) 2013, Hans Robeers
+
+ Copyright (c) 2017, Hans Robeers
  All rights reserved.
- 
+
  BSD 2-Clause License
- 
+
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
+
    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-   
+
    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-   
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
  COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
 ****************************************************************************/
 
-#ifndef PROFILEEDITOR_HPP
-#define PROFILEEDITOR_HPP
+#ifndef HRLIB_GETLINESAFE_HPP
+#define HRLIB_GETLINESAFE_HPP
 
-#include "hrlib/fwd/qtfwd.hpp"
-#include "patheditor/fwd/patheditorfwd.hpp"
-#include "foillogic/fwd/foillogicfwd.hpp"
+#include <string>
 
-#include <QWidget>
-
-using namespace patheditor;
-
-namespace foileditors
+namespace hrlib
 {
-    class ProfileEditor : public QWidget
-    {
-        Q_OBJECT
-    public:
-        explicit ProfileEditor(QWidget *parent = 0);
+  std::istream& getline_safe(std::istream& is, std::string& t) {
+    t.clear();
 
-        void setFoil(foillogic::Foil* foil);
-        void setEditable(bool editable);
+    // The characters in the stream are read one-by-one using a std::streambuf.
+    // That is faster than reading them one-by-one using the std::istream.
+    // Code that uses streambuf this way must be guarded by a sentry object.
+    // The sentry object performs various tasks,
+    // such as thread synchronization and updating the stream state.
 
-        virtual ~ProfileEditor() {}
+    std::istream::sentry se(is, true);
+    std::streambuf* sb = is.rdbuf();
 
-    signals:
-
-    public slots:
-        void setGridUnitSize(qreal pxPerUnit);
-
-    private:
-        foillogic::Foil* _foil;
-        EditablePath* _topProfile;
-        EditablePath* _botProfile;
-
-        QVBoxLayout* _mainLayout;
-        PathEditorWidget* _pathEditor;
-        QComboBox* _symmetryCombo;
-
-    private slots:
-        void symmetryChanged(int sym);
-    };
+    for (;;) {
+      int c = sb->sbumpc();
+      switch (c) {
+        case '\n':
+                return is;
+        case '\r':
+                if (sb->sgetc() == '\n') {
+                        sb->sbumpc();
+                }
+                return is;
+        case EOF:
+                // Also handle the case when the last line has no line ending
+                if (t.empty()) {
+                        is.setstate(std::ios::eofbit);
+                }
+                return is;
+        default:
+                t += (char)c;
+      }
+    }
+  }
 }
 
-#endif // PROFILEEDITOR_HPP
+#endif // HRLIB_GETLINESAFE_HPP

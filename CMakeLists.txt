@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.2)
 
 
 #
@@ -27,19 +27,20 @@ option(Tests "Build the tests executable" OFF)
 option(Web "Include the web components" ON)
 
 # Build flags
+set(CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(DEBUG_FLAGS "-g -O0 -Wall -Wextra -pedantic")
 set(RELEASE_FLAGS "-O3 -fomit-frame-pointer -finline-functions -ffast-math")
 
 # Assign the build flags
-#set(CMAKE_VERBOSE_MAKEFILE OFF)
-set(CMAKE_CXX_FLAGS ${RELEASE_FLAGS})
-set(CMAKE_C_FLAGS ${RELEASE_FLAGS})
-
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_FLAGS_RELEASE ${RELEASE_FLAGS})
+set(CMAKE_C_FLAGS_RELEASE ${RELEASE_FLAGS})
 set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_FLAGS})
-set(CMAKE_CXX_FLAGS_DEBUG ${GCOV_FLAGS})
+#set(CMAKE_CXX_FLAGS_DEBUG ${GCOV_FLAGS})
 set(CMAKE_C_FLAGS_DEBUG ${DEBUG_FLAGS})
-set(CMAKE_C_FLAGS_DEBUG ${GCOV_FLAGS})
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG ${GCOV_FLAGS})
+#set(CMAKE_C_FLAGS_DEBUG ${GCOV_FLAGS})
+#set(CMAKE_EXE_LINKER_FLAGS_DEBUG ${GCOV_FLAGS})
 
 # TODO OP check how this works on multiple configurations generators
 # available configurations in multiple configurations enabled generators
@@ -137,6 +138,7 @@ add_subdirectory(src/app)
 if(Tests)
     find_package(Qt5Test REQUIRED)
     add_subdirectory(tests/unittests)
+    file(COPY tests/testdata DESTINATION ${CMAKE_BINARY_DIR}/bin/)
 endif()
 
 # Install header files
