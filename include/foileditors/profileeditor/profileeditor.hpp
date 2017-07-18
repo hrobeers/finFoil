@@ -40,7 +40,6 @@ namespace foileditors
         explicit ProfileEditor(QWidget *parent = 0);
 
         void setFoil(foillogic::Foil* foil);
-        void setEditable(bool editable);
 
         virtual ~ProfileEditor() {}
 

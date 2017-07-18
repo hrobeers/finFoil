@@ -35,9 +35,17 @@ using namespace foillogic;
 using namespace patheditor;
 using namespace boost::units;
 
+namespace {
+  struct Flags { enum e {
+    None = 0x0,
+    Editable = 0x1,
+    Default = Editable
+  }; };
+}
+
 Profile::Profile(QObject *parent) :
     QObject(parent), _symmetry(Symmetry::Symmetric),
-    t_topProfileTop(0.3), t_botProfileTop(0.3)
+    t_topProfileTop(0.3), t_botProfileTop(0.3), _flags(Flags::Default)
 {
     initProfile();
 }
@@ -108,6 +116,16 @@ qreal Profile::thicknessRatio() const
     return -_topProfileTop.y() / _botProfileTop.y();
 }
 
+bool Profile::editable() const
+{
+  return _flags & Flags::Editable;
+}
+
+void Profile::setEditable(bool editable)
+{
+  _flags = editable ? _flags | Flags::Editable : _flags ^ Flags::Editable;
+}
+
 QString Profile::symmetryStr() const
 {
     QMetaEnum symmetryEnum = this->metaObject()->enumerator(0);
@@ -124,7 +142,12 @@ Path *Profile::pBotProfile()
     if (symmetry() == Symmetry::Asymmetric)
         return botProfile();
     else
-        return nullptr;
+      return nullptr;
+}
+
+int Profile::flags() const
+{
+    return _flags;
 }
 
 void Profile::setSymmetryStr(QString symmetry)
@@ -168,9 +191,19 @@ void Profile::pSetBotProfile(Path *botProfile)
     attachSignals(_botProfile.get());
 }
 
+void Profile::setFlags(int flags)
+{
+  _flags = flags;
+}
+
 void Profile::pResetBotProfile()
 {
-    // Do nothing, initialized in ctor
+  // Do nothing, initialized in ctor
+}
+
+void Profile::resetFlags()
+{
+  _flags = Flags::Default;
 }
 
 Profile::~Profile() {}

@@ -74,13 +74,6 @@ void ProfileEditor::setFoil(Foil *foil)
     _pathEditor->addPath(_topProfile);
 }
 
-void ProfileEditor::setEditable(bool editable)
-{
-  _topProfile->setEditable(editable);
-  _botProfile->setEditable(editable);
-  // TODO disable symmetry combobox
-}
-
 void ProfileEditor::setGridUnitSize(qreal pxPerUnit)
 {
     _pathEditor->setGridUnitSize(pxPerUnit);
@@ -88,23 +81,28 @@ void ProfileEditor::setGridUnitSize(qreal pxPerUnit)
 
 void ProfileEditor::symmetryChanged(int sym)
 {
+    bool editable = _foil->profile()->editable();
+
     switch (sym)
     {
     case 0:
         _foil->profile()->setSymmetry(Profile::Symmetric);
-        _botProfile->setEditable(false);
-        _topProfile->setEditable(true);
+        _botProfile->setEditable(editable && false);
+        _topProfile->setEditable(editable && true);
         break;
     case 1:
         _foil->profile()->setSymmetry(Profile::Asymmetric);
-        _botProfile->setEditable(true);
+        _botProfile->setEditable(editable && true);
+        _topProfile->setEditable(editable);
         break;
     case 2:
         _foil->profile()->setSymmetry(Profile::Flat);
-        _botProfile->setEditable(false);
-        _topProfile->setEditable(true);
+        _botProfile->setEditable(editable && false);
+        _topProfile->setEditable(editable && true);
         break;
     }
+
+    _symmetryCombo->setDisabled(!editable);
 
     _pathEditor->scene()->invalidate();
 }

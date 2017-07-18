@@ -1,6 +1,6 @@
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2017, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -45,6 +45,7 @@ namespace foillogic
         Q_PROPERTY(QString symmetry READ symmetryStr WRITE setSymmetryStr)
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
         Q_PROPERTY(patheditor::Path* botProfile READ pBotProfile WRITE pSetBotProfile RESET pResetBotProfile)
+        Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
         // optional properties
         Q_PROPERTY_UUID
@@ -71,20 +72,27 @@ namespace foillogic
         qreal pxThickness() const;
         qreal thicknessRatio() const;
 
+        // Flags
+        bool editable() const;
+        void setEditable(bool editable);
+
         // Q_PROPERTY getters
         QString symmetryStr() const;
         patheditor::Path* pTopProfile();
         patheditor::Path* pBotProfile();
+        int flags() const;
 
         // Q_PROPERTY setters
         void setSymmetryStr(QString symmetry);
         void pSetTopProfile(patheditor::Path *topProfile);
         void pSetBotProfile(patheditor::Path *botProfile);
+        void setFlags(int flags);
 
         void pSetThickness_legacy(qreal thickness) { _thickness_legacy = thickness; }
         void pResetThickness_legacy() { _thickness_legacy = NAN; }
 
         void pResetBotProfile();
+        void resetFlags();
 
         virtual ~Profile();
 
@@ -103,6 +111,8 @@ namespace foillogic
 
         QPointF _topProfileTop, _botProfileTop;
         qreal t_topProfileTop, t_botProfileTop;
+
+        int _flags;
 
         void initProfile();
         void attachSignals(patheditor::Path* path);
