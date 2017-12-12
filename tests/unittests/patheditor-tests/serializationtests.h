@@ -33,6 +33,7 @@ class SerializationTests : public QObject
 private slots:
     void testFoilSerialization();
     void testPathSerialization();
+    void testFlagSerialization();
 
     // Test backwards compatibility
     void testDeserializing_v_1_0();

@@ -90,6 +90,27 @@ void SerializationTests::testPathSerialization()
     QVERIFY(!deserialized->pathItems().last()->constStartPoint()->continuous());
 }
 
+void SerializationTests::testFlagSerialization()
+{
+    qunique_ptr<Profile> profile(new Profile());
+    QVERIFY(profile->editable());
+
+    QJsonObject serialized = JenSON::serialize(profile.get());
+    qunique_ptr<Profile> deserialized = JenSON::deserialize<Profile>(&serialized);
+    QVERIFY(deserialized->editable());
+
+    profile->setEditable(false);
+    QJsonObject serialized2 = JenSON::serialize(profile.get());
+    qunique_ptr<Profile> deserialized2 = JenSON::deserialize<Profile>(&serialized2);
+    QVERIFY(!deserialized2->editable());
+}
+
+///
+/// \brief SerializationTests::testDeserializing_v_1_0
+///
+/// Paths received an added cont property to highlight continuity.
+/// This change should be backwards compatible, meaning that old files should still load successfully.
+///
 void SerializationTests::testDeserializing_v_1_0()
 {
     QString errorMsg;
@@ -113,6 +134,9 @@ void SerializationTests::testDeserializing_v_1_0()
     // Verify that the v1.0 thickness property is not present in the current serialization
     QByteArray serialized = QJsonDocument(JenSON::serialize(deserialized.get())).toJson(QJsonDocument::Compact);
     QVERIFY(!serialized.contains("\"thickness\":0"));
+
+    // A flags property is added to v1.2, make sure flag properties are initialized correctly
+    QVERIFY(deserialized->profile()->editable());
 }
 
 QTR_ADD_TEST(SerializationTests)
