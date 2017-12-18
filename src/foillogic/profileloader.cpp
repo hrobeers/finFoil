@@ -97,5 +97,42 @@ Profile* ProfileLoader::loadDatStream(std::istream &stream)
   profile->pSetTopProfile(topProfile.release());
   profile->pSetBotProfile(botProfile.release());
 
+
+  //  //
+  //  // Fit 4 quadrant sections
+  //  //
+
+  //  Path *topProfile = profile->topProfile();
+  //  Path *botProfile = profile->botProfile();
+
+  //  auto q1_handles = curve_fit<2>::single(std::vector<vertex<2>>(dat_curve.cbegin(), top), {0,0}, {1,0});
+  //  auto q2_handles = curve_fit<2>::single(std::vector<vertex<2>>(top, le), {1,0}, {0,1});
+  //  auto q3_handles = curve_fit<2>::single(std::vector<vertex<2>>(le, bot), {0,1}, {-1,0});
+  //  auto q4_handles = curve_fit<2>::single(std::vector<vertex<2>>(bot, dat_curve.cend()), {-1,0}, {0,0});
+
+  //  std::shared_ptr<PathItem> q1_item = topItems.last();
+  //  q1_item->startPoint()->setRestrictedPos((*top)[0], -(*top)[1]);
+  //  q1_item->endPoint()->setRestrictedPos(scale, 0);
+  //  q1_item->controlPoints().first()->setRestrictedPos(q1_handles[1][0], -q1_handles[1][1]);
+  //  q1_item->controlPoints().last()->setRestrictedPos(q1_handles[0][0], -q1_handles[0][1]);
+
+  //  std::shared_ptr<PathItem> q2_item = topItems.first();
+  //  q2_item->startPoint()->setRestrictedPos(0,0);
+  //  q2_item->endPoint()->setRestrictedPos((*top)[0], -(*top)[1]);
+  //  q2_item->controlPoints().first()->setRestrictedPos(q2_handles[1][0], -q2_handles[1][1]);
+  //  q2_item->controlPoints().last()->setRestrictedPos(q2_handles[0][0], -q2_handles[0][1]);
+
+  //  std::shared_ptr<PathItem> q3_item = botItems.first();
+  //  q3_item->startPoint()->setRestrictedPos(0,0);
+  //  q3_item->endPoint()->setRestrictedPos((*bot)[0], -(*bot)[1]);
+  //  q3_item->controlPoints().first()->setRestrictedPos(q3_handles[0][0], -q3_handles[0][1]);
+  //  q3_item->controlPoints().last()->setRestrictedPos(q3_handles[1][0], -q3_handles[1][1]);
+
+  //  std::shared_ptr<PathItem> q4_item = botItems.last();
+  //  q4_item->startPoint()->setRestrictedPos((*bot)[0], -(*bot)[1]);
+  //  q4_item->endPoint()->setRestrictedPos(scale, 0);
+  //  q4_item->controlPoints().first()->setRestrictedPos(q4_handles[0][0], -q4_handles[0][1]);
+  //  q4_item->controlPoints().last()->setRestrictedPos(q4_handles[1][0], -q4_handles[1][1]);
+
   return profile.release();
 }

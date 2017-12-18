@@ -146,6 +146,15 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/.
   DESTINATION include/finfoil
   COMPONENT headers
 )
+# Install JenSON header files
+file(GLOB_RECURSE JENSON_H ${CMAKE_SOURCE_DIR}/submodules/jenson/src/*.h)
+file(GLOB_RECURSE JENSON_HPP ${CMAKE_SOURCE_DIR}/submodules/jenson/src/*.hpp)
+install(FILES
+  ${JENSON_H}
+  ${JENSON_HPP}
+  DESTINATION include/finfoil/jenson
+  COMPONENT headers
+)
 
 # Install readme and license files
 install(FILES
