@@ -22,7 +22,6 @@
 #include <QPainterPath>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/area.hpp>
-#include "foillogic/contourcalculator.hpp"
 
 namespace foillogic
 {

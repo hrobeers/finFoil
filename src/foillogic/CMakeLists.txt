@@ -6,7 +6,6 @@ file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/foillogic/*.hpp)
 set(SRC
     foil.cpp
     foilcalculator.cpp
-    contourcalculator.cpp
     profile.cpp
     profileloader.cpp
     thicknessprofile.cpp
