@@ -12,4 +12,5 @@ target_link_libraries(${LIB_NAME} Qt5::Core)
 
 install(TARGETS ${LIB_NAME}
   LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib/static
 )

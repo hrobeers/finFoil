@@ -166,6 +166,7 @@ install(FILES
 
 install(TARGETS ${LIB_NAME}
   LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib/static
 )
 
 # Note: executable and library installation is configured in dedicated CMakeLists.txt
