@@ -46,9 +46,9 @@ namespace foillogic
 
     inline bool isInRange(qreal x, qreal a, qreal b)
     {
-        if (x > a && x < b)
+        if (x >= a && x <= b)
             return true;
-        if (x < a && x > b)
+        if (x <= a && x >= b)
             return true;
         return false;
     }
