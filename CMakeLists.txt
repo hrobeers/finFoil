@@ -155,6 +155,12 @@ install(FILES
   DESTINATION include/finfoil/jenson
   COMPONENT headers
 )
+# Install qtestrunner header file
+install(FILES
+  ${CMAKE_SOURCE_DIR}/submodules/qtestrunner/qtestrunner.hpp
+  DESTINATION include/finfoil/qtestrunner
+  COMPONENT headers
+)
 
 # Install readme and license files
 install(FILES
