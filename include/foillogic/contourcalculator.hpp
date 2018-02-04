@@ -14,6 +14,8 @@
 #ifndef CONTOURCALCULATOR_HPP
 #define CONTOURCALCULATOR_HPP
 
+#include "foillogic/fwd/foillogicfwd.hpp"
+
 #include <QRunnable>
 #include <QPointF>
 
@@ -21,10 +23,6 @@
 #include <boost/math/tools/roots.hpp>
 #include "patheditor/pathfunctors.hpp"
 #include "hrlib/math/spline.hpp"
-#include "foillogic/foil.hpp"
-#include "foillogic/profile.hpp"
-#include "foillogic/thicknessprofile.hpp"
-#include "foillogic/outline.hpp"
 #include "patheditor/path.hpp"
 
 using namespace patheditor;
@@ -71,13 +69,13 @@ namespace foillogic
         qreal increment = qreal(1) / sectionCount;
         qreal t = 0;
         qreal height = thicknessProfile->pointAtPercent(1).x();
-        qreal maxThickness = qMin(thicknessProfile->minY(), thicknessProfile->pointAtPercent(0).y());
+        qreal maxThickness = qMax(qAbs(thicknessProfile->minY()), qAbs(thicknessProfile->pointAtPercent(0).y()));
         for (int i=0; i<sectionCount; i++)
         {
             QPointF p = thicknessProfile->pointAtPercent(t);
 
             sectionHeightArray[i] = p.x();
-            thicknessArray[i] = p.y();
+            thicknessArray[i] = qAbs(p.y());
             if (normalize)
             {
                 sectionHeightArray[i] /= height;
@@ -104,21 +102,13 @@ namespace foillogic
         qreal _tTol;
 
     public:
-        explicit ContourCalculator(qreal percContourHeight, Foil* foil, Target* result,
-                                   Side::e side = Side::Top, bool fast = false) :
-          _side(side), _percContourHeight(percContourHeight),
-          _outline(foil->outline()->path()), _thickness(foil->thicknessProfile()->topProfile()),
-          _result(result), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
+        explicit ContourCalculator(Target* result, qreal percContourHeight,
+                                   IPath* outline, IPath* thickness, IPath* profile,
+                                   Side::e side, bool fast = false) :
+          _result(result), _percContourHeight(percContourHeight),
+          _outline(outline), _thickness(thickness), _profile(profile),
+          _side(side), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
         {
-            switch (_side) {
-            case Side::Bottom:
-                _profile = foil->profile()->botProfile();
-                break;
-            default:
-                _profile = foil->profile()->topProfile();
-                break;
-            }
-
             if (!fast)
             {
                 _sectionCount = INITCNT / 2;
