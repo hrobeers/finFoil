@@ -155,6 +155,15 @@ install(FILES
   DESTINATION include/finfoil/jenson
   COMPONENT headers
 )
+# Install QtUnits header files
+file(GLOB_RECURSE QTUNITS_H ${CMAKE_SOURCE_DIR}/submodules/qtunits/src/*.h)
+file(GLOB_RECURSE QTUNITS_HPP ${CMAKE_SOURCE_DIR}/submodules/qtunits/src/*.hpp)
+install(FILES
+  ${QTUNITS_H}
+  ${QTUNITS_HPP}
+  DESTINATION include/finfoil/qtunits
+  COMPONENT headers
+)
 # Install qtestrunner header file
 install(FILES
   ${CMAKE_SOURCE_DIR}/submodules/qtestrunner/qtestrunner.hpp
