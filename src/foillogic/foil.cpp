@@ -157,8 +157,9 @@ std::unique_ptr<IPath> foillogic::Foil::outlineSI()
 {
     qreal t_top = 0.3;
     quantity<si::length, qreal> height = _outline->height();
-    qreal s = height.value() / _outline->path()->minY(&t_top);
-    return decorate<PathScaleDecorator>(_outline->path(), s, s);
+    qreal s = height.value() / -_outline->path()->minY(&t_top);
+    // Flip over the x-axis, since the internal screen coordinates have the y-axis pointing downwards.
+    return decorate<PathScaleDecorator>(_outline->path(), s, -s);
 }
 
 namespace {
@@ -180,7 +181,8 @@ namespace {
         // determine the y scaling factor
         quantity<si::length, qreal> thicknessSI = self->thickness();
         qreal t_top = 0.3;
-        retVal.second = qAbs(thicknessSI.value() / (self->profile()->topProfileTop(&t_top).y() - self->profile()->bottomProfileTop(&t_top).y()));
+        // Flip over the x-axis, since the internal screen coordinates have the y-axis pointing downwards.
+        retVal.second = -qAbs(thicknessSI.value() / (self->profile()->topProfileTop(&t_top).y() - self->profile()->bottomProfileTop(&t_top).y()));
 
         return retVal;
     }
@@ -196,7 +198,8 @@ namespace {
         // determine the y scaling factor
         quantity<si::length, qreal> thicknessSI = self->thickness();
         qreal t_top = 0;
-        retVal.second = qAbs(thicknessSI.value() / (self->thicknessProfile()->topProfile()->minY(&t_top) - self->thicknessProfile()->botProfile()->maxY(&t_top)));
+        // Flip over the x-axis, since the internal screen coordinates have the y-axis pointing downwards.
+        retVal.second = -qAbs(thicknessSI.value() / (self->thicknessProfile()->topProfile()->minY(&t_top) - self->thicknessProfile()->botProfile()->maxY(&t_top)));
 
         return retVal;
     }
