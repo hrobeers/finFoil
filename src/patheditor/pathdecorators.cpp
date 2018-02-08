@@ -38,20 +38,20 @@ QPointF PathScaleDecorator::pointAtPercent(qreal t) const
 
 qreal PathScaleDecorator::minX(qreal *t_top) const
 {
-    return _target->minX(t_top) * _sx;
+    return (_sx>0 ? _target->minX(t_top) : _target->maxX(t_top) ) * _sx;
 }
 
 qreal PathScaleDecorator::maxX(qreal *t_top) const
 {
-    return _target->maxX(t_top) * _sx;
+    return (_sx>0 ? _target->maxX(t_top) : _target->minX(t_top)) * _sx;
 }
 
 qreal PathScaleDecorator::minY(qreal *t_top) const
 {
-    return _target->minY(t_top) * _sy;
+    return (_sy>0 ? _target->minY(t_top) : _target->maxY(t_top)) * _sy;
 }
 
 qreal PathScaleDecorator::maxY(qreal *t_top) const
 {
-    return _target->maxY(t_top) * _sy;
+    return (_sy>0 ? _target->maxY(t_top) : _target->minY(t_top)) * _sy;
 }
