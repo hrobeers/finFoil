@@ -14,8 +14,6 @@
 #ifndef CONTOURCALCULATOR_HPP
 #define CONTOURCALCULATOR_HPP
 
-#include "foillogic/fwd/foillogicfwd.hpp"
-
 #include <QRunnable>
 #include <QPointF>
 
@@ -90,7 +88,6 @@ namespace foillogic
     {
         enum SplineFunction { bSpline, overhauser };
 
-        Side::e _side;
         qreal _percContourHeight;
         patheditor::IPath* _profile;
         patheditor::IPath* _outline;
@@ -104,10 +101,10 @@ namespace foillogic
     public:
         explicit ContourCalculator(Target* result, qreal percContourHeight,
                                    IPath* outline, IPath* thickness, IPath* profile,
-                                   Side::e side, bool fast = false) :
+                                   bool fast = false) :
           _result(result), _percContourHeight(percContourHeight),
           _outline(outline), _thickness(thickness), _profile(profile),
-          _side(side), _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
+          _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
         {
             if (!fast)
             {
@@ -122,15 +119,7 @@ namespace foillogic
             qreal t_profileTop;
             qreal y_profileTop;
 
-            switch (_side) {
-            case Side::Bottom:
-                y_profileTop = _profile->maxY(&t_profileTop);
-                break;
-            default:
-                y_profileTop = _profile->minY(&t_profileTop);
-                break;
-            }
-
+            y_profileTop = _profile->maxY(&t_profileTop);
             qreal profileLength = _profile->pointAtPercent(1).x();
 
 
@@ -157,7 +146,7 @@ namespace foillogic
             //
 
             qreal t_top = 0.5; // start value
-            qreal y_top = _outline->minY(&t_top);
+            qreal y_top = _outline->maxY(&t_top);
 
 
             //
@@ -180,10 +169,7 @@ namespace foillogic
                 qreal y_profileBot = 0;
                 if (_percContourHeight < 0)
                 {
-                    if (_side == Side::Bottom)
-                        y_profileBot = _profile->minY(&t_profileTop);
-                    else
-                        y_profileBot = _profile->maxY(&t_profileTop);
+                    y_profileBot = _profile->minY(&t_profileTop);
                 }
 
                 if (!isInRange(profileOffset, y_profileBot, y_profileTop))
