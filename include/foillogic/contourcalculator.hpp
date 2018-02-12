@@ -88,11 +88,11 @@ namespace foillogic
     {
         enum SplineFunction { bSpline, overhauser };
 
+        Target *_result;
         qreal _percContourHeight;
-        patheditor::IPath* _profile;
         patheditor::IPath* _outline;
         patheditor::IPath* _thickness;
-        Target *_result;
+        patheditor::IPath* _profile;
 
         int _sectionCount;
         int _resolution;

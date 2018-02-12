@@ -73,9 +73,9 @@ private slots:
     void setClean();
 
 private:
+    Ui::MainWindow *ui;
     const QUrl _baseUrl;
     const hrlib::Version _version;
-    Ui::MainWindow *ui;
 
     sptr<foillogic::Foil> _fin;
 
