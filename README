@@ -23,6 +23,18 @@ $ git submodule update --recursive
 
 After fetching the submodules, continue with section "Compilation from source".
 
+
+Ubuntu/Debian instructions
+==========================
+
+    sudo apt install cmake qtbase5-dev libqt5webkit5-dev libboost-dev
+    git clone git@github.com:hrobeers/finFoil.git --recursive
+    cd finFoil
+    mkdir bin
+    cd bin
+    cmake ..
+    make -j4
+
 Dependencies
 ============
 C++11 compliant compiler (GCC >= 4.7, Clang >= 3.0, Intel C++ >= 12.1)
