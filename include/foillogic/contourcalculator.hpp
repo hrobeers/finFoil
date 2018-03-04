@@ -266,7 +266,10 @@ namespace foillogic
         void createSplinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex, SplineFunction splineFunction)
         {
             if (firstIndex >= lastIndex)
+            {
+                _result->moveTo(*leadingEdgePnts[firstIndex]);
                 return;
+            }
 
             bool closing = firstIndex != 0;
             QVarLengthArray<qreal, INITCNT> points_x;
