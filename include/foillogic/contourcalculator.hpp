@@ -73,7 +73,7 @@ namespace foillogic
             QPointF p = thicknessProfile->pointAtPercent(t);
 
             sectionHeightArray[i] = p.x();
-            thicknessArray[i] = qAbs(p.y());
+            thicknessArray[i] = p.y();
             if (normalize)
             {
                 sectionHeightArray[i] /= height;
