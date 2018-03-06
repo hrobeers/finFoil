@@ -27,6 +27,18 @@ using namespace foillogic;
 using namespace boost::units;
 using namespace hrlib::patterns;
 
+#ifdef QT_DEBUG
+    const size_t LOW_SEC = 16;
+    const size_t HI_SEC = 64;
+    const size_t LOW_RES = 20;
+    const size_t HI_RES = 50;
+#else
+    const size_t LOW_SEC = 128;
+    const size_t HI_SEC = 512;
+    const size_t LOW_RES = 200;
+    const size_t HI_RES = 500;
+#endif
+
 FoilCalculator::FoilCalculator(Foil *foil) :
     QObject(), _calculated(false)
 {
@@ -97,6 +109,9 @@ void FoilCalculator::calculate(bool fastCalc)
     _topContours.clear();
     _botContours.clear();
 
+    size_t sectionCount = fastCalc? LOW_SEC : HI_SEC;
+    size_t resolution = fastCalc? LOW_RES : HI_RES;
+
     auto outline = decorate<PathScaleDecorator>(_foil->outline()->path(),1,-1);
     auto topThickness = decorate<PathScaleDecorator>(_foil->thicknessProfile()->topProfile(),1,-1);
     auto topProfile = decorate<PathScaleDecorator>(_foil->profile()->topProfile(),1,-1);
@@ -115,7 +130,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                       outline.get(),
                                                       topThickness.get(),
                                                       topProfile.get(),
-                                                      fastCalc);
+                                                      sectionCount, resolution);
             tcCalc.run();
         }
 
@@ -129,7 +144,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                       outline.get(),
                                                       _foil->thicknessProfile()->botProfile(),
                                                       _foil->profile()->botProfile(),
-                                                      fastCalc);
+                                                      sectionCount, resolution);
             bcCalc.run();
         }
 
@@ -154,7 +169,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                                 outline.get(),
                                                                 topThickness.get(),
                                                                 topProfile.get(),
-                                                                fastCalc));
+                                                                sectionCount, resolution));
             painterscope.push_back(std::move(path));
         }
 
@@ -168,7 +183,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                                 outline.get(),
                                                                 _foil->thicknessProfile()->botProfile(),
                                                                 _foil->profile()->botProfile(),
-                                                                fastCalc));
+                                                                sectionCount, resolution));
             painterscope.push_back(std::move(path));
         }
     }

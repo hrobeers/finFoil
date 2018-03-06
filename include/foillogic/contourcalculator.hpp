@@ -17,7 +17,6 @@
 #include <QRunnable>
 #include <QPointF>
 
-#include <QVarLengthArray>
 #include <boost/math/tools/roots.hpp>
 #include "patheditor/pathfunctors.hpp"
 #include "hrlib/math/spline.hpp"
@@ -29,17 +28,6 @@ using namespace boost::math::tools;
 
 namespace foillogic
 {
-
-#ifdef QT_DEBUG
-    const size_t INITCNT = 128;
-    const size_t LOW_RES = 20;
-    const size_t HI_RES = 50;
-#else
-    const size_t INITCNT = 1024;
-    const size_t LOW_RES = 200;
-    const size_t HI_RES = 500;
-#endif
-
     inline bool isInRange(qreal x, qreal a, qreal b)
     {
         if (x >= a && x <= b)
@@ -94,25 +82,18 @@ namespace foillogic
         patheditor::IPath* _thickness;
         patheditor::IPath* _profile;
 
-        int _sectionCount;
-        int _resolution;
+        size_t _sectionCount;
+        size_t _resolution;
         qreal _tTol;
 
     public:
         explicit ContourCalculator(Target* result, qreal percContourHeight,
                                    IPath* outline, IPath* thickness, IPath* profile,
-                                   bool fast = false) :
+                                   size_t sectionCount = 512, size_t resolution = 512) :
           _result(result), _percContourHeight(percContourHeight),
           _outline(outline), _thickness(thickness), _profile(profile),
-          _sectionCount(INITCNT / 8), _resolution(LOW_RES), _tTol(0.0015)
-        {
-            if (!fast)
-            {
-                _sectionCount = INITCNT / 2;
-                _resolution = HI_RES;
-                _tTol = 0.0001;
-            }
-        }
+          _sectionCount(sectionCount), _resolution(resolution), _tTol(0.0015)
+        {}
 
         virtual void run()
         {
@@ -127,8 +108,8 @@ namespace foillogic
             // discretise and normalise the thickness profile in different cross sections
             //
 
-            QVarLengthArray<qreal, INITCNT> sectionHeightArray(_sectionCount);
-            QVarLengthArray<qreal, INITCNT> thicknessArray(_sectionCount);
+            std::vector<qreal> sectionHeightArray(_sectionCount);
+            std::vector<qreal> thicknessArray(_sectionCount);
             sampleThickess(_thickness, _sectionCount, sectionHeightArray.data(), thicknessArray.data(), true);
 
 
@@ -153,12 +134,12 @@ namespace foillogic
             // calculate the contour points
             //
 
-            QVarLengthArray<QPointF*, INITCNT> leadingEdgePnts;
-            QVarLengthArray<QPointF*, INITCNT> trailingEdgePnts;
+            std::vector<QPointF*> leadingEdgePnts;
+            std::vector<QPointF*> trailingEdgePnts;
 
             QPointF outlineLeadingEdge, outlineTrailingEdge;
             qreal leadingEdgePerc, trailingEdgePerc;
-            for (int i=0; i<_sectionCount; i++)
+            for (size_t i=0; i<_sectionCount; i++)
             {
                 qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
 
@@ -174,8 +155,8 @@ namespace foillogic
 
                 if (!isInRange(profileOffset, y_profileBot, y_profileTop))
                 {
-                    leadingEdgePnts.append(0);
-                    trailingEdgePnts.append(0);
+                    leadingEdgePnts.push_back(0);
+                    trailingEdgePnts.push_back(0);
                     continue;
                 }
 
@@ -198,8 +179,8 @@ namespace foillogic
                 catch (evaluation_error /*unused*/)
                 {
                     // no result when bisect fails
-                    leadingEdgePnts.append(0);
-                    trailingEdgePnts.append(0);
+                    leadingEdgePnts.push_back(0);
+                    trailingEdgePnts.push_back(0);
                     continue;
                 }
 
@@ -212,19 +193,19 @@ namespace foillogic
                 if (i%5 == 0)
                 {
                     // Make sure that at least one in 5 points is added for spline evaluation
-                    leadingEdgePnts.append(leadingEdgePnt.release());
-                    trailingEdgePnts.append(trailingEdgePnt.release());
+                    leadingEdgePnts.push_back(leadingEdgePnt.release());
+                    trailingEdgePnts.push_back(trailingEdgePnt.release());
                 }
-                else if (includePoint(leadingEdgePnts.last(), leadingEdgePnt.get()) ||
-                         includePoint(trailingEdgePnts.last(), trailingEdgePnt.get()))
+                else if (includePoint(leadingEdgePnts.back(), leadingEdgePnt.get()) ||
+                         includePoint(trailingEdgePnts.back(), trailingEdgePnt.get()))
                 {
                     // Only add point for spline evaluation when abs(x/y) > 1 (close to the tip)
-                    leadingEdgePnts.append(leadingEdgePnt.release());
-                    trailingEdgePnts.append(trailingEdgePnt.release());
+                    leadingEdgePnts.push_back(leadingEdgePnt.release());
+                    trailingEdgePnts.push_back(trailingEdgePnt.release());
                 }
             }
 
-            int pointCount = leadingEdgePnts.count();
+            int pointCount = leadingEdgePnts.size();
 
             int firstIndex = 0;
             for (int i=0; i<pointCount; i++)
@@ -272,34 +253,34 @@ namespace foillogic
             }
 
             bool closing = firstIndex != 0;
-            QVarLengthArray<qreal, INITCNT> points_x;
-            QVarLengthArray<qreal, INITCNT> points_y;
+            std::vector<qreal> points_x;
+            std::vector<qreal> points_y;
 
             if (closing)
             {
-                points_x.append(trailingEdgePnts[firstIndex]->x());
-                points_y.append(trailingEdgePnts[firstIndex]->y());
+                points_x.push_back(trailingEdgePnts[firstIndex]->x());
+                points_y.push_back(trailingEdgePnts[firstIndex]->y());
             }
             for (int i = firstIndex; i <= lastIndex; i++)
             {
-                points_x.append(leadingEdgePnts[i]->x());
-                points_y.append(leadingEdgePnts[i]->y());
+                points_x.push_back(leadingEdgePnts[i]->x());
+                points_y.push_back(leadingEdgePnts[i]->y());
             }
             for (int i = lastIndex; i >= firstIndex; i--)
             {
-                points_x.append(trailingEdgePnts[i]->x());
-                points_y.append(trailingEdgePnts[i]->y());
+                points_x.push_back(trailingEdgePnts[i]->x());
+                points_y.push_back(trailingEdgePnts[i]->y());
             }
             if (closing)
             {
-                points_x.append(points_x[1]);
-                points_y.append(points_y[1]);
+                points_x.push_back(points_x[1]);
+                points_y.push_back(points_y[1]);
 
-                points_x.append(points_x[2]);
-                points_y.append(points_y[2]);
+                points_x.push_back(points_x[2]);
+                points_y.push_back(points_y[2]);
             }
 
-            int pointCount = points_x.count();
+            int pointCount = points_x.size();
 
             qreal t_val = 0;
             qreal t_valStep;
@@ -320,7 +301,7 @@ namespace foillogic
                 x = hrlib::spline_b_val(pointCount, points_x.data(), t_val);
                 y = hrlib::spline_b_val(pointCount, points_y.data(), t_val);
                 _result->moveTo(x, y);
-                for (int i = 1; i <= _resolution; i++)
+                for (size_t i = 1; i <= _resolution; i++)
                 {
                     t_val += t_valStep;
                     x = hrlib::spline_b_val(pointCount, points_x.data(), t_val);
@@ -330,14 +311,14 @@ namespace foillogic
                 break;
 
             case overhauser:
-                QVarLengthArray<qreal, INITCNT> t_data(pointCount);
-                for (int i = 0; i < t_data.count(); i++)
+                std::vector<qreal> t_data(pointCount);
+                for (size_t i = 0; i < t_data.size(); i++)
                     t_data[i] = i;
 
                 x = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_x.data(), t_val);
                 y = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_y.data(), t_val);
                 _result->moveTo(x, y);
-                for (int i = 1; i <= _resolution; i++)
+                for (size_t i = 1; i <= _resolution; i++)
                 {
                     t_val += t_valStep;
                     x = hrlib::spline_overhauser_uni_val(pointCount, t_data.data(), points_x.data(), t_val);
