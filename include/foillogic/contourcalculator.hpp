@@ -50,7 +50,7 @@ namespace foillogic
         return false;
     }
 
-    inline void sampleThickess(patheditor::IPath *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[], bool normalize = false)
+    inline void sampleThickess(const patheditor::IPath *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[], bool normalize = false)
     {
         qreal increment = qreal(1) / sectionCount;
         qreal t = 0;
@@ -78,9 +78,9 @@ namespace foillogic
 
         Target *_result;
         qreal _percContourHeight;
-        patheditor::IPath* _outline;
-        patheditor::IPath* _thickness;
-        patheditor::IPath* _profile;
+        const patheditor::IPath* _outline;
+        const patheditor::IPath* _thickness;
+        const patheditor::IPath* _profile;
 
         size_t _sectionCount;
         size_t _resolution;
@@ -88,7 +88,7 @@ namespace foillogic
 
     public:
         explicit ContourCalculator(Target* result, qreal percContourHeight,
-                                   IPath* outline, IPath* thickness, IPath* profile,
+                                   const IPath* outline, const IPath* thickness, const IPath* profile,
                                    size_t sectionCount = 512, size_t resolution = 512) :
           _result(result), _percContourHeight(percContourHeight),
           _outline(outline), _thickness(thickness), _profile(profile),
