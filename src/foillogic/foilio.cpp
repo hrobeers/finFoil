@@ -20,7 +20,7 @@
 
 ****************************************************************************/
 
-#include "foillogic/profileloader.hpp"
+#include "foillogic/foilio.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include "hrlib/curvefit/curvefit.hpp"

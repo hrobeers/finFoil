@@ -37,7 +37,7 @@
 #include "foillogic/foilcalculator.hpp"
 #include "foillogic/outline.hpp"
 #include "foillogic/profile.hpp"
-#include "foillogic/profileloader.hpp"
+#include "foillogic/foilio.hpp"
 #include "foillogic/thicknessprofile.hpp"
 #include "hrlib/string/json_utils.hpp"
 
