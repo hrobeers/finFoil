@@ -182,7 +182,7 @@ void MainWindow::loadProfile()
       std::ifstream ifs;
       ifs.open(filePath.toStdString(), std::ifstream::in);
 
-      _fin->pSetProfile(ProfileLoader::loadDatStream(ifs));
+      _fin->pSetProfile(loadProfileDatStream(ifs));
       _fin->profile()->setEditable(false);
       _profileEditor->setFoil(_fin.get());
       _fin->onDeserialized();

@@ -29,10 +29,8 @@
 
 namespace foillogic
 {
-  struct ProfileLoader
-  {
-    static Profile* loadDatStream(std::istream &stream);
-  };
+  Profile* loadProfileDatStream(std::istream &stream);
+  Outline* loadOutlinePdfStream(std::istream &stream);
 }
 
 #endif // PROFILELOADER_HPP

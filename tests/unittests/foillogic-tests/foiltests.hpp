@@ -31,6 +31,7 @@ class FoilTests : public QObject
 
 private slots:
     void testSIdecoration();
+    void testOutlineIO();
 };
 
 #endif // FOILTESTS_H

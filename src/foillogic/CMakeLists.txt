@@ -16,6 +16,8 @@ add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
 
 target_link_libraries(${LIB_NAME}
     finfoil_patheditor
+    boost_iostreams
+    ${Boost_LIBRARIES}
 )
 
 install(TARGETS ${LIB_NAME}

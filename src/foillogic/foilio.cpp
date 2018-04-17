@@ -23,6 +23,11 @@
 #include "foillogic/foilio.hpp"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#include <boost/interprocess/streams/vectorstream.hpp>
+
 #include "hrlib/curvefit/curvefit.hpp"
 #include "hrlib/curvefit/vertexio.hpp"
 #include "foillogic/profile.hpp"
@@ -38,9 +43,10 @@ using namespace hrlib;
 namespace {
   constexpr auto comp_x = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[0] < v2[0]; };
   constexpr auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
+  const std::string whitespace = " \f\n\r\t\v";
 }
 
-Profile* ProfileLoader::loadDatStream(std::istream &stream)
+Profile* foillogic::loadProfileDatStream(std::istream &stream)
 {
   const double scale = 300;
 
@@ -135,4 +141,81 @@ Profile* ProfileLoader::loadDatStream(std::istream &stream)
   //  q4_item->controlPoints().last()->setRestrictedPos(q4_handles[1][0], -q4_handles[1][1]);
 
   return profile.release();
+}
+
+namespace pdf
+{
+  std::istream& read_next_binary(std::istream& stream, std::vector<char>& bin)
+  {
+    std::string line;
+    while(true)
+    {
+      getline_safe(stream, line);
+      if (!stream) return stream;
+
+      const std::string HDR_BEGIN("<<");
+      const std::string HDR_END(">>");
+      const std::string LENGTH("Length");
+      const std::string FLATE("FlateDecode");
+      if (line.find(HDR_BEGIN) != std::string::npos)
+      {
+          size_t length=0;
+          bool compressed=false;
+
+          do
+          {
+            if (line.find(FLATE) != std::string::npos)
+              compressed=true;
+            if (size_t pos=line.find(LENGTH) != std::string::npos)
+            {
+                // offset by Length position
+                auto it=line.cbegin()+pos+LENGTH.size();
+                // skip whitespace
+                while(std::any_of(whitespace.cbegin(), whitespace.cend(), [&it](char f){ return *it==f; })) ++it;
+                auto length_begin = it;
+                // iterate until non-digit
+                while(std::isdigit(*it)) ++it;
+                // substring and write to size_t
+                std::istringstream(std::string(length_begin, it)) >> length;
+            }
+            getline_safe(stream, line);
+          } while (line.find(HDR_END)==std::string::npos);
+
+          // Continue if not a stream object
+          if (length==0)
+            continue;
+
+          // Read until "stream" keyword
+          do { getline_safe(stream,line); }
+          while (line.find_first_of("stream")==std::string::npos);
+          // Read the binary data
+          bin.resize(length);
+          stream.read(bin.data(), length);
+
+          // Decompress if compressed
+          if (compressed)
+          {
+            boost::iostreams::array_source src {bin.data(), length};
+            boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+            in.push(boost::iostreams::zlib_decompressor());
+            in.push(src);
+            std::vector<char> out;
+            out.assign(std::istreambuf_iterator<char>{&in}, {});
+            bin.swap(out);
+          }
+
+          return stream;
+      }
+    }
+  }
+}
+
+Outline* foillogic::loadOutlinePdfStream(std::istream &stream)
+{
+  std::vector<char> bin;
+  while(pdf::read_next_binary(stream, bin))
+  {
+    boost::interprocess::basic_ivectorstream<std::vector<char>> bin_stream(bin);
+    std::clog << std::endl << bin.data() << std::endl;
+  }
 }

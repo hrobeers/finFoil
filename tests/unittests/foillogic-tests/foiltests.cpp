@@ -23,9 +23,11 @@
 #include "foiltests.hpp"
 
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "foillogic/foil.hpp"
+#include "foillogic/foilio.hpp"
 #include "patheditor/ipath.hpp"
 
 using namespace foillogic;
@@ -74,6 +76,17 @@ void FoilTests::testSIdecoration()
   // The profile bottom (fin's inside) is on the negative Y direction
   ::assertAllPointsInQuadrant(foil.botProfileSI().get(), 4);
   ::assertAllPointsInQuadrant(foil.botThicknessSI().get(), 4);
+}
+
+void FoilTests::testOutlineIO()
+{
+  std::string path = "testdata/outlines/";
+  for (auto & p : boost::filesystem::directory_iterator(path))
+  {
+    std::ifstream ifs;
+    ifs.open(p.path().string(), std::ifstream::in);
+    foillogic::loadOutlinePdfStream(ifs);
+  }
 }
 
 QTR_ADD_TEST(FoilTests)
