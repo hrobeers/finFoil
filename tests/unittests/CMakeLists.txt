@@ -25,9 +25,6 @@ add_executable(${TESTS_BINARY_NAME} WIN32 ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADE
 # Linking
 #
 
-find_package(Boost COMPONENTS system filesystem REQUIRED)
-
-#Qt modules
 target_link_libraries(${TESTS_BINARY_NAME}
     Qt5::Core
     Qt5::Test

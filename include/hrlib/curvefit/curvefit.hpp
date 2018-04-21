@@ -29,7 +29,7 @@
 #include <boost/math/special_functions/pow.hpp>
 #include <boost/utility/value_init.hpp>
 
-#include "hrlib/curvefit/vertex.hpp"
+#include "hrlib/io/vertex.hpp"
 
 extern "C" {
   #include "curve_fit_nd.h"

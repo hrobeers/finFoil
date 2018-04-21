@@ -137,10 +137,25 @@ bool MainWindow::saveOutline()
 
 void MainWindow::loadOutline()
 {
-    QString filePath = askOpenFileName(tr("Outlines (*.foutl);;All files (*)")); // TODO support: Foils (*.foil)
+    QString filePath = askOpenFileName(tr("All supported (*.foutl *.pdf);;Outlines (*.foutl);;Blending Curves (*.pdf);;All files (*)")); // TODO support: Foils (*.foil)
 
     if (filePath.isEmpty())
         return;
+
+    if (filePath.endsWith(".pdf", Qt::CaseInsensitive))
+      {
+        std::ifstream ifs;
+        ifs.open(filePath.toStdString(), std::ifstream::in);
+
+        std::unique_ptr<Outline> outline(loadOutlinePdfStream(ifs));
+        if (outline)
+        {
+          _fin->pSetOutline(outline.release());
+          _outlineEditor->setFoil(_fin.get());
+          _fin->onDeserialized();
+          return;
+        }
+      }
 
     QString errorMsg;
     QJsonObject jObj;

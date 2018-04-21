@@ -23,18 +23,20 @@
 #include "foillogic/foilio.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/copy.hpp>
-#include <boost/iostreams/filter/zlib.hpp>
 #include <boost/interprocess/streams/vectorstream.hpp>
 
+#include "hrlib/math/matrix.hpp"
 #include "hrlib/curvefit/curvefit.hpp"
-#include "hrlib/curvefit/vertexio.hpp"
+#include "hrlib/io/vertexio.hpp"
+#include "hrlib/io/pdfio.hpp"
 #include "foillogic/profile.hpp"
+#include "foillogic/outline.hpp"
 #include "patheditor/path.hpp"
 #include "patheditor/pathitem.hpp"
 #include "patheditor/curvepoint.hpp"
 #include "patheditor/line.hpp"
+#include "patheditor/controlpoint.hpp"
+#include "patheditor/cubicbezier.hpp"
 
 using namespace patheditor;
 using namespace foillogic;
@@ -43,7 +45,6 @@ using namespace hrlib;
 namespace {
   constexpr auto comp_x = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[0] < v2[0]; };
   constexpr auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
-  const std::string whitespace = " \f\n\r\t\v";
 }
 
 Profile* foillogic::loadProfileDatStream(std::istream &stream)
@@ -143,79 +144,128 @@ Profile* foillogic::loadProfileDatStream(std::istream &stream)
   return profile.release();
 }
 
-namespace pdf
+void transform(std::vector<double> &values, const mx::Matrix &T)
 {
-  std::istream& read_next_binary(std::istream& stream, std::vector<char>& bin)
+  assert(values.size()%2==0);
+  for (size_t i=0; i<values.size()-1; i+=2)
   {
-    std::string line;
-    while(true)
-    {
-      getline_safe(stream, line);
-      if (!stream) return stream;
-
-      const std::string HDR_BEGIN("<<");
-      const std::string HDR_END(">>");
-      const std::string LENGTH("Length");
-      const std::string FLATE("FlateDecode");
-      if (line.find(HDR_BEGIN) != std::string::npos)
-      {
-          size_t length=0;
-          bool compressed=false;
-
-          do
-          {
-            if (line.find(FLATE) != std::string::npos)
-              compressed=true;
-            if (size_t pos=line.find(LENGTH) != std::string::npos)
-            {
-                // offset by Length position
-                auto it=line.cbegin()+pos+LENGTH.size();
-                // skip whitespace
-                while(std::any_of(whitespace.cbegin(), whitespace.cend(), [&it](char f){ return *it==f; })) ++it;
-                auto length_begin = it;
-                // iterate until non-digit
-                while(std::isdigit(*it)) ++it;
-                // substring and write to size_t
-                std::istringstream(std::string(length_begin, it)) >> length;
-            }
-            getline_safe(stream, line);
-          } while (line.find(HDR_END)==std::string::npos);
-
-          // Continue if not a stream object
-          if (length==0)
-            continue;
-
-          // Read until "stream" keyword
-          do { getline_safe(stream,line); }
-          while (line.find_first_of("stream")==std::string::npos);
-          // Read the binary data
-          bin.resize(length);
-          stream.read(bin.data(), length);
-
-          // Decompress if compressed
-          if (compressed)
-          {
-            boost::iostreams::array_source src {bin.data(), length};
-            boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
-            in.push(boost::iostreams::zlib_decompressor());
-            in.push(src);
-            std::vector<char> out;
-            out.assign(std::istreambuf_iterator<char>{&in}, {});
-            bin.swap(out);
-          }
-
-          return stream;
-      }
-    }
+    mx::Array a = {values[i], values[i+1], 0};
+    mx::Vector t = mx::ublas::prod(T, mx::Vector(3,std::move(a)));
+    values[i]=t[0];
+    values[i+1]=t[1];
   }
 }
 
 Outline* foillogic::loadOutlinePdfStream(std::istream &stream)
 {
+  std::unique_ptr<Outline> outline(new Outline());
+
+  // Parse a sequence of path commands (first path encountered)
+  std::vector<pdf::path_cmd> path_cmds;
   std::vector<char> bin;
+  pdf::path_cmd first;
   while(pdf::read_next_binary(stream, bin))
   {
+    std::string line;
     boost::interprocess::basic_ivectorstream<std::vector<char>> bin_stream(bin);
-    std::clog << std::endl << bin.data() << std::endl;
+    while(getline_safe(bin_stream, line))
+    {
+      if (auto pc = pdf::parse_path_line(line)) {
+        if (first.cmd!='m' && pc->cmd!='m')
+          // continue until first move
+          continue;
+        if (first.cmd!='m' && pc->cmd=='m')
+          // set first move
+          first=pc.value();
+        else if (first.cmd=='m' && pc->cmd=='m')
+          // break on a second move
+          break;
+        path_cmds.push_back(std::move(pc.value()));
+      }
+    }
   }
+
+  // Tranformation matrix for transform to first quadrant
+  mx::Vector first_pnt(2, {first.vals[0], first.vals[1]});
+  mx::Vector last_pnt(2);
+  auto prit = path_cmds.rbegin();
+  last_pnt[0] = (*prit).vals[(*prit).vals.size()-2];
+  last_pnt[1] = (*prit).vals[(*prit).vals.size()-1];
+  if (last_pnt[0]==0 && last_pnt[1]==0) {
+    // if path is closed, take last coord of prev section
+    prit++;
+    last_pnt[0] = (*prit).vals[(*prit).vals.size()-2];
+    last_pnt[1] = (*prit).vals[(*prit).vals.size()-1];
+    // remove closing command
+    path_cmds.pop_back();
+  }
+  // normalize length
+  mx::Vector rotation = last_pnt-first_pnt;
+  double length = mx::ublas::norm_2(rotation);
+  rotation/=length;
+  // construct the transformation matrix
+  mx::Array a({rotation[0],rotation[1],first_pnt[0],
+               -rotation[1],rotation[0],first_pnt[1],
+               0,0,0});
+  mx::Matrix T = mx::Matrix(3,3,std::move(a));
+
+  std::unique_ptr<Path> outline_path(new Path());
+
+  std::shared_ptr<CurvePoint> prev_pnt;
+  for (pdf::path_cmd &pc : path_cmds)
+  {
+    if (pc.vals.size()%2!=0)
+      return nullptr;
+    transform(pc.vals, T);
+
+    // find the first move command before before building the path
+    if (!prev_pnt) {
+      if (pc.cmd == 'm' && pc.vals.size()==2)
+        prev_pnt = std::make_shared<CurvePoint>(pc.vals[0], -pc.vals[1]);
+      continue;
+    }
+
+    if (pc.vals.size()<2) continue;
+    auto next_pnt = std::make_shared<CurvePoint>(pc.vals[pc.vals.size()-2], -pc.vals[pc.vals.size()-1]);
+
+    // Detect closing (base rotation on this)
+    if(next_pnt->x()==0 && next_pnt->y()==0)
+      break;
+
+    switch (pc.cmd) {
+      case 'l':
+        if (pc.vals.size()!=2) return nullptr;
+        outline_path->append(std::make_shared<Line>(prev_pnt, next_pnt));
+        break;
+      case 'c':
+        if (pc.vals.size()!=6) return nullptr;
+        outline_path->append(std::make_shared<CubicBezier>(prev_pnt,
+                                                           std::make_shared<ControlPoint>(pc.vals[0], -pc.vals[1]),
+                                                           std::make_shared<ControlPoint>(pc.vals[2], -pc.vals[3]),
+                                                           next_pnt));
+        break;
+      case 'v':
+        if (pc.vals.size()!=4) return nullptr;
+        outline_path->append(std::make_shared<CubicBezier>(prev_pnt,
+                                                           std::make_shared<ControlPoint>(prev_pnt->x(), prev_pnt->y()),
+                                                           std::make_shared<ControlPoint>(pc.vals[0], -pc.vals[1]),
+                                                           next_pnt));
+        break;
+      case 'y':
+        if (pc.vals.size()!=4) return nullptr;
+        outline_path->append(std::make_shared<CubicBezier>(prev_pnt,
+                                                           std::make_shared<ControlPoint>(pc.vals[0], -pc.vals[1]),
+                                                           std::make_shared<ControlPoint>(next_pnt->x(), next_pnt->y()),
+                                                           next_pnt));
+        break;
+      default:
+        return nullptr;
+    }
+    prev_pnt = next_pnt;
+  }
+
+  if (outline_path->pathItems().count()==0)
+    return nullptr;
+  outline->pSetPath(outline_path.release());
+  return outline.release();
 }

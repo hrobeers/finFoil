@@ -86,6 +86,8 @@ Path *Outline::pPath()
 
 void Outline::pSetPath(Path *path)
 {
+    assert(path->pathItems().count()!=0);
+
     std::shared_ptr<Restrictor> startPntRestrictor = _path->pathItems().first()->startPoint()->restrictor();
     std::shared_ptr<Restrictor> endPntRestrictor = _path->pathItems().last()->endPoint()->restrictor();
 
@@ -93,7 +95,6 @@ void Outline::pSetPath(Path *path)
     path->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
 
     _path.reset(path);
-
     attachSignals(_path.get());
 }
 

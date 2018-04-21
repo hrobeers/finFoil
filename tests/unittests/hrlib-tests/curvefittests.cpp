@@ -26,7 +26,7 @@
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "hrlib/curvefit/curvefit.hpp"
-#include "hrlib/curvefit/vertexio.hpp"
+#include "hrlib/io/vertexio.hpp"
 
 using namespace hrlib;
 using namespace std;

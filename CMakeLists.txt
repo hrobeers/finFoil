@@ -27,7 +27,7 @@ option(Tests "Build the tests executable" OFF)
 option(Web "Include the web components" ON)
 
 # Build flags
-set(CXX_STANDARD 11)
+set(CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(DEBUG_FLAGS "-g -O0 -Wall -Wextra -pedantic")
 set(RELEASE_FLAGS "-O3 -fomit-frame-pointer -finline-functions -ffast-math")
@@ -86,7 +86,7 @@ endif()
 set(CMAKE_AUTOMOC ON)
 
 # Boost
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system filesystem iostreams REQUIRED)
 if(Boost_FOUND)
   message(STATUS "Including Boost from: ${Boost_INCLUDE_DIRS}")
   include_directories(${Boost_INCLUDE_DIRS})

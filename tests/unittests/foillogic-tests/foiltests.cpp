@@ -28,7 +28,10 @@
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "foillogic/foil.hpp"
 #include "foillogic/foilio.hpp"
+#include "foillogic/outline.hpp"
 #include "patheditor/ipath.hpp"
+#include "patheditor/path.hpp"
+#include "jenson.h"
 
 using namespace foillogic;
 using namespace patheditor;
@@ -85,7 +88,9 @@ void FoilTests::testOutlineIO()
   {
     std::ifstream ifs;
     ifs.open(p.path().string(), std::ifstream::in);
-    foillogic::loadOutlinePdfStream(ifs);
+    auto outline = std::unique_ptr<Outline>(foillogic::loadOutlinePdfStream(ifs));
+    QVERIFY(outline);
+    QVERIFY(outline->pPath()->pathItems().count() > 0);
   }
 }
 
