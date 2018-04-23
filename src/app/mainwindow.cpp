@@ -152,6 +152,7 @@ void MainWindow::loadOutline()
         {
           _fin->pSetOutline(outline.release());
           _outlineEditor->setFoil(_fin.get());
+          _foilDataWidget->setFoilCalculator(_outlineEditor->foilCalculator());
           _fin->onDeserialized();
           return;
         }
@@ -172,6 +173,7 @@ void MainWindow::loadOutline()
 
     _fin->pSetOutline(deserialized.release());
     _outlineEditor->setFoil(_fin.get());
+    _foilDataWidget->setFoilCalculator(_outlineEditor->foilCalculator());
     _fin->onDeserialized();
 }
 

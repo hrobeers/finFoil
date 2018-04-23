@@ -170,6 +170,7 @@ void Profile::pSetTopProfile(Path *topProfile)
     _botProfile->pathItems().first()->setStartPoint(topProfile->pathItems().first()->startPoint());
     _botProfile->pathItems().last()->setEndPoint(topProfile->pathItems().last()->endPoint());
 
+    if (_topProfile) _topProfile->disconnect();
     _topProfile.reset(topProfile);
 
     attachSignals(_topProfile.get());
@@ -186,6 +187,7 @@ void Profile::pSetBotProfile(Path *botProfile)
     _topProfile->pathItems().first()->setStartPoint(botProfile->pathItems().first()->startPoint());
     _topProfile->pathItems().last()->setEndPoint(botProfile->pathItems().last()->endPoint());
 
+    if (_botProfile) _botProfile->disconnect();
     _botProfile.reset(botProfile);
 
     attachSignals(_botProfile.get());
@@ -210,6 +212,8 @@ Profile::~Profile() {}
 
 void Profile::initProfile()
 {
+    if (_topProfile) _topProfile->disconnect();
+    if (_botProfile) _botProfile->disconnect();
     _topProfile.reset(new Path());
     _botProfile.reset(new Path());
 

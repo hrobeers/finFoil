@@ -94,6 +94,7 @@ void Outline::pSetPath(Path *path)
     path->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
     path->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
 
+    if (_path) _path->disconnect();
     _path.reset(path);
     attachSignals(_path.get());
 }
@@ -102,6 +103,7 @@ Outline::~Outline() {}
 
 void Outline::initPath()
 {
+    if (_path) _path->disconnect();
     _path.reset(new Path());
 
     qreal m = 2;

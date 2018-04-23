@@ -83,7 +83,7 @@ namespace foillogic
     public slots:
 
     private:
-        std::unique_ptr<patheditor::Path> _path;
+        qunique_ptr<patheditor::Path> _path;
 
         boost::units::quantity<boost::units::si::length, qreal> _height;
         boost::units::quantity<boost::units::si::area, qreal> _area;

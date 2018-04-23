@@ -68,8 +68,8 @@ namespace foillogic
     private:
         qreal _thicknessRatio;
 
-        std::unique_ptr<patheditor::Path> _topProfile;
-        std::unique_ptr<patheditor::Path> _botProfile;
+        qunique_ptr<patheditor::Path> _topProfile;
+        qunique_ptr<patheditor::Path> _botProfile;
 
         void attachSignals(patheditor::Path* path);
 

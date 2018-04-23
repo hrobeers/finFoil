@@ -36,8 +36,8 @@ using namespace patheditor;
 
 ThicknessProfile::ThicknessProfile(QObject *parent) :
     QObject(parent), _thicknessRatio(1),
-    _topProfile(std::unique_ptr<Path>(new Path())),
-    _botProfile(std::unique_ptr<Path>(new Path()))
+    _topProfile(new Path()),
+    _botProfile(new Path())
 {
     qshared_ptr<PathPoint> point0(new CurvePoint(0,0));
 
@@ -86,6 +86,7 @@ void ThicknessProfile::pSetTopProfile(Path *topProfile)
     topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
     topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
 
+    if (_topProfile) _topProfile->disconnect();
     _topProfile.reset(topProfile);
 
     attachSignals(_topProfile.get());
