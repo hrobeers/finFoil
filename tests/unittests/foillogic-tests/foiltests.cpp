@@ -81,6 +81,30 @@ void FoilTests::testSIdecoration()
   ::assertAllPointsInQuadrant(foil.botThicknessSI().get(), 4);
 }
 
+#define WRITE_OUTLINES
+#ifdef WRITE_OUTLINES
+#include <QImage>
+#include <QPainter>
+std::unique_ptr<QImage> toImage(Path *path)
+{
+    int maxX = std::ceil(path->maxX()) + 2;
+    int maxY = std::ceil(-path->minY()) + 2;
+
+    std::unique_ptr<QImage> image(new QImage(maxX, maxY, QImage::Format_ARGB32_Premultiplied));
+    image->fill(Qt::white);
+
+    std::unique_ptr<QPainter> painter(new QPainter());
+
+    painter->begin(image.get());
+    painter->translate(1, maxY);
+    painter->setRenderHint(QPainter::Antialiasing);
+    path->paint(painter.get(), 0, 0);
+    painter->end();
+
+    return image;
+}
+#endif // WRITE_OUTLINES
+
 void FoilTests::testOutlineIO()
 {
   std::string path = "testdata/outlines/";
@@ -91,6 +115,11 @@ void FoilTests::testOutlineIO()
     auto outline = std::unique_ptr<Outline>(foillogic::loadOutlinePdfStream(ifs));
     QVERIFY(outline);
     QVERIFY(outline->pPath()->pathItems().count() > 0);
+
+#ifdef WRITE_OUTLINES
+    auto image = toImage(outline->pPath());
+    image->save((p.path().string()+".png").c_str());
+#endif // WRITE_OUTLINES
   }
 }
 
