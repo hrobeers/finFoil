@@ -108,8 +108,12 @@ std::unique_ptr<QImage> toImage(Path *path)
 void FoilTests::testOutlineIO()
 {
   std::string path = "testdata/outlines/";
-  for (auto & p : boost::filesystem::directory_iterator(path))
+  for (const boost::filesystem::directory_entry &p : boost::filesystem::directory_iterator(path))
   {
+    if (p.path().extension().string()!=".pdf")
+      // TODO error handling on non-pdf files
+      continue;
+
     std::ifstream ifs;
     ifs.open(p.path().string(), std::ifstream::in);
     auto outline = std::unique_ptr<Outline>(foillogic::loadOutlinePdfStream(ifs));
