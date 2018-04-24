@@ -41,6 +41,12 @@ namespace hrlib { namespace pdf
     std::vector<double> vals;
   };
 
+  struct linear_dict {
+    size_t file_length = 0;
+    size_t num_pages = 0;
+  };
+
+  std::istream& read_linear_dict(std::istream& stream, linear_dict& dict);
   std::istream& read_next_binary(std::istream& stream, std::vector<char>& bin);
   optional<path_cmd> parse_path_line(const std::string &line);
 }}

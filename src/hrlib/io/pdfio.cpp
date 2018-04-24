@@ -31,6 +31,74 @@
 using namespace hrlib;
 using namespace pdf;
 
+namespace {
+  const std::string HDR_BEGIN("<<");
+  const std::string HDR_END(">>");
+  const std::string LENGTH("/Length");
+  const std::string FLATE("/FlateDecode");
+  const std::string LINEARIZED("/Linearized");
+  const std::string L("/L");
+  const std::string N("/N");
+
+  bool is_path_char(char c) { return std::any_of(path_chars.cbegin(), path_chars.cend(), [c](char f){ return c==f; }); }
+  bool is_path_line(const std::string &str)
+  {
+    return std::all_of(str.begin(), str.end(), [](char c){
+        if (utf8::is_float_char(c)) return true;
+        return is_path_char(c);
+      });
+  }
+
+  bool try_read_property(const std::string &line, const std::string &prop, bool &out) {
+    if(line.find(prop) != std::string::npos)
+      return out=true;
+    return false;
+  }
+
+  bool try_read_property(const std::string &line, const std::string &prop, size_t &out) {
+    if (size_t pos=line.find(prop) != std::string::npos)
+    {
+        // offset by Length position
+        auto it=line.cbegin()+pos+prop.size();
+        // skip whitespace
+        while(std::any_of(whitespace.cbegin(), whitespace.cend(), [&it](char f){ return *it==f; })) ++it;
+        auto length_begin = it;
+        // iterate until non-digit
+        while(std::isdigit(*it)) ++it;
+        // substring and write to size_t
+        std::istringstream(std::string(length_begin, it)) >> out;
+        return true;
+    }
+    return false;
+  }
+}
+
+std::istream& hrlib::pdf::read_linear_dict(std::istream &stream, linear_dict &dict)
+{
+  std::string line;
+  while(true)
+  {
+    getline_safe(stream, line);
+    if (!stream) return stream;
+
+    bool linearized;
+    if (line.find(HDR_BEGIN) != std::string::npos)
+    {
+      do
+      {
+        try_read_property(line, LINEARIZED, linearized);
+        try_read_property(line, L, dict.file_length);
+        try_read_property(line, N, dict.num_pages);
+        getline_safe(stream, line);
+      } while (line.find(HDR_END)==std::string::npos);
+    }
+
+    if (linearized)
+      return stream;
+  }
+  return stream;
+}
+
 std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<char> &bin)
 {
   std::string line;
@@ -39,10 +107,6 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
     getline_safe(stream, line);
     if (!stream) return stream;
 
-    const std::string HDR_BEGIN("<<");
-    const std::string HDR_END(">>");
-    const std::string LENGTH("Length");
-    const std::string FLATE("FlateDecode");
     if (line.find(HDR_BEGIN) != std::string::npos)
     {
         size_t length=0;
@@ -50,20 +114,8 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
 
         do
         {
-          if (line.find(FLATE) != std::string::npos)
-            compressed=true;
-          if (size_t pos=line.find(LENGTH) != std::string::npos)
-          {
-              // offset by Length position
-              auto it=line.cbegin()+pos+LENGTH.size();
-              // skip whitespace
-              while(std::any_of(whitespace.cbegin(), whitespace.cend(), [&it](char f){ return *it==f; })) ++it;
-              auto length_begin = it;
-              // iterate until non-digit
-              while(std::isdigit(*it)) ++it;
-              // substring and write to size_t
-              std::istringstream(std::string(length_begin, it)) >> length;
-          }
+          try_read_property(line, FLATE, compressed);
+          try_read_property(line, LENGTH, length);
           getline_safe(stream, line);
         } while (line.find(HDR_END)==std::string::npos);
 
@@ -92,17 +144,6 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
 
         return stream;
     }
-  }
-}
-
-namespace {
-  bool is_path_char(char c) { return std::any_of(path_chars.cbegin(), path_chars.cend(), [c](char f){ return c==f; }); }
-  bool is_path_line(const std::string &str)
-  {
-    return std::all_of(str.begin(), str.end(), [](char c){
-        if (utf8::is_float_char(c)) return true;
-        return is_path_char(c);
-      });
   }
 }
 

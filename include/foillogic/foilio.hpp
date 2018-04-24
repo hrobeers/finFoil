@@ -30,7 +30,7 @@
 namespace foillogic
 {
   Profile* loadProfileDatStream(std::istream &stream);
-  Outline* loadOutlinePdfStream(std::istream &stream);
+  Outline* loadOutlinePdfStream(std::istream &stream, std::ostream *err = nullptr);
 }
 
 #endif // PROFILELOADER_HPP

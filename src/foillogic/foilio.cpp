@@ -144,19 +144,28 @@ Profile* foillogic::loadProfileDatStream(std::istream &stream)
   return profile.release();
 }
 
-void transform(std::vector<double> &values, const mx::Matrix &T)
-{
-  assert(values.size()%2==0);
-  for (size_t i=0; i<values.size()-1; i+=2)
+namespace {
+  void transform(std::vector<double> &values, const mx::Matrix &T)
   {
-    mx::Array a = {values[i], values[i+1], 0};
-    mx::Vector t = mx::ublas::prod(T, mx::Vector(3,std::move(a)));
-    values[i]=t[0];
-    values[i+1]=t[1];
+    assert(values.size()%2==0);
+    for (size_t i=0; i<values.size()-1; i+=2)
+    {
+      mx::Array a = {values[i], values[i+1], 0};
+      mx::Vector t = mx::ublas::prod(T, mx::Vector(3,std::move(a)));
+      values[i]=t[0];
+      values[i+1]=t[1];
+    }
+  }
+
+  template<typename T>
+  T* error(std::ostream *err, const char* msg) {
+    if (err)
+      (*err) << msg << std::endl;
+    return nullptr;
   }
 }
 
-Outline* foillogic::loadOutlinePdfStream(std::istream &stream)
+Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream *err)
 {
   std::unique_ptr<Outline> outline(new Outline());
 
@@ -178,8 +187,15 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream)
           // set first move
           first=pc.value();
         else if (first.cmd=='m' && pc->cmd=='m')
-          // break on a second move
-          break;
+        {
+          // break on a second move if path long enough
+          // otherwise reset move command
+          // this ensures alignment lines are skipped
+          if (path_cmds.size()>2)
+            break;
+          path_cmds.clear();
+          first=pc.value();
+        }
         path_cmds.push_back(std::move(pc.value()));
       }
     }
@@ -215,7 +231,7 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream)
   for (pdf::path_cmd &pc : path_cmds)
   {
     if (pc.vals.size()%2!=0)
-      return nullptr;
+      return error<Outline>(err, "pdf path command has uneven value count");
     transform(pc.vals, T);
 
     // find the first move command before before building the path

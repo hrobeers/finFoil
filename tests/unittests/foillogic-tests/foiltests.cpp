@@ -116,7 +116,7 @@ void FoilTests::testOutlineIO()
 
     std::ifstream ifs;
     ifs.open(p.path().string(), std::ifstream::in);
-    auto outline = std::unique_ptr<Outline>(foillogic::loadOutlinePdfStream(ifs));
+    auto outline = std::unique_ptr<Outline>(foillogic::loadOutlinePdfStream(ifs, &std::clog));
     QVERIFY(outline);
     QVERIFY(outline->pPath()->pathItems().count() > 0);
 
