@@ -150,7 +150,7 @@ namespace {
     assert(values.size()%2==0);
     for (size_t i=0; i<values.size()-1; i+=2)
     {
-      mx::Array a = {values[i], values[i+1], 0};
+      mx::Array a = {values[i], values[i+1], 1};
       mx::Vector t = mx::ublas::prod(T, mx::Vector(3,std::move(a)));
       values[i]=t[0];
       values[i+1]=t[1];
