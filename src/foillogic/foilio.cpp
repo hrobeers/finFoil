@@ -43,6 +43,7 @@ using namespace foillogic;
 using namespace hrlib;
 
 namespace {
+  const double OUTLINE_HEIGHT_PX = 260;
   constexpr auto comp_x = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[0] < v2[0]; };
   constexpr auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
 }
@@ -157,6 +158,22 @@ namespace {
     }
   }
 
+  void transform(std::vector<pdf::path_cmd> &values, const mx::Matrix &T,
+                 std::pair<hrlib::vertex<2>, hrlib::vertex<2>> *extremes = nullptr)
+  {
+    hrlib::vertex<2> min, max = {0,0};
+    for (pdf::path_cmd &pc : values) {
+      transform(pc.vals, T);
+      if (extremes)
+        for (size_t i=0; i<pc.vals.size(); i++) {
+          min[i%2] = std::min(min[i%2], pc.vals[i]);
+          max[i%2] = std::max(max[i%2], pc.vals[i]);
+        }
+    }
+    if (extremes)
+      *extremes = { std::move(min), std::move(max) };
+  }
+
   template<typename T>
   T* error(std::ostream *err, const char* msg) {
     if (err)
@@ -223,17 +240,23 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream *err
   mx::Array a({rotation[0],rotation[1],first_pnt[0],
                -rotation[1],rotation[0],first_pnt[1],
                0,0,0});
-  mx::Matrix T = mx::Matrix(3,3,std::move(a));
+  mx::Matrix Tr = mx::Matrix(3,3,std::move(a));
+  std::pair<hrlib::vertex<2>, hrlib::vertex<2>> extr;
+  transform(path_cmds, Tr, &extr);
+  // rescale
+  double minY = extr.second[1];
+  double scale = std::abs(OUTLINE_HEIGHT_PX/minY);
+  mx::Array s({scale,0,0,
+               0,scale,0,
+               0,0,0});
+  mx::Matrix Ts = mx::Matrix(3,3,std::move(s));
+  transform(path_cmds, Ts);
 
   std::unique_ptr<Path> outline_path(new Path());
 
   std::shared_ptr<CurvePoint> prev_pnt;
   for (pdf::path_cmd &pc : path_cmds)
   {
-    if (pc.vals.size()%2!=0)
-      return error<Outline>(err, "pdf path command has uneven value count");
-    transform(pc.vals, T);
-
     // find the first move command before before building the path
     if (!prev_pnt) {
       if (pc.cmd == 'm' && pc.vals.size()==2)
