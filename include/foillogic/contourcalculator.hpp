@@ -217,7 +217,11 @@ namespace foillogic
 
                     if (i == pointCount-1 || leadingEdgePnts[i+1] == 0)
                     {
-        //                createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
+                        if (_percContourHeight!=0) {
+                          smoothLaplacian(leadingEdgePnts.data(), firstIndex, i, 2);
+                          smoothLaplacian(trailingEdgePnts.data(), firstIndex, i, 2);
+                        }
+                        //createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
                         createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
                     }
                 }
@@ -231,6 +235,15 @@ namespace foillogic
         virtual ~ContourCalculator() {}
 
     private:
+        void smoothLaplacian(QPointF* pnts[], int firstIndex, int lastIndex, int it_cnt=1)
+        {
+            for(; it_cnt>0; it_cnt--)
+            for (int i = firstIndex+1; i <= lastIndex-1; i++)
+            {
+              pnts[i]->setX((pnts[i-1]->x()+pnts[i+1]->x())/2);
+              pnts[i]->setY((pnts[i-1]->y()+pnts[i+1]->y())/2);
+            }
+        }
         void createLinePath(QPointF* leadingEdgePnts[], QPointF* trailingEdgePnts[], int firstIndex, int lastIndex)
         {
             _result->moveTo(*leadingEdgePnts[firstIndex]);
