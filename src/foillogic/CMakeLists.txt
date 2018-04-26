@@ -8,6 +8,7 @@ set(SRC
     foilcalculator.cpp
     foilio.cpp
     profile.cpp
+    samplers.cpp
     thicknessprofile.cpp
     outline.cpp
 )

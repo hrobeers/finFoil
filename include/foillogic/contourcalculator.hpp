@@ -21,6 +21,7 @@
 #include "patheditor/pathfunctors.hpp"
 #include "hrlib/math/spline.hpp"
 #include "patheditor/path.hpp"
+#include "foillogic/samplers.hpp"
 
 using namespace patheditor;
 using namespace boost::math;
@@ -50,27 +51,6 @@ namespace foillogic
         return false;
     }
 
-    inline void sampleThickess(const patheditor::IPath *thicknessProfile, int sectionCount, qreal sectionHeightArray[], qreal thicknessArray[], bool normalize = false)
-    {
-        qreal increment = qreal(1) / sectionCount;
-        qreal t = 0;
-        qreal height = thicknessProfile->pointAtPercent(1).x();
-        qreal maxThickness = qMax(qAbs(thicknessProfile->minY()), qAbs(thicknessProfile->pointAtPercent(0).y()));
-        for (int i=0; i<sectionCount; i++)
-        {
-            QPointF p = thicknessProfile->pointAtPercent(t);
-
-            sectionHeightArray[i] = p.x();
-            thicknessArray[i] = p.y();
-            if (normalize)
-            {
-                sectionHeightArray[i] /= height;
-                thicknessArray[i] /= maxThickness;
-            }
-            t += increment;
-        }
-    }
-
     template<typename Target>
     class ContourCalculator : public QRunnable
     {
@@ -92,7 +72,7 @@ namespace foillogic
                                    size_t sectionCount = 512, size_t resolution = 512) :
           _result(result), _percContourHeight(percContourHeight),
           _outline(outline), _thickness(thickness), _profile(profile),
-          _sectionCount(sectionCount), _resolution(resolution), _tTol(0.0015)
+          _sectionCount(sectionCount), _resolution(resolution), _tTol(0.00001)
         {}
 
         virtual void run()
@@ -108,9 +88,18 @@ namespace foillogic
             // discretise and normalise the thickness profile in different cross sections
             //
 
-            std::vector<qreal> sectionHeightArray(_sectionCount);
-            std::vector<qreal> thicknessArray(_sectionCount);
-            sampleThickess(_thickness, _sectionCount, sectionHeightArray.data(), thicknessArray.data(), true);
+            const double mult = 2;
+            FeatureSampler featureSampler;
+            featureSampler.addFeatureSamples(_outline, [](QPointF p){return p.y();}, _sectionCount);
+            featureSampler.addFeatureSamples(_thickness, [](QPointF p){return p.x();}, _sectionCount);
+            featureSampler.addUniformSamples(0, _thickness->pointAtPercent(1).x(), _sectionCount*mult);
+            std::vector<qreal> sectionHeightArray = featureSampler.sampleAt(_sectionCount);
+            std::vector<qreal> thicknessArray = sampleThickess(_thickness, sectionHeightArray);
+            // normalize
+            qreal height = _thickness->pointAtPercent(1).x();
+            qreal maxThickness = qMax(qAbs(_thickness->minY()), qAbs(_thickness->pointAtPercent(0).y()));
+            for (qreal &h : sectionHeightArray) h/=height;
+            for (qreal &t : thicknessArray) t/=maxThickness;
 
 
             //
@@ -179,8 +168,8 @@ namespace foillogic
                 catch (evaluation_error /*unused*/)
                 {
                     // no result when bisect fails
-                    leadingEdgePnts.push_back(0);
-                    trailingEdgePnts.push_back(0);
+                    leadingEdgePnts.push_back(nullptr);
+                    trailingEdgePnts.push_back(nullptr);
                     continue;
                 }
 
@@ -217,10 +206,6 @@ namespace foillogic
 
                     if (i == pointCount-1 || leadingEdgePnts[i+1] == 0)
                     {
-                        if (_percContourHeight!=0) {
-                          smoothLaplacian(leadingEdgePnts.data(), firstIndex, i, 2);
-                          smoothLaplacian(trailingEdgePnts.data(), firstIndex, i, 2);
-                        }
                         //createLinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i);
                         createSplinePath(leadingEdgePnts.data(), trailingEdgePnts.data(), firstIndex, i, bSpline);
                     }
