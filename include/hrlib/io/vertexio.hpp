@@ -36,14 +36,14 @@ namespace hrlib
   {
     const std::string delimiters = " \t,;";
 
-    bool is_float_char(char c)
+    inline bool is_float_char(char c)
     {
       if (isdigit(c)) return true;
       const std::string nondigit = "-.eE";
       return std::any_of(nondigit.cbegin(), nondigit.cend(), [c](char f){ return c==f; });
     }
 
-    bool is_floats(const std::string &str)
+    inline bool is_floats(const std::string &str)
     {
       return std::all_of(str.begin(), str.end(), [](char c){
           if (is_float_char(c)) return true;

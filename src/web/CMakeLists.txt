@@ -12,7 +12,7 @@ set(SRC
     stlexport.cpp
 )
 
-add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR} ${FORMS_HEADERS})
 
 target_link_libraries(${LIB_NAME}
     Qt5::Core

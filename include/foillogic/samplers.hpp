@@ -24,7 +24,7 @@
 #define FOILLOGIC_SAMPLERS_HPP
 
 #include "foillogic/fwd/foillogicfwd.hpp"
-#include "finfoil/patheditor/fwd/patheditorfwd.hpp"
+#include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <iterator>
 #include <QPointF>
