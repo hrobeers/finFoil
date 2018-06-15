@@ -29,6 +29,7 @@ public:
   ArrayIterator(T* x) :p(x) {}
   ArrayIterator(const ArrayIterator& mit) : p(mit.p) {}
   ArrayIterator& operator++() {++p;return *this;}
+  ArrayIterator& operator--() {--p;return *this;}
   ArrayIterator& operator+=(int i) {p+=i;return *this;}
   bool operator==(const ArrayIterator& rhs) {return p==rhs.p;}
   bool operator!=(const ArrayIterator& rhs) {return p!=rhs.p;}

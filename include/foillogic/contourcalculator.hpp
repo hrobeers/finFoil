@@ -165,7 +165,7 @@ namespace foillogic
                     leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
                     trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
                 }
-                catch (evaluation_error /*unused*/)
+                catch (evaluation_error &/*unused*/)
                 {
                     // no result when bisect fails
                     leadingEdgePnts.push_back(nullptr);

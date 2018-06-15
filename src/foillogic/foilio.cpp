@@ -44,8 +44,8 @@ using namespace hrlib;
 
 namespace {
   const double OUTLINE_HEIGHT_PX = 260;
-  constexpr auto comp_x = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[0] < v2[0]; };
-  constexpr auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
+  auto comp_x = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[0] < v2[0]; };
+  auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
 }
 
 Profile* foillogic::loadProfileDatStream(std::istream &stream)
