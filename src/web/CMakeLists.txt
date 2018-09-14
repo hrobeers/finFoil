@@ -2,7 +2,7 @@ set(LIB_NAME "finfoil_web")
 project(${LIB_NAME})
 
 set(CMAKE_AUTOUIC ON)
-qt5_wrap_ui(FORMS_HEADERS exportdialog.ui)
+qt5_wrap_ui(FORMS_HEADERS_WEB exportdialog.ui)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}) # the auto generated ui_*.h files
 
 file(GLOB_RECURSE HDR ${CMAKE_SOURCE_DIR}/include/web/*.hpp)
@@ -12,7 +12,7 @@ set(SRC
     stlexport.cpp
 )
 
-add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR} ${FORMS_HEADERS})
+add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR} ${FORMS_HEADERS_WEB})
 
 target_link_libraries(${LIB_NAME}
     Qt5::Core
