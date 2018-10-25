@@ -32,7 +32,7 @@ namespace {
 
 std::string hrlib::trim_json_floats(const std::string &json_utf8)
 {
-    std::string retVal;
+    std::stringstream retVal;
 
     std::sregex_iterator next(json_utf8.begin(), json_utf8.end(), re_float);
     std::sregex_iterator end;
@@ -43,17 +43,21 @@ std::string hrlib::trim_json_floats(const std::string &json_utf8)
         std::smatch match = *next;
 
         // append the non-float part
-        retVal.append(json_utf8.substr(prev_end, match.position() - prev_end));
+        retVal << json_utf8.substr(prev_end, match.position() - prev_end);
 
         // reduce float precision and append
-        retVal.append(std::regex_replace(std::regex_replace(match.str(), re_zeros, ""), re_nines, "9"));
+        std::string reduced = std::regex_replace(std::regex_replace(match.str(), re_zeros, ""), re_nines, "9");
+        if (reduced.back() == '.')
+          reduced.erase(reduced.cend()-1);
+
+        retVal << reduced;
 
         prev_end = match.position() + match.length();
         next++;
     }
 
     // append the last part
-    retVal.append(json_utf8.substr(prev_end));
+    retVal << json_utf8.substr(prev_end);
 
-    return retVal;
+    return retVal.str();
 }
