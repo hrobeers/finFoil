@@ -37,6 +37,7 @@ namespace {
   const std::string LENGTH("/Length");
   const std::string FLATE("/FlateDecode");
   const std::string LINEARIZED("/Linearized");
+  const std::string ASCII85("/ASCII85Decode"); // TODO not implemented
   const std::string L("/L");
   const std::string N("/N");
 
@@ -56,10 +57,11 @@ namespace {
   }
 
   bool try_read_property(const std::string &line, const std::string &prop, size_t &out) {
-    if (size_t pos=line.find(prop) != std::string::npos)
+    size_t pos=line.find(prop);
+    if (pos != std::string::npos)
     {
         // offset by Length position
-        auto it=line.cbegin()+pos+prop.size();
+        auto it=line.cbegin()+pos+prop.size()+1;
         // skip whitespace
         while(std::any_of(whitespace.cbegin(), whitespace.cend(), [&it](char f){ return *it==f; })) ++it;
         auto length_begin = it;
@@ -110,22 +112,24 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
     if (line.find(HDR_BEGIN) != std::string::npos)
     {
         size_t length=0;
-        bool compressed=false;
+        bool ascii85,compressed=false;
 
         do
         {
+          try_read_property(line, ASCII85, ascii85);
           try_read_property(line, FLATE, compressed);
           try_read_property(line, LENGTH, length);
-          getline_safe(stream, line);
-        } while (line.find(HDR_END)==std::string::npos);
+          if (line.find(HDR_END)!=std::string::npos)
+            break;
+        } while (getline_safe(stream, line));
 
         // Continue if not a stream object
-        if (length==0)
+        if (length==0 || ascii85) // TODO ascii85 not implemented
           continue;
 
         // Read until "stream" keyword
-        do { getline_safe(stream,line); }
-        while (line.find_first_of("stream")==std::string::npos);
+        while (line.find_first_of("stream")==std::string::npos)
+        { getline_safe(stream,line); }
         // Read the binary data
         bin.resize(length);
         stream.read(bin.data(), length);
