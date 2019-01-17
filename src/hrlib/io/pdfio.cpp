@@ -25,6 +25,7 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#include <cmath>
 
 #include "hrlib/io/vertexio.hpp"
 
@@ -159,6 +160,7 @@ optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
   // Push coordinates & extract command
   path_cmd retval;
   size_t prev = 0;
+  size_t coord_idx = 0;
   while (true)
   {
     auto pos = line.find_first_of(delimiters, prev);
@@ -168,9 +170,13 @@ optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
     {
       double v;
       std::istringstream(line.substr(prev, pos-prev)) >> v;
-      retval.vals.push_back(v);
+      if (coord_idx % 2 == 0)
+        retval.vals.push_back({v, NAN});
+      else
+        retval.vals.back()[1] = v;
+      ++coord_idx;
     }
-    else if (word.size()==1 && is_path_char(word[0]) && retval.vals.size()%2==0)
+    else if (word.size()==1 && is_path_char(word[0]) && retval.vals.size()>0)
     {
       retval.cmd = word[0];
       return std::move(retval);

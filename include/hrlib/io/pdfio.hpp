@@ -28,6 +28,8 @@
 #include <algorithm>
 #include <experimental/optional>
 
+#include "vertex.hpp"
+
 namespace hrlib { namespace pdf
 {
   using std::experimental::optional;
@@ -38,7 +40,7 @@ namespace hrlib { namespace pdf
 
   struct path_cmd {
     char cmd = 0;
-    std::vector<double> vals;
+    std::vector<vertex<2>> vals;
   };
 
   struct linear_dict {
