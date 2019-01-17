@@ -211,7 +211,7 @@ namespace {
   }
 }
 
-Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream *err)
+Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*err*/)
 {
   std::unique_ptr<Outline> outline(new Outline());
 
