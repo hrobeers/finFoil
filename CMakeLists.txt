@@ -29,8 +29,8 @@ option(Web "Include the web components" ON)
 # Build flags
 set(CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(DEBUG_FLAGS "-g -O0 -Wall -Wextra -pedantic")
-set(RELEASE_FLAGS "-O3 -fomit-frame-pointer -finline-functions -ffast-math")
+set(DEBUG_FLAGS "-g -Og -Wall -Wextra -pedantic")
+set(RELEASE_FLAGS "-O3 -fomit-frame-pointer -finline-functions")
 
 # Assign the build flags
 #set(CMAKE_VERBOSE_MAKEFILE ON)

@@ -54,7 +54,7 @@ namespace {
   bool try_read_property(const std::string &line, const std::string &prop, bool &out) {
     if(line.find(prop) != std::string::npos)
       return out=true;
-    return false;
+    return out=false;
   }
 
   bool try_read_property(const std::string &line, const std::string &prop, size_t &out) {
@@ -84,7 +84,7 @@ std::istream& hrlib::pdf::read_linear_dict(std::istream &stream, linear_dict &di
     getline_safe(stream, line);
     if (!stream) return stream;
 
-    bool linearized;
+    bool linearized = false;
     if (line.find(HDR_BEGIN) != std::string::npos)
     {
       do

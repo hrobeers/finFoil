@@ -182,6 +182,8 @@ namespace {
   }
 
   bool is_closed(const std::vector<pdf::path_cmd> &path_cmds) {
+    if (path_cmds.size()<2)
+      return false;
     auto first = path_cmds.front();
     auto last = path_cmds.back();
     bool closed = first.vals[first.vals.size()-1][0] == last.vals[last.vals.size()-1][0] &&
@@ -257,6 +259,9 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*e
       }
     }
   }
+  if (path_cmds.size()<2)
+    // TODO: error handling
+    return outline.release();
 
 
   //
