@@ -39,7 +39,7 @@ namespace {
 ProfileSampler::ProfileSampler(Profile *profile, qreal thick, qreal minThick, int resolution)
     : _profile(profile), _fThickTop(1), _fThickBot(1),
       _thick(thick), _minThick(minThick),
-      _resolution(resolution), _idxTop(-1), _idxBot(-1)
+      _idxTop(-1), _idxBot(-1), _resolution(resolution)
 {
     _normalizedDiscreteTop.resize(resolution);
     _normalizedDiscreteBot.resize(resolution);

@@ -34,9 +34,10 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
                            const hrlib::Version &version, QWidget *parent) :
     QDialog(parent),
     _ui(new Ui::ExportDialog),
-    _toExport(toExport), _fileName(currentFile),
     _stlExport(new StlExport(baseUrl, version)),
-    _msgReply(nullptr), _postFoilReply(nullptr)
+    _toExport(toExport),
+    _msgReply(nullptr), _postFoilReply(nullptr), _getStlReply(nullptr),
+    _fileName(currentFile)
 {
     _ui->setupUi(this);
 

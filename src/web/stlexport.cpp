@@ -42,10 +42,10 @@ StlExport::StlExport(const QUrl &baseUrl, const Version &version, QObject *paren
   _manager(new QNetworkAccessManager()),
   _manager2(new QNetworkAccessManager()),
   _messageName("finfoil"),
-  _baseUrl(baseUrl),
   _versionSuffix("_v" + QString::number(version.Major()) + "."
                  + QString::number(version.Minor()) + "."
-                 + QString::number(version.Revision()))
+                 + QString::number(version.Revision())),
+  _baseUrl(baseUrl)
 {
     _messageName.append(_versionSuffix);
     _messageName.append(".html");

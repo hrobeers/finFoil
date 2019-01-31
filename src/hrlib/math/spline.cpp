@@ -3101,7 +3101,7 @@ qreal least_val_old ( qreal x, int ndeg, qreal b[], qreal c[], qreal d[] )
   int B_OFFSET = -1;
   int D_OFFSET = -2;
   int k;
-  qreal sk;
+  qreal sk = 0;
   qreal skp1;
   qreal skp2;
   qreal value;
