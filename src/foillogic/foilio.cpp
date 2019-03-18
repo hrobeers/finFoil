@@ -258,6 +258,9 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*e
         path_cmds.push_back(std::move(pc.value()));
       }
     }
+    // stop reading file when a path is parsed
+    if (path_cmds.size()>2)
+      break;
   }
   if (path_cmds.size()<2)
     // TODO: error handling
