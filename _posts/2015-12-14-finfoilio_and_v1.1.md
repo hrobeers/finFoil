@@ -1,6 +1,6 @@
 ---
-layout: post
-title: finfoil.io & v1.1
+layout: redirected
+redirect_to: https://finfoil.io/blog/posts/2015/12/14/finfoilio_and_v1.1.html
 cover: mosaik.jpg
 date:   2015-12-14 18:04:00
 categories: posts
