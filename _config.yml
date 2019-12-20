@@ -22,11 +22,14 @@ baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "http://finfoil.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 #github_username:  jekyll
+hero_img: cover.jpg
 
 # Build settings
 markdown: kramdown
+#theme: jekyll-sleek
 #theme: minima
-#plugins:
+plugins:
+  - jekyll-seo-tag
 #  - jekyll-feed
 
 # Exclude from processing.

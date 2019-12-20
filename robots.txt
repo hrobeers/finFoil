@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /s/3D/
+Disallow: /3D/
+Disallow: /s/r/
+Disallow: /r/
+Disallow: /s/edit/
+Disallow: /edit/
+Disallow: /s/e/
+Disallow: /e/
+Disallow: /tmp/
+Disallow: /vids/
+Disallow: /dev/
