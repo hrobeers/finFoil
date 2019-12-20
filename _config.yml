@@ -24,6 +24,11 @@ url: "http://finfoil.io" # the base hostname & protocol for your site, e.g. http
 #github_username:  jekyll
 hero_img: cover.jpg
 
+navigation:
+  - {name: 'Online editor', link: 'https://finfoil.io/#editor'}
+  - {name: 'Download', link: 'https://finfoil.io/#download'}
+  - {name: 'Contact', link: 'https://finfoil.io/#contact'}
+
 # Build settings
 markdown: kramdown
 #theme: jekyll-sleek
