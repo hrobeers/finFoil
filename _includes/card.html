@@ -13,12 +13,12 @@
       <figure class="post-card__thumb">
           <!-- TODO figure out how to use srcset -->
         <img
-          src="{{ site.url }}{{ site.baseurl }}/images/{{post.cover}}"
-          data-srcset="{{ site.url }}{{ site.baseurl }}/images/{{post.cover}}, {{ site.url }}{{ site.baseurl }}/images/{{post.cover}} 2x"
+          src="{{ site.baseurl }}/images/{{post.cover}}"
+          data-srcset="{{ site.baseurl }}/images/{{post.cover}}, {{ site.baseurl }}/images/{{post.cover}} 2x"
           class="lazyload blur"
           alt="{{post.title}}"
         />
-        <noscript><img src="{{ site.url }}{{ site.baseurl }}/images/{{post.cover}}" alt="{{ post.title }}"></noscript>
+        <noscript><img src="{{ site.baseurl }}/images/{{post.cover}}" alt="{{ post.title }}"></noscript>
       </figure>
     {% else %}
       <figure class="post-card__thumb">
