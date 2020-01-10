@@ -39,8 +39,7 @@ namespace patheditor
             None = 0x0,
             HorizontalAxis = 0x1,
             VerticalAxis = 0x2,
-            DragImageHereText = 0x4,
-            PointRemove = 0x8
+            DragImageHereText = 0x4
         };
     };
 

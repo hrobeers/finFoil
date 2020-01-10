@@ -78,8 +78,6 @@ void PathEditorWidget::addPath(EditablePath* path)
 #include<patheditor/pathitem.hpp>
 void PathEditorWidget::onPointRemove(PathPoint* toRemove, EditablePath* sender)
 {
-  if (!featureEnabled(Features::PointRemove))
-    return;
   _scene->removeItem(sender);
   Path* path = sender->path();
   path->disconnectAll();
@@ -137,9 +135,6 @@ void PathEditorWidget::enableFeatures(QFlags<Features::e> features)
 
         _enabledFeatures |= Features::DragImageHereText;
     }
-
-    if (features.testFlag(Features::PointRemove))
-        _enabledFeatures |= Features::PointRemove;
 }
 
 std::shared_ptr<Restrictor> PathEditorWidget::originRestrictor()
