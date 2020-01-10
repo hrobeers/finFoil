@@ -48,8 +48,9 @@ void PointContextMenu::Show(const QPoint &pos)
 //    QAction *splitAct = new QAction("Split", &menu);
 //    menu.addAction(splitAct);
 
-//    QAction *removeAct = new QAction("Remove", &menu);
-//    menu.addAction(removeAct);
+    QAction *removeAct = new QAction("Remove", &menu);
+    connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
+    menu.addAction(removeAct);
 
     menu.exec(pos);
 }
@@ -57,4 +58,9 @@ void PointContextMenu::Show(const QPoint &pos)
 void PointContextMenu::setContinuous(bool continuous)
 {
     _point->setContinuous(continuous);
+}
+
+void PointContextMenu::remove()
+{
+    _point->remove();
 }

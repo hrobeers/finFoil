@@ -56,6 +56,8 @@ namespace patheditor
 
         virtual QRectF controlPointRect() const = 0;
 
+        virtual std::shared_ptr<PathItem> clone() const = 0;
+
         //
         // EditablePath paint methods
         //

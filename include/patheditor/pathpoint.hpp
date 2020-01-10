@@ -75,12 +75,14 @@ namespace patheditor
 
         virtual bool continuous() const { return false; }
         virtual void setContinuous(bool /*continuous*/) {}
+        virtual void remove() { emit pointRemove(this); }
 
         virtual ~PathPoint() {}
 
     signals:
         void pointDrag(PathPoint *sender);
         void pointRelease(PathPoint *sender);
+        void pointRemove(PathPoint *sender);
 
     public slots:
         void onPointDrag(QGraphicsSceneMouseEvent *event);

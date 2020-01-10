@@ -118,3 +118,12 @@ void CubicBezier::paintPathItemImpl(QPainterPath *totalPainterPath, QPainter *pa
 
     totalPainterPath->cubicTo(*_cPoint1, *_cPoint2, *_endPoint);
 }
+
+#include <patheditor/curvepoint.hpp>
+std::shared_ptr<PathItem> CubicBezier::clone() const
+{
+  return std::shared_ptr<PathItem>(new CubicBezier(std::shared_ptr<PathPoint>(new CurvePoint(_startPoint->x(),_startPoint->y())),
+                                                   std::make_shared<ControlPoint>(_cPoint1->x(),_cPoint1->y()),
+                                                   std::make_shared<ControlPoint>(_cPoint2->x(),_cPoint2->y()),
+                                                   std::shared_ptr<PathPoint>(new CurvePoint(_endPoint->x(),_endPoint->y()))));
+}

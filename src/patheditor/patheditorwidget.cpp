@@ -23,10 +23,12 @@
 #include "patheditor/patheditorwidget.hpp"
 
 #include <QLayout>
+#include <QList>
 #include "patheditor/patheditorview.hpp"
 #include "patheditor/linerestrictor.hpp"
 #include "patheditor/pointrestrictor.hpp"
 #include "patheditor/editablepath.hpp"
+#include "patheditor/path.hpp"
 
 #define featureEnabled(feat) (_enabledFeatures & feat)
 
@@ -68,7 +70,26 @@ QGraphicsScene *PathEditorWidget::scene()
 
 void PathEditorWidget::addPath(EditablePath* path)
 {
+    connect(path, SIGNAL(pointRemove(PathPoint*, EditablePath*)),
+            this, SLOT(onPointRemove(PathPoint*, EditablePath*)), Qt::UniqueConnection);
     this->scene()->addItem(path);
+}
+
+#include<patheditor/pathitem.hpp>
+void PathEditorWidget::onPointRemove(PathPoint* toRemove, EditablePath* sender)
+{
+  _scene->removeItem(sender);
+  Path* path = sender->path();
+  path->disconnectAll();
+
+  auto newPath = new patheditor::Path();
+  for (auto pi : path->pathItems())
+    if (pi->endPoint().get() == toRemove)
+      continue;
+    else
+      newPath->append(pi->clone());
+
+  emit pathChange(newPath);
 }
 
 void PathEditorWidget::addGraphicsItem(QGraphicsItem *item)

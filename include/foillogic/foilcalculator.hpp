@@ -32,6 +32,7 @@ namespace foillogic
         explicit FoilCalculator(Foil* foil);
 
         Foil* foil();
+        void setFoil(Foil* foil);
 
         QList<qreal> contourThicknesses() const;
         void setContourThicknesses(QList<qreal> thicknesses);

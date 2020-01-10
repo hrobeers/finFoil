@@ -48,6 +48,9 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     _botPathEditor = new patheditor::PathEditorWidget();
     _botPathEditor->enableFeatures(features);
 
+    connect(_topPathEditor, SIGNAL(pathChange(Path*)), this, SLOT(onPathChange(Path*)));
+    connect(_botPathEditor, SIGNAL(pathChange(Path*)), this, SLOT(onPathChange(Path*)));
+
 
     //
     // Layout
@@ -74,16 +77,20 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
 
 void OutlineEditor::setFoil(Foil *foil)
 {
+    _foil = foil;
     _topPathEditor->clear();
     _botPathEditor->clear();
 
-    _foilCalculator.reset(new FoilCalculator(foil));
+    if (_foilCalculator)
+      _foilCalculator->setFoil(foil);
+    else
+      _foilCalculator.reset(new FoilCalculator(foil));
 
     ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
     ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
 
-    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path());
-    nonEditableOutline->setEditable(false);
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path(), false);
+    //nonEditableOutline->setEditable(false);
     _topPathEditor->addGraphicsItem(topContours);
     _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
     _botPathEditor->addGraphicsItem(botContours);
@@ -101,4 +108,11 @@ void OutlineEditor::setGridUnitSize(qreal pxPerUnit)
 {
     _topPathEditor->setGridUnitSize(pxPerUnit);
     _botPathEditor->setGridUnitSize(pxPerUnit);
+}
+
+void OutlineEditor::onPathChange(Path *path)
+{
+    _foil->outline()->pSetPath(path);
+    _foil->pSetOutline(_foil->outline());
+    setFoil(_foil);
 }

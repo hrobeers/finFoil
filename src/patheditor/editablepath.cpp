@@ -34,12 +34,12 @@
 
 using namespace patheditor;
 
-EditablePath::EditablePath(Path *path, QGraphicsItem *parent)
-    : QGraphicsObject(parent), _path(path), _settings(PathSettings::Default())
+EditablePath::EditablePath(Path *path, bool editable, QGraphicsItem *parent)
+  : QGraphicsObject(parent), _editable(editable), _path(path), _settings(PathSettings::Default())
 {
-    foreach(std::shared_ptr<PathItem> item, _path->pathItems())
+    for (auto item : _path->pathItems())
         onAppend(item.get());
-    connect(path, SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)));
+    connect(path, SIGNAL(onAppend(patheditor::PathItem*)), this, SLOT(onAppend(patheditor::PathItem*)), Qt::UniqueConnection);
 }
 
 QRectF EditablePath::boundingRect() const
@@ -80,12 +80,12 @@ void EditablePath::setEditable(bool editable)
 {
     _editable = editable;
 
-    foreach (std::shared_ptr<PathItem> item, _path->pathItems())
+    for (auto item : _path->pathItems())
     {
         item->startPoint()->handle()->setVisible(editable);
         item->endPoint()->handle()->setVisible(editable);
 
-        foreach (std::shared_ptr<ControlPoint> point, item->controlPoints())
+        for (auto point : item->controlPoints())
         {
             point->handle()->setVisible(editable);
         }
@@ -101,17 +101,25 @@ void EditablePath::onAppend(PathItem *pathItem)
 {
     // Add the startpoint pointHandle
     pathItem->startPoint()->createPointHandle(this, _settings);
+    if (editable())
+      connect(pathItem->startPoint().get(), SIGNAL(pointRemove(PathPoint*)),
+              this, SLOT(onPointRemove(PathPoint*)), Qt::UniqueConnection);
 
     // Add the endpoint pointHandle
     pathItem->endPoint()->createPointHandle(this, _settings);
 
     // Add the controlPoint's pointHandles
-    foreach(std::shared_ptr<PathPoint> controlPoint, pathItem->controlPoints())
+    for (auto controlPoint : pathItem->controlPoints())
     {
         controlPoint->createPointHandle(this, _settings);
     }
 
     connectPoints(pathItem);
+}
+
+void EditablePath::onPointRemove(PathPoint *sender)
+{
+    emit pointRemove(sender, this);
 }
 
 void EditablePath::onPointDrag(PathPoint* /*unused*/)
@@ -140,7 +148,7 @@ void EditablePath::connectPoints(PathItem *pathItem)
     connect(pathItem->endPoint().get(), SIGNAL(pointRelease(PathPoint*)),
             this, SLOT(onPointRelease(PathPoint*)), Qt::UniqueConnection);
 
-    foreach(std::shared_ptr<ControlPoint> cPoint, pathItem->controlPoints())
+    for (auto cPoint : pathItem->controlPoints())
     {
         connect(cPoint.get(), SIGNAL(pointDrag(PathPoint*)),
                 this, SLOT(onPointDrag(PathPoint*)), Qt::UniqueConnection);

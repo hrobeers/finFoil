@@ -53,7 +53,11 @@ namespace foileditors
     public slots:
         void setGridUnitSize(qreal pxPerUnit);
 
+    private slots:
+        void onPathChange(Path* path);
+
     private:
+        foillogic::Foil* _foil;
         std::unique_ptr<foillogic::FoilCalculator> _foilCalculator;
 
         PathEditorWidget* _topPathEditor;
