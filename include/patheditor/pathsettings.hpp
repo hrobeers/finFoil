@@ -45,6 +45,8 @@ namespace patheditor
         const QBrush& controlPointBrush() const;
         const QBrush& scalePointBrush() const;
 
+        bool pointRemove;
+
         virtual ~PathSettings() {}
 
     private:

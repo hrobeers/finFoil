@@ -24,6 +24,7 @@
 
 #include <QMenu>
 #include "patheditor/pathpoint.hpp"
+#include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 
@@ -48,9 +49,11 @@ void PointContextMenu::Show(const QPoint &pos)
 //    QAction *splitAct = new QAction("Split", &menu);
 //    menu.addAction(splitAct);
 
-    QAction *removeAct = new QAction("Remove", &menu);
-    connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
-    menu.addAction(removeAct);
+    if (_settings->pointRemove) {
+      QAction *removeAct = new QAction("Remove", &menu);
+      connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
+      menu.addAction(removeAct);
+    }
 
     menu.exec(pos);
 }

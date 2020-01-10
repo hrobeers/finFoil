@@ -73,6 +73,14 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     QVBoxLayout* _mainLayout = new QVBoxLayout();
     _mainLayout->addWidget(splitter);
     this->setLayout(_mainLayout);
+
+
+    //
+    // PathSettings
+    //
+    _settings.reset(new patheditor::PathSettings());
+    // endable pointRemove
+    _settings->pointRemove = true;
 }
 
 void OutlineEditor::setFoil(Foil *foil)
@@ -89,10 +97,10 @@ void OutlineEditor::setFoil(Foil *foil)
     ThicknessContours *topContours = new ThicknessContours(_foilCalculator.get(), Side::Top);
     ThicknessContours *botContours = new ThicknessContours(_foilCalculator.get(), Side::Bottom);
 
-    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path(), false);
+    EditablePath* nonEditableOutline = new EditablePath(foil->outline()->path(), _settings.get(), false);
     //nonEditableOutline->setEditable(false);
     _topPathEditor->addGraphicsItem(topContours);
-    _topPathEditor->addPath(new EditablePath(foil->outline()->path()));
+    _topPathEditor->addPath(new EditablePath(foil->outline()->path(), _settings.get()));
     _botPathEditor->addGraphicsItem(botContours);
     _botPathEditor->addPath(nonEditableOutline);
 }

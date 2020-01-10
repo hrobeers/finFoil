@@ -33,7 +33,7 @@ ScalePoint::ScalePoint(qreal xpos, qreal ypos) :
 
 void ScalePoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings)
 {
-    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->scalePointBrush(), parent);
+    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->scalePointBrush(), settings, parent);
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
 }

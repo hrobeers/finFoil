@@ -37,6 +37,7 @@ namespace patheditor
     {
     public:
         explicit PointHandle(PathPoint *point, int size, const QBrush &brush,
+                             const PathSettings *settings,
                              QGraphicsItem *parent = 0);
 
         void setCenter(QPointF *point);
@@ -50,6 +51,7 @@ namespace patheditor
         std::shared_ptr<QPen> _pen;
 
         PathPoint *_point;
+        const PathSettings *_settings;
         QPointF _originToCenter;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

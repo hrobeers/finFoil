@@ -29,13 +29,12 @@
 #include "patheditor/pathitem.hpp"
 #include "patheditor/pathpoint.hpp"
 #include "patheditor/controlpoint.hpp"
-#include "patheditor/pathsettings.hpp"
 #include "patheditor/pointhandle.hpp"
 
 using namespace patheditor;
 
-EditablePath::EditablePath(Path *path, bool editable, QGraphicsItem *parent)
-  : QGraphicsObject(parent), _editable(editable), _path(path), _settings(PathSettings::Default())
+EditablePath::EditablePath(Path *path, const PathSettings* settings, bool editable, QGraphicsItem *parent)
+  : QGraphicsObject(parent), _editable(editable), _path(path), _settings(settings)
 {
     for (auto item : _path->pathItems())
         onAppend(item.get());

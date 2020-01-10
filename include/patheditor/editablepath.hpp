@@ -26,6 +26,7 @@
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QGraphicsObject>
+#include "patheditor/pathsettings.hpp"
 
 namespace patheditor
 {
@@ -36,7 +37,7 @@ namespace patheditor
     {
         Q_OBJECT
     public:
-        explicit EditablePath(Path* path, bool editable = true, QGraphicsItem * parent = 0);
+        explicit EditablePath(Path* path, const PathSettings* settings = PathSettings::Default(), bool editable = true, QGraphicsItem * parent = nullptr);
 
         // Implementing QGraphicsItem
         virtual QRectF boundingRect() const;

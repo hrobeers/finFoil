@@ -31,8 +31,8 @@
 
 using namespace patheditor;
 
-PointHandle::PointHandle(PathPoint *point, int size, const QBrush &brush, QGraphicsItem *parent)
-    : QGraphicsEllipseItem(0, 0, size, size, parent)
+PointHandle::PointHandle(PathPoint *point, int size, const QBrush &brush, const PathSettings *settings, QGraphicsItem *parent)
+  : QGraphicsEllipseItem(0, 0, size, size, parent), _settings(settings)
 {
     _point = point;
     _originToCenter.setX(this->rect().width()/2);
@@ -84,7 +84,7 @@ void PointHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case Qt::RightButton:
         // TODO show dropdown (same action on double click?)
         {
-            PointContextMenu menu(_point);
+            PointContextMenu menu(_point, _settings);
             menu.Show(event->buttonDownScreenPos(Qt::RightButton));
         }
         break;

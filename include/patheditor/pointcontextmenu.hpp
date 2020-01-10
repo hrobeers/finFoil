@@ -35,12 +35,14 @@ namespace patheditor
         Q_OBJECT
 
     public:
-        explicit PointContextMenu(PathPoint *point) : _point(point) {}
+        explicit PointContextMenu(PathPoint *point, const PathSettings *settings)
+          : _point(point), _settings(settings) {}
 
         void Show(const QPoint &pos);
 
     private:
         PathPoint* _point;
+        const PathSettings* _settings;
 
     private slots:
         void setContinuous(bool continuous);
