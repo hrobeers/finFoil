@@ -39,7 +39,7 @@ void PointContextMenu::Show(const QPoint &pos)
     // Continuity, Duplicate/split, remove
     QMenu menu;
 
-    QAction *contAct = new QAction("Continuous", &menu);
+    QAction *contAct = new QAction("Smooth", &menu);
     contAct->setCheckable(true);
     contAct->setChecked(_point->continuous());
     connect(contAct, SIGNAL(toggled(bool)), this, SLOT(setContinuous(bool)));
