@@ -42,7 +42,7 @@ OutlineEditor::OutlineEditor(QWidget *parent) :
     //
     // PathEditors
     //
-    QFlags<Features::e> features(Features::HorizontalAxis | Features::DragImageHereText);
+    QFlags<Features::e> features(Features::HorizontalAxis | Features::DragImageHereText | Features::PointRemove);
     _topPathEditor = new patheditor::PathEditorWidget();
     _topPathEditor->enableFeatures(features);
     _botPathEditor = new patheditor::PathEditorWidget();
