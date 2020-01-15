@@ -93,6 +93,7 @@ namespace patheditor
     public slots:
         void setGridUnitSize(qreal pxPerUnit);
         void onPointRemove(PathPoint *toRemove, EditablePath *sender);
+        void onPointSplit(PathPoint *toSplit, EditablePath *sender);
 
     private slots:
         void onSceneRectChanged ( const QRectF & rect );

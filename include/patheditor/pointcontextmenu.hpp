@@ -47,6 +47,7 @@ namespace patheditor
     private slots:
         void setContinuous(bool continuous);
         void remove();
+        void split();
     };
 }
 

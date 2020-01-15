@@ -59,12 +59,14 @@ namespace patheditor
         void pathChanged(EditablePath *sender);
         void pathReleased(EditablePath *sender);
         void pointRemove(PathPoint *toRemove, EditablePath *sender);
+        void pointSplit(PathPoint *toSplit, EditablePath *sender);
 
     private slots:
         void onAppend(patheditor::PathItem *pathItem);
         void onPointDrag(PathPoint *sender);
         void onPointRelease(PathPoint *sender);
         void onPointRemove(PathPoint *sender);
+        void onPointSplit(PathPoint *sender);
 
     private:
         bool _editable = true;

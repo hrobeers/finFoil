@@ -117,3 +117,13 @@ void PathItem::paintPathItem(QPainterPath *totalPainterPath, QPainter *painter, 
     if (!settings) settings = PathSettings::Default();
     paintPathItemImpl(totalPainterPath, painter, editable, settings);
 }
+
+QList<QPointF> PathItem::points()
+{
+  QList<QPointF> pnts;
+  pnts.append(QPointF(startPoint()->x(), startPoint()->y()));
+  for (auto p : controlPoints())
+    pnts.append(QPointF(p->x(), p->y()));
+  pnts.append(QPointF(endPoint()->x(), endPoint()->y()));
+  return pnts;
+}
