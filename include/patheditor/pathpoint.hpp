@@ -77,6 +77,7 @@ namespace patheditor
         virtual void setContinuous(bool /*continuous*/) {}
         virtual void remove() { emit pointRemove(this); }
         virtual void split() { emit pointSplit(this); }
+        virtual void togglePathType() { emit pointPathTypeToggle(this); }
 
         virtual ~PathPoint() {}
 
@@ -85,6 +86,7 @@ namespace patheditor
         void pointRelease(PathPoint *sender);
         void pointRemove(PathPoint *sender);
         void pointSplit(PathPoint *sender);
+        void pointPathTypeToggle(PathPoint *sender);
 
     public slots:
         void onPointDrag(QGraphicsSceneMouseEvent *event);

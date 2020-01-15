@@ -48,6 +48,7 @@ namespace patheditor
         void setContinuous(bool continuous);
         void remove();
         void split();
+        void togglePathType();
     };
 }
 

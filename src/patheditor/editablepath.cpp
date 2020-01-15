@@ -105,6 +105,8 @@ void EditablePath::onAppend(PathItem *pathItem)
               this, SLOT(onPointRemove(PathPoint*)), Qt::UniqueConnection);
       connect(pathItem->endPoint().get(), SIGNAL(pointSplit(PathPoint*)),
               this, SLOT(onPointSplit(PathPoint*)), Qt::UniqueConnection);
+      connect(pathItem->endPoint().get(), SIGNAL(pointPathTypeToggle(PathPoint*)),
+              this, SLOT(onPointPathTypeToggle(PathPoint*)), Qt::UniqueConnection);
     }
 
     // Add the endpoint pointHandle
@@ -127,6 +129,11 @@ void EditablePath::onPointRemove(PathPoint *sender)
 void EditablePath::onPointSplit(PathPoint *sender)
 {
   emit pointSplit(sender, this);
+}
+
+void EditablePath::onPointPathTypeToggle(PathPoint *sender)
+{
+  emit pointPathTypeToggle(sender, this);
 }
 
 void EditablePath::onPointDrag(PathPoint* /*unused*/)

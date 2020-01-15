@@ -57,6 +57,10 @@ void PointContextMenu::Show(const QPoint &pos)
       QAction *splitAct = new QAction("Split", &menu);
       connect(splitAct, SIGNAL(triggered()), this, SLOT(split()));
       menu.addAction(splitAct);
+
+      QAction *toggleTypeAct = new QAction("Toggle Curve/Line", &menu);
+      connect(toggleTypeAct, SIGNAL(triggered()), this, SLOT(togglePathType()));
+      menu.addAction(toggleTypeAct);
     }
 
     menu.exec(pos);
@@ -75,4 +79,9 @@ void PointContextMenu::remove()
 void PointContextMenu::split()
 {
     _point->split();
+}
+
+void PointContextMenu::togglePathType()
+{
+  _point->togglePathType();
 }

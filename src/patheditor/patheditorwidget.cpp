@@ -74,6 +74,8 @@ void PathEditorWidget::addPath(EditablePath* path)
             this, SLOT(onPointRemove(PathPoint*, EditablePath*)), Qt::UniqueConnection);
     connect(path, SIGNAL(pointSplit(PathPoint*, EditablePath*)),
             this, SLOT(onPointSplit(PathPoint*, EditablePath*)), Qt::UniqueConnection);
+    connect(path, SIGNAL(pointPathTypeToggle(PathPoint*, EditablePath*)),
+            this, SLOT(onPointPathTypeToggle(PathPoint*, EditablePath*)), Qt::UniqueConnection);
     this->scene()->addItem(path);
 }
 
@@ -145,6 +147,29 @@ void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
         newPath->append(first);
         newPath->append(second);
       }
+    }
+    else
+      newPath->append(pi->clone());
+
+  emit pathChange(newPath);
+}
+
+#include<patheditor/line.hpp>
+#include<patheditor/cubicbezier.hpp>
+void PathEditorWidget::onPointPathTypeToggle(PathPoint* toToggle, EditablePath* sender)
+{
+  _scene->removeItem(sender);
+  Path* path = sender->path();
+  path->disconnectAll();
+
+  auto newPath = new patheditor::Path();
+  for (auto pi : path->pathItems())
+    if (pi->endPoint().get() == toToggle) {
+      auto clone = pi->clone();
+      if (pi->controlPoints().size())
+        newPath->append(std::shared_ptr<PathItem>(new Line(clone->startPoint(), clone->endPoint())));
+      else
+        newPath->append(std::shared_ptr<PathItem>(new CubicBezier(clone->startPoint(), clone->endPoint())));
     }
     else
       newPath->append(pi->clone());
