@@ -56,8 +56,8 @@ void FoilCalculator::setFoil(Foil *foil)
 
     setEquidistantContours(_foil->layerCount());
 
-    connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()));
-    connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()));
+    connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()), Qt::UniqueConnection);
+    connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()), Qt::UniqueConnection);
 }
 
 QList<qreal> FoilCalculator::contourThicknesses() const
