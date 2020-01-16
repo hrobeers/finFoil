@@ -123,6 +123,7 @@ std::array<std::deque<Tpnt>,2> casteljau(const Tpath& p, double t) {
 }
 #include <patheditor/pathpoint.hpp>
 #include <patheditor/controlpoint.hpp>
+#include<patheditor/line.hpp>
 void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
 {
   _scene->removeItem(sender);
@@ -132,8 +133,6 @@ void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
   auto newPath = new patheditor::Path();
   for (auto pi : path->pathItems())
     if (pi->endPoint().get() == toSplit) {
-      // TODO casteljau
-      // TODO differentiate line item splitting
       auto r = casteljau(pi->points(),0.5);
       auto first = pi->clone();
       auto second = pi->clone();
@@ -147,6 +146,12 @@ void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
         newPath->append(first);
         newPath->append(second);
       }
+      if (r[0].size() == 2 && r[1].size() == 2) {
+        first->endPoint()->setPos(r[0][1].x(), r[0][1].y());
+        second->endPoint()->setPos(r[1][1].x(), r[1][1].y());
+        newPath->append(std::shared_ptr<PathItem>(new Line(first->startPoint(), first->endPoint())));
+        newPath->append(std::shared_ptr<PathItem>(new Line(second->startPoint(), second->endPoint())));
+      }
     }
     else
       newPath->append(pi->clone());
@@ -154,7 +159,6 @@ void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
   emit pathChange(newPath);
 }
 
-#include<patheditor/line.hpp>
 #include<patheditor/cubicbezier.hpp>
 void PathEditorWidget::onPointPathTypeToggle(PathPoint* toToggle, EditablePath* sender)
 {
