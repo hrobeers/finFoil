@@ -146,6 +146,17 @@ qreal Path::area(int resolution) const
     return qAbs(area) / 2;
 }
 
+void Path::disconnectAll()
+{
+  disconnect();
+  for (auto pi : pathItems()) {
+    pi->startPoint()->disconnect();
+    pi->endPoint()->disconnect();
+    for (auto p : pi->controlPoints())
+      p->disconnect();
+  }
+}
+
 void Path::paint(QPainter *painter, bool editable, const PathSettings *settings)
 {
     if (!pathItems().isEmpty())

@@ -72,3 +72,10 @@ void Line::paintPathItemImpl(QPainterPath *totalPainterPath, QPainter * /*unused
 {
     totalPainterPath->lineTo(*_endPoint);
 }
+
+#include <patheditor/curvepoint.hpp>
+std::shared_ptr<PathItem> Line::clone() const
+{
+  return std::shared_ptr<PathItem>(new Line(std::shared_ptr<PathPoint>(new CurvePoint(_startPoint->x(),_startPoint->y())),
+                                            std::shared_ptr<PathPoint>(new CurvePoint(_endPoint->x(),_endPoint->y()))));
+}

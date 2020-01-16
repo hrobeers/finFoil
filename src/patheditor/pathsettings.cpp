@@ -27,11 +27,8 @@ using namespace patheditor;
 const PathSettings _default;
 
 PathSettings::PathSettings()
+  : pointRemove(false), _lineWidth(2), _controlLineWidth(1), _handleSize(10)
 {
-    _lineWidth = 2;
-    _controlLineWidth = 1;
-    _handleSize = 10;
-
     // linePen
     _linePen.setWidth(_lineWidth);
 

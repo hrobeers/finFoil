@@ -28,6 +28,7 @@
 
 #include <memory>
 #include <QList>
+#include <QPointF>
 
 namespace patheditor
 {
@@ -43,6 +44,7 @@ namespace patheditor
         void setEndPoint(std::shared_ptr<PathPoint> endPoint);
 
         virtual QList<std::shared_ptr<ControlPoint> > controlPoints() = 0;
+        QList<QPointF> points();
 
         // const getters
         const PathPoint* constStartPoint() const;
@@ -55,6 +57,8 @@ namespace patheditor
         virtual void setPrevPathItem(std::shared_ptr<PathItem> prevPathItem);
 
         virtual QRectF controlPointRect() const = 0;
+
+        virtual std::shared_ptr<PathItem> clone() const = 0;
 
         //
         // EditablePath paint methods

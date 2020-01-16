@@ -88,9 +88,13 @@ namespace patheditor
         virtual ~PathEditorWidget() {}
 
     signals:
+        void pathChange(Path *path);
 
     public slots:
         void setGridUnitSize(qreal pxPerUnit);
+        void onPointRemove(PathPoint *toRemove, EditablePath *sender);
+        void onPointSplit(PathPoint *toSplit, EditablePath *sender);
+        void onPointPathTypeToggle(PathPoint* toToggle, EditablePath* sender);
 
     private slots:
         void onSceneRectChanged ( const QRectF & rect );

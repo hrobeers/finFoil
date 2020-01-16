@@ -36,7 +36,7 @@ CurvePoint::CurvePoint(qreal xpos, qreal ypos)
 
 void CurvePoint::createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings)
 {
-    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->pointBrush(), parent);
+    PointHandle *newPointHandle = new PointHandle(this, settings->handleSize(), settings->pointBrush(), settings, parent);
     newPointHandle->setZValue(1);
     replaceCurrentPointHandle(newPointHandle);
 }

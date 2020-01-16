@@ -12,8 +12,8 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib/)
 
 # Version
 set(MAJOR_VERSION "1")
-set(MINOR_VERSION "1")
-set(REVISION "1")
+set(MINOR_VERSION "2")
+set(REVISION "0")
 
 
 #

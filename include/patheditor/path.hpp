@@ -66,6 +66,8 @@ namespace patheditor
 
         void paint(QPainter *painter, bool editable = false, const PathSettings *settings = 0);
 
+        void disconnectAll();
+
         virtual ~Path();
 
     signals:

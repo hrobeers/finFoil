@@ -42,17 +42,22 @@ using namespace hrlib::patterns;
 FoilCalculator::FoilCalculator(Foil *foil) :
     QObject(), _calculated(false)
 {
-    _foil = foil;
-
-    setEquidistantContours(_foil->layerCount());
-
-    connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()));
-    connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()));
+  setFoil(foil);
 }
 
 Foil *FoilCalculator::foil()
 {
-    return _foil;
+  return _foil;
+}
+
+void FoilCalculator::setFoil(Foil *foil)
+{
+    _foil = foil;
+
+    setEquidistantContours(_foil->layerCount());
+
+    connect(_foil, SIGNAL(foilChanged(Foil*)), this, SLOT(foilChanged()), Qt::UniqueConnection);
+    connect(_foil, SIGNAL(foilReleased(Foil*)), this, SLOT(foilReleased()), Qt::UniqueConnection);
 }
 
 QList<qreal> FoilCalculator::contourThicknesses() const

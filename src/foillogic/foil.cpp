@@ -60,19 +60,22 @@ void Foil::onDeserialized()
 
 void Foil::pSetOutline(Outline *outline)
 {
-    _outline.reset(outline);
+    if (_outline.get()!=outline)
+      _outline.reset(outline);
     connectOutline();
 }
 
 void Foil::pSetProfile(Profile *profile)
 {
-    _profile.reset(profile);
+    if (_profile.get()!=profile)
+      _profile.reset(profile);
     connectProfile();
 }
 
 void Foil::pSetThicknessProfile(ThicknessProfile *thickness)
 {
-    _thicknessProfile.reset(thickness);
+    if (_thicknessProfile.get()!=thickness)
+      _thicknessProfile.reset(thickness);
     connectThickness();
 }
 

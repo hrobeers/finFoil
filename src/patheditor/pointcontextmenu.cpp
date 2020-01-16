@@ -24,6 +24,7 @@
 
 #include <QMenu>
 #include "patheditor/pathpoint.hpp"
+#include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 
@@ -38,7 +39,7 @@ void PointContextMenu::Show(const QPoint &pos)
     // Continuity, Duplicate/split, remove
     QMenu menu;
 
-    QAction *contAct = new QAction("Continuous", &menu);
+    QAction *contAct = new QAction("Smooth", &menu);
     contAct->setCheckable(true);
     contAct->setChecked(_point->continuous());
     connect(contAct, SIGNAL(toggled(bool)), this, SLOT(setContinuous(bool)));
@@ -48,8 +49,19 @@ void PointContextMenu::Show(const QPoint &pos)
 //    QAction *splitAct = new QAction("Split", &menu);
 //    menu.addAction(splitAct);
 
-//    QAction *removeAct = new QAction("Remove", &menu);
-//    menu.addAction(removeAct);
+    if (_settings->pointRemove) {
+      QAction *removeAct = new QAction("Remove", &menu);
+      connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
+      menu.addAction(removeAct);
+
+      QAction *splitAct = new QAction("Split", &menu);
+      connect(splitAct, SIGNAL(triggered()), this, SLOT(split()));
+      menu.addAction(splitAct);
+
+      QAction *toggleTypeAct = new QAction("Toggle Curve/Line", &menu);
+      connect(toggleTypeAct, SIGNAL(triggered()), this, SLOT(togglePathType()));
+      menu.addAction(toggleTypeAct);
+    }
 
     menu.exec(pos);
 }
@@ -57,4 +69,19 @@ void PointContextMenu::Show(const QPoint &pos)
 void PointContextMenu::setContinuous(bool continuous)
 {
     _point->setContinuous(continuous);
+}
+
+void PointContextMenu::remove()
+{
+    _point->remove();
+}
+
+void PointContextMenu::split()
+{
+    _point->split();
+}
+
+void PointContextMenu::togglePathType()
+{
+  _point->togglePathType();
 }
