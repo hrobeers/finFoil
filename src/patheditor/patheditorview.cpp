@@ -57,21 +57,25 @@ void PathEditorView::setImage(const QUrl &url)
         _imageItem = 0;
     }
 
-    QString imagePath = url.path();
-    QPixmap image(url.path());
-    if (image.isNull()) image.load(imagePath.right(imagePath.size() - 1));
+    setImage(url.path());
+}
 
-    if (!image.isNull())
+void PathEditorView::setImage(const QString &path)
+{
+  QPixmap image(path);
+  if (image.isNull()) image.load(path.right(path.size() - 1));
+
+  if (!image.isNull())
     {
-        QRect position = this->rect();
-        position.setHeight(position.height() * 0.9);
-        position.translate(0, -position.height());
-        _imageItem = new ScalableImage(image, position);
-        _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
-        _imageItem->setZValue(-1);
-        _imageItem->setOpacity(0.7);
+      QRect position = this->rect();
+      position.setHeight(position.height() * 0.9);
+      position.translate(0, -position.height());
+      _imageItem = new ScalableImage(image, position);
+      _imageItem->setFlag(QGraphicsItem::ItemIsMovable);
+      _imageItem->setZValue(-1);
+      _imageItem->setOpacity(0.7);
 
-        scene()->addItem(_imageItem);
+      scene()->addItem(_imageItem);
     }
 }
 

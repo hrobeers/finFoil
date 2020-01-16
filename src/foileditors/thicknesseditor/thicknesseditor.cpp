@@ -67,3 +67,8 @@ void ThicknessEditor::update()
 {
     _pathEditor->scene()->update();
 }
+
+void ThicknessEditor::setImage(const QString &path)
+{
+  _pathEditor->setImage(path);
+}

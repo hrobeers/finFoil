@@ -46,6 +46,8 @@ namespace foileditors
         void setFoil(foillogic::Foil *foil);
         foillogic::FoilCalculator* foilCalculator();
 
+        void setImage(const QString &path);
+
         virtual ~OutlineEditor();
 
     signals:

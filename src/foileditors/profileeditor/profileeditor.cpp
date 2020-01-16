@@ -106,3 +106,8 @@ void ProfileEditor::symmetryChanged(int sym)
 
     _pathEditor->scene()->invalidate();
 }
+
+void ProfileEditor::setImage(const QString &path)
+{
+  _pathEditor->setImage(path);
+}

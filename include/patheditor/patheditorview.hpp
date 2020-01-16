@@ -37,6 +37,7 @@ namespace patheditor
         void setPixelsPerUnit(qreal pxPerUnit);
 
         void setImage(const QUrl &url);
+        void setImage(const QString &path);
 
         virtual ~PathEditorView() {}
 
