@@ -58,10 +58,13 @@ private slots:
 
     bool saveOutline();
     void loadOutline();
+    void loadOutlineImage();
     bool saveProfile();
     void loadProfile();
+    void loadProfileImage();
     bool saveThickness();
     void loadThickness();
+    void loadThicknessImage();
 
     void stlExport();
 
@@ -88,7 +91,8 @@ private:
     QFileInfo _currentFile;
 
     QMenu *fileMenu;
-    QMenu *importExportMenu;
+    QMenu *importMenu;
+    QMenu *exportMenu;
     QMenu *aboutMenu;
 
     QAction *newAct;
@@ -97,10 +101,13 @@ private:
     QAction *saveAsAct;
 
     QAction *loadOutlAct;
+    QAction *loadOutlImgAct;
     QAction *saveOutlAct;
     QAction *loadProfAct;
+    QAction *loadProfImgAct;
     QAction *saveProfAct;
     QAction *loadThickAct;
+    QAction *loadThickImgAct;
     QAction *saveThickAct;
 
     QAction *stlExportAct;

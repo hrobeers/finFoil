@@ -165,6 +165,7 @@ void MainWindow::loadOutline()
 
     if (!deserialized)
       {
+        // TODO popup error msg
         errorMsg.prepend(tr("Failed to load outline: "));
         statusBar()->showMessage(errorMsg, 5000);
         qCritical(errorMsg.toUtf8().constData());
@@ -268,6 +269,30 @@ void MainWindow::stlExport()
 #endif
 }
 
+void MainWindow::loadOutlineImage() {
+    QString filePath = askOpenFileName(tr("All supported (*.jpg *.png);;All files (*)"));
+
+    if (filePath.isEmpty())
+        return;
+    _outlineEditor->setImage(filePath);
+}
+
+void MainWindow::loadProfileImage() {
+  QString filePath = askOpenFileName(tr("All supported (*.jpg *.png);;All files (*)"));
+
+  if (filePath.isEmpty())
+    return;
+  _profileEditor->setImage(filePath);
+}
+
+void MainWindow::loadThicknessImage() {
+  QString filePath = askOpenFileName(tr("All supported (*.jpg *.png);;All files (*)"));
+
+  if (filePath.isEmpty())
+    return;
+  _thicknessEditor->setImage(filePath);
+}
+
 void MainWindow::about()
 {
     QMessageBox::about(this, tr("About finFoil"), aboutHtml());
@@ -369,6 +394,10 @@ void MainWindow::createActions()
     loadOutlAct->setStatusTip(tr("Import outline from file"));
     connect(loadOutlAct, SIGNAL(triggered()), this, SLOT(loadOutline()));
 
+    loadOutlImgAct = new QAction(QIcon(), tr("Import Outline image"), this);
+    loadOutlImgAct->setStatusTip(tr("Import outline image for tracing"));
+    connect(loadOutlImgAct, SIGNAL(triggered()), this, SLOT(loadOutlineImage()));
+
     saveOutlAct = new QAction(QIcon(), tr("Export Outline"), this);
     saveOutlAct->setStatusTip(tr("Export outline to file"));
     connect(saveOutlAct, SIGNAL(triggered()), this, SLOT(saveOutline()));
@@ -377,6 +406,10 @@ void MainWindow::createActions()
     loadProfAct->setStatusTip(tr("Import profile from file"));
     connect(loadProfAct, SIGNAL(triggered()), this, SLOT(loadProfile()));
 
+    loadProfImgAct = new QAction(QIcon(), tr("Import Profile image"), this);
+    loadProfImgAct->setStatusTip(tr("Import profile image for tracing"));
+    connect(loadProfImgAct, SIGNAL(triggered()), this, SLOT(loadProfileImage()));
+
     saveProfAct = new QAction(QIcon(), tr("Export Profile"), this);
     saveProfAct->setStatusTip(tr("Export profile to file"));
     connect(saveProfAct, SIGNAL(triggered()), this, SLOT(saveProfile()));
@@ -384,6 +417,10 @@ void MainWindow::createActions()
     loadThickAct = new QAction(QIcon(), tr("Import Thickness"), this);
     loadThickAct->setStatusTip(tr("Import thickness profile from file"));
     connect(loadThickAct, SIGNAL(triggered()), this, SLOT(loadThickness()));
+
+    loadThickImgAct = new QAction(QIcon(), tr("Import Thickness image"), this);
+    loadThickImgAct->setStatusTip(tr("Import thickness image for tracing"));
+    connect(loadThickImgAct, SIGNAL(triggered()), this, SLOT(loadThicknessImage()));
 
     saveThickAct = new QAction(QIcon(), tr("Export Thickness"), this);
     saveThickAct->setStatusTip(tr("Export thickness profile to file"));
@@ -415,18 +452,23 @@ void MainWindow::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
 
-    importExportMenu = menuBar()->addMenu(tr("&Import/Export"));
-    importExportMenu->addAction(loadOutlAct);
-    importExportMenu->addAction(loadProfAct);
-    importExportMenu->addAction(loadThickAct);
-    importExportMenu->addSeparator();
-    importExportMenu->addAction(saveOutlAct);
-    importExportMenu->addAction(saveProfAct);
-    importExportMenu->addAction(saveThickAct);
+    importMenu = menuBar()->addMenu(tr("&Import"));
+    importMenu->addAction(loadOutlAct);
+    importMenu->addAction(loadProfAct);
+    importMenu->addAction(loadThickAct);
+    importMenu->addSeparator();
+    importMenu->addAction(loadOutlImgAct);
+    importMenu->addAction(loadProfImgAct);
+    importMenu->addAction(loadThickImgAct);
+
+    exportMenu = menuBar()->addMenu(tr("&Export"));
+    exportMenu->addAction(saveOutlAct);
+    exportMenu->addAction(saveProfAct);
+    exportMenu->addAction(saveThickAct);
 
 #ifndef WEB_DISABLED
-    importExportMenu->addSeparator();
-    importExportMenu->addAction(stlExportAct);
+    exportMenu->addSeparator();
+    exportMenu->addAction(stlExportAct);
 #endif
 
     aboutMenu = menuBar()->addMenu(tr("&About"));

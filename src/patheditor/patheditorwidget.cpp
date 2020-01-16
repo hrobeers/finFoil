@@ -253,3 +253,8 @@ void PathEditorWidget::onSceneRectChanged(const QRectF &rect)
     if (featureEnabled(Features::VerticalAxis))
         _verticalAxis->setLine(0, rect.bottom() - 1, 0, rect.top() + 1);
 }
+
+void PathEditorWidget::setImage(const QString &path)
+{
+  _view->setImage(path);
+}

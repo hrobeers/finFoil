@@ -123,3 +123,8 @@ void OutlineEditor::onPathChange(Path *path)
     _foil->pSetOutline(_foil->outline());
     setFoil(_foil);
 }
+
+void OutlineEditor::setImage(const QString &path)
+{
+  _topPathEditor->setImage(path);
+}

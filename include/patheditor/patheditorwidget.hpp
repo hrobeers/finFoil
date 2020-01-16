@@ -85,6 +85,8 @@ namespace patheditor
          */
         std::shared_ptr<Restrictor> verticalAxisRestrictor();
 
+        void setImage(const QString &path);
+
         virtual ~PathEditorWidget() {}
 
     signals:

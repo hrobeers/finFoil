@@ -41,6 +41,8 @@ namespace foileditors
 
         void setFoil(foillogic::Foil* foil);
 
+        void setImage(const QString &path);
+
         virtual ~ThicknessEditor() {}
 
     signals:
