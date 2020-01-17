@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             baseUrl = QUrl::fromUserInput(parser.value(serverUrl));
 #endif
         if (!baseUrl.isValid())
-            baseUrl = QStringLiteral("http://finfoil.io/s");
+            baseUrl = QStringLiteral("https://finfoil.io/s");
 
         return runInteractive(app, baseUrl, filePath);
     }
