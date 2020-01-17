@@ -54,7 +54,7 @@ namespace {
   bool try_read_property(const std::string &line, const std::string &prop, bool &out) {
     if(line.find(prop) != std::string::npos)
       return out=true;
-    return out=false;
+    return false;
   }
 
   bool try_read_property(const std::string &line, const std::string &prop, size_t &out) {
