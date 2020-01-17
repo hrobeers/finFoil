@@ -49,7 +49,7 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
     connect(_ui->webView, &QWebView::linkClicked, this, &ExportDialog::linkClicked);
-    _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact finfoil.io</p>");
+    _ui->webView->setHtml("<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style><h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact info@finfoil.io</p>");
     setLinkDelegation();
 
     connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
@@ -88,7 +88,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     {
         if (reply->size())
         {
-            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()));
+            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()), QUrl("https://finfoil.io/"));
             setLinkDelegation();
         }
 
