@@ -155,7 +155,7 @@ std::vector<qreal> FeatureSampler::sampleAt(size_t resolution)
       size_t idx = i*_featureSamples.size()/resolution;
       sampled.push_back(_featureSamples[idx]);
     }
-  return std::move(sampled);
+  return sampled;
 }
 
 std::vector<qreal> foillogic::sampleThickess(const IPath *thicknessProfile, const std::vector<qreal> &sectionHeightArray)
@@ -172,5 +172,5 @@ std::vector<qreal> foillogic::sampleThickess(const IPath *thicknessProfile, cons
       auto sol = tools::bisect(f_thickness, 0.0, 1.0, stop_condition, max_it, ignore_eval_err());
       sampled[i++] = thicknessProfile->pointAtPercent(sol.first).y();
     }
-  return std::move(sampled);
+  return sampled;
 }

@@ -83,7 +83,7 @@ void FoilCalculator::setEquidistantContours(int contourCount)
         thicknesses.append(thickness);
     }
 
-    qSort(thicknesses);
+    std::sort(thicknesses.begin(), thicknesses.end());
     setContourThicknesses(thicknesses);
 }
 

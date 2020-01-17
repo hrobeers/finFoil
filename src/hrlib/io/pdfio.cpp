@@ -179,7 +179,7 @@ optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
     else if (word.size()==1 && is_path_char(word[0]) && retval.vals.size()>0)
     {
       retval.cmd = word[0];
-      return std::move(retval);
+      return retval;
     }
 
     prev = pos+1;
