@@ -26,6 +26,7 @@
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QPointF>
+#include <memory>
 #include "patheditor/restrictor.hpp"
 
 namespace patheditor
@@ -46,14 +47,14 @@ namespace patheditor
     {
     public:
         explicit QuadrantRestrictor(int quadrants);
-        explicit QuadrantRestrictor(QPointF &origin, int quadrants);
+        explicit QuadrantRestrictor(std::weak_ptr<QPointF> origin, int quadrants);
 
         virtual void restrictCoordinate(qreal *x, qreal *y);
 
         virtual ~QuadrantRestrictor() {}
 
     private:
-        QPointF _origin;
+        std::weak_ptr<QPointF> _origin;
         int _quadrants;
     };
 }
