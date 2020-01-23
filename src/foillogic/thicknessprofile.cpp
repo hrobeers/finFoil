@@ -27,6 +27,7 @@
 #include "patheditor/controlpoint.hpp"
 #include "patheditor/curvepoint.hpp"
 #include "patheditor/linerestrictor.hpp"
+#include "patheditor/quadrantrestrictor.hpp"
 #include "patheditor/cubicbezier.hpp"
 
 SERIALIZABLE(foillogic::ThicknessProfile, tProfile)
@@ -36,7 +37,7 @@ using namespace patheditor;
 
 ThicknessProfile::ThicknessProfile(QObject *parent) :
     QObject(parent), _thicknessRatio(1),
-    _topProfile(new Path()),
+    _topProfile(nullptr),
     _botProfile(new Path())
 {
     qshared_ptr<PathPoint> point0(new CurvePoint(0,0));
@@ -50,17 +51,14 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     qshared_ptr<ControlPoint> point6(new ControlPoint(0,30));
     qshared_ptr<ControlPoint> point7(new ControlPoint(300,30));
 
-    std::shared_ptr<Restrictor> verticalAxisRestrictor(new LineRestrictor(*point0, *point1));
-    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point0, *point4));
+    std::unique_ptr<Path> topProfile(new Path());
 
-    point1->setRestrictor(verticalAxisRestrictor);
-    point4->setRestrictor(horizontalAxisRestrictor);
-
-    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    auto topProfilePath = std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4));
+    topProfile->append(topProfilePath);
     _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point5, point6, point7, point4)));
 
     // connect the profile
-    attachSignals(_topProfile.get());
+    pSetTopProfile(topProfile.release());
 }
 
 Path *ThicknessProfile::topProfile()
@@ -80,11 +78,21 @@ Path *ThicknessProfile::pTopProfile()
 
 void ThicknessProfile::pSetTopProfile(Path *topProfile)
 {
-    std::shared_ptr<Restrictor> startPntRestrictor = _topProfile->pathItems().first()->startPoint()->restrictor();
-    std::shared_ptr<Restrictor> endPntRestrictor = _topProfile->pathItems().last()->endPoint()->restrictor();
+    auto startPoint = topProfile->pathItems().first()->startPoint();
+    auto endPoint = topProfile->pathItems().last()->endPoint();
 
-    topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
-    topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+    std::shared_ptr<Restrictor> verticalAxisRestrictor(new LineRestrictor({0,0}, {0,1}));
+    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor({0,0}, {1,0}));
+
+    startPoint->setRestrictor(verticalAxisRestrictor);
+    endPoint->setRestrictor(horizontalAxisRestrictor);
+
+    std::shared_ptr<Restrictor> baseRestrictor(new QuadrantRestrictor(endPoint, Quadrants::II | Quadrants::III));
+    std::shared_ptr<Restrictor> tipRestrictor(new QuadrantRestrictor(endPoint, Quadrants::II));
+    if (auto point2 = topProfile->pathItems().first()->controlPoints().first())
+      point2->setRestrictor(baseRestrictor);
+    if (auto point3 = topProfile->pathItems().last()->controlPoints().last())
+      point3->setRestrictor(tipRestrictor);
 
     if (_topProfile) _topProfile->disconnect();
     _topProfile.reset(topProfile);

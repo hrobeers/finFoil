@@ -28,19 +28,21 @@
 
 using namespace patheditor;
 
-QuadrantRestrictor::QuadrantRestrictor(int quadrants)
-{
-    _quadrants = quadrants;
+namespace {
+  const std::shared_ptr<QPointF> ORIGIN = std::make_shared<QPointF>();
 }
 
-QuadrantRestrictor::QuadrantRestrictor(QPointF &origin, int quadrants)
-{
-    _origin = origin;
-    _quadrants = quadrants;
-}
+QuadrantRestrictor::QuadrantRestrictor(int quadrants)
+  : _origin(ORIGIN), _quadrants(quadrants) {}
+
+QuadrantRestrictor::QuadrantRestrictor(std::weak_ptr<QPointF> origin, int quadrants)
+  : _origin(origin), _quadrants(quadrants) {}
 
 void QuadrantRestrictor::restrictCoordinate(qreal *x, qreal *y)
 {
+    auto origin = _origin.lock();
+    if (!origin)
+        return;
     switch (_quadrants)
     {
 
@@ -49,31 +51,31 @@ void QuadrantRestrictor::restrictCoordinate(qreal *x, qreal *y)
     //
 
     case (Quadrants::I):
-        if (*y > _origin.ry())
-            *y = _origin.ry();
-        if (*x < _origin.rx())
-            *x = _origin.rx();
+        if (*y > origin->ry())
+            *y = origin->ry();
+        if (*x < origin->rx())
+            *x = origin->rx();
         break;
 
     case (Quadrants::II):
-        if (*y > _origin.ry())
-            *y = _origin.ry();
-        if (*x > _origin.rx())
-            *x = _origin.rx();
+        if (*y > origin->ry())
+            *y = origin->ry();
+        if (*x > origin->rx())
+            *x = origin->rx();
         break;
 
     case (Quadrants::III):
-        if (*y < _origin.ry())
-            *y = _origin.ry();
-        if (*x > _origin.rx())
-            *x = _origin.rx();
+        if (*y < origin->ry())
+            *y = origin->ry();
+        if (*x > origin->rx())
+            *x = origin->rx();
         break;
 
     case (Quadrants::IV):
-        if (*y < _origin.ry())
-            *y = _origin.ry();
-        if (*x < _origin.rx())
-            *x = _origin.rx();
+        if (*y < origin->ry())
+            *y = origin->ry();
+        if (*x < origin->rx())
+            *x = origin->rx();
         break;
 
     //
@@ -81,23 +83,23 @@ void QuadrantRestrictor::restrictCoordinate(qreal *x, qreal *y)
     //
 
     case (Quadrants::I | Quadrants::II):
-        if (*y > _origin.ry())
-            *y = _origin.ry();
+        if (*y > origin->ry())
+            *y = origin->ry();
         break;
 
     case (Quadrants::III | Quadrants::IV):
-        if (*y < _origin.ry())
-            *y = _origin.ry();
+        if (*y < origin->ry())
+            *y = origin->ry();
         break;
 
     case (Quadrants::I | Quadrants::IV):
-        if (*x < _origin.rx())
-            *x = _origin.rx();
+        if (*x < origin->rx())
+            *x = origin->rx();
         break;
 
     case (Quadrants::II | Quadrants::III):
-        if (*x > _origin.rx())
-            *x = _origin.rx();
+        if (*x > origin->rx())
+            *x = origin->rx();
         break;
 
     //
