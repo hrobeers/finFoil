@@ -112,9 +112,9 @@ void Outline::initPath()
     qshared_ptr<ControlPoint> point3 = make_qshared(new ControlPoint(m*70.399, m*-113.57));
     qshared_ptr<CurvePoint> point4 = make_qshared(new CurvePoint(m*134.75, m*-114.48));
     qshared_ptr<ControlPoint> point5 = make_qshared(new ControlPoint(m*148.07, m*-114.67));
-    qshared_ptr<ControlPoint> point6 = make_qshared(new ControlPoint(m*168.49, m*-110.44));
-    qshared_ptr<CurvePoint> point7 = make_qshared(new CurvePoint(m*170.30, m*-97.24));
-    qshared_ptr<ControlPoint> point8 = make_qshared(new ControlPoint(m*171.48, m*-88.650));
+    qshared_ptr<ControlPoint> point6 = make_qshared(new ControlPoint(m*158.49, m*-110.44));
+    qshared_ptr<CurvePoint> point7 = make_qshared(new CurvePoint(m*160.30, m*-97.24));
+    qshared_ptr<ControlPoint> point8 = make_qshared(new ControlPoint(m*151.48, m*-88.650));
     qshared_ptr<ControlPoint> point9 = make_qshared(new ControlPoint(m*134.60, m*-78.115));
     qshared_ptr<CurvePoint> point10 = make_qshared(new CurvePoint(m*123.55, m*-62.042));
     qshared_ptr<ControlPoint> point11 = make_qshared(new ControlPoint(m*99.878, m*-27.620));
@@ -138,6 +138,9 @@ void Outline::initPath()
 
     // pipe the path signals
     attachSignals(_path.get());
+
+    point4->setContinuous(true);
+    point10->setContinuous(true);
 }
 
 void Outline::attachSignals(Path *path)
