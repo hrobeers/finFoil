@@ -43,7 +43,7 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     qshared_ptr<PathPoint> point0(new CurvePoint(0,0));
 
     qshared_ptr<PathPoint> point1(new CurvePoint(0,-30));
-    qshared_ptr<ControlPoint> point2(new ControlPoint(0,-30));
+    qshared_ptr<ControlPoint> point2(new ControlPoint(100,-30));
     qshared_ptr<ControlPoint> point3(new ControlPoint(300,-30));
     qshared_ptr<PathPoint> point4(new CurvePoint(300,0));
 
