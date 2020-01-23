@@ -85,6 +85,15 @@ void Profile::setSymmetry(Symmetry symmetry)
         }
     }
 
+    if (_symmetry != Symmetry::Symmetric)
+    {
+        foreach (std::shared_ptr<PathItem> item, _botProfile->pathItems())
+        {
+            item->startPoint()->setContinuous(false);
+            item->endPoint()->setContinuous(false);
+        }
+    }
+
     onProfileChanged(_topProfile.get());
     onProfileReleased();
     emit symmetryChanged(_symmetry);
@@ -262,14 +271,14 @@ void Profile::attachSignals(Path *path)
 
 void Profile::mirror(const PathItem *source, PathItem *destination)
 {
-    destination->startPoint()->setRestrictedPos(source->constStartPoint()->x(), -source->constStartPoint()->y());
-    destination->endPoint()->setRestrictedPos(source->constEndPoint()->x(), -source->constEndPoint()->y());
+    destination->startPoint()->setPos(source->constStartPoint()->x(), -source->constStartPoint()->y());
+    destination->endPoint()->setPos(source->constEndPoint()->x(), -source->constEndPoint()->y());
 
     auto topContrPoints = source->constControlPoints();
     auto botContrPoints = destination->controlPoints();
     for (int i=0; i<topContrPoints.count(); i++)
     {
-        botContrPoints[i]->setRestrictedPos(topContrPoints[i]->x(), -topContrPoints[i]->y());
+        botContrPoints[i]->setPos(topContrPoints[i]->x(), -topContrPoints[i]->y());
     }
 }
 
