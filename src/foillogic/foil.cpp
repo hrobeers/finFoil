@@ -86,7 +86,7 @@ void Foil::setLayerCount(int layerCount)
 
 void Foil::resetLayerCount()
 {
-    setLayerCount(6);
+    setLayerCount(8);
 }
 
 void Foil::pResetThickness()
