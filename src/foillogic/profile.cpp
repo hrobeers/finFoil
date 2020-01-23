@@ -248,6 +248,9 @@ void Profile::initProfile()
     // connect the profiles
     attachSignals(_topProfile.get());
     attachSignals(_botProfile.get());
+
+    tPoint->setContinuous(true);
+    bPoint->setContinuous(true);
 }
 
 void Profile::attachSignals(Path *path)
