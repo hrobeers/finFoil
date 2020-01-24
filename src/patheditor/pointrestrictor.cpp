@@ -24,7 +24,7 @@
 
 using namespace patheditor;
 
-PointRestrictor::PointRestrictor(QPointF &point)
+PointRestrictor::PointRestrictor(const QPointF &point)
 {
     _point = point;
 }
