@@ -27,6 +27,7 @@
 #include "patheditor/curvepoint.hpp"
 #include "patheditor/pointrestrictor.hpp"
 #include "patheditor/linerestrictor.hpp"
+#include "patheditor/quadrantrestrictor.hpp"
 #include "patheditor/cubicbezier.hpp"
 
 SERIALIZABLE(foillogic::Profile, profile)
@@ -41,6 +42,7 @@ namespace {
     Editable = 0x1,
     Default = Editable
   }; };
+
 }
 
 Profile::Profile(QObject *parent) :
@@ -170,17 +172,30 @@ void Profile::setSymmetryStr(QString symmetry)
 
 void Profile::pSetTopProfile(Path *topProfile)
 {
-    std::shared_ptr<Restrictor> startPntRestrictor = _topProfile->pathItems().first()->startPoint()->restrictor();
-    std::shared_ptr<Restrictor> endPntRestrictor = _topProfile->pathItems().last()->endPoint()->restrictor();
+    if (_topProfile) _topProfile->disconnect();
+    _topProfile.reset(topProfile);
 
-    topProfile->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
-    topProfile->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+    const std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor({0,0}));
+    const std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor({0,0},{1,0}));
+    const std::shared_ptr<Restrictor> QI(new QuadrantRestrictor(Quadrants::I));
+
+    for (auto pi : topProfile->pathItems()) {
+      pi->startPoint()->setRestrictor(QI);
+      pi->endPoint()->setRestrictor(QI);
+    }
+    // Overwrite start & end restrictors
+    topProfile->pathItems().first()->startPoint()->setRestrictor(originRestrictor);
+    topProfile->pathItems().last()->endPoint()->setRestrictor(horizontalAxisRestrictor);
+    // Set the first control point restrictor if it exists
+    if (topProfile->pathItems().first()->controlPoints().size())
+      topProfile->pathItems().first()->controlPoints().first()->setRestrictor(QI);
+    // Set the last control point restrictor if it exists
+    if (topProfile->pathItems().last()->controlPoints().size())
+      topProfile->pathItems().last()->controlPoints().last()
+        ->setRestrictor(std::shared_ptr<Restrictor>(new QuadrantRestrictor(topProfile->pathItems().last()->endPoint(), Quadrants::II)));
 
     _botProfile->pathItems().first()->setStartPoint(topProfile->pathItems().first()->startPoint());
     _botProfile->pathItems().last()->setEndPoint(topProfile->pathItems().last()->endPoint());
-
-    if (_topProfile) _topProfile->disconnect();
-    _topProfile.reset(topProfile);
 
     attachSignals(_topProfile.get());
 }
@@ -223,7 +238,8 @@ void Profile::initProfile()
 {
     if (_topProfile) _topProfile->disconnect();
     if (_botProfile) _botProfile->disconnect();
-    _topProfile.reset(new Path());
+
+    std::unique_ptr<Path> topProfile(new Path());
     _botProfile.reset(new Path());
 
     qshared_ptr<PathPoint> point1(new CurvePoint(0,0));
@@ -245,17 +261,15 @@ void Profile::initProfile()
     std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
     std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point3));
 
-    point1->setRestrictor(originRestrictor);
-    point3->setRestrictor(horizontalAxisRestrictor);
-
-    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint)));
-    _topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3)));
+    topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, tcPoint1, tcPoint2, tPoint)));
+    topProfile->append(std::shared_ptr<PathItem>(new CubicBezier(tPoint, tcPoint3, tcPoint4, point3)));
 
     _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(point1, bcPoint1, bcPoint2, bPoint)));
     _botProfile->append(std::shared_ptr<PathItem>(new CubicBezier(bPoint, bcPoint3, bcPoint4, point3)));
 
+
     // connect the profiles
-    attachSignals(_topProfile.get());
+    pSetTopProfile(topProfile.release());
     attachSignals(_botProfile.get());
 
     tPoint->setContinuous(true);
