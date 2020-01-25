@@ -106,7 +106,7 @@ namespace foillogic
     private:
         Symmetry _symmetry;
 
-        qunique_ptr<patheditor::Path> _topProfile;
+        qshared_ptr<patheditor::Path> _topProfile;
         qunique_ptr<patheditor::Path> _botProfile;
 
         QPointF _topProfileTop, _botProfileTop;
