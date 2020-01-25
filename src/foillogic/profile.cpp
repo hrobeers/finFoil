@@ -28,6 +28,7 @@
 #include "patheditor/pointrestrictor.hpp"
 #include "patheditor/linerestrictor.hpp"
 #include "patheditor/quadrantrestrictor.hpp"
+#include "patheditor/pathrestrictor.hpp"
 #include "patheditor/cubicbezier.hpp"
 
 SERIALIZABLE(foillogic::Profile, profile)
@@ -222,11 +223,6 @@ void Profile::pSetBotProfile(Path *botProfile)
       botProfile->pathItems().last()->controlPoints().last()
         ->setRestrictor(std::shared_ptr<Restrictor>(new QuadrantRestrictor(botProfile->pathItems().last()->endPoint(), Quadrants::III)));
 
-    if (_topProfile) {
-      _topProfile->pathItems().first()->setStartPoint(botProfile->pathItems().first()->startPoint());
-      _topProfile->pathItems().last()->setEndPoint(botProfile->pathItems().last()->endPoint());
-    }
-
     attachSignals(_botProfile.get());
 }
 
@@ -293,6 +289,26 @@ void Profile::attachSignals(Path *path)
 {
     connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onProfileChanged(patheditor::Path*)));
     connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onProfileReleased()));
+
+    // Add bottom profile restrictions
+    if (_topProfile && _botProfile) {
+      _topProfile->pathItems().first()->setStartPoint(_botProfile->pathItems().first()->startPoint());
+      _topProfile->pathItems().last()->setEndPoint(_botProfile->pathItems().last()->endPoint());
+
+      std::shared_ptr<Restrictor> botThickRestrictor(new PathRestrictor(_topProfile, [](qreal */*x*/, qreal *y, Path* path)
+                                                                            {
+                                                                              qreal minY=0;
+                                                                              for (auto pi : path->pathItems())
+                                                                                for (auto p : pi->points())
+                                                                                  if (p.y()<minY)
+                                                                                    minY = p.y();
+                                                                              *y = std::min(-minY, *y);
+                                                                            }));
+      for (auto pi : _botProfile->pathItems()) {
+        if (pi != _botProfile->pathItems().last())
+          pi->endPoint()->setRestrictor(botThickRestrictor);
+      }
+    }
 }
 
 void Profile::mirror(const PathItem *source, PathItem *destination)

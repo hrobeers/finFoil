@@ -17,6 +17,7 @@ set(SRC
     patheditorwidget.cpp
     pathitem.cpp
     pathpoint.cpp
+    pathrestrictor.cpp
     pathsettings.cpp
     pointcontextmenu.cpp
     pointhandle.cpp
