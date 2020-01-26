@@ -255,6 +255,12 @@ void FoilDataWidget::onThicknessChange(IQuantity *thickness)
 void FoilDataWidget::onMinThickChange(qt::units::IQuantity *minThick)
 {
   Length* lminThick = static_cast<Length*>(minThick);
+  const auto maxMinThick = 0.003 * boost::units::si::meter;
+  if (lminThick->internalValue() > maxMinThick) {
+    lminThick->setInternalValue(maxMinThick);
+    _minThickEdit->setValue(*lminThick);
+    return;
+  }
   _minThick.setInternalValue(lminThick->internalValue());
   _foilCalculator->foil()->setMinThickness(_minThick.internalValue());
 }
