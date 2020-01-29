@@ -1,6 +1,6 @@
 /****************************************************************************
 
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2020, Hans Robeers
  All rights reserved.
 
  This code is distributed under the GNU LGPL version 2.1.
@@ -246,11 +246,30 @@ AreaCalculator::AreaCalculator(Foil *foil)
     _foil = foil;
 }
 
+
+#include <boost/geometry.hpp>
+typedef boost::geometry::model::ring<QPointF> ring;
+#include <boost/geometry/geometries/register/point.hpp>
+BOOST_GEOMETRY_REGISTER_POINT_2D_GET_SET(QPointF, qreal, cs::cartesian, x, y, setX, setY)
+
 void AreaCalculator::run()
 {
-    qreal outlineTop = _foil->outline()->path()->minY();
+    Path* outlinePath = _foil->outline()->path();
+    qreal outlineTop = outlinePath->minY();
     qreal scalefactor = qPow(_foil->outline()->height().value() / qAbs(outlineTop), 2);
-    qreal smArea = _foil->outline()->path()->area() * scalefactor;
+
+    const int resolution = 512;
+    qreal percStep = 1 / qreal(resolution-1);
+    ring points;
+    qreal perc = 0;
+    for (int i = 0; i < resolution; i++)
+      {
+        QPointF pnt = outlinePath->pointAtPercent(perc);
+        points.push_back(pnt);
+        perc += percStep;
+      }
+
+    qreal smArea = std::abs(boost::geometry::area(points)) * scalefactor;
     quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
     _foil->outline()->setArea(area);
 }

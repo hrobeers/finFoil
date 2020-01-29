@@ -1,6 +1,6 @@
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2020, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -31,8 +31,6 @@
 #include "jenson.h"
 #include "patheditor/ipath.hpp"
 
-#define PATH_AREARES 512
-
 namespace patheditor
 {
     class Path : public QObject, public IPath
@@ -61,8 +59,6 @@ namespace patheditor
         virtual qreal maxX(qreal *t_top = 0) const override;
         virtual qreal minY(qreal *t_top = 0) const override;
         virtual qreal maxY(qreal *t_top = 0) const override;
-
-        qreal area(int resolution = PATH_AREARES) const;
 
         void paint(QPainter *painter, bool editable = false, const PathSettings *settings = 0);
 

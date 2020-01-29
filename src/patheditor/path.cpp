@@ -123,40 +123,6 @@ qreal Path::maxY(qreal *t_top) const
     return extreme<Y, Max>(this, t_top);
 }
 
-
-#include <boost/geometry.hpp>
-typedef boost::geometry::model::ring<QPointF> ring;
-#include <boost/geometry/geometries/register/point.hpp>
-BOOST_GEOMETRY_REGISTER_POINT_2D_GET_SET(QPointF, qreal, cs::cartesian, x, y, setX, setY)
-
-qreal Path::area(int resolution) const
-{
-    qreal percStep = 1 / qreal(resolution-1);
-    ring points;
-    qreal perc = 0;
-    for (int i = 0; i < resolution; i++)
-    {
-        QPointF pnt = pointAtPercent(perc);
-        points.push_back(pnt);
-        perc += percStep;
-    }
-
-    return std::abs(boost::geometry::area(points));
-
-    /*
-    qreal area = 0;
-    int j = 0;
-    for (int i = 0; i < resolution; i++)
-    {
-        j = (i + 1) % resolution;
-        area += points[i].x() * points[j].y();
-        area -= points[j].x() * points[i].y();
-    }
-
-    return qAbs(area) / 2;
-    */
-}
-
 void Path::disconnectAll()
 {
   disconnect();
