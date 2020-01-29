@@ -1,6 +1,6 @@
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2020, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -123,17 +123,27 @@ qreal Path::maxY(qreal *t_top) const
     return extreme<Y, Max>(this, t_top);
 }
 
+
+#include <boost/geometry.hpp>
+typedef boost::geometry::model::ring<QPointF> ring;
+#include <boost/geometry/geometries/register/point.hpp>
+BOOST_GEOMETRY_REGISTER_POINT_2D_GET_SET(QPointF, qreal, cs::cartesian, x, y, setX, setY)
+
 qreal Path::area(int resolution) const
 {
-    qreal percStep = 1 / qreal(resolution);
-    QVarLengthArray<QPointF, PATH_AREARES> points(resolution);
+    qreal percStep = 1 / qreal(resolution-1);
+    ring points;
     qreal perc = 0;
     for (int i = 0; i < resolution; i++)
     {
-        points[i] = pointAtPercent(perc);
+        QPointF pnt = pointAtPercent(perc);
+        points.push_back(pnt);
         perc += percStep;
     }
 
+    return std::abs(boost::geometry::area(points));
+
+    /*
     qreal area = 0;
     int j = 0;
     for (int i = 0; i < resolution; i++)
@@ -144,6 +154,7 @@ qreal Path::area(int resolution) const
     }
 
     return qAbs(area) / 2;
+    */
 }
 
 void Path::disconnectAll()
