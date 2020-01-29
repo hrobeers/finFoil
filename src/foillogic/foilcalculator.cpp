@@ -153,11 +153,9 @@ void FoilCalculator::calculate(bool fastCalc)
             bcCalc.run();
         }
 
-        AreaCalculator aCalc(_foil);
-        SweepCalculator sCalc(_foil);
+        AreaSweepCalculator aCalc(_foil);
 
         aCalc.run();
-        sCalc.run();
     }
 #endif
 #ifndef SERIAL
@@ -193,8 +191,7 @@ void FoilCalculator::calculate(bool fastCalc)
         }
     }
 
-    _tPool.start(new AreaCalculator(_foil));
-    _tPool.start(new SweepCalculator(_foil));
+    _tPool.start(new AreaSweepCalculator(_foil));
 
     _tPool.waitForDone();
 #endif
@@ -210,7 +207,7 @@ bool FoilCalculator::calculated() const
 
 void FoilCalculator::recalculateArea()
 {
-    AreaCalculator aCalc(_foil);
+    AreaSweepCalculator aCalc(_foil);
     aCalc.run();
 }
 
@@ -241,7 +238,7 @@ void FoilCalculator::foilReleased()
 }
 
 
-AreaCalculator::AreaCalculator(Foil *foil)
+AreaSweepCalculator::AreaSweepCalculator(Foil *foil)
 {
     _foil = foil;
 }
@@ -252,7 +249,7 @@ typedef boost::geometry::model::ring<QPointF> ring;
 #include <boost/geometry/geometries/register/point.hpp>
 BOOST_GEOMETRY_REGISTER_POINT_2D_GET_SET(QPointF, qreal, cs::cartesian, x, y, setX, setY)
 
-void AreaCalculator::run()
+void AreaSweepCalculator::run()
 {
     Path* outlinePath = _foil->outline()->path();
     qreal outlineTop = outlinePath->minY();
@@ -269,36 +266,17 @@ void AreaCalculator::run()
         perc += percStep;
       }
 
+    // calculate the area
     qreal smArea = std::abs(boost::geometry::area(points)) * scalefactor;
     quantity<si::area, qreal> area = quantity<si::area, qreal>(smArea * si::square_meter);
     _foil->outline()->setArea(area);
-}
 
-
-SweepCalculator::SweepCalculator(Foil *foil)
-{
-    _foil = foil;
-}
-
-void SweepCalculator::run()
-{
-    // find top and outline edges
-    qreal t_top = 0;
-    _foil->outline()->path()->minY(&t_top);
-    QPointF top = _foil->outline()->path()->pointAtPercent(t_top);
-    qreal oLEdge = _foil->outline()->path()->pointAtPercent(0).x();
-    qreal oTEdge = _foil->outline()->path()->pointAtPercent(1).x();
-
-    // find thickest point
-    qreal t_thick = 0;
-    _foil->profile()->topProfile()->minY(&t_thick);
-    qreal thick = _foil->profile()->topProfile()->pointAtPercent(t_thick).x();
-    qreal pEdge = _foil->profile()->topProfile()->pointAtPercent(1).x();
-    qreal thickX = thick/pEdge * (oTEdge - oLEdge) + oLEdge;
-
-    // calculate the sweep angle in degrees
-    qreal os = top.x() - thickX;
-    qreal ns = -top.y();
+    // calculate the sweep angle
+    QPointF centroid;
+    boost::geometry::centroid(points, centroid);
+    qreal xHalfBase = _foil->outline()->path()->pointAtPercent(1).x()/2;
+    qreal os = centroid.x() - xHalfBase;
+    qreal ns = -centroid.y();
     quantity<si::plane_angle, qreal> sweep(qAtan(os/ns) * si::radian);
     _foil->outline()->setSweep(sweep);
 }
