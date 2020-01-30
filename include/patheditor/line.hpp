@@ -35,6 +35,8 @@ namespace patheditor
     class Line : public PathItem
     {
     public:
+        explicit Line(const QPointF& endPoint);
+        explicit Line(const QPointF& startPoint, const QPointF& endPoint);
         explicit Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint);
 
         // implementing PathItem
