@@ -31,6 +31,7 @@
 #include "foillogic/outline.hpp"
 #include "patheditor/ipath.hpp"
 #include "patheditor/path.hpp"
+#include "patheditor/line.hpp"
 #include "jenson.h"
 
 using namespace foillogic;
@@ -125,6 +126,47 @@ void FoilTests::testOutlineIO()
     image->save((p.path().string()+".png").c_str());
 #endif // WRITE_OUTLINES
   }
+}
+
+#include "foillogic/foilcalculator.hpp"
+void FoilTests::testAreaSweepCalc()
+{
+  Foil foil;
+  AreaSweepCalculator calc(&foil);
+
+  std::unique_ptr<Path> outline;
+
+  // Test square calculation
+  outline.reset(new Path());
+  outline->append(std::shared_ptr<PathItem>(new Line({0,-100})));
+  outline->append(std::shared_ptr<PathItem>(new Line({100,-100})));
+  outline->append(std::shared_ptr<PathItem>(new Line({100,0})));
+  foil.outline()->pSetPath(outline.release());
+  foil.outline()->pSetHeight(10); // pSetHeight in meters
+  calc.run();
+  QVERIFY(std::abs(foil.outline()->area().value() - 100.0) < 1e-3);
+  QVERIFY(std::abs(foil.outline()->sweep().value() - 0.0) < 1e-3);
+
+  // Test triangle calculation
+  outline.reset(new Path());
+  outline->append(std::shared_ptr<PathItem>(new Line({50,-100})));
+  outline->append(std::shared_ptr<PathItem>(new Line({100,0})));
+  foil.outline()->pSetPath(outline.release());
+  foil.outline()->pSetHeight(10); // pSetHeight in meters
+  calc.run();
+  QVERIFY(std::abs(foil.outline()->area().value() - 50.0) < 1e-3);
+  QVERIFY(std::abs(foil.outline()->sweep().value() - 0.0) < 1e-3);
+
+  // Test parallelogram calculation
+  outline.reset(new Path());
+  outline->append(std::shared_ptr<PathItem>(new Line({100,-100})));
+  outline->append(std::shared_ptr<PathItem>(new Line({200,-100})));
+  outline->append(std::shared_ptr<PathItem>(new Line({100,0})));
+  foil.outline()->pSetPath(outline.release());
+  foil.outline()->pSetHeight(10); // pSetHeight in meters
+  calc.run();
+  QVERIFY(std::abs(foil.outline()->area().value() - 100.0) < 1e-3);
+  QVERIFY(std::abs(foil.outline()->sweep().value() - M_PI/4) < 1e-3);
 }
 
 QTR_ADD_TEST(FoilTests)

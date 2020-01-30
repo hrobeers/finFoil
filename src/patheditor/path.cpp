@@ -1,6 +1,6 @@
 /****************************************************************************
   
- Copyright (c) 2013, Hans Robeers
+ Copyright (c) 2020, Hans Robeers
  All rights reserved.
  
  BSD 2-Clause License
@@ -121,29 +121,6 @@ qreal Path::minY(qreal *t_top) const
 qreal Path::maxY(qreal *t_top) const
 {
     return extreme<Y, Max>(this, t_top);
-}
-
-qreal Path::area(int resolution) const
-{
-    qreal percStep = 1 / qreal(resolution);
-    QVarLengthArray<QPointF, PATH_AREARES> points(resolution);
-    qreal perc = 0;
-    for (int i = 0; i < resolution; i++)
-    {
-        points[i] = pointAtPercent(perc);
-        perc += percStep;
-    }
-
-    qreal area = 0;
-    int j = 0;
-    for (int i = 0; i < resolution; i++)
-    {
-        j = (i + 1) % resolution;
-        area += points[i].x() * points[j].y();
-        area -= points[j].x() * points[i].y();
-    }
-
-    return qAbs(area) / 2;
 }
 
 void Path::disconnectAll()

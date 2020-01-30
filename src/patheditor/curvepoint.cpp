@@ -29,6 +29,10 @@
 
 using namespace patheditor;
 
+CurvePoint::CurvePoint(const QPointF& p)
+  : PathPoint(p.x(), p.y()), _continuous(false)
+{
+}
 CurvePoint::CurvePoint(qreal xpos, qreal ypos)
     : PathPoint(xpos, ypos), _continuous(false)
 {

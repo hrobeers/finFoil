@@ -26,10 +26,21 @@
 #include <QGraphicsItem>
 #include <QRectF>
 #include "patheditor/pathpoint.hpp"
+#include "patheditor/curvepoint.hpp"
 #include "patheditor/pathsettings.hpp"
 
 using namespace patheditor;
 
+Line::Line(const QPointF& endPoint)
+{
+  setStartPoint(std::shared_ptr<PathPoint>(new CurvePoint(0,0)));
+  setEndPoint(std::shared_ptr<PathPoint>(new CurvePoint(endPoint)));
+}
+Line::Line(const QPointF& startPoint, const QPointF& endPoint)
+{
+  setStartPoint(std::shared_ptr<PathPoint>(new CurvePoint(startPoint)));
+  setEndPoint(std::shared_ptr<PathPoint>(new CurvePoint(endPoint)));
+}
 Line::Line(std::shared_ptr<PathPoint> startPoint, std::shared_ptr<PathPoint> endPoint)
 {
     setStartPoint(startPoint);

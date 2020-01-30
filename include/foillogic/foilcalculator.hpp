@@ -68,21 +68,10 @@ namespace foillogic
         void foilReleased();
     };
 
-    class AreaCalculator : public QRunnable
+    class AreaSweepCalculator : public QRunnable
     {
     public:
-        explicit AreaCalculator(Foil* foil);
-
-        virtual void run();
-
-    private:
-        Foil* _foil;
-    };
-
-    class SweepCalculator : public QRunnable
-    {
-    public:
-        explicit SweepCalculator(Foil* foil);
+        explicit AreaSweepCalculator(Foil* foil);
 
         virtual void run();
 

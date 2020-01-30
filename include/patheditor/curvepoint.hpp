@@ -32,6 +32,7 @@ namespace patheditor
         Q_OBJECT
 
     public:
+        explicit CurvePoint(const QPointF& p);
         explicit CurvePoint(qreal xpos, qreal ypos);
 
         virtual void createPointHandleImpl(QGraphicsItem *parent, const PathSettings *settings) override;

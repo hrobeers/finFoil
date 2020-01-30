@@ -88,11 +88,12 @@ void Outline::pSetPath(Path *path)
 {
     assert(path->pathItems().count()!=0);
 
-    std::shared_ptr<Restrictor> startPntRestrictor = _path->pathItems().first()->startPoint()->restrictor();
-    std::shared_ptr<Restrictor> endPntRestrictor = _path->pathItems().last()->endPoint()->restrictor();
+    std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor({0,0}));
+    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor({0,0},{1,0}));
+    //std::shared_ptr<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
 
-    path->pathItems().first()->startPoint()->setRestrictor(startPntRestrictor);
-    path->pathItems().last()->endPoint()->setRestrictor(endPntRestrictor);
+    path->pathItems().first()->startPoint()->setRestrictor(originRestrictor);
+    path->pathItems().last()->endPoint()->setRestrictor(horizontalAxisRestrictor);
 
     if (_path) _path->disconnect();
     _path.reset(path);
@@ -104,7 +105,7 @@ Outline::~Outline() {}
 void Outline::initPath()
 {
     if (_path) _path->disconnect();
-    _path.reset(new Path());
+    std::unique_ptr<Path> path(new Path());
 
     qreal m = 2;
     qshared_ptr<CurvePoint> point1 = make_qshared(new CurvePoint(m*0, m*0));
@@ -121,23 +122,13 @@ void Outline::initPath()
     qshared_ptr<ControlPoint> point12 = make_qshared(new ControlPoint(m*113.43, m*-6.5));
     qshared_ptr<CurvePoint> point13 = make_qshared(new CurvePoint(m*116.43, m*0));
 
-    std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor(*point1));
-    std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor(*point1, *point13));
-    std::shared_ptr<Restrictor> aboveHorizontalRestrictor(new QuadrantRestrictor(Quadrants::I | Quadrants::II));
+    path->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
+    path->append(std::shared_ptr<PathItem>(new CubicBezier(point4, point5, point6, point7)));
+    path->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
+    path->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
 
-    point1->setRestrictor(originRestrictor);
-    point4->setRestrictor(aboveHorizontalRestrictor);
-    point7->setRestrictor(aboveHorizontalRestrictor);
-    point10->setRestrictor(aboveHorizontalRestrictor);
-    point13->setRestrictor(horizontalAxisRestrictor);
-
-    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4)));
-    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point4, point5, point6, point7)));
-    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point7, point8, point9, point10)));
-    _path->append(std::shared_ptr<PathItem>(new CubicBezier(point10, point11, point12, point13)));
-
-    // pipe the path signals
-    attachSignals(_path.get());
+    // set the path
+    pSetPath(path.release());
 
     point4->setContinuous(true);
     point10->setContinuous(true);
