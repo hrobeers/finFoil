@@ -125,7 +125,8 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
         } while (getline_safe(stream, line));
 
         // Continue if not a stream object
-        if (length==0 || ascii85) // TODO ascii85 not implemented
+        if (length==0 || (ascii85 && !compressed)) // compressed referenced here purely to avoid optimizing out :S
+          // TODO ascii85 not implemented
           continue;
 
         // Read until "stream" keyword
