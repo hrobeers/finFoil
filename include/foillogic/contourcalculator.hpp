@@ -32,10 +32,9 @@ namespace foillogic
     inline bool isInRange(qreal x, qreal a, qreal b)
     {
         // For consistency, the boundaries are not considered in range
-        qreal d = std::max(std::abs(a),std::abs(b))*0.001;
-        if (x >= a+d && x <= b-d)
+        if (x > a && x < b)
             return true;
-        if (x <= a-d && x >= b+d)
+        if (x < a && x > b)
             return true;
         return false;
     }
