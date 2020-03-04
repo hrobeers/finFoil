@@ -45,6 +45,7 @@ namespace web {
 
     private:
         std::unique_ptr<Ui::ExportDialog> _ui;
+        QUrl _baseUrl;
         std::unique_ptr<StlExport> _stlExport;
         const foillogic::Foil* _toExport;
 
