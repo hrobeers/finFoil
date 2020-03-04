@@ -33,6 +33,8 @@
 using namespace foileditors;
 using namespace foillogic;
 
+#define COLORMAP MAGMA
+
 #include <vector>
 #include <array>
 const std::vector<std::array<float,3>> MAGMA = {{0.001462, 0.000466, 0.013866},
@@ -566,9 +568,9 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         int a = 100;
         int increment = 0;
 
-        painter->setBrush(QColor((int)(MAGMA[min][0]*M),
-                                 (int)(MAGMA[min][1]*M),
-                                 (int)(MAGMA[min][2]*M),
+        painter->setBrush(QColor((int)(COLORMAP[min][0]*M),
+                                 (int)(COLORMAP[min][1]*M),
+                                 (int)(COLORMAP[min][2]*M),
                                  a));
 
         QList<std::shared_ptr<QPainterPath> > contours = (_side == Side::Bottom)? _calculator->bottomContours() : _calculator->topContours();
@@ -581,9 +583,9 @@ void ThicknessContours::paint(QPainter *painter, const QStyleOptionGraphicsItem 
             {
                 min += increment;
                 max -= increment;
-                painter->setBrush(QColor((int)(MAGMA[min][0]*M),
-                                         (int)(MAGMA[min][1]*M),
-                                         (int)(MAGMA[min][2]*M),
+                painter->setBrush(QColor((int)(COLORMAP[min][0]*M),
+                                         (int)(COLORMAP[min][1]*M),
+                                         (int)(COLORMAP[min][2]*M),
                                          a));
 
                 painter->drawPath(*contour);
