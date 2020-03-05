@@ -43,7 +43,7 @@ namespace web
 
         QNetworkReply* getMessage();
         QNetworkReply* generateSTL(const foillogic::Foil *foil, QString fileName);
-        QNetworkReply* getSTL(const QByteArray &stlReply);
+        QNetworkReply* getSTL(const QString &stlReply);
 
         virtual ~StlExport();
 

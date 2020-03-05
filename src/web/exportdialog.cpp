@@ -33,7 +33,7 @@ using namespace web;
 namespace {
   const QString css = "<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style>";
   QString qrcode(QString txt) {
-    return "<div id=\"qrcode\"></div><script src=\"js/qrcode.min.js\"></script><script>new QRCode(document.getElementById('qrcode'),'" + txt + "');</script>";
+    return "<p><div id=\"qrcode\"></p></div><script src=\"js/qrcode.min.js\"></script><script>new QRCode(document.getElementById('qrcode'),'" + txt + "');</script>";
   }
 }
 
@@ -78,7 +78,9 @@ void ExportDialog::exportClicked()
                                              _fileName.absolutePath() + "/" + _fileName.baseName() + ".stl",
                                              tr("STL (*.stl);;All files (*)"));
     QFileInfo stlFile(_fileName);
-    _postFoilReply.reset(_stlExport->generateSTL(_toExport, stlFile.baseName()));
+    _getStlReply.reset(_stlExport->getSTL(_stlUrl));
+    connect(_getStlReply.get(), &QNetworkReply::downloadProgress, this, &ExportDialog::downloadProgress);
+
     _ui->progressBar->show();
 }
 
@@ -96,13 +98,16 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     {
         if (reply->size())
         {
-            _ui->webView->setHtml(QString::fromUtf8(reply->readAll()), _baseUrl);
+            _message = QString::fromUtf8(reply->readAll());
+            _ui->webView->setHtml(_message, _baseUrl);
             setLinkDelegation();
         }
 
         if (reply->error() == QNetworkReply::NoError) {
             _ui->exportButton->setDisabled(false);
-            _ui->previewButton->setDisabled(false);
+
+            QFileInfo stlFile(_fileName);
+            _postFoilReply.reset(_stlExport->generateSTL(_toExport, stlFile.baseName()));
         }
 
         _msgReply.reset();
@@ -122,13 +127,12 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     //
     else if (_postFoilReply.get() == reply)
     {
-        auto stlUrl = reply->readAll();
-        _getStlReply.reset(_stlExport->getSTL(stlUrl));
-        connect(_getStlReply.get(), &QNetworkReply::downloadProgress, this, &ExportDialog::downloadProgress);
+        _stlUrl = QString::fromUtf8(reply->readAll());
 
-        auto id = QString::fromUtf8(stlUrl).split('/', QString::SkipEmptyParts)[1];
+        auto id = _stlUrl.split('/', QString::SkipEmptyParts)[1];
         QString previewUrl =_baseUrl.toString(QUrl::StripTrailingSlash) + "/r/" + id;
-        _ui->webView->setHtml(css + "<a href=\"" + previewUrl + "\">preview</a>" + qrcode(previewUrl), _baseUrl);
+        auto msgSplit = _message.split("{{}}", QString::SkipEmptyParts);
+        _ui->webView->setHtml(msgSplit.join("<a href=\"" + previewUrl + "\"><button>3D Preview</button></a>" + qrcode(previewUrl)), _baseUrl);
 
         _postFoilReply.reset();
     }
@@ -148,7 +152,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
           }
 
         file.write(reply->readAll());
-        //close();
+        close();
 
         _getStlReply.reset();
         _ui->progressBar->hide();

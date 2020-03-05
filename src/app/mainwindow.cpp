@@ -426,8 +426,8 @@ void MainWindow::createActions()
     saveThickAct->setStatusTip(tr("Export thickness profile to file"));
     connect(saveThickAct, SIGNAL(triggered()), this, SLOT(saveThickness()));
 
-    stlExportAct = new QAction(QIcon(), tr("Export STL file"), this);
-    stlExportAct->setStatusTip(tr("Export to STL file (internet connection required)"));
+    stlExportAct = new QAction(QIcon(), tr("3D Preview/STL Export"), this);
+    stlExportAct->setStatusTip(tr("Interactive 3D preview or STL file export (internet connection required)"));
     connect(stlExportAct, SIGNAL(triggered()), this, SLOT(stlExport()));
 
     quitAct = new QAction(QIcon(), tr("&Quit"), this);
@@ -469,6 +469,9 @@ void MainWindow::createMenus()
 #ifndef WEB_DISABLED
     exportMenu->addSeparator();
     exportMenu->addAction(stlExportAct);
+
+    threedMenu = menuBar()->addMenu(tr("&3D"));
+    threedMenu->addAction(stlExportAct);
 #endif
 
     aboutMenu = menuBar()->addMenu(tr("&About"));

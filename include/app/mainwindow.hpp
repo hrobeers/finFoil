@@ -93,6 +93,7 @@ private:
     QMenu *fileMenu;
     QMenu *importMenu;
     QMenu *exportMenu;
+    QMenu *threedMenu;
     QMenu *aboutMenu;
 
     QAction *newAct;

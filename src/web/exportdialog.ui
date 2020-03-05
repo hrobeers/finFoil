@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,17 +51,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Save As</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="previewButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Preview</string>
+        <string>Export STL</string>
        </property>
       </widget>
      </item>
