@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>600</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,7 +51,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Export</string>
+        <string>Export STL</string>
        </property>
       </widget>
      </item>

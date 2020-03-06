@@ -82,9 +82,9 @@ QNetworkReply* StlExport::generateSTL(const Foil *foil, QString fileName)
     return _manager->post(request, QByteArray(short_utf8.c_str()));
 }
 
-QNetworkReply *StlExport::getSTL(const QByteArray &stlReply)
+QNetworkReply *StlExport::getSTL(const QString &stlReply)
 {
-    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + QString::fromUtf8(stlReply));
+    QUrl url(_baseUrl.toString(QUrl::StripTrailingSlash) + stlReply);
     QNetworkRequest request(url);
 
     connect(_manager2.get(), &QNetworkAccessManager::finished, this, &StlExport::finished);

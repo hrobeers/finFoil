@@ -45,11 +45,14 @@ namespace web {
 
     private:
         std::unique_ptr<Ui::ExportDialog> _ui;
+        QUrl _baseUrl;
         std::unique_ptr<StlExport> _stlExport;
         const foillogic::Foil* _toExport;
 
         qunique_ptr<QNetworkReply> _msgReply, _postFoilReply, _getStlReply;
         QFileInfo _fileName;
+        QString _message;
+        QString _stlUrl;
 
         void setLinkDelegation();
 
