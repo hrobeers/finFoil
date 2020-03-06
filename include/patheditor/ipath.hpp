@@ -37,6 +37,8 @@ namespace patheditor
         virtual qreal maxX(qreal *t_top = 0) const = 0;
         virtual qreal minY(qreal *t_top = 0) const = 0;
         virtual qreal maxY(qreal *t_top = 0) const = 0;
+
+        virtual ~IPath() {};
     };
 }
 

@@ -168,7 +168,7 @@ void MainWindow::loadOutline()
         // TODO popup error msg
         errorMsg.prepend(tr("Failed to load outline: "));
         statusBar()->showMessage(errorMsg, 5000);
-        qCritical(errorMsg.toUtf8().constData());
+        qCritical("%s", errorMsg.toUtf8().constData());
         return;
       }
 
@@ -216,7 +216,7 @@ void MainWindow::loadProfile()
     {
       errorMsg.prepend(tr("Failed to load profile: "));
       statusBar()->showMessage(errorMsg, 5000);
-      qCritical(errorMsg.toUtf8().constData());
+      qCritical("%s", errorMsg.toUtf8().constData());
       return;
     }
 
@@ -251,7 +251,7 @@ void MainWindow::loadThickness()
     {
       errorMsg.prepend(tr("Failed to load thickness profile: "));
       statusBar()->showMessage(errorMsg, 5000);
-      qCritical(errorMsg.toUtf8().constData());
+      qCritical("%s", errorMsg.toUtf8().constData());
       return;
     }
 
@@ -525,7 +525,7 @@ bool MainWindow::loadFile(const QString &path)
     {
         errorMsg.prepend(tr("Failed to open fin: "));
         statusBar()->showMessage(errorMsg, 5000);
-        qCritical(errorMsg.toUtf8().constData());
+        qCritical("%s", errorMsg.toUtf8().constData());
 
         return false;
     }

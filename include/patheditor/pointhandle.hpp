@@ -43,7 +43,7 @@ namespace patheditor
         void setCenter(QPointF *point);
         void setCenter(qreal &xpos, qreal &ypos);
 
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
         virtual ~PointHandle() {}
 
