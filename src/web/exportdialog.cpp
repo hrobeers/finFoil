@@ -104,7 +104,6 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         {
             _message = QString::fromUtf8(reply->readAll());
             _ui->webView->setHtml(_message, _baseUrl);
-            setLinkDelegation();
         }
 
         if (reply->error() == QNetworkReply::NoError) {
@@ -123,7 +122,6 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     else if (reply->error() != QNetworkReply::NoError)
     {
         _ui->webView->setHtml(QString::fromUtf8(reply->readAll()), _baseUrl);
-        setLinkDelegation();
     }
 
     //
@@ -140,6 +138,9 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
 
         _postFoilReply.reset();
     }
+
+    // Set link delegation here as the window can be closed in section below
+    setLinkDelegation();
 
     //
     // Handle the getSTL reply (write to file)
