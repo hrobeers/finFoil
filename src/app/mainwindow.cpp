@@ -148,14 +148,18 @@ void MainWindow::loadOutline()
         ifs.open(filePath.toStdString(), std::ifstream::in);
 
         std::unique_ptr<Outline> outline(loadOutlinePdfStream(ifs));
-        if (outline)
-        {
+        if (outline) {
           _fin->pSetOutline(outline.release());
           _outlineEditor->setFoil(_fin.get());
           _foilDataWidget->setFoilCalculator(_outlineEditor->foilCalculator());
           _fin->onDeserialized();
-          return;
         }
+        else {
+          QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to load outline"));
+          msgBox.setStandardButtons(QMessageBox::Ok);
+          msgBox.exec();
+        }
+        return;
       }
 
     QString errorMsg;

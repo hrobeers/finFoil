@@ -267,8 +267,7 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*e
       break;
   }
   if (path_cmds.size()<2)
-    // TODO: error handling
-    return outline.release();
+    return nullptr;
 
 
   //
