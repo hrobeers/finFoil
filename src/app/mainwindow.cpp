@@ -200,10 +200,17 @@ void MainWindow::loadProfile()
       std::ifstream ifs;
       ifs.open(filePath.toStdString(), std::ifstream::in);
 
-      _fin->pSetProfile(loadProfileDatStream(ifs));
-      _fin->profile()->setEditable(false);
-      _profileEditor->setFoil(_fin.get());
-      _fin->onDeserialized();
+      if (auto profile = loadProfileDatStream(ifs)) {
+        _fin->pSetProfile(profile);
+        _fin->profile()->setEditable(false);
+        _profileEditor->setFoil(_fin.get());
+        _fin->onDeserialized();
+      }
+      else {
+        QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to load profile"));
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+      }
       return;
     }
 

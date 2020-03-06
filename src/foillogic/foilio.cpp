@@ -61,6 +61,10 @@ Profile* foillogic::loadProfileDatStream(std::istream &stream)
     dat_curve.push_back(point);
   }
 
+  if (dat_curve.size() < 3)
+    // a profile with less than 3 points makes no sense
+    return nullptr;
+
   auto le = std::min_element(dat_curve.cbegin(), dat_curve.cend(), comp_x);
 //  auto top = std::max_element(dat_curve.cbegin(), dat_curve.cend(), comp_y);
 //  auto bot = std::min_element(dat_curve.cbegin(), dat_curve.cend(), comp_y);
