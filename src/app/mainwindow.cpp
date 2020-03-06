@@ -165,10 +165,10 @@ void MainWindow::loadOutline()
 
     if (!deserialized)
       {
-        // TODO popup error msg
-        errorMsg.prepend(tr("Failed to load outline: "));
-        statusBar()->showMessage(errorMsg, 5000);
-        qCritical("%s", errorMsg.toUtf8().constData());
+        QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to load outline"));
+        msgBox.setDetailedText(errorMsg);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
         return;
       }
 
@@ -214,9 +214,10 @@ void MainWindow::loadProfile()
 
   if (!deserialized)
     {
-      errorMsg.prepend(tr("Failed to load profile: "));
-      statusBar()->showMessage(errorMsg, 5000);
-      qCritical("%s", errorMsg.toUtf8().constData());
+      QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to load profile"));
+      msgBox.setDetailedText(errorMsg);
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
       return;
     }
 
@@ -249,9 +250,10 @@ void MainWindow::loadThickness()
 
   if (!deserialized)
     {
-      errorMsg.prepend(tr("Failed to load thickness profile: "));
-      statusBar()->showMessage(errorMsg, 5000);
-      qCritical("%s", errorMsg.toUtf8().constData());
+      QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to load thickness profile"));
+      msgBox.setDetailedText(errorMsg);
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
       return;
     }
 
@@ -523,10 +525,10 @@ bool MainWindow::loadFile(const QString &path)
     }
     else
     {
-        errorMsg.prepend(tr("Failed to open fin: "));
-        statusBar()->showMessage(errorMsg, 5000);
-        qCritical("%s", errorMsg.toUtf8().constData());
-
+        QMessageBox msgBox(QMessageBox::Critical, tr("Load failure"), tr("Failed to open fin"));
+        msgBox.setDetailedText(errorMsg);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
         return false;
     }
 }
