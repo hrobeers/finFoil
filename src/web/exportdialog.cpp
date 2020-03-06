@@ -33,7 +33,7 @@ using namespace web;
 namespace {
   const QString css = "<style>body { font-family: helvetica neue, lucida grande, sans-serif; color: #444; text-align: center; }</style>";
   QString qrcode(QString txt) {
-    return "<p><div id=\"qrcode\"></p></div><script src=\"js/qrcode.min.js\"></script><script>new QRCode(document.getElementById('qrcode'),'" + txt + "');</script>";
+    return "<div id=\"qrcode\"></div><script src=\"js/qrcode.min.js\"></script><script>new QRCode(document.getElementById('qrcode'),'" + txt + "');</script>";
   }
 }
 
@@ -47,6 +47,10 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     _msgReply(nullptr), _postFoilReply(nullptr), _getStlReply(nullptr),
     _fileName(currentFile)
 {
+#ifdef QT_DEBUG
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+#endif
+
     _ui->setupUi(this);
 
     _ui->progressBar->hide();
