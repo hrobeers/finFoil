@@ -139,9 +139,6 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         _postFoilReply.reset();
     }
 
-    // Set link delegation here as the window can be closed in section below
-    setLinkDelegation();
-
     //
     // Handle the getSTL reply (write to file)
     //
@@ -162,6 +159,8 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         _getStlReply.reset();
         _ui->progressBar->hide();
     }
+
+    setLinkDelegation();
 }
 
 void ExportDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
