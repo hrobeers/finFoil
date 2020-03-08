@@ -29,7 +29,6 @@
 using namespace foillogic;
 using namespace patheditor;
 using namespace boost::math;
-using namespace std::experimental;
 
 namespace {
   typedef boost::math::policies::policy<boost::math::policies::evaluation_error<boost::math::policies::ignore_error>> ignore_eval_err;
@@ -90,11 +89,11 @@ void ProfileSampler::resetTop(qreal thicknessFactor)
     _idxTop = -1;
 }
 
-optional<QPointF> ProfileSampler::nextTop()
+std::optional<QPointF> ProfileSampler::nextTop()
 {
     _idxTop++;
     if (_idxTop >= _resolution)
-        return optional<QPointF>();
+        return std::optional<QPointF>();
 
     QPointF pnt = _normalizedDiscreteTop[_idxTop];
 
@@ -110,11 +109,11 @@ void ProfileSampler::resetBot(qreal thicknessFactor)
     _idxBot = -1;
 }
 
-std::experimental::optional<QPointF> ProfileSampler::nextBot()
+std::optional<QPointF> ProfileSampler::nextBot()
 {
     _idxBot++;
     if (_idxBot >= _resolution)
-        return optional<QPointF>();
+        return std::optional<QPointF>();
 
     QPointF pnt = _normalizedDiscreteBot[_idxBot];
 

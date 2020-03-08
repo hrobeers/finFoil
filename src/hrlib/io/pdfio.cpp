@@ -25,6 +25,7 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#include <cctype>
 #include <cmath>
 
 #include "hrlib/io/vertexio.hpp"
@@ -153,10 +154,10 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
   }
 }
 
-optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
+std::optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
 {
   if (!is_path_line(line))
-    return optional<path_cmd>();
+    return std::optional<path_cmd>();
 
   // Push coordinates & extract command
   path_cmd retval;
@@ -188,5 +189,5 @@ optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
       break;
   }
 
-  return optional<path_cmd>();
+  return std::optional<path_cmd>();
 }

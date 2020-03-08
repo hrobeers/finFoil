@@ -14,7 +14,7 @@ set(SRC
 )
 
 add_library(${LIB_NAME} ${FINFOIL_LIB_TYPE} ${SRC} ${HDR})
-set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 14)
+set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 17)
 
 target_link_libraries(${LIB_NAME}
     finfoil_patheditor

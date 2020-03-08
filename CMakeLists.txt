@@ -27,8 +27,6 @@ option(Tests "Build the tests executable" OFF)
 option(Web "Include the web components" ON)
 
 # Build flags
-set(CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(DEBUG_FLAGS "-g -O0 -Wall -Wextra -pedantic")
 set(RELEASE_FLAGS "-O3 -fomit-frame-pointer -finline-functions")
 
@@ -90,6 +88,14 @@ find_package(Boost COMPONENTS system filesystem iostreams REQUIRED)
 if(Boost_FOUND)
   message(STATUS "Including Boost from: ${Boost_INCLUDE_DIRS}")
   include_directories(${Boost_INCLUDE_DIRS})
+endif()
+if (WIN32)
+  # disable autolinking in boost
+  add_definitions( -DBOOST_ALL_NO_LIB )
+
+  # force all boost libraries to dynamic link (we already disabled
+  # autolinking, so I don't know why we need this, but we do!)
+  add_definitions( -DBOOST_ALL_DYN_LINK )
 endif()
 
 

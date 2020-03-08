@@ -29,7 +29,7 @@
 #include <iterator>
 #include <QPointF>
 #include <vector>
-#include <experimental/optional>
+#include <optional>
 #include <functional>
 
 
@@ -42,10 +42,10 @@ namespace foillogic
         ~ProfileSampler() {}
 
         void resetTop(qreal thicknessFactor);
-        std::experimental::optional<QPointF> nextTop();
+        std::optional<QPointF> nextTop();
 
         void resetBot(qreal thicknessFactor);
-        std::experimental::optional<QPointF> nextBot();
+        std::optional<QPointF> nextBot();
 
         qreal shift() { return _profileShift; }
 

@@ -93,6 +93,7 @@ void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
 //
 //    Output, int *LEFT, *RIGHT, the results of the search.
 //
+/* TODO MSVC 2017 fails to compile the upper_bound version
 {
   ArrayIterator<qreal> begin(x), end(x+n);
   auto it = std::upper_bound(begin, end, xval);
@@ -101,6 +102,26 @@ void r8vec_bracket ( int n, qreal x[], qreal xval, int *left,
   if (*left == 0) *left = 1;
   else if (*left == n) *left = n-1;
   *right = *left + 1;
+}
+*/
+{
+  int i;
+
+  for ( i = 2; i <= n - 1; i++ )
+  {
+    if ( xval < x[i-1] )
+    {
+      *left = i - 1;
+      *right = i;
+      return;
+    }
+
+   }
+
+  *left = n - 1;
+  *right = n;
+
+  return;
 }
 //****************************************************************************80
 

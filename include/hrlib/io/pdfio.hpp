@@ -26,14 +26,12 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <experimental/optional>
+#include <optional>
 
 #include "vertex.hpp"
 
 namespace hrlib { namespace pdf
 {
-  using std::experimental::optional;
-
   const std::string whitespace = " \f\n\r\t\v";
   const std::string path_chars = " mlcyv";
   const std::string delimiters = "\t ";
@@ -50,7 +48,7 @@ namespace hrlib { namespace pdf
 
   std::istream& read_linear_dict(std::istream& stream, linear_dict& dict);
   std::istream& read_next_binary(std::istream& stream, std::vector<char>& bin);
-  optional<path_cmd> parse_path_line(const std::string &line);
+  std::optional<path_cmd> parse_path_line(const std::string &line);
 }}
 
 #endif //HRLIB_PDFIO_HPP

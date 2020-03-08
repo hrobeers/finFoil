@@ -23,6 +23,7 @@
 #include "hrlib/string/json_utils.hpp"
 
 #include <regex>
+#include <sstream>
 
 namespace {
     const std::regex re_float("[-]*\\d+[.]\\d*[09]{5,}\\d");

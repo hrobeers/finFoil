@@ -22,6 +22,7 @@
 
 #include "patheditor/patheditorwidget.hpp"
 
+#include <deque>
 #include <QLayout>
 #include <QList>
 #include "patheditor/patheditorview.hpp"
