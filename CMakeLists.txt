@@ -79,7 +79,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 if(Web)
     find_package(Qt5Network REQUIRED)
-    find_package(Qt5WebKitWidgets REQUIRED)
+    find_package(Qt5WebEngineWidgets REQUIRED)
 endif()
 set(CMAKE_AUTOMOC ON)
 
