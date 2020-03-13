@@ -48,27 +48,53 @@ namespace {
   auto comp_y = [](const vertex<2> &v1, const vertex<2> &v2){ return v1[1] < v2[1]; };
 }
 
+namespace foillogic {
+  // allow parse_profile to be referenced outside
+  std::array<std::vector<vertex<2>>,2> parse_profile(std::istream &stream, double scale=1);
+}
+
+std::array<std::vector<vertex<2>>,2> foillogic::parse_profile(std::istream &stream, double scale) {
+  std::array<std::vector<vertex<2>>,2> dat_curves;
+  size_t side=0; // top=0, bottom=1
+  double direction=0;
+  vertex<2> prev;
+  vertex<2> point;
+  while(utf8::read_next_vertex<2>(stream, point)) {
+    if (point[0]<-1 || point[0]>1 ||
+        point[1]<-1 || point[1]>1)
+      continue;
+    point[0] *= scale;
+    point[1] *= scale;
+
+    // initialize direction for side
+    if (dat_curves[side].size()==1)
+      direction = point[0]-prev[0];
+
+    // switch side when x direction reverses
+    if (direction!=0 && (point[0]-prev[0])*direction<0)
+      if (++side>1)
+        break;
+
+    dat_curves[side].push_back(point);
+    prev = point;
+  }
+
+  // sort curves by increasing x
+  std::sort(dat_curves[0].begin(), dat_curves[0].end(), comp_x);
+  std::sort(dat_curves[1].begin(), dat_curves[1].end(), comp_x);
+
+  return dat_curves;
+}
+
 Profile* foillogic::loadProfileDatStream(std::istream &stream)
 {
   const double scale = 300;
 
-  std::vector<vertex<2>> dat_curve;
-  vertex<2> point;
-  while(utf8::read_next_vertex<2>(stream, point))
-  {
-    point[0] *= scale;
-    point[1] *= scale;
-    dat_curve.push_back(point);
-  }
+  auto dat_curves = parse_profile(stream, scale);
 
-  if (dat_curve.size() < 3)
-    // a profile with less than 3 points makes no sense
+  if (dat_curves[0].size() < 3)
+    // a top profile with less than 3 points makes no sense
     return nullptr;
-
-  auto le = std::min_element(dat_curve.cbegin(), dat_curve.cend(), comp_x);
-//  auto top = std::max_element(dat_curve.cbegin(), dat_curve.cend(), comp_y);
-//  auto bot = std::min_element(dat_curve.cbegin(), dat_curve.cend(), comp_y);
-//  auto te = std::max_element(dat_curve.cbegin(), bot, comp_x);
 
   std::unique_ptr<Profile> profile(new Profile());
 
@@ -82,29 +108,29 @@ Profile* foillogic::loadProfileDatStream(std::istream &stream)
   std::unique_ptr<Path> topProfile(new Path());
   std::unique_ptr<Path> botProfile(new Path());
 
-  std::shared_ptr<CurvePoint> prev;
-  std::shared_ptr<CurvePoint> le_pnt, te_pnt;
-  for(auto it = le; it != dat_curve.cbegin(); --it)
-    {
-      std::shared_ptr<CurvePoint> pnt = std::make_shared<CurvePoint>((*it)[0], -(*it)[1]);
-      if (prev)
-        topProfile->append(std::make_shared<Line>(prev, pnt));
-      else
-        le_pnt = pnt;
-      prev.swap(pnt);
-    }
 
-  te_pnt = prev;
-  prev = le_pnt;
-  for(auto it = le+1; it != dat_curve.cend(); ++it)
-    {
-      std::shared_ptr<CurvePoint> pnt = std::make_shared<CurvePoint>((*it)[0], -(*it)[1]);
-      if (prev)
-        {
-          botProfile->append(std::make_shared<Line>(prev, pnt));
-        }
-      prev.swap(pnt);
-    }
+  auto le = std::make_shared<CurvePoint>(0,0);
+  auto te = std::make_shared<CurvePoint>(scale,0);
+
+  auto prev = le;
+  for(auto p : dat_curves[0]) {
+    // Skip te and le points
+    if (p[1]==0) continue;
+    std::shared_ptr<CurvePoint> pnt = std::make_shared<CurvePoint>(p[0], -p[1]);
+    topProfile->append(std::make_shared<Line>(prev, pnt));
+    prev = pnt;
+  }
+  topProfile->append(std::make_shared<Line>(prev, te));
+
+  prev = le;
+  for(auto p : dat_curves[1]) {
+    // Skip te and le points
+    if (p[1]==0) continue;
+    std::shared_ptr<CurvePoint> pnt = std::make_shared<CurvePoint>(p[0], -p[1]);
+    botProfile->append(std::make_shared<Line>(prev, pnt));
+    prev = pnt;
+  }
+  botProfile->append(std::make_shared<Line>(prev, te));
 
   profile->pSetTopProfile(topProfile.release());
   profile->pSetBotProfile(botProfile.release());
