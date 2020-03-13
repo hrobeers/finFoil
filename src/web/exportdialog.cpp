@@ -105,8 +105,11 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     {
         if (reply->size())
         {
-          _ui->webView->setContent(reply->readAll(), "text/html;charset=UTF-8", _baseUrl);
+          _message = reply->readAll();
+          _ui->webView->setContent(_message, "text/html;charset=UTF-8", _baseUrl);
         }
+        else
+          _message.clear();
 
         if (reply->error() == QNetworkReply::NoError) {
             _ui->exportButton->setDisabled(false);
@@ -138,14 +141,6 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         previewUrl.setPath("/r/" + id);
         previewUrl.setQuery(identifier);
         _ui->webView->load(previewUrl);
-        /*
-        QString previewUrl =_baseUrl.toString(QUrl::StripTrailingSlash) + "/r/" + id;
-        auto msgSplit = _message.split("{{}}", QString::SkipEmptyParts);
-        _ui->webView->setContent(
-                                 msgSplit.join("<a href=\"" + previewUrl + "\"><button>3D Preview</button></a>" + qrcode(previewUrl)).toUtf8(),
-                                 "text/html;charset=UTF-8",
-                                 _baseUrl);
-        */
 
         _postFoilReply.reset();
     }
@@ -156,19 +151,20 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     else if (_getStlReply.get() == reply)
     {
         QFile file(_fileName.absoluteFilePath());
-        if (!file.open(QFile::WriteOnly))
-          {
-            QMessageBox::warning(this, tr("Cannot save fin"),
-                                 tr("Cannot write to file %1:\n%2.")
-                                 .arg(_fileName.absoluteFilePath())
-                                 .arg(file.errorString()));
-          }
-
-        file.write(reply->readAll());
-        close();
+        if (!file.open(QFile::WriteOnly)) {
+          QMessageBox::warning(this, tr("Cannot save fin"),
+                               tr("Cannot write to file %1:\n%2.")
+                               .arg(_fileName.absoluteFilePath())
+                               .arg(file.errorString()));
+        }
+        else {
+          _ui->webView->setContent(_message, "text/html;charset=UTF-8", _baseUrl);
+          file.write(reply->readAll());
+        }
 
         _getStlReply.reset();
         _ui->progressBar->hide();
+        _ui->exportButton->setDisabled(true);
     }
 
     setLinkDelegation();

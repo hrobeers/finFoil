@@ -51,7 +51,7 @@ namespace web {
 
         qunique_ptr<QNetworkReply> _msgReply, _postFoilReply, _getStlReply;
         QFileInfo _fileName;
-        QString _message;
+        QByteArray _message;
         QString _stlUrl;
 
         void setLinkDelegation();
