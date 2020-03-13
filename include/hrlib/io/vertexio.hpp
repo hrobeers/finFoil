@@ -45,15 +45,19 @@ namespace hrlib
 
     inline bool is_floats(const std::string &str)
     {
-      return std::all_of(str.begin(), str.end(), [](char c){
-          if (is_float_char(c)) return true;
-          return std::any_of(delimiters.cbegin(), delimiters.cend(), [c](char f){ return c==f; });
-        });
+      auto is_floats_test = [](char c){
+                              if (is_float_char(c)) return true;
+                              return std::any_of(delimiters.cbegin(), delimiters.cend(), [c](char f){ return c==f; });
+                            };
+      if (std::none_of(str.begin(), str.end(), is_floats_test))
+        return false;
+      return std::all_of(str.begin(), str.end(), is_floats_test);
     }
 
     template<int Dim>
     std::istream& read_next_vertex(std::istream& str, vertex<Dim>& v)
     {
+      while (str.peek()!=EOF) {
       // find next line containing floats
       std::string line;
       do
@@ -74,6 +78,9 @@ namespace hrlib
             break;
         }
 
+      if (i>=Dim)
+        break;
+      }
       return str;
     }
   }
