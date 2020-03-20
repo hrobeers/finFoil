@@ -136,8 +136,8 @@ void Outline::initPath()
 
 void Outline::attachSignals(Path *path)
 {
-    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()));
-    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()));
+    connect(path, SIGNAL(pathChanged(patheditor::Path*)), this, SLOT(onOutlineChanged()), Qt::UniqueConnection);
+    connect(path, SIGNAL(pathReleased(patheditor::Path*)), this, SLOT(onOutlineReleased()), Qt::UniqueConnection);
 }
 
 void Outline::onOutlineChanged()

@@ -23,6 +23,7 @@
 #include "app/mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+#include <sstream>
 #include <fstream>
 #include <QSplitter>
 #include <QFileDialog>
@@ -144,8 +145,13 @@ void MainWindow::loadOutline()
 
     if (filePath.endsWith(".pdf", Qt::CaseInsensitive))
       {
-        std::ifstream ifs;
-        ifs.open(filePath.toStdString(), std::ifstream::in);
+        // TODO: ifstream did not work correctly with msvc 2017?
+        //std::ifstream ifs;
+        //ifs.open(filePath.toStdString(), std::ifstream::in);
+        QFile file(filePath);
+        file.open(QIODevice::ReadOnly);
+        QByteArray ba = file.readAll();
+        std::istringstream ifs(ba.toStdString());
 
         std::unique_ptr<Outline> outline(loadOutlinePdfStream(ifs));
         if (outline) {
