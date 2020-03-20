@@ -97,6 +97,8 @@ namespace patheditor
         void onPointRemove(PathPoint *toRemove, EditablePath *sender);
         void onPointSplit(PathPoint *toSplit, EditablePath *sender);
         void onPointPathTypeToggle(PathPoint* toToggle, EditablePath* sender);
+        void onZoomIn();
+        void onZoomOut();
 
     private slots:
         void onSceneRectChanged ( const QRectF & rect );

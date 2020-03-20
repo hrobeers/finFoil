@@ -25,6 +25,7 @@
 #include <deque>
 #include <QLayout>
 #include <QList>
+#include <QPushButton>
 #include "patheditor/patheditorview.hpp"
 #include "patheditor/linerestrictor.hpp"
 #include "patheditor/pointrestrictor.hpp"
@@ -57,11 +58,35 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     // view options
     _view->setRenderHint(QPainter::Antialiasing);
 
+    // zoom in
+    auto btnuser = new QPushButton(this);
+    btnuser->setGeometry(QRect(0,0,30,30));
+    btnuser->setText("+");
+    _scene->addWidget(btnuser);
+    connect(btnuser, SIGNAL(clicked()), this, SLOT(onZoomIn()), Qt::UniqueConnection);
+    // zoom out
+    btnuser = new QPushButton(this);
+    btnuser->setGeometry(QRect(35,0,30,30));
+    btnuser->setText("-");
+    _scene->addWidget(btnuser);
+    connect(btnuser, SIGNAL(clicked()), this, SLOT(onZoomOut()), Qt::UniqueConnection);
+
     // layout
     _mainLayout->addWidget(_view);
     this->setLayout(_mainLayout);
 
     connect(this->scene(), SIGNAL(sceneRectChanged(QRectF)), this, SLOT(onSceneRectChanged(QRectF)));
+}
+
+void PathEditorWidget::onZoomIn() {
+  int pixelD = 20;
+  qreal scaleFactor = 1 + ((qreal)pixelD / (qreal)this->height()) / 2;
+  _view->scale(scaleFactor, scaleFactor);
+}
+void PathEditorWidget::onZoomOut() {
+  int pixelD = -20;
+  qreal scaleFactor = 1 + ((qreal)pixelD / (qreal)this->height()) / 2;
+  _view->scale(scaleFactor, scaleFactor);
 }
 
 QGraphicsScene *PathEditorWidget::scene()

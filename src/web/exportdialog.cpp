@@ -27,6 +27,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QUrlQuery>
 
 using namespace web;
 
@@ -35,6 +36,7 @@ namespace {
   QString qrcode(QString txt) {
     return "<div id=\"qrcode\"></div><script src=\"js/qrcode.min.js\"></script><script>new QRCode(document.getElementById('qrcode'),'" + txt + "');</script>";
   }
+  const QUrlQuery identifier = {{QStringLiteral("origin"), QStringLiteral("qt")}};
 }
 
 ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl, const QFileInfo &currentFile,
@@ -47,11 +49,12 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     _msgReply(nullptr), _postFoilReply(nullptr), _getStlReply(nullptr),
     _fileName(currentFile)
 {
-#ifdef QT_DEBUG
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-#endif
-
     _ui->setupUi(this);
+
+    setWindowFlags(windowFlags() | Qt::CustomizeWindowHint |
+                   Qt::WindowMinimizeButtonHint |
+                   Qt::WindowMaximizeButtonHint |
+                   Qt::WindowCloseButtonHint);
 
     _ui->progressBar->hide();
     _ui->progressBar->setMinimum(0);
@@ -60,8 +63,7 @@ ExportDialog::ExportDialog(const foillogic::Foil *toExport, const QUrl &baseUrl,
     connect(_ui->exportButton, &QPushButton::clicked, this, &ExportDialog::exportClicked);
     connect(_ui->closeButton, &QPushButton::clicked, this, &ExportDialog::closeClicked);
 
-    connect(_ui->webView, &QWebView::linkClicked, this, &ExportDialog::linkClicked);
-    _ui->webView->setHtml(css + "<h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact info@finfoil.io</p>", _baseUrl);
+    _ui->webView->setContent((css + "<h2>Connecting to server ...</h2><p>If this message does not disappear soon, check your internet connection.<br/>Otherwise contact info@finfoil.io</p>").toUtf8(), "text/html;charset=UTF-8", _baseUrl);
     setLinkDelegation();
 
     connect(_stlExport.get(), &StlExport::finished, this, &ExportDialog::exportFinished);
@@ -73,7 +75,8 @@ ExportDialog::~ExportDialog() {}
 
 void ExportDialog::setLinkDelegation()
 {
-    _ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+  // TODO ?
+  //_ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 }
 
 void ExportDialog::exportClicked()
@@ -96,15 +99,17 @@ void ExportDialog::closeClicked()
 void ExportDialog::exportFinished(QNetworkReply *reply)
 {
     //
-    // Handle message reply (to show in QWebView component)
+    // Handle message reply (to show in QWebEngineView component)
     //
     if (_msgReply.get() == reply)
     {
         if (reply->size())
         {
-            _message = QString::fromUtf8(reply->readAll());
-            _ui->webView->setHtml(_message, _baseUrl);
+          _message = reply->readAll();
+          _ui->webView->setContent(_message, "text/html;charset=UTF-8", _baseUrl);
         }
+        else
+          _message.clear();
 
         if (reply->error() == QNetworkReply::NoError) {
             _ui->exportButton->setDisabled(false);
@@ -121,7 +126,7 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     //
     else if (reply->error() != QNetworkReply::NoError)
     {
-        _ui->webView->setHtml(QString::fromUtf8(reply->readAll()), _baseUrl);
+      _ui->webView->setContent(reply->readAll(), "text/html;charset=UTF-8", _baseUrl);
     }
 
     //
@@ -132,9 +137,10 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
         _stlUrl = QString::fromUtf8(reply->readAll());
 
         auto id = _stlUrl.split('/', QString::SkipEmptyParts)[1];
-        QString previewUrl =_baseUrl.toString(QUrl::StripTrailingSlash) + "/r/" + id;
-        auto msgSplit = _message.split("{{}}", QString::SkipEmptyParts);
-        _ui->webView->setHtml(msgSplit.join("<a href=\"" + previewUrl + "\"><button>3D Preview</button></a>" + qrcode(previewUrl)), _baseUrl);
+        QUrl previewUrl = _baseUrl;
+        previewUrl.setPath("/r/" + id);
+        previewUrl.setQuery(identifier);
+        _ui->webView->load(previewUrl);
 
         _postFoilReply.reset();
     }
@@ -145,19 +151,20 @@ void ExportDialog::exportFinished(QNetworkReply *reply)
     else if (_getStlReply.get() == reply)
     {
         QFile file(_fileName.absoluteFilePath());
-        if (!file.open(QFile::WriteOnly))
-          {
-            QMessageBox::warning(this, tr("Cannot save fin"),
-                                 tr("Cannot write to file %1:\n%2.")
-                                 .arg(_fileName.absoluteFilePath())
-                                 .arg(file.errorString()));
-          }
-
-        file.write(reply->readAll());
-        close();
+        if (!file.open(QFile::WriteOnly)) {
+          QMessageBox::warning(this, tr("Cannot save fin"),
+                               tr("Cannot write to file %1:\n%2.")
+                               .arg(_fileName.absoluteFilePath())
+                               .arg(file.errorString()));
+        }
+        else {
+          _ui->webView->setContent(_message, "text/html;charset=UTF-8", _baseUrl);
+          file.write(reply->readAll());
+        }
 
         _getStlReply.reset();
         _ui->progressBar->hide();
+        _ui->exportButton->setDisabled(true);
     }
 
     setLinkDelegation();
@@ -169,6 +176,7 @@ void ExportDialog::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     _ui->progressBar->setValue(bytesReceived);
 }
 
+// TODO preview button?
 void ExportDialog::linkClicked(const QUrl &url)
 {
     QDesktopServices::openUrl(url);

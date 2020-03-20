@@ -18,7 +18,7 @@ target_link_libraries(${LIB_NAME}
     Qt5::Core
     Qt5::Network
     Qt5::Widgets
-    Qt5::WebKitWidgets
+    Qt5::WebEngineWidgets
 )
 
 install(TARGETS ${LIB_NAME}
