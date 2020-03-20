@@ -84,7 +84,7 @@ endif()
 set(CMAKE_AUTOMOC ON)
 
 # Boost
-find_package(Boost COMPONENTS system filesystem iostreams REQUIRED)
+find_package(Boost COMPONENTS iostreams REQUIRED)
 if(Boost_FOUND)
   message(STATUS "Including Boost from: ${Boost_INCLUDE_DIRS}")
   include_directories(${Boost_INCLUDE_DIRS})

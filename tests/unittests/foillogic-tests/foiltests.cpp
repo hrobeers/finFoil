@@ -22,8 +22,10 @@
 
 #include "foiltests.hpp"
 
+#include <fstream>
+#include <filesystem>
+
 #include <boost/format.hpp>
-#include <boost/filesystem.hpp>
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "foillogic/foil.hpp"
@@ -109,7 +111,7 @@ std::unique_ptr<QImage> toImage(Path *path)
 void FoilTests::testOutlineIO()
 {
   std::string path = "testdata/outlines/";
-  for (const boost::filesystem::directory_entry &p : boost::filesystem::directory_iterator(path))
+  for (const std::filesystem::directory_entry &p : std::filesystem::directory_iterator(path))
   {
     if (p.path().extension().string()!=".pdf")
       // TODO error handling on non-pdf files

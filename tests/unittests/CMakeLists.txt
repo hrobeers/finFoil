@@ -19,6 +19,7 @@ file(GLOB_RECURSE HDR *.hpp)
 #
 
 add_executable(${TESTS_BINARY_NAME} WIN32 ${SRC} ${HDR} ${MOC_SRC} ${FORMS_HEADERS} ${RC_SRC} ${QM})
+set_property(TARGET ${TESTS_BINARY_NAME} PROPERTY CXX_STANDARD 17)
 
 
 #
@@ -32,6 +33,4 @@ target_link_libraries(${TESTS_BINARY_NAME}
     finfoil_patheditor
     finfoil_logic
     jenson
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
 )

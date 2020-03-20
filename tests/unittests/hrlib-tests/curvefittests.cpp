@@ -22,7 +22,8 @@
 
 #include "curvefittests.hpp"
 
-#include <boost/filesystem.hpp>
+#include <fstream>
+#include <filesystem>
 
 #include "submodules/qtestrunner/qtestrunner.hpp"
 #include "hrlib/curvefit/curvefit.hpp"
@@ -34,7 +35,7 @@ using namespace std;
 void CurveFitTests::testVertexReading()
 {
   std::string path = "testdata/profiles/";
-  for (auto & p : boost::filesystem::directory_iterator(path))
+  for (auto & p : std::filesystem::directory_iterator(path))
   {
     std::ifstream ifs;
     ifs.open(p.path().string(), std::ifstream::in);

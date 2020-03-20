@@ -18,7 +18,6 @@ set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 17)
 
 target_link_libraries(${LIB_NAME}
     finfoil_patheditor
-    ${Boost_LIBRARIES}
 )
 
 install(TARGETS ${LIB_NAME}
