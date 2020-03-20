@@ -61,15 +61,15 @@ PathEditorWidget::PathEditorWidget(QWidget *parent) :
     // zoom in
     auto btnuser = new QPushButton(this);
     btnuser->setGeometry(QRect(0,0,30,30));
-    btnuser->setText("+");
-    _scene->addWidget(btnuser);
-    connect(btnuser, SIGNAL(clicked()), this, SLOT(onZoomIn()), Qt::UniqueConnection);
-    // zoom out
-    btnuser = new QPushButton(this);
-    btnuser->setGeometry(QRect(35,0,30,30));
     btnuser->setText("-");
     _scene->addWidget(btnuser);
     connect(btnuser, SIGNAL(clicked()), this, SLOT(onZoomOut()), Qt::UniqueConnection);
+    // zoom out
+    btnuser = new QPushButton(this);
+    btnuser->setGeometry(QRect(35,0,30,30));
+    btnuser->setText("+");
+    _scene->addWidget(btnuser);
+    connect(btnuser, SIGNAL(clicked()), this, SLOT(onZoomIn()), Qt::UniqueConnection);
 
     // layout
     _mainLayout->addWidget(_view);
