@@ -11,7 +11,7 @@
 #define MINOR_VERSION 2
 #define REVISION 0
 
-#define BUILD_NUMBER 608
-#define COMMIT_HASH "a495370f63b67d9195db191e5fb41e504ea612a2"
+#define BUILD_NUMBER 609
+#define COMMIT_HASH "4e1ccb8d49b32609bbff02a31c34aa3f4fcc88bb"
 
 #endif // VERSION_AUTOGEN_H

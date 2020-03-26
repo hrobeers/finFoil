@@ -43,7 +43,6 @@ namespace {
     Editable = 0x1,
     Default = Editable
   }; };
-
 }
 
 Profile::Profile(QObject *parent) :

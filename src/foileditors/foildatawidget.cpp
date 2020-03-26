@@ -194,6 +194,8 @@ void FoilDataWidget::onFoilCalculated()
 {
     updatePxPerUnit();
     updateArea();
+    _thickness.setInternalValue(_foilCalculator->foil()->thickness());
+    _thicknessEdit->setValue(_thickness);
     _sweep.setInternalValue(_foilCalculator->foil()->outline()->sweep());
     _sweepEdit->setValue(_sweep);
     _thicknessRatioEdit->setText(thicknessRatioString(_foilCalculator->foil()->profile()->thicknessRatio()));

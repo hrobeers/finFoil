@@ -232,6 +232,11 @@ std::unique_ptr<IPath> Foil::botThicknessSI()
     return decorate<PathScaleDecorator>(_thicknessProfile->botProfile(), s.first, s.second);
 }
 
+bool Foil::aspectRatioEnforced() const
+{
+    return _thicknessProfile->aspectRatioEnforced();
+}
+
 boost::units::quantity<boost::units::si::length, qreal> Foil::thickness() const
 {
     return _thickness;

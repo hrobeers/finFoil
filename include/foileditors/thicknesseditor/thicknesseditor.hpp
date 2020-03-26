@@ -28,6 +28,7 @@
 #include "patheditor/fwd/patheditorfwd.hpp"
 
 #include <QWidget>
+#include <QComboBox>
 
 using namespace patheditor;
 
@@ -47,14 +48,19 @@ namespace foileditors
 
     signals:
 
-    public slots:
-
     private:
         QVBoxLayout* _mainLayout;
         patheditor::PathEditorWidget* _pathEditor;
 
+        foillogic::Foil* _foil;
+        EditablePath* _topPath;
+        EditablePath* _botPath;
+
+        QComboBox* _modeCombo;
+
     private slots:
         void update();
+        void modeChanged(int mode);
     };
 }
 

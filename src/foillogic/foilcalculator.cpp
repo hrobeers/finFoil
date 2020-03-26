@@ -135,6 +135,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                       outline.get(),
                                                       topThickness.get(),
                                                       topProfile.get(),
+                                                      _foil->thicknessProfile()->aspectRatioEnforced(),
                                                       sectionCount, resolution);
             tcCalc.run();
         }
@@ -149,6 +150,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                       outline.get(),
                                                       _foil->thicknessProfile()->botProfile(),
                                                       _foil->profile()->botProfile(),
+                                                      _foil->thicknessProfile()->aspectRatioEnforced(),
                                                       sectionCount, resolution);
             bcCalc.run();
         }
@@ -172,6 +174,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                                 outline.get(),
                                                                 topThickness.get(),
                                                                 topProfile.get(),
+                                                                _foil->thicknessProfile()->aspectRatioEnforced(),
                                                                 sectionCount, resolution));
             painterscope.push_back(std::move(path));
         }
@@ -186,6 +189,7 @@ void FoilCalculator::calculate(bool fastCalc)
                                                                 outline.get(),
                                                                 _foil->thicknessProfile()->botProfile(),
                                                                 _foil->profile()->botProfile(),
+                                                                _foil->thicknessProfile()->aspectRatioEnforced(),
                                                                 sectionCount, resolution));
             painterscope.push_back(std::move(path));
         }
@@ -279,4 +283,15 @@ void AreaSweepCalculator::run()
     qreal ns = -centroid.y();
     quantity<si::plane_angle, qreal> sweep(qAtan(os/ns) * si::radian);
     _foil->outline()->setSweep(sweep);
+
+    // recalc thickness if AR enforced
+    if (_foil->aspectRatioEnforced()) {
+      // TODO recalc on depth change
+      auto topProfile = _foil->profile()->topProfile();
+      auto botProfile = _foil->profile()->botProfile();
+      auto aspectRatio = (botProfile->maxY() - topProfile->minY()) /
+        (topProfile->pointAtPercent(1).x() - topProfile->pointAtPercent(0).x());
+      auto thickness = (_foil->outlineSI()->pointAtPercent(1).x() - _foil->outlineSI()->pointAtPercent(0).x())*aspectRatio;
+      _foil->pSetThickness(thickness);
+    }
 }
