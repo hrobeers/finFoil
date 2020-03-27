@@ -120,36 +120,10 @@ void PathEditorWidget::onPointRemove(PathPoint* toRemove, EditablePath* sender)
   emit pathChange(newPath);
 }
 
-template<typename Tpnt>
-struct pnt_access {
-  static constexpr auto x(const Tpnt& p) { return p.x(); }
-  static constexpr auto y(const Tpnt& p) { return p.y(); }
-};
-template<typename Tpath, typename Tpnt = typename Tpath::value_type, typename Tpa = pnt_access<Tpnt>>
-std::array<std::deque<Tpnt>,2> casteljau(const Tpath& p, double t) {
-  if (p.size()==0)
-    return std::array<std::deque<Tpnt>,2>();
-
-  std::deque<Tpnt> sub;
-  auto it = p.cbegin();
-  Tpnt prev = *it;
-  while (p.cend() != ++it) {
-    sub.push_back(Tpnt {
-                        (Tpa::x(*it) - Tpa::x(prev))*t + Tpa::x(prev),
-                        (Tpa::y(*it) - Tpa::y(prev))*t + Tpa::y(prev)
-      });
-    prev = *it;
-  }
-
-  auto retval = casteljau(sub, t);
-  retval.front().push_front(p.front());
-  retval.back().push_back(p.back());
-
-  return retval;
-}
 #include <patheditor/pathpoint.hpp>
 #include <patheditor/controlpoint.hpp>
-#include<patheditor/line.hpp>
+#include <patheditor/line.hpp>
+#include <hrlib/math/nurbs.hpp>
 void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
 {
   _scene->removeItem(sender);
@@ -159,7 +133,7 @@ void PathEditorWidget::onPointSplit(PathPoint* toSplit, EditablePath* sender)
   auto newPath = new patheditor::Path();
   for (auto pi : path->pathItems())
     if (pi->endPoint().get() == toSplit) {
-      auto r = casteljau(pi->points(),0.5);
+      auto r = nurbs::casteljau(pi->points(),0.5);
       auto first = pi->clone();
       auto second = pi->clone();
       if (r[0].size() == 4 && r[1].size() == 4) {
