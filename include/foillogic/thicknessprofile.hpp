@@ -38,21 +38,38 @@ namespace foillogic
 
         // read-write properties
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+        Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
         // optional properties
         Q_PROPERTY_UUID
 
+        qreal _thicknessRatio;
+        int _flags;
+
+        qunique_ptr<patheditor::Path> _topProfile;
+        qunique_ptr<patheditor::Path> _botProfile;
+
+
     public:
         Q_INVOKABLE explicit ThicknessProfile(QObject *parent = 0);
+        void init();
 
         patheditor::Path* topProfile();
         patheditor::Path* botProfile();
 
         // Q_PROPERTY getters
         patheditor::Path* pTopProfile();
+        int flags() const { return _flags; };
 
         // Q_PROPERTY setters
         void pSetTopProfile(patheditor::Path *topProfile);
+        void setFlags(int flags) { _flags = flags; }
+
+        void resetFlags();
+
+        bool editable() const;
+        bool aspectRatioEnforced() const;
+        void setAspectRatioEnforced(bool enforce);
 
         virtual ~ThicknessProfile();
 
@@ -66,11 +83,6 @@ namespace foillogic
         void setThicknessRatio(qreal profileRatio);
 
     private:
-        qreal _thicknessRatio;
-
-        qunique_ptr<patheditor::Path> _topProfile;
-        qunique_ptr<patheditor::Path> _botProfile;
-
         void attachSignals(patheditor::Path* path);
 
         void mirror();

@@ -63,6 +63,8 @@ namespace foillogic
         const patheditor::IPath* _thickness;
         const patheditor::IPath* _profile;
 
+        bool _arEnforced;
+
         size_t _sectionCount;
         size_t _resolution;
         qreal _tTol;
@@ -70,9 +72,11 @@ namespace foillogic
     public:
         explicit ContourCalculator(Target* result, qreal percContourHeight,
                                    const IPath* outline, const IPath* thickness, const IPath* profile,
+                                   bool arEnforced,
                                    size_t sectionCount = 512, size_t resolution = 512) :
           _result(result), _percContourHeight(percContourHeight),
           _outline(outline), _thickness(thickness), _profile(profile),
+          _arEnforced(arEnforced),
           _sectionCount(sectionCount), _resolution(resolution), _tTol(0.00001)
         {}
 
@@ -92,7 +96,8 @@ namespace foillogic
             const double mult = 2;
             FeatureSampler featureSampler;
             featureSampler.addFeatureSamples(_outline, [](QPointF p){return p.y();}, _sectionCount);
-            featureSampler.addFeatureSamples(_thickness, [](QPointF p){return p.x();}, _sectionCount);
+            if (!_arEnforced) // Currently no need to add features if not ar enforced, might be revisited when variable AR profile
+              featureSampler.addFeatureSamples(_thickness, [](QPointF p){return p.x();}, _sectionCount);
             featureSampler.addUniformSamples(0, _thickness->pointAtPercent(1).x(), _sectionCount*mult);
             std::vector<qreal> sectionHeightArray = featureSampler.sampleAt(_sectionCount);
             std::vector<qreal> thicknessArray = sampleThickess(_thickness, sectionHeightArray);
@@ -101,6 +106,7 @@ namespace foillogic
             qreal maxThickness = qMax(qAbs(_thickness->minY()), qAbs(_thickness->pointAtPercent(0).y()));
             for (qreal &h : sectionHeightArray) h/=height;
             for (qreal &t : thicknessArray) t/=maxThickness;
+            qreal baseChord = _outline->pointAtPercent(1).x() - _outline->pointAtPercent(0).x();
 
 
             //
@@ -131,40 +137,42 @@ namespace foillogic
             qreal leadingEdgePerc, trailingEdgePerc;
             for (size_t i=0; i<_sectionCount; i++)
             {
-                qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
-
-                qreal profileOffset = thicknessOffsetPercent * y_profileTop;
-                yProfile.setOffset(profileOffset);
-
-                // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
-                qreal y_profileBot = 0;
-                if (_percContourHeight < 0)
+              try
                 {
+                  yOutline.setOffset(sectionHeightArray[i] * y_top);
+
+                  qreal t_outlineLeadingEdge = bisect(yOutline, 0.0, t_top, tTolerance).first;
+                  qreal t_outlineTrailingEdge = bisect(yOutline, t_top, 1.0, tTolerance).first;
+                  outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
+                  outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
+
+                  qreal thicknessOffsetPercent = _percContourHeight / thicknessArray[i];
+
+                  if (_arEnforced) {
+                    // Modify thicknessOffsetPercent according to aspect ratio
+                    qreal chord = outlineTrailingEdge.x() - outlineLeadingEdge.x();
+                    thicknessOffsetPercent = _percContourHeight / (thicknessArray[i]*chord/baseChord);
+                  }
+
+                  qreal profileOffset = thicknessOffsetPercent * y_profileTop;
+                  yProfile.setOffset(profileOffset);
+
+                  // Set t_profileTop to t_min of the profile for correct calculation of the Negative profile
+                  qreal y_profileBot = 0;
+                  if (_percContourHeight < 0) {
                     y_profileBot = _profile->minY(&t_profileTop);
-                }
+                  }
 
-                if (!isInRange(profileOffset, y_profileBot, y_profileTop))
-                {
+                  if (!isInRange(profileOffset, y_profileBot, y_profileTop)) {
                     leadingEdgePnts.push_back(0);
                     trailingEdgePnts.push_back(0);
                     continue;
-                }
+                  }
 
-                try
-                {
-                    yOutline.setOffset(sectionHeightArray[i] * y_top);
-
-                    qreal t_outlineLeadingEdge = bisect(yOutline, 0.0, t_top, tTolerance).first;
-                    qreal t_outlineTrailingEdge = bisect(yOutline, t_top, 1.0, tTolerance).first;
-
-                    outlineLeadingEdge = _outline->pointAtPercent(t_outlineLeadingEdge);
-                    outlineTrailingEdge = _outline->pointAtPercent(t_outlineTrailingEdge);
-
-                    qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
-                    qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
-
-                    leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
-                    trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
+                  qreal t_profileLE = bisect(yProfile, 0.0, t_profileTop, tTolerance).first;
+                  qreal t_profileTE = bisect(yProfile, t_profileTop, 1.0, tTolerance).first;
+                  leadingEdgePerc = _profile->pointAtPercent(t_profileLE).x() / profileLength;
+                  trailingEdgePerc = _profile->pointAtPercent(t_profileTE).x() / profileLength;
                 }
                 catch (evaluation_error &/*unused*/)
                 {

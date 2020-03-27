@@ -40,8 +40,14 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
     _pathEditor->enableFeatures(QFlags<Features::e>(Features::HorizontalAxis | Features::VerticalAxis |
                                                     Features::DragImageHereText));
 
+    _modeCombo = new QComboBox();
+    _modeCombo->addItem(tr("Thickness"));
+    _modeCombo->addItem(tr("Aspect Ratio"));
+    connect(_modeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(modeChanged(int)));
+
     QGroupBox* gb = new QGroupBox(tr("Thickness"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
+    gbLayout->addWidget(_modeCombo);
     gbLayout->addWidget(_pathEditor);
     gb->setLayout(gbLayout);
 
@@ -52,15 +58,21 @@ ThicknessEditor::ThicknessEditor(QWidget *parent) :
 
 void ThicknessEditor::setFoil(Foil *foil)
 {
+    _modeCombo->setCurrentIndex(foil->thicknessProfile()->aspectRatioEnforced()? 1 : 0);
     _pathEditor->clear();
 
     EditablePath* botPath = new EditablePath(foil->thicknessProfile()->botProfile());
     botPath->setEditable(false);
-    connect(foil->thicknessProfile(), SIGNAL(mirrored()), this, SLOT(update())); // A non-editable path won't signal updates to it's scene
+    connect(foil->thicknessProfile(), SIGNAL(mirrored()), this, SLOT(update()), Qt::UniqueConnection); // A non-editable path won't signal updates to it's scene
     EditablePath* topPath = new EditablePath(foil->thicknessProfile()->topProfile());
+    topPath->setEditable(foil->thicknessProfile()->editable());
 
     _pathEditor->addPath(topPath);
     _pathEditor->addPath(botPath);
+
+    _foil = foil;
+    _topPath = topPath;
+    _botPath = botPath;
 }
 
 void ThicknessEditor::update()
@@ -71,4 +83,24 @@ void ThicknessEditor::update()
 void ThicknessEditor::setImage(const QString &path)
 {
   _pathEditor->setImage(path);
+}
+
+void ThicknessEditor::modeChanged(int mode)
+{
+  switch (mode) {
+  case 0: // Thickness
+    _foil->thicknessProfile()->setAspectRatioEnforced(false);
+    setFoil(_foil);
+    break;
+  case 1: // Aspect Ratio
+    _foil->thicknessProfile()->setAspectRatioEnforced(true);
+    setFoil(_foil);
+    break;
+  }
+
+  bool editable = true; // _foil->thicknessProfile()->editable();
+  _botPath->setEditable(editable && false);
+  _topPath->setEditable(editable && true);
+
+  _pathEditor->scene()->invalidate();
 }
