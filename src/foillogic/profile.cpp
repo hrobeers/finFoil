@@ -209,18 +209,18 @@ void Profile::pSetBotProfile(Path *botProfile)
 
     const std::shared_ptr<Restrictor> originRestrictor(new PointRestrictor({0,0}));
     const std::shared_ptr<Restrictor> horizontalAxisRestrictor(new LineRestrictor({0,0},{1,0}));
-    const std::shared_ptr<Restrictor> QIV(new QuadrantRestrictor(Quadrants::IV));
+    const std::shared_ptr<Restrictor> QIVI(new QuadrantRestrictor(Quadrants::IV | Quadrants::I));
 
     // Set the end and start restrictors
     botProfile->pathItems().first()->startPoint()->setRestrictor(originRestrictor);
     botProfile->pathItems().last()->endPoint()->setRestrictor(horizontalAxisRestrictor);
     // Set the first control point restrictor if it exists
     if (botProfile->pathItems().first()->controlPoints().size())
-      botProfile->pathItems().first()->controlPoints().first()->setRestrictor(QIV);
+      botProfile->pathItems().first()->controlPoints().first()->setRestrictor(QIVI);
     // Set the last control point restrictor if it exists
     if (botProfile->pathItems().last()->controlPoints().size())
       botProfile->pathItems().last()->controlPoints().last()
-        ->setRestrictor(std::shared_ptr<Restrictor>(new QuadrantRestrictor(botProfile->pathItems().last()->endPoint(), Quadrants::III)));
+        ->setRestrictor(std::shared_ptr<Restrictor>(new QuadrantRestrictor(botProfile->pathItems().last()->endPoint(), Quadrants::II | Quadrants::III)));
 
     attachSignals(_botProfile.get());
 }
