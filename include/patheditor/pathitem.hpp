@@ -44,7 +44,7 @@ namespace patheditor
         void setEndPoint(std::shared_ptr<PathPoint> endPoint);
 
         virtual QList<std::shared_ptr<ControlPoint> > controlPoints() = 0;
-        QList<QPointF> points();
+        QList<QPointF> points() const;
 
         // const getters
         const PathPoint* constStartPoint() const;

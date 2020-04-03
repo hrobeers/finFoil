@@ -50,6 +50,8 @@ namespace patheditor
         virtual qreal minY(qreal *t_top = 0) const override;
         virtual qreal maxY(qreal *t_top = 0) const override;
 
+        virtual std::vector<std::vector<QPointF>> bezierItems() const override;
+
         virtual ~PathScaleDecorator() {}
     };
 }

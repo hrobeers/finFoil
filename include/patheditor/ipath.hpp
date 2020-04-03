@@ -26,6 +26,8 @@
 #include "hrlib/fwd/qtfwd.hpp"
 #include "patheditor/fwd/patheditorfwd.hpp"
 
+#include <vector>
+
 namespace patheditor
 {
     class IPath
@@ -37,6 +39,8 @@ namespace patheditor
         virtual qreal maxX(qreal *t_top = 0) const = 0;
         virtual qreal minY(qreal *t_top = 0) const = 0;
         virtual qreal maxY(qreal *t_top = 0) const = 0;
+
+        virtual std::vector<std::vector<QPointF>> bezierItems() const = 0;
 
         virtual ~IPath() {};
     };
