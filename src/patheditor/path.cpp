@@ -123,6 +123,18 @@ qreal Path::maxY(qreal *t_top) const
     return extreme<Y, Max>(this, t_top);
 }
 
+std::vector<std::vector<QPointF>> Path::bezierItems() const
+{
+  std::vector<std::vector<QPointF>> retVal;
+  for (auto pi : _pathItemList) {
+    std::vector<QPointF> i;
+    for (auto p : pi->points())
+      i.push_back({p.x(), p.y()});
+    retVal.push_back(i);
+  }
+  return retVal;
+}
+
 void Path::disconnectAll()
 {
   disconnect();

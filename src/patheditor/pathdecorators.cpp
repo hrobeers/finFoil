@@ -55,3 +55,15 @@ qreal PathScaleDecorator::maxY(qreal *t_top) const
 {
     return (_sy>0 ? _target->maxY(t_top) : _target->minY(t_top)) * _sy;
 }
+
+std::vector<std::vector<QPointF>> PathScaleDecorator::bezierItems() const
+{
+  std::vector<std::vector<QPointF>> retVal;
+  for (auto pi : _target->bezierItems()) {
+    std::vector<QPointF> i;
+    for (auto p : pi)
+      i.push_back({p.x()*_sx, p.y()*_sy});
+    retVal.push_back(i);
+  }
+  return retVal;
+}

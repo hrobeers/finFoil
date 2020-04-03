@@ -60,6 +60,8 @@ namespace patheditor
         virtual qreal minY(qreal *t_top = 0) const override;
         virtual qreal maxY(qreal *t_top = 0) const override;
 
+        virtual std::vector<std::vector<QPointF>> bezierItems() const override;
+
         void paint(QPainter *painter, bool editable = false, const PathSettings *settings = 0);
 
         void disconnectAll();
