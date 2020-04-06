@@ -35,33 +35,6 @@
 
 namespace foillogic
 {
-    class ProfileSampler
-    {
-    public:
-        ProfileSampler(foillogic::Profile *profile, qreal thick, qreal minThick, int resolution);
-        ~ProfileSampler() {}
-
-        void resetTop(qreal thicknessFactor);
-        std::optional<QPointF> nextTop();
-
-        void resetBot(qreal thicknessFactor);
-        std::optional<QPointF> nextBot();
-
-        qreal shift() { return _profileShift; }
-
-    private:
-        foillogic::Profile* _profile;
-        qreal _fThickTop, _fThickBot;
-        qreal _thick, _minThick, _profileShift;
-        qreal _topMinThick, _botMinThick;
-        int _idxTop, _idxBot, _resolution;
-
-        std::vector<QPointF> _normalizedDiscreteTop;
-        std::vector<QPointF> _normalizedDiscreteBot;
-
-        qreal scaleY(qreal normalizedZ, qreal thicknessFactor, qreal minimumThickness);
-    };
-
     class FeatureSampler
     {
       std::vector<qreal> _featureSamples;
