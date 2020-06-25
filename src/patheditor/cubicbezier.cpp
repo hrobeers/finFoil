@@ -23,6 +23,7 @@
 #include "patheditor/cubicbezier.hpp"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QRectF>
 #include <boost/math/special_functions/pow.hpp>
 #include "patheditor/pathsettings.hpp"

@@ -26,6 +26,7 @@
 #include <QVarLengthArray>
 #include <QJsonArray>
 #include <QPainter>
+#include <QPainterPath>
 #include "patheditor/controlpoint.hpp"
 #include "patheditor/curvepoint.hpp"
 #include "patheditor/pathitem.hpp"

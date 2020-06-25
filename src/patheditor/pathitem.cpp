@@ -23,6 +23,7 @@
 #include "patheditor/pathitem.hpp"
 
 #include <QPainter>
+#include <QPainterPath>
 #include "patheditor/pathsettings.hpp"
 #include "patheditor/controlpoint.hpp"
 
