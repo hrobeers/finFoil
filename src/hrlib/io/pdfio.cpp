@@ -131,16 +131,32 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
           continue;
 
         // Read until "stream" keyword
-        while (line.find_first_of("stream")==std::string::npos)
+        while (line.find("stream")==std::string::npos)
         { getline_safe(stream,line); }
+
         // Read the binary data
-        bin.resize(length);
-        stream.read(bin.data(), length);
+        if (length<32) { // TODO better length decoding (this case is to allow length references)
+          bin.clear();
+          size_t pos, slast = 0;
+          while ((pos=line.find("endstream"))==std::string::npos)
+          {
+             getline_safe(stream,line, true);
+             bin.insert(bin.end(), line.cbegin(), line.cend());
+             slast=line.size();
+          }
+          bin.resize(bin.size()-(slast-pos));
+          while (bin.back()=='\n' || bin.back()=='\r')
+            bin.pop_back();
+        }
+        else {
+          bin.resize(length);
+          stream.read(bin.data(), length);
+        }
 
         // Decompress if compressed
         if (compressed)
         {
-          boost::iostreams::array_source src {bin.data(), length};
+          boost::iostreams::array_source src {bin.data(), bin.size()};
           boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
           in.push(boost::iostreams::zlib_decompressor());
           in.push(src);

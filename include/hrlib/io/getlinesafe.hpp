@@ -27,7 +27,7 @@
 
 namespace hrlib
 {
-  inline std::istream& getline_safe(std::istream& is, std::string& t) {
+  inline std::istream& getline_safe(std::istream& is, std::string& t, bool include_endl = false) {
     t.clear();
 
     // The characters in the stream are read one-by-one using a std::streambuf.
@@ -43,9 +43,12 @@ namespace hrlib
       int c = sb->sbumpc();
       switch (c) {
         case '\n':
+                if (include_endl) t += (char)c;
                 return is;
         case '\r':
+                if (include_endl) t += (char)c;
                 if (sb->sgetc() == '\n') {
+                        if (include_endl) t += '\n';
                         sb->sbumpc();
                 }
                 return is;
