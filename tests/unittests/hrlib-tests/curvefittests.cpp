@@ -42,7 +42,7 @@ void CurveFitTests::testVertexReading()
 
     std::vector<vertex<2>> curve;
     vertex<2> point;
-    while(utf8::read_next_vertex<2>(ifs, point))
+    while(utf8::read_next_vertex_line<2>(ifs, point))
       curve.push_back(point);
 
     if (std::all_of(curve.cbegin(), curve.cend(), [curve](const vertex<2> &p){return p[1] == curve[0][1];}))

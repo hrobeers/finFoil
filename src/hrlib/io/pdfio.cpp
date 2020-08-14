@@ -135,7 +135,7 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
         { getline_safe(stream,line); }
 
         // Read the binary data
-        if (length<32) { // TODO better length decoding (this case is to allow length references)
+        //if (length<32) { // TODO better length decoding (this case is to allow length references)
           bin.clear();
           size_t pos, slast = 0;
           while ((pos=line.find("endstream"))==std::string::npos)
@@ -147,11 +147,13 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
           bin.resize(bin.size()-(slast-pos));
           while (bin.back()=='\n' || bin.back()=='\r')
             bin.pop_back();
+        /*
         }
         else {
           bin.resize(length);
           stream.read(bin.data(), length);
         }
+        */
 
         // Decompress if compressed
         if (compressed)

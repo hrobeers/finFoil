@@ -59,7 +59,7 @@ std::array<std::vector<vertex<2>>,2> foillogic::parse_profile(std::istream &stre
   double direction=0;
   vertex<2> prev;
   vertex<2> point;
-  while(utf8::read_next_vertex<2>(stream, point)) {
+  while(utf8::read_next_vertex_line<2>(stream, point)) {
     if (point[0]<-1 || point[0]>1 ||
         point[1]<-1 || point[1]>1)
       continue;

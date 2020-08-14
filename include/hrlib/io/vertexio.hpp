@@ -55,7 +55,7 @@ namespace hrlib
     }
 
     template<int Dim>
-    std::istream& read_next_vertex(std::istream& str, vertex<Dim>& v)
+    std::istream& read_next_vertex_line(std::istream& str, vertex<Dim>& v)
     {
       while (str.peek()!=EOF) {
       // find next line containing floats
@@ -81,6 +81,29 @@ namespace hrlib
       if (i>=Dim)
         break;
       }
+      return str;
+    }
+
+    template<int Dim>
+    std::istream& read_next_vertex(std::istream& str, vertex<Dim>& v)
+    {
+      char c;
+      int i=0;
+
+      while (i<Dim) {
+        bool prefix=true;
+        std::stringstream fstr;
+        while (str.get(c)) {
+          if (is_float_char(c)) {
+            prefix = false;
+            fstr << c;
+          }
+          else if (!prefix)
+            break;
+        }
+        fstr >> v[i++];
+      }
+
       return str;
     }
   }
