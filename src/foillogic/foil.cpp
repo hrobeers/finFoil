@@ -172,6 +172,22 @@ namespace {
         return xSI / baseLength;
     }
 
+    std::pair<qreal, qreal> profileNormFactors(Foil* self)
+    {
+        std::pair<qreal, qreal> retVal;
+
+        // determine the x scaling factor
+        auto pOutlineSI = self->outlineSI();
+        retVal.first = qAbs(scaleFactorX(self->profile()->topProfile(), 1));
+
+        // determine the y scaling factor
+        qreal t_top = 0.3;
+        // Flip over the x-axis, since the internal screen coordinates have the y-axis pointing downwards.
+        retVal.second = -qAbs(1 / (self->profile()->topProfileTop(&t_top).y() - self->profile()->bottomProfileTop(&t_top).y()));
+
+        return retVal;
+    }
+
     std::pair<qreal, qreal> profileScaleFactors(Foil* self)
     {
         std::pair<qreal, qreal> retVal;
@@ -206,6 +222,18 @@ namespace {
 
         return retVal;
     }
+}
+
+std::unique_ptr<IPath> Foil::topProfileNorm()
+{
+    auto s = profileNormFactors(this);
+    return decorate<PathScaleDecorator>(_profile->topProfile(), s.first, s.second);
+}
+
+std::unique_ptr<IPath> Foil::botProfileNorm()
+{
+    auto s = profileNormFactors(this);
+    return decorate<PathScaleDecorator>(_profile->botProfile(), s.first, s.second);
 }
 
 std::unique_ptr<IPath> Foil::topProfileSI()

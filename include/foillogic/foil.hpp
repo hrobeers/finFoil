@@ -58,6 +58,8 @@ namespace foillogic
 
         // SI paths
         std::unique_ptr<patheditor::IPath> outlineSI();
+        std::unique_ptr<patheditor::IPath> topProfileNorm();
+        std::unique_ptr<patheditor::IPath> botProfileNorm();
         std::unique_ptr<patheditor::IPath> topProfileSI();
         std::unique_ptr<patheditor::IPath> botProfileSI();
         std::unique_ptr<patheditor::IPath> topThicknessSI();
