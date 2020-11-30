@@ -41,6 +41,14 @@ using namespace patheditor;
 using namespace hrlib::patterns;
 using namespace boost::units;
 
+namespace {
+  struct Flags { enum e {
+      None = 0x0,
+      Mirror = 0x1,
+      Default = None
+    }; };
+}
+
 Foil::Foil(QObject *parent) :
     QObject(parent),
     _thickness(0.01 * si::meter) // 1cm
@@ -84,6 +92,16 @@ void Foil::setLayerCount(int layerCount)
     _layerCount = layerCount;
 }
 
+bool Foil::mirrored() const
+{
+  return _flags & Flags::Mirror;
+}
+
+void Foil::setMirror(bool mirror)
+{
+  _flags = mirror ? _flags | Flags::Mirror : _flags ^ Flags::Mirror;
+}
+
 void Foil::resetLayerCount()
 {
     setLayerCount(12);
@@ -97,6 +115,11 @@ void Foil::pResetThickness()
 void Foil::pResetMinThickness()
 {
     _minThickness = 0;
+}
+
+void Foil::resetFlags()
+{
+  _flags = Flags::Default;
 }
 
 foillogic::Foil::~Foil() { }

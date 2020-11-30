@@ -45,6 +45,7 @@ namespace foillogic
         Q_PROPERTY(foillogic::Profile* profile READ profile WRITE pSetProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ thicknessProfile WRITE pSetThicknessProfile)
         Q_PROPERTY(qreal thick READ pThickness WRITE pSetThickness RESET pResetThickness)
+        Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
@@ -72,6 +73,10 @@ namespace foillogic
         boost::units::quantity<boost::units::si::length, qreal> minThickness() const;
         void setMinThickness(boost::units::quantity<boost::units::si::length, qreal> minThickness);
 
+        // Flags
+        bool mirrored() const;
+        void setMirror(bool mirror);
+
         // Q_PROPERTY getters
         Outline* outline() { return _outline.get(); }
         Profile* profile() { return _profile.get(); }
@@ -79,6 +84,7 @@ namespace foillogic
         int layerCount() { return _layerCount; }
         qreal pThickness() const { return thickness().value(); }
         qreal pMinThickness() const { return minThickness().value(); }
+        int flags() const { return _flags; };
 
         // Q_PROPERTY setters
         void pSetOutline(Outline *outline);
@@ -87,10 +93,12 @@ namespace foillogic
         void setLayerCount(int layerCount);
         void pSetThickness(qreal thickness) { setThickness(thickness * boost::units::si::meter); }
         void pSetMinThickness(qreal minThickness) { setMinThickness(minThickness * boost::units::si::meter); }
+        void setFlags(int flags) { _flags = flags; };
 
         void resetLayerCount();
         void pResetThickness();
         void pResetMinThickness();
+        void resetFlags();
 
         virtual ~Foil();
 
@@ -107,6 +115,7 @@ namespace foillogic
         int _layerCount;
         boost::units::quantity<boost::units::si::length, qreal> _thickness;
         boost::units::quantity<boost::units::si::length, qreal> _minThickness;
+        int _flags;
 
         void initOutline();
         void initProfile();
