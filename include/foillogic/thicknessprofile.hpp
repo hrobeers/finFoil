@@ -38,6 +38,7 @@ namespace foillogic
 
         // read-write properties
         Q_PROPERTY(patheditor::Path* topProfile READ pTopProfile WRITE pSetTopProfile)
+        Q_PROPERTY(patheditor::Path* curve READ pCurve WRITE pSetCurve RESET pResetCurve)
         Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
         // optional properties
@@ -48,6 +49,7 @@ namespace foillogic
 
         qunique_ptr<patheditor::Path> _topProfile;
         qunique_ptr<patheditor::Path> _botProfile;
+        qunique_ptr<patheditor::Path> _curve;
 
 
     public:
@@ -59,12 +61,15 @@ namespace foillogic
 
         // Q_PROPERTY getters
         patheditor::Path* pTopProfile();
+        patheditor::Path* pCurve();
         int flags() const { return _flags; };
 
         // Q_PROPERTY setters
         void pSetTopProfile(patheditor::Path *topProfile);
+        void pSetCurve(patheditor::Path *curve);
         void setFlags(int flags) { _flags = flags; }
 
+        void pResetCurve();
         void resetFlags();
 
         bool editable() const;

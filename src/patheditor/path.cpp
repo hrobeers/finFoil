@@ -104,6 +104,26 @@ QPointF Path::pointAtPercent(qreal t) const
     return _pathItemList[item]->pointAtPercent(t);
 }
 
+qreal Path::angleAtPercent(qreal t) const
+{
+  int pathItemCount = _pathItemList.count();
+  qreal itemRange = 1/qreal(pathItemCount);
+
+  int item = 0;
+  while (t > itemRange && item < pathItemCount-1)
+    {
+      t -= itemRange;
+      item++;
+    }
+
+  t = t/itemRange;
+
+  if (t<0) t = 0;
+  if (t>1) t = 1;
+
+  return _pathItemList[item]->angleAtPercent(t);
+}
+
 qreal Path::minX(qreal *t_top) const
 {
     return extreme<X, Min>(this, t_top);

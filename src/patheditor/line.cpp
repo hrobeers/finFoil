@@ -62,6 +62,11 @@ QPointF Line::pointAtPercent(qreal t) const
     return (*_endPoint - *_startPoint) * t + *_startPoint;
 }
 
+qreal Line::angleAtPercent(qreal t) const
+{
+  return std::atan2(_endPoint->y()-_startPoint->y(), _endPoint->x()-_startPoint->x());
+}
+
 QRectF Line::controlPointRect() const
 {
     qreal left = qMin(_startPoint->x(), _endPoint->x());

@@ -71,6 +71,7 @@ namespace patheditor
         // Custom path calculation (preferably faster than using QPainterPath)
         //
         virtual QPointF pointAtPercent(qreal t) const = 0;
+        virtual qreal angleAtPercent(qreal t) const = 0;
 
         virtual ~PathItem() {}
 

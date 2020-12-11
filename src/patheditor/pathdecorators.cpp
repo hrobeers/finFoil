@@ -36,6 +36,11 @@ QPointF PathScaleDecorator::pointAtPercent(qreal t) const
     return pnt;
 }
 
+qreal PathScaleDecorator::angleAtPercent(qreal t) const
+{
+  return _target->angleAtPercent(t);
+}
+
 qreal PathScaleDecorator::minX(qreal *t_top) const
 {
     return (_sx>0 ? _target->minX(t_top) : _target->maxX(t_top) ) * _sx;

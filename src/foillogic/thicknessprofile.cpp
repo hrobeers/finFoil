@@ -50,7 +50,8 @@ ThicknessProfile::ThicknessProfile(QObject *parent) :
     QObject(parent), _thicknessRatio(1),
     _flags(Flags::Default),
     _topProfile(nullptr),
-    _botProfile(nullptr)
+    _botProfile(nullptr),
+    _curve(nullptr)
 {
   init();
 }
@@ -73,6 +74,9 @@ void ThicknessProfile::init()
 
   // connect the profile
   pSetTopProfile(topProfile.release());
+
+  // init the curve
+  if (!_curve) pResetCurve();
 }
 
 Path *ThicknessProfile::topProfile()
@@ -88,6 +92,11 @@ Path *ThicknessProfile::botProfile()
 Path *ThicknessProfile::pTopProfile()
 {
     return topProfile();
+}
+
+Path *ThicknessProfile::pCurve()
+{
+  return _curve.get();
 }
 
 void ThicknessProfile::pSetTopProfile(Path *topProfile)
@@ -123,6 +132,27 @@ void ThicknessProfile::pSetTopProfile(Path *topProfile)
     mirror();
 
     attachSignals(_topProfile.get());
+}
+
+void ThicknessProfile::pSetCurve(Path *curve)
+{
+  _curve.reset(curve);
+}
+
+void ThicknessProfile::pResetCurve()
+{
+  qshared_ptr<PathPoint> point1(new CurvePoint(0,0));
+  qshared_ptr<ControlPoint> point2(new ControlPoint(100,0));
+  qshared_ptr<ControlPoint> point3(new ControlPoint(200,0));
+  qshared_ptr<PathPoint> point4(new CurvePoint(300,0));
+
+  std::unique_ptr<Path> curve(new Path());
+
+  auto curvePath = std::shared_ptr<PathItem>(new CubicBezier(point1, point2, point3, point4));
+  curve->append(curvePath);
+
+  // set the curve
+  pSetCurve(curve.release());
 }
 
 void ThicknessProfile::resetFlags()

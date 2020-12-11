@@ -47,6 +47,7 @@ namespace patheditor
         virtual QList<std::shared_ptr<ControlPoint> > controlPoints() override;
         virtual const QList<const ControlPoint*> constControlPoints() const override;
         virtual QPointF pointAtPercent(qreal t) const override;
+        virtual qreal angleAtPercent(qreal t) const override;
         virtual QRectF controlPointRect() const override;
         virtual std::shared_ptr<PathItem> clone() const override;
 

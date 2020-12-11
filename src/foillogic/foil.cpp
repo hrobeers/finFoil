@@ -51,6 +51,7 @@ namespace {
 
 Foil::Foil(QObject *parent) :
     QObject(parent),
+    _flags(Flags::None),
     _thickness(0.01 * si::meter) // 1cm
 {
     initOutline();
@@ -245,6 +246,20 @@ namespace {
 
         return retVal;
     }
+
+    std::pair<qreal, qreal> curveScaleFactors(Foil* self)
+    {
+      std::pair<qreal, qreal> retVal;
+
+      // determine the x scaling factor
+      quantity<si::length, qreal> heightSI = self->outline()->height();
+      retVal.first = qAbs(scaleFactorX(self->thicknessProfile()->pCurve(), heightSI.value()));
+
+      // determine the y scaling factor
+      retVal.second = retVal.first;
+
+      return retVal;
+    }
 }
 
 std::unique_ptr<IPath> Foil::topProfileNorm()
@@ -281,6 +296,12 @@ std::unique_ptr<IPath> Foil::botThicknessSI()
 {
     auto s = thicknessScaleFactors(this);
     return decorate<PathScaleDecorator>(_thicknessProfile->botProfile(), s.first, s.second);
+}
+
+std::unique_ptr<IPath> Foil::curveSI()
+{
+  auto s = curveScaleFactors(this);
+  return decorate<PathScaleDecorator>(_thicknessProfile->pCurve(), s.first, s.second);
 }
 
 bool Foil::aspectRatioEnforced() const

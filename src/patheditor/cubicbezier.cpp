@@ -95,6 +95,23 @@ QPointF CubicBezier::pointAtPercent(qreal t) const
     return QPointF(xAtPercent, yAtPercent);
 }
 
+qreal CubicBezier::angleAtPercent(qreal t) const
+{
+  /*
+  qreal x0 = _cPoint1->x() + pow<2>(1-t) * (_startPoint->x()-_cPoint1->x()) + pow<2>(1-t) * (_cPoint2->x()-_cPoint1->x());
+  qreal y0 = _cPoint1->y() + pow<2>(1-t) * (_startPoint->y()-_cPoint1->y()) + pow<2>(1-t) * (_cPoint2->y()-_cPoint1->y());
+
+  qreal x1 = _cPoint2->x() + pow<2>(1-t) * (_cPoint1->x()-_cPoint2->x()) + pow<2>(1-t) * (_endPoint->x()-_cPoint2->x());
+  qreal y1 = _cPoint2->y() + pow<2>(1-t) * (_cPoint1->y()-_cPoint2->y()) + pow<2>(1-t) * (_endPoint->y()-_cPoint2->y());
+
+  return std::atan2(y1-y0, x1-x0);
+  */
+
+  qreal dx = 3 * pow<2>(1-t) * (_cPoint1->x()-_startPoint->x()) + 6 * (1-t)*t * (_cPoint2->x()-_cPoint1->x()) + 3 * pow<2>(t) * (_endPoint->x()-_cPoint2->x());
+  qreal dy = 3 * pow<2>(1-t) * (_cPoint1->y()-_startPoint->y()) + 6 * (1-t)*t * (_cPoint2->y()-_cPoint1->y()) + 3 * pow<2>(t) * (_endPoint->y()-_cPoint2->y());
+  return std::atan2(dy, dx);
+}
+
 QRectF CubicBezier::controlPointRect() const
 {
     qreal left = qMin(qMin(_startPoint->x(), _endPoint->x()), qMin(_cPoint1->x(), _cPoint2->x()));

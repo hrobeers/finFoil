@@ -54,6 +54,7 @@ namespace patheditor
         QRectF controlPointRect() const;
 
         virtual QPointF pointAtPercent(qreal t) const override;
+        virtual qreal angleAtPercent(qreal t) const override;
 
         virtual qreal minX(qreal *t_top = 0) const override;
         virtual qreal maxX(qreal *t_top = 0) const override;

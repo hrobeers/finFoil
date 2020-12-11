@@ -34,6 +34,7 @@ namespace patheditor
     {
     public:
         virtual QPointF pointAtPercent(qreal t) const = 0;
+        virtual qreal angleAtPercent(qreal t) const = 0;
 
         virtual qreal minX(qreal *t_top = 0) const = 0;
         virtual qreal maxX(qreal *t_top = 0) const = 0;

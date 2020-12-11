@@ -65,6 +65,7 @@ namespace foillogic
         std::unique_ptr<patheditor::IPath> botProfileSI();
         std::unique_ptr<patheditor::IPath> topThicknessSI();
         std::unique_ptr<patheditor::IPath> botThicknessSI();
+        std::unique_ptr<patheditor::IPath> curveSI();
         bool aspectRatioEnforced() const;
 
 
