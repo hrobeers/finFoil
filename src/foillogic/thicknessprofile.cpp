@@ -141,6 +141,7 @@ void ThicknessProfile::pSetCurve(Path *curve)
 
 void ThicknessProfile::pResetCurve()
 {
+  /*
   qshared_ptr<PathPoint> point1(new CurvePoint(0,0));
   qshared_ptr<ControlPoint> point2(new ControlPoint(100,0));
   qshared_ptr<ControlPoint> point3(new ControlPoint(200,0));
@@ -153,6 +154,8 @@ void ThicknessProfile::pResetCurve()
 
   // set the curve
   pSetCurve(curve.release());
+  */
+  pSetCurve(nullptr);
 }
 
 void ThicknessProfile::resetFlags()

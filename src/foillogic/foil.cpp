@@ -300,6 +300,10 @@ std::unique_ptr<IPath> Foil::botThicknessSI()
 
 std::unique_ptr<IPath> Foil::curveSI()
 {
+  // curve can be nullptr
+  if (!_thicknessProfile->pCurve())
+    return nullptr;
+
   auto s = curveScaleFactors(this);
   return decorate<PathScaleDecorator>(_thicknessProfile->pCurve(), s.first, s.second);
 }
