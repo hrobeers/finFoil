@@ -58,6 +58,11 @@ layout: compress
   <main class="site__content">
     <div class="container">
       <article class="post-content" itemprop="articleBody">
+        {% if page.legacy %}
+        <div class="isa_warning">
+          This article describes the old desktop editor which is replaced by the web app at <a href="https://app.finfoil.io" target="_blank">https://app.finfoil.io</a>.<br/>All functionality described below is still available in the new app.
+        </div>
+        {% endif %}
 
         {{ content }}
 
