@@ -25,6 +25,7 @@ url: "http://finfoil.io" # the base hostname & protocol for your site, e.g. http
 hero_img: cover.jpg
 
 navigation:
+  - {name: 'Blog', link: '/'}
   - {name: 'finfoil App', link: 'https://app.finfoil.io'}
   - {name: 'Contact', link: 'https://finfoil.io/software/#contact'}
 
