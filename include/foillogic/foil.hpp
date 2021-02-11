@@ -36,6 +36,25 @@
 
 namespace foillogic
 {
+    class Base : public QObject
+    {
+        Q_OBJECT
+
+        // read-write properties
+        Q_PROPERTY(qreal rx READ rx WRITE setRx RESET resetRx)
+
+        qreal _rx;
+
+    public:
+        Q_INVOKABLE explicit Base(QObject *parent = 0) : QObject(parent), _rx(0) {}
+
+        qreal rx() const { return _rx; };
+        void setRx(qreal rx) { _rx = rx; }
+        void resetRx() { _rx = 0; }
+
+        virtual ~Base() {}
+    };
+
     class Foil : public QObject, public hrlib::Identifiable, public hrlib::THistorical<5>
     {
         Q_OBJECT
@@ -44,6 +63,7 @@ namespace foillogic
         Q_PROPERTY(foillogic::Outline* outline READ outline WRITE pSetOutline)
         Q_PROPERTY(foillogic::Profile* profile READ profile WRITE pSetProfile)
         Q_PROPERTY(foillogic::ThicknessProfile* thickness READ thicknessProfile WRITE pSetThicknessProfile)
+        Q_PROPERTY(foillogic::Base* base READ nullBase WRITE pSetBase RESET pResetBase)
         Q_PROPERTY(qreal thick READ pThickness WRITE pSetThickness RESET pResetThickness)
         Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
@@ -82,6 +102,8 @@ namespace foillogic
         Outline* outline() { return _outline.get(); }
         Profile* profile() { return _profile.get(); }
         ThicknessProfile* thicknessProfile() { return _thicknessProfile.get(); }
+        Base* base() { return _base.get(); }
+        Base* nullBase() { return nullptr; } // skip for serialization (base is read only for compatibility)
         int layerCount() { return _layerCount; }
         qreal pThickness() const { return thickness().value(); }
         qreal pMinThickness() const { return minThickness().value(); }
@@ -91,11 +113,13 @@ namespace foillogic
         void pSetOutline(Outline *outline);
         void pSetProfile(Profile *profile);
         void pSetThicknessProfile(ThicknessProfile *thicknessProfile); // TODO read thickness from object if it exists
+        void pSetBase(Base *base); // TODO read thickness from object if it exists
         void setLayerCount(int layerCount);
         void pSetThickness(qreal thickness) { setThickness(thickness * boost::units::si::meter); }
         void pSetMinThickness(qreal minThickness) { setMinThickness(minThickness * boost::units::si::meter); }
         void setFlags(int flags) { _flags = flags; };
 
+        void pResetBase();
         void resetLayerCount();
         void pResetThickness();
         void pResetMinThickness();
@@ -113,6 +137,7 @@ namespace foillogic
         std::unique_ptr<foillogic::Outline> _outline;
         qunique_ptr<foillogic::Profile> _profile;
         qunique_ptr<foillogic::ThicknessProfile> _thicknessProfile;
+        qunique_ptr<foillogic::Base> _base;
         int _layerCount;
         boost::units::quantity<boost::units::si::length, qreal> _thickness;
         boost::units::quantity<boost::units::si::length, qreal> _minThickness;

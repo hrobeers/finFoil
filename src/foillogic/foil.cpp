@@ -34,6 +34,7 @@
 #include "foillogic/thicknessprofile.hpp"
 #include "patheditor/pathdecorators.hpp"
 
+SERIALIZABLE(foillogic::Base, base)
 SERIALIZABLE(foillogic::Foil, foil)
 
 using namespace foillogic;
@@ -88,6 +89,12 @@ void Foil::pSetThicknessProfile(ThicknessProfile *thickness)
     connectThickness();
 }
 
+void Foil::pSetBase(Base *base)
+{
+  if (_base.get()!=base)
+    _base.reset(base);
+}
+
 void Foil::setLayerCount(int layerCount)
 {
     _layerCount = layerCount;
@@ -101,6 +108,11 @@ bool Foil::mirrored() const
 void Foil::setMirror(bool mirror)
 {
   _flags = mirror ? _flags | Flags::Mirror : _flags ^ Flags::Mirror;
+}
+
+void Foil::pResetBase()
+{
+  pSetBase(new Base());
 }
 
 void Foil::resetLayerCount()
