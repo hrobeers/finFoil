@@ -30,6 +30,7 @@
 #include <memory>
 #include "boost/units/quantity.hpp"
 #include "boost/units/systems/si/length.hpp"
+#include "boost/units/systems/si/volume.hpp"
 #include "hrlib/mixin/identifiable.hpp"
 #include "hrlib/mixin/historical.hpp"
 #include "jenson.h"
@@ -67,6 +68,9 @@ namespace foillogic
         Q_PROPERTY(qreal thick READ pThickness WRITE pSetThickness RESET pResetThickness)
         Q_PROPERTY(int flags READ flags WRITE setFlags RESET resetFlags)
 
+        // read-only properties
+        Q_PROPERTY(qreal volume READ pVolume)
+
         // optional properties
         Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount RESET resetLayerCount)
         Q_PROPERTY(qreal minThick READ pMinThickness WRITE pSetMinThickness RESET pResetMinThickness)
@@ -93,6 +97,10 @@ namespace foillogic
         void setThickness(boost::units::quantity<boost::units::si::length, qreal> thickness);
         boost::units::quantity<boost::units::si::length, qreal> minThickness() const;
         void setMinThickness(boost::units::quantity<boost::units::si::length, qreal> minThickness);
+
+        boost::units::quantity<boost::units::si::volume, qreal> volume() const { return _volume; };
+        void setVolume(boost::units::quantity<boost::units::si::volume, qreal> volume) { _volume = volume; }
+        qreal pVolume() const { return volume().value(); }
 
         // Flags
         bool mirrored() const;
@@ -142,6 +150,8 @@ namespace foillogic
         boost::units::quantity<boost::units::si::length, qreal> _thickness;
         boost::units::quantity<boost::units::si::length, qreal> _minThickness;
         int _flags;
+
+        boost::units::quantity<boost::units::si::volume, qreal> _volume;
 
         void initOutline();
         void initProfile();
