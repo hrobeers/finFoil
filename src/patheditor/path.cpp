@@ -413,3 +413,20 @@ void PathSerializer::deserializeContinuity(const QJsonArray *continuity, Path *p
         item->endPoint()->setContinuous(continuity->at(i).toInt());
     }
 }
+
+
+// TODO remove only for testing bezier issues
+// if want to keep, move to path implementation?
+std::unique_ptr<patheditor::IPath> patheditor::toPolyLine(const patheditor::IPath* p, size_t res) {
+  std::unique_ptr<Path> path(new Path());
+
+  QPointF prev_pnt(0,0);
+  for (size_t i=0; i<res; i++) {
+    double t = double(i)/(res-1);
+    auto pnt = p->pointAtPercent(t);
+    path->append(std::shared_ptr<PathItem>(new Line(prev_pnt, pnt)));
+    prev_pnt = pnt;
+  }
+
+  return path;
+}

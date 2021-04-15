@@ -81,6 +81,8 @@ namespace patheditor
     private:
         QList<std::shared_ptr<PathItem> > _pathItemList;
     };
+
+  std::unique_ptr<patheditor::IPath> toPolyLine(const patheditor::IPath* p, size_t res = 20);
 }
 
 #endif // PATH_HPP
