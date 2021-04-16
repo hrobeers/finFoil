@@ -99,6 +99,11 @@ Path *ThicknessProfile::pCurve()
   return _curve.get();
 }
 
+Path *ThicknessProfile::pTwist()
+{
+  return _twist.get();
+}
+
 void ThicknessProfile::pSetTopProfile(Path *topProfile)
 {
     auto startPoint = topProfile->pathItems().first()->startPoint();
@@ -156,6 +161,16 @@ void ThicknessProfile::pResetCurve()
   pSetCurve(curve.release());
   */
   pSetCurve(nullptr);
+}
+
+void ThicknessProfile::pSetTwist(Path *twist)
+{
+  _twist.reset(twist);
+}
+
+void ThicknessProfile::pResetTwist()
+{
+  pSetTwist(nullptr);
 }
 
 void ThicknessProfile::resetFlags()

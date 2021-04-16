@@ -272,6 +272,20 @@ namespace {
 
       return retVal;
     }
+
+    std::pair<qreal, qreal> twistScaleFactors(Foil* self)
+    {
+      std::pair<qreal, qreal> retVal;
+
+      // determine the x scaling factor
+      quantity<si::length, qreal> heightSI = self->outline()->height();
+      retVal.first = qAbs(scaleFactorX(self->thicknessProfile()->pTwist(), heightSI.value()));
+
+      // determine the y scaling factor
+      retVal.second = qAbs(scaleFactorX(self->thicknessProfile()->pTwist(), M_PI/4)); // full height = 45deg
+
+      return retVal;
+    }
 }
 
 std::unique_ptr<IPath> Foil::topProfileNorm()
@@ -318,6 +332,16 @@ std::unique_ptr<IPath> Foil::curveSI()
 
   auto s = curveScaleFactors(this);
   return decorate<PathScaleDecorator>(_thicknessProfile->pCurve(), s.first, s.second);
+}
+
+std::unique_ptr<IPath> Foil::twistSI()
+{
+  // curve can be nullptr
+  if (!_thicknessProfile->pTwist())
+    return nullptr;
+
+  auto s = twistScaleFactors(this);
+  return decorate<PathScaleDecorator>(_thicknessProfile->pTwist(), s.first, s.second);
 }
 
 bool Foil::aspectRatioEnforced() const
