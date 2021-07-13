@@ -44,13 +44,6 @@ namespace {
   const std::string N("/N");
 
   bool is_path_char(char c) { return std::any_of(path_chars.cbegin(), path_chars.cend(), [c](char f){ return c==f; }); }
-  bool is_path_line(const std::string &str)
-  {
-    return std::all_of(str.begin(), str.end(), [](char c){
-        if (utf8::is_float_char(c)) return true;
-        return is_path_char(c);
-      });
-  }
 
   bool try_read_property(const std::string &line, const std::string &prop, bool &out) {
     if(line.find(prop) != std::string::npos)
@@ -172,40 +165,33 @@ std::istream& hrlib::pdf::read_next_binary(std::istream &stream, std::vector<cha
   }
 }
 
-std::optional<path_cmd> hrlib::pdf::parse_path_line(const std::string &line)
+std::optional<path_cmd> hrlib::pdf::parse_path_line(std::istream& stream)
 {
-  if (!is_path_line(line))
-    return std::optional<path_cmd>();
-
   // Push coordinates & extract command
   path_cmd retval;
-  size_t prev = 0;
   size_t coord_idx = 0;
-  while (true)
-  {
-    auto pos = line.find_first_of(delimiters, prev);
-
-    std::string word = line.substr(prev, pos-prev);
-    if (hrlib::utf8::is_floats(word))
+  while (!stream.eof())
     {
-      double v;
-      std::istringstream(line.substr(prev, pos-prev)) >> v;
-      if (coord_idx % 2 == 0)
-        retval.vals.push_back({v, NAN});
-      else
-        retval.vals.back()[1] = v;
-      ++coord_idx;
+      std::string word;
+      stream >> word;
+      if (hrlib::utf8::is_floats(word)) {
+        double v;
+        std::istringstream(word) >> v;
+        if (coord_idx % 2 == 0)
+          retval.vals.push_back({v, NAN});
+        else
+          retval.vals.back()[1] = v;
+        ++coord_idx;
+      }
+      else if (word.size()==1 && is_path_char(word[0]) && retval.vals.size()>0) {
+        retval.cmd = word[0];
+        return retval;
+      }
+      else {
+        retval.vals.clear();
+        coord_idx=0;
+      }
     }
-    else if (word.size()==1 && is_path_char(word[0]) && retval.vals.size()>0)
-    {
-      retval.cmd = word[0];
-      return retval;
-    }
-
-    prev = pos+1;
-    if (pos==std::string::npos)
-      break;
-  }
 
   return std::optional<path_cmd>();
 }

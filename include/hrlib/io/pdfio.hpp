@@ -48,7 +48,7 @@ namespace hrlib { namespace pdf
 
   std::istream& read_linear_dict(std::istream& stream, linear_dict& dict);
   std::istream& read_next_binary(std::istream& stream, std::vector<char>& bin);
-  std::optional<path_cmd> parse_path_line(const std::string &line);
+  std::optional<path_cmd> parse_path_line(std::istream& stream);
 }}
 
 #endif //HRLIB_PDFIO_HPP

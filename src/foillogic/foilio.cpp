@@ -255,16 +255,15 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*e
   {
     std::string line;
     boost::interprocess::basic_ivectorstream<std::vector<char>> bin_stream(bin);
-    while(getline_safe(bin_stream, line))
+    while(auto pc = pdf::parse_path_line(bin_stream))
     {
-      if (auto pc = pdf::parse_path_line(line)) {
-        if (first.cmd!='m' && pc->cmd!='m')
-          // continue until first move
-          continue;
-        if (first.cmd!='m' && pc->cmd=='m')
-          // set first move
-          first=pc.value();
-        else if (first.cmd=='m' && pc->cmd=='m')
+      if (first.cmd!='m' && pc->cmd!='m')
+        // continue until first move
+        continue;
+      if (first.cmd!='m' && pc->cmd=='m')
+        // set first move
+        first=pc.value();
+      else if (first.cmd=='m' && pc->cmd=='m')
         {
           // break on a second move if path long enough
           // otherwise reset move command
@@ -274,19 +273,18 @@ Outline* foillogic::loadOutlinePdfStream(std::istream &stream, std::ostream */*e
           path_cmds.clear();
           first=pc.value();
         }
-        if (pc->cmd == 'l' && path_cmds.back().cmd == 'l') {
-          // merge line commands that extend each other
-          if (pc->vals[0][0] == path_cmds.back().vals[0][0]) {
-            path_cmds.back().vals[0][1] = pc->vals[0][1];
-            continue;
-          }
-          if (pc->vals[0][1] == path_cmds.back().vals[0][1]) {
-            path_cmds.back().vals[0][0] = pc->vals[0][0];
-            continue;
-          }
+      if (pc->cmd == 'l' && path_cmds.back().cmd == 'l') {
+        // merge line commands that extend each other
+        if (pc->vals[0][0] == path_cmds.back().vals[0][0]) {
+          path_cmds.back().vals[0][1] = pc->vals[0][1];
+          continue;
         }
-        path_cmds.push_back(std::move(pc.value()));
+        if (pc->vals[0][1] == path_cmds.back().vals[0][1]) {
+          path_cmds.back().vals[0][0] = pc->vals[0][0];
+          continue;
+        }
       }
+      path_cmds.push_back(std::move(pc.value()));
     }
     // stop reading file when a path is parsed
     if (path_cmds.size()>2)
