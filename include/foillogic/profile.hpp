@@ -71,6 +71,7 @@ namespace foillogic
         QPointF bottomProfileTop(qreal* t_top = 0) const;
         qreal pxThickness() const;
         qreal thicknessRatio() const;
+        qreal topRatio() const;
 
         // Flags
         bool editable() const;

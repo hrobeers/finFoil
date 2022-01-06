@@ -127,6 +127,11 @@ qreal Profile::thicknessRatio() const
     return -_topProfileTop.y() / _botProfileTop.y();
 }
 
+qreal Profile::topRatio() const
+{
+    return -_topProfileTop.y() / (-_topProfileTop.y() + _botProfileTop.y());
+}
+
 bool Profile::editable() const
 {
   return _flags & Flags::Editable;

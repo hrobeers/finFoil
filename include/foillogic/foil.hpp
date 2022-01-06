@@ -42,12 +42,30 @@ namespace foillogic
         Q_OBJECT
 
         // read-write properties
+        Q_PROPERTY(QString t READ type WRITE setType RESET resetType)
+        Q_PROPERTY(qreal bh READ bh WRITE setBh RESET resetBh)
+        Q_PROPERTY(qreal bt READ bt WRITE setBt RESET resetBt)
         Q_PROPERTY(qreal rx READ rx WRITE setRx RESET resetRx)
 
+        QString _type;
+        qreal _bt;
+        qreal _bh;
         qreal _rx;
 
     public:
-        Q_INVOKABLE explicit Base(QObject *parent = 0) : QObject(parent), _rx(0) {}
+        Q_INVOKABLE explicit Base(QObject *parent = 0) : QObject(parent), _type("extend"), _bt(0), _bh(0), _rx(0) {}
+
+        QString type() const { return _type; };
+        void setType(QString type) { _type = type; }
+        void resetType() { _type = "extend"; }
+
+        qreal bt() const { return _bt; };
+        void setBt(qreal bt) { _bt = bt; }
+        void resetBt() { _bt = 0; }
+
+        qreal bh() const { return _bh; };
+        void setBh(qreal bh) { _bh = bh; }
+        void resetBh() { _bh = 0; }
 
         qreal rx() const { return _rx; };
         void setRx(qreal rx) { _rx = rx; }
